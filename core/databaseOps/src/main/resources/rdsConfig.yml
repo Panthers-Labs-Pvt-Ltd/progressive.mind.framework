@@ -1,0 +1,42 @@
+application:
+  name: ChimeraRDSConfig
+  version: 1.0.0
+  environment:
+    test:
+      url: "jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE"
+      username : "sa"
+      password : ""
+      DriverClassName : "org.h2.Driver"
+    dev:
+      url: "jdbc:postgresql://localhost:5432/postgres"
+      username : "postgres"
+      password : "root"
+      DriverClassName : "org.postgresql.Driver"
+      MaximumPoolSize : "10"
+      MinimumIdle : "2"
+      IdleTimeout : "600000"
+      MaxLifetime : "1800000"
+      ConnectionTimeout : "30000"
+      Default : "N"
+    sit:
+      url: "jdbc:postgresql://localhost:5432/postgres"
+      username: "postgres"
+      password: "root"
+      DriverClassName: "org.postgresql.Driver"
+      MaximumPoolSize: "10"
+      MinimumIdle: "2"
+      IdleTimeout: "600000"
+      MaxLifetime: "1800000"
+      ConnectionTimeout: "30000"
+      Default: "N"
+    prod:
+      url: "jdbc:postgresql://localhost:5432/postgres"
+      username: "postgres"
+      password: "root"
+      DriverClassName: "org.postgresql.Driver"
+      MaximumPoolSize: "10"
+      MinimumIdle: "2"
+      IdleTimeout: "600000"
+      MaxLifetime: "1800000"
+      ConnectionTimeout: "30000"
+      Default: "N"
