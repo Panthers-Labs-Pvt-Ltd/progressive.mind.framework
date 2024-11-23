@@ -1,14 +1,16 @@
 image: maven:3.8.3-openjdk-17
 
 variables:
-  MAVEN_CLI_OPTS: "-s .m2/settings.xml --batch-mode"
+  MAVEN_CLI_OPTS: "-s .m2/settings.xml --batch-mode -B -Dmaven.test.failure.ignore=true"
   MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
-  DOCKER_IMAGE: "$CI_REGISTRY_IMAGE/chimera_framework:latest" 
+  DOCKER_IMAGE: "$CI_REGISTRY_IMAGE/chimera:latest" 
   JAR_DIR : "build/application-files/"
   FILTER_VERSION : "1.0-SNAPSHOT"
 stages:
   - build
-  - docker
+  - test
+  - scan
+  - deploy
 
 cache:
   paths:
@@ -62,7 +64,7 @@ before_script :
 
       }
 
-"Build Chimera":
+build:
   stage: build
   script:
     - |
@@ -71,6 +73,7 @@ before_script :
       mvn clean package -DskipTests
       mkdir -p build/application-files
       find $CI_PROJECT_DIR -type f -name "*${FILTER_VERSION}*.jar" -exec mv {} ${JAR_DIR} \;
+      ls -lart ${JAR_DIR}
       generateDocker
   artifacts:
     paths:
@@ -78,8 +81,46 @@ before_script :
       - Dockerfile
     expire_in: 1 week
 
-"Create Docker Image":
-  stage: docker
+# Test phase
+unit_test:
+  stage: test
+  script:
+    - mvn $MAVEN_CLI_OPTS test
+
+# Dependency scan using OWASP Dependency-Check
+dependency_scan:
+  stage: scan
+  image: owasp/dependency-check:latest
+  variables:
+    OWASP_OUTPUT_FORMAT: "HTML"
+    OWASP_OUTPUT_DIR: "./dependency-check-report"
+  script:
+    - |
+      docker pull owasp/dependency-check
+      docker run --rm -v $(pwd):/src owasp/dependency-check --scan /src
+      dependency-check.sh --project "Chimera" --scan ./ --format $OWASP_OUTPUT_FORMAT --out $OWASP_OUTPUT_DIR
+  artifacts:
+    paths:
+      - dependency-check-report/
+
+# Image scanning using Trivy
+image_scan:
+  stage: scan
+  image: aquasec/trivy:latest
+  variables:
+    TRIVY_EXIT_CODE: "0" # Ignore vulnerabilities during the build
+  script:
+    - |
+      docker pull aquasec/trivy
+      trivy fs --exit-code $TRIVY_EXIT_CODE --severity HIGH,CRITICAL .
+  allow_failure: true
+  artifacts:
+    paths:
+    - dependency-check-report/
+    - target/surefire-reports/
+    
+build_and_push_docker:
+  stage: deploy
   image: docker:latest
   services:
     - docker:dind
@@ -87,5 +128,7 @@ before_script :
     - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY
   script:
     - |
+      echo "Files recieved from Previous Step"
+    - ls -lart ${JAR_DIR}
     - docker build -t $DOCKER_IMAGE .
     - docker push $DOCKER_IMAGE
