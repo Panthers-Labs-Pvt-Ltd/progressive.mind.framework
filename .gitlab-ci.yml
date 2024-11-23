@@ -1,4 +1,4 @@
-image: maven:3.6.3-jdk-17
+image: maven:3.8.3-openjdk-17
 
 variables:
   MAVEN_CLI_OPTS: "-s .m2/settings.xml --batch-mode"
