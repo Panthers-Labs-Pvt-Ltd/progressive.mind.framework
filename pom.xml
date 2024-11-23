@@ -6,9 +6,32 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.nwg.edl</groupId>
-    <artifactId>tachyon</artifactId>
+    <artifactId>Chimera</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <developers>
+        <developer>
+            <id>0001</id><name>Kumar, Manish</name><email>manish.kumar.gupta@outlook.com</email>
+        </developer>
+        <developer>
+            <id>0002</id><name>Mohit Ranjan</name><email>manish.kumar.gupta@outlook.com</email>
+        </developer>
+        <developer>
+            <id>0003</id><name>Prashant Kumar</name><email>manish.kumar.gupta@outlook.com</email>
+        </developer>
+        <developer>
+            <id>0004</id><name>Vivek</name><email>manish.kumar.gupta@outlook.com</email>
+        </developer>
+        <developer>
+            <id>0005</id><name>Abhinav</name><email>manish.kumar.gupta@outlook.com</email>
+        </developer>
+    </developers>
+<inceptionYear>2024</inceptionYear>
+    <name>Chimera Data Engineering</name>
+    <description> Data Engineering</description>
     <packaging>pom</packaging>
+
+
+
 
 
     <properties>
