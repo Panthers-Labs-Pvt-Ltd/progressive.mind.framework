@@ -4,7 +4,9 @@ package com.progressive.minds.chimera.core.logger;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.PrintWriter;
 import java.io.Serializable;
+import java.io.StringWriter;
 
 public class ChimeraLogger extends LogManager implements Serializable {
 
@@ -42,5 +44,12 @@ public class ChimeraLogger extends LogManager implements Serializable {
     public void logWarning(String tag, String message) {
         String formattedMessage = "[" + tag + "]: " + message;
         logger.warn(formattedMessage);
+    }
+
+    public static String getStackTraceString(Throwable throwable) {
+        StringWriter stringWriter = new StringWriter();
+        PrintWriter printWriter = new PrintWriter(stringWriter);
+        throwable.printStackTrace(printWriter);
+        return stringWriter.toString();
     }
 }
