@@ -15,6 +15,7 @@ stages:
 cache:
   paths:
     - .m2/repository/
+    - .m2/settings.xml
     - target/
 before_script :
    - |
@@ -118,7 +119,7 @@ image_scan:
     paths:
     - dependency-check-report/
     - target/surefire-reports/
-    
+
 build_and_push_docker:
   stage: deploy
   image: docker:latest
