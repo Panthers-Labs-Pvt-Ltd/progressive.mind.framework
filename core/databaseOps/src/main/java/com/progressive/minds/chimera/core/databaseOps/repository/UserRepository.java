@@ -11,11 +11,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static com.progressive.minds.chimera.core.databaseOps.utility.ColumnExtractor.extractGetterColumnNames;
+
 public class UserRepository {
+    List<String> columnNames = extractGetterColumnNames(User.class);
+    int columnCount = columnNames.size();
+    String questionMarks = "?".repeat(columnCount).replace("", ", ").strip().substring(1);
 
     public List<User> getAllUsers() {
         List<User> users = new ArrayList<>();
-        String query = "SELECT id, name, email FROM users";
+        String query = "SELECT " + String.join(", ", columnNames) + " FROM User";
 
         try (Connection connection = DataSourceConfig.getDataSource().getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query);
@@ -36,7 +41,7 @@ public class UserRepository {
     }
 
     public void saveUser(User user) {
-        String query = "INSERT INTO users (name, email) VALUES (?, ?)";
+        String query = "INSERT INTO users (" + columnNames + ") VALUES (" + questionMarks + ")";
 
         try (Connection connection = DataSourceConfig.getDataSource().getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
@@ -51,7 +56,7 @@ public class UserRepository {
 
     public List<User> getAllUsers(Map<String, Object> filters) {
         List<User> users = new ArrayList<>();
-        StringBuilder queryBuilder = new StringBuilder("SELECT id, name, email FROM users");
+        StringBuilder queryBuilder = new StringBuilder("SELECT " + columnNames + " FROM users");
 
         // Add filters dynamically
         if (filters != null && !filters.isEmpty()) {
