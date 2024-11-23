@@ -22,7 +22,7 @@
         <jsoup.version>1.15.3</jsoup.version>
         <amazonaws.sdk.version>1.12.376</amazonaws.sdk.version>
 
-        <!--Hibernate dependancies-->
+        <!--Hibernate dependencies-->
         <sqlite.jdbc.version>3.25.2</sqlite.jdbc.version>
         <hibernate.version>5.2.16.Final</hibernate.version>
         <sqlite.dialect.version>0.1.2</sqlite.dialect.version>
