@@ -3,7 +3,7 @@ image: maven:3.8.3-openjdk-17
 variables:
   MAVEN_CLI_OPTS: "-s .m2/settings.xml --batch-mode"
   MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
-  DOCKER_IMAGE: "$CI_REGISTRY_IMAGE/Chimera:latest" 
+  DOCKER_IMAGE: "$CI_REGISTRY_IMAGE/chimera:latest" 
 
 stages:
   - build
@@ -20,7 +20,7 @@ build:
     - |
       echo "Maven Path : $(whereis mvn)"
       echo "Java Path : $(whereis java)"
-      mvn clean package -DskipTests
+      mvn clean package 
   artifacts:
     paths:
       - target/*.jar
