@@ -3,6 +3,11 @@ image: maven:3.8.3-openjdk-17
 variables:
   MAVEN_CLI_OPTS: "-s .m2/settings.xml --batch-mode"
   MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
+  DOCKER_IMAGE: "$CI_REGISTRY_IMAGE/Chimera:latest" 
+
+stages:
+  - build
+  - docker
 
 cache:
   paths:
@@ -12,6 +17,22 @@ cache:
 build:
   stage: build
   script:
-    - whereis mvn
-    - whereis java
-    - mvn compile
+    - |
+      echo "Maven Path : $(whereis mvn)"
+      echo "Java Path : $(whereis java)"
+      mvn clean package 
+  artifacts:
+    paths:
+      - target/*.jar
+    expire_in: 1 week
+
+build_and_push_docker:
+  stage: docker
+  image: docker:latest
+  services:
+    - docker:dind
+  before_script:
+    - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY
+  script:
+    - docker build -t $DOCKER_IMAGE .
+    - docker push $DOCKER_IMAGE
