@@ -21,9 +21,12 @@ build:
       echo "Maven Path : $(whereis mvn)"
       echo "Java Path : $(whereis java)"
       mvn clean package -DskipTests
+      mkdir -p build/application-files
+      find $CI_PROJECT_DIR -type f -name "*.jar" -exec mv {} build/application-files/ \;
+      ls -lart build/application-files/
   artifacts:
     paths:
-      - target/*.jar
+      - build/application-files/*.jar
     expire_in: 1 week
 
 build_and_push_docker:
@@ -34,5 +37,8 @@ build_and_push_docker:
   before_script:
     - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY
   script:
+    - |
+      echo "Files recieved from Previous Step"
+    - ls -lart build/application-files/
     - docker build -t $DOCKER_IMAGE .
     - docker push $DOCKER_IMAGE
