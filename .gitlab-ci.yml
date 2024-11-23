@@ -4,7 +4,8 @@ variables:
   MAVEN_CLI_OPTS: "-s .m2/settings.xml --batch-mode"
   MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
   DOCKER_IMAGE: "$CI_REGISTRY_IMAGE/chimera:latest" 
-
+  JAR_DIR : "build/application-files/"
+  FILTER_VERSION : "1.0-SNAPSHOT"
 stages:
   - build
   - docker
@@ -13,6 +14,53 @@ cache:
   paths:
     - .m2/repository/
     - target/
+before_script :
+   - |
+      function generateDocker(){
+              
+      # Output Dockerfile
+      DOCKERFILE="Dockerfile"
+
+      # Ensure the JAR directory exists
+      if [[ ! -d "$JAR_DIR" ]]; then
+        echo "Error: Directory $JAR_DIR does not exist."
+        exit 1
+      fi
+
+      # Start writing the Dockerfile
+      cat <<EOL > "$DOCKERFILE"
+      # Use an official Java runtime as a parent image
+      FROM openjdk:17-jdk-slim
+
+      # Set working directory
+      WORKDIR /app
+
+      # Copy JAR files into the container
+      EOL
+
+      # Iterate over all .jar files in the folder and add COPY instructions
+      for jar in "$JAR_DIR"/*.jar; do
+        if [[ -f "$jar" ]]; then
+          jar_name=$(basename "$jar")
+          echo "COPY $jar_name /app/$jar_name" >> "$DOCKERFILE"
+        fi
+      done
+
+      # Add an example CMD command
+      cat <<EOL >> "$DOCKERFILE"
+
+      # Expose application port
+      EXPOSE 8080
+
+      # Command to run the first JAR (customize as needed)
+      CMD ["java", "-jar", "/app/$(basename "$JAR_DIR"/*.jar)"]
+      EOL
+
+      # Output result
+      echo "Dockerfile generated successfully:"
+      cat "$DOCKERFILE"
+
+      }
 
 build:
   stage: build
@@ -22,11 +70,13 @@ build:
       echo "Java Path : $(whereis java)"
       mvn clean package -DskipTests
       mkdir -p build/application-files
-      find $CI_PROJECT_DIR -type f -name "*.jar" -exec mv {} build/application-files/ \;
-      ls -lart build/application-files/
+      find $CI_PROJECT_DIR -type f -name "*.jar" -exec mv {} ${JAR_DIR} \;
+      ls -lart ${JAR_DIR}
+      generateDocker
   artifacts:
     paths:
-      - build/application-files/*.jar
+      - ${JAR_DIR}/*.jar
+      - Dockerfile
     expire_in: 1 week
 
 build_and_push_docker:
@@ -39,6 +89,6 @@ build_and_push_docker:
   script:
     - |
       echo "Files recieved from Previous Step"
-    - ls -lart build/application-files/
+    - ls -lart ${JAR_DIR}
     - docker build -t $DOCKER_IMAGE .
     - docker push $DOCKER_IMAGE
