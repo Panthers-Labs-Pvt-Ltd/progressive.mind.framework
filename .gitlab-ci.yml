@@ -42,7 +42,7 @@ before_script :
       for jar in "$JAR_DIR"/*.jar; do
         if [[ -f "$jar" ]]; then
           jar_name=$(basename "$jar")
-          echo "COPY $jar_name /app/$jar_name" >> "$DOCKERFILE"
+          echo "COPY ${JAR_DIR}/$jar_name /app/$jar_name" >> "$DOCKERFILE"
         fi
       done
 
