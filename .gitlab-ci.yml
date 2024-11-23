@@ -53,7 +53,7 @@ before_script :
       EXPOSE 8080
 
       # Command to run the first JAR (customize as needed)
-      CMD ["java", "-jar", "/app/$(basename "$JAR_DIR"/*.jar)"]
+      CMD ["java", "-jar", "/app/$(basename "${JAR_DIR}"/*.jar)"]
       EOL
 
       # Output result
@@ -70,7 +70,7 @@ build:
       echo "Java Path : $(whereis java)"
       mvn clean package -DskipTests
       mkdir -p build/application-files
-      find $CI_PROJECT_DIR -type f -name "*.jar" -exec mv {} ${JAR_DIR} \;
+      find $CI_PROJECT_DIR -type f -name "*${FILTER_VERSION}*.jar" -exec mv {} ${JAR_DIR} \;
       ls -lart ${JAR_DIR}
       generateDocker
   artifacts:
