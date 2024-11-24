@@ -31,7 +31,18 @@
     <packaging>pom</packaging>
 
 
-
+    <dependencyManagement>
+        <dependencies>
+            <!-- AWS SDK for Java 2.x BOM -->
+            <dependency>
+                <groupId>software.amazon.awssdk</groupId>
+                <artifactId>bom</artifactId>
+                <version>2.20.20</version> <!-- Use the latest version -->
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
 
     <properties>
@@ -124,7 +135,24 @@
     </properties>
     <!--<repositories><repository><id>gitlab-maven</id><url>https://gitlab.com/manishkumargupta/TestScala.git</url></repository></repositories><distributionManagement><repository><id>gitlab-maven</id><url>https://gitlab.com/manishkumargupta/TestScala.git</url></repository><snapshotRepository><id>gitlab-maven</id><url>https://gitlab.com/manishkumargupta/TestScala.git</url></snapshotRepository></distributionManagement>-->
     <dependencies>
+        <dependency>
+            <groupId>com.google.cloud</groupId>
+            <artifactId>google-cloud-secretmanager</artifactId>
+            <version>2.24.0</version> <!-- Use the latest version -->
+        </dependency>
+        <!-- Azure Key Vault SDK -->
+        <dependency>
+            <groupId>com.azure</groupId>
+            <artifactId>azure-security-keyvault-secrets</artifactId>
+            <version>4.7.0</version>
+        </dependency>
 
+        <!-- Azure Identity SDK for Authentication -->
+        <dependency>
+            <groupId>com.azure</groupId>
+            <artifactId>azure-identity</artifactId>
+            <version>1.8.0</version>
+        </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
@@ -142,6 +170,53 @@
             <artifactId>HikariCP</artifactId>
             <version>5.0.1</version> <!-- Use the latest version -->
         </dependency>
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>secretsmanager</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-sql-kafka-0-10_2.12</artifactId>
+            <version>3.5.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-streaming_2.12</artifactId>
+            <version>3.5.0</version>
+        </dependency>
+            <!-- Spark Core -->
+            <dependency>
+                <groupId>org.apache.spark</groupId>
+                <artifactId>spark-core_2.12</artifactId>
+                <version>3.5.0</version> <!-- Replace with your Spark version -->
+            </dependency>
+
+            <!-- Spark SQL -->
+            <dependency>
+                <groupId>org.apache.spark</groupId>
+                <artifactId>spark-sql_2.12</artifactId>
+                <version>3.5.0</version> <!-- Replace with your Spark version -->
+            </dependency>
+
+        <!-- Apache Comet libraries -->
+        <!-- https://mvnrepository.com/artifact/com.ebiznext/comet-spark3 -->
+        <!-- https://mvnrepository.com/artifact/org.apache.datafusion/comet-spark-integration-spark3.5 -->
+        <!-- https://mvnrepository.com/artifact/org.apache.datafusion/comet-spark-integration-spark3.5 -->
+   <!--     <dependency>
+            <groupId>org.apache.datafusion</groupId>
+            <artifactId>comet-spark-integration-spark3.5_2.12</artifactId>
+            <version>0.3.0</version>
+            <type>pom</type>
+        </dependency>-->
+
+
+        <!-- https://mvnrepository.com/artifact/com.ebiznext/comet-spark3 -->
+        <dependency>
+            <groupId>com.ebiznext</groupId>
+            <artifactId>comet-spark3_2.12</artifactId>
+            <version>0.2.6</version>
+        </dependency>
+
 
         <!-- https://mvnrepository.com/artifact/io.findify/s3mock -->
         <dependency>
@@ -348,8 +423,8 @@
                             <rules>
                                 <banDuplicatePomDependencyVersions/>
                                 <requireJavaVersion>
-                                    <version>1.8</version>
-                                    <message>Invalid Java version. It should be 1.8</message>
+                                    <version>17</version>
+                                    <message>Invalid Java version. It should be 17</message>
                                 </requireJavaVersion>
                             </rules>
                         </configuration>

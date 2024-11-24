@@ -19,5 +19,6 @@
     <modules>
         <module>databaseOps</module>
         <module>logging</module>
+        <module>apacheComet</module>
     </modules>
 </project>

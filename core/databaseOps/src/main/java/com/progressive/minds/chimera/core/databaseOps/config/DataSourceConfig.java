@@ -1,5 +1,7 @@
 package com.progressive.minds.chimera.core.databaseOps.config;
 
+import com.progressive.minds.chimera.core.databaseOps.exception.ValidationException;
+import com.progressive.minds.chimera.core.databaseOps.utility.CloudCredentials;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
@@ -13,17 +15,43 @@ public class DataSourceConfig {
 
     private static DataSource dataSource;
     static String envName = System.getProperty("CHIMERA_EXE_ENV", "dev");
+
     static Map<String, Object> envProperties = getEnvironmentProperties(envName);
-    
-    static String jdbcURL = (String) envProperties.get("url");
-    static String userName = (String) envProperties.get("username");
-    static String password = (String) envProperties.get("password");
-    static String driver = (String) envProperties.get("DriverClassName");
-    static String maxPoolSize = (String) envProperties.get("MaximumPoolSize");
-    static String minIdle = (String) envProperties.get("MinimumIdle");
-    static String idleTimeout = (String) envProperties.get("IdleTimeout");
-    static String maxLifeTime = (String) envProperties.get("MaxLifetime");
-    static String connectionTimeout = (String) envProperties.get("ConnectionTimeout");
+    static Map<String, String> credentials;
+    static String RDSUserName = "";
+    static String RDSPassword = "";
+    static {
+        String cloudProvider = "";
+        String rdsSecretName = "";
+        String ProjectIdOrVault = "";
+
+        try {
+            cloudProvider = (String) envProperties.getOrDefault("CloudProvider", "LOCAL");
+            rdsSecretName = (String) envProperties.getOrDefault("RDSSecretName", "Invalid RDS Secret Name");
+            if (cloudProvider.equalsIgnoreCase("gcp"))
+                ProjectIdOrVault = (String) envProperties.get("GCPProjectId");
+            else
+                ProjectIdOrVault = (String) envProperties.get("AZUREKeyVaultURL");
+
+            credentials = CloudCredentials.getCredentials(cloudProvider, rdsSecretName , ProjectIdOrVault);
+            RDSUserName = credentials.get("username");
+            RDSPassword = credentials.get("password");
+        } catch (Exception e) {
+            throw new ValidationException("Exception While Fetching Cloud Credentials " + cloudProvider + "For Secret"
+             + rdsSecretName);
+        }
+    }
+
+    static String defaultURL = "jdbc:postgresql://localhost:5432/postgres";
+    static String jdbcURL = (String) envProperties.getOrDefault("url", defaultURL);
+    static String userName = (String) envProperties.getOrDefault("username", RDSUserName);
+    static String password = (String) envProperties.getOrDefault("password", RDSPassword);
+    static String driver = (String) envProperties.getOrDefault("DriverClassName", "org.postgresql.Driver");
+    static String maxPoolSize = (String) envProperties.getOrDefault("MaximumPoolSize", "10");
+    static String minIdle = (String) envProperties.getOrDefault("MinimumIdle", "2");
+    static String idleTimeout = (String) envProperties.getOrDefault("IdleTimeout", "600000");
+    static String maxLifeTime = (String) envProperties.getOrDefault("MaxLifetime", "1800000");
+    static String connectionTimeout = (String) envProperties.getOrDefault("ConnectionTimeout", "30000");
 
 
     public static DataSource getDataSource() {
