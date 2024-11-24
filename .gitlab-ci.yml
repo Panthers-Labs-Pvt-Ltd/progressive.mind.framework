@@ -12,6 +12,7 @@ stages:
   - scan
   - deploy
 
+
 cache:
   paths:
     - .m2/repository/
@@ -82,43 +83,17 @@ build:
       - Dockerfile
     expire_in: 1 week
 
+include:
+- template: Security/Dependency-Scanning.gitlab-ci.yml
+- template: Jobs/Container-Scanning.gitlab-ci.yml
+- template: Security/Secret-Detection.gitlab-ci.yml
+
+
 # Test phase
 unit_test:
   stage: test
   script:
     - mvn -B -Dmaven.test.failure.ignore=true test
-
-# Dependency scan using OWASP Dependency-Check
-dependency_scan:
-  stage: scan
-  image: owasp/dependency-check:latest
-  variables:
-    OWASP_OUTPUT_FORMAT: "HTML"
-    OWASP_OUTPUT_DIR: "./dependency-check-report"
-  script:
-    - |
-      docker pull owasp/dependency-check
-      docker run --rm -v $(pwd):/src owasp/dependency-check --scan /src
-      dependency-check.sh --project "Chimera" --scan ./ --format $OWASP_OUTPUT_FORMAT --out $OWASP_OUTPUT_DIR
-  artifacts:
-    paths:
-      - dependency-check-report/
-
-# Image scanning using Trivy
-image_scan:
-  stage: scan
-  image: aquasec/trivy:latest
-  variables:
-    TRIVY_EXIT_CODE: "0" # Ignore vulnerabilities during the build
-  script:
-    - |
-      docker pull aquasec/trivy
-      trivy fs --exit-code $TRIVY_EXIT_CODE --severity HIGH,CRITICAL .
-  allow_failure: true
-  artifacts:
-    paths:
-    - dependency-check-report/
-    - target/surefire-reports/
 
 build_and_push_docker:
   stage: deploy
