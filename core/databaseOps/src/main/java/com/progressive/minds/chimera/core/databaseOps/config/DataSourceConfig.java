@@ -30,9 +30,10 @@ public class DataSourceConfig {
             rdsSecretName = (String) envProperties.getOrDefault("RDSSecretName", "Invalid RDS Secret Name");
             if (cloudProvider.equalsIgnoreCase("gcp"))
                 ProjectIdOrVault = (String) envProperties.get("GCPProjectId");
-            else
+            else if (cloudProvider.equalsIgnoreCase("azure"))
                 ProjectIdOrVault = (String) envProperties.get("AZUREKeyVaultURL");
-
+            else
+                ProjectIdOrVault = "";
             credentials = CloudCredentials.getCredentials(cloudProvider, rdsSecretName , ProjectIdOrVault);
             RDSUserName = credentials.get("username");
             RDSPassword = credentials.get("password");

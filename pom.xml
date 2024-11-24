@@ -202,20 +202,21 @@
         <!-- https://mvnrepository.com/artifact/com.ebiznext/comet-spark3 -->
         <!-- https://mvnrepository.com/artifact/org.apache.datafusion/comet-spark-integration-spark3.5 -->
         <!-- https://mvnrepository.com/artifact/org.apache.datafusion/comet-spark-integration-spark3.5 -->
-   <!--     <dependency>
+       <dependency>
             <groupId>org.apache.datafusion</groupId>
-            <artifactId>comet-spark-integration-spark3.5_2.12</artifactId>
-            <version>0.3.0</version>
-            <type>pom</type>
-        </dependency>-->
+            <artifactId>comet-spark-spark3.5_2.12</artifactId>
+            <version>0.4.0</version>
+        </dependency>
 
+<!--
 
-        <!-- https://mvnrepository.com/artifact/com.ebiznext/comet-spark3 -->
+        &lt;!&ndash; https://mvnrepository.com/artifact/com.ebiznext/comet-spark3 &ndash;&gt;
         <dependency>
             <groupId>com.ebiznext</groupId>
             <artifactId>comet-spark3_2.12</artifactId>
             <version>0.2.6</version>
         </dependency>
+-->
 
 
         <!-- https://mvnrepository.com/artifact/io.findify/s3mock -->

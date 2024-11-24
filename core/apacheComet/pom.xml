@@ -6,18 +6,21 @@
 
     <parent>
         <groupId>org.nwg.edl</groupId>
-        <artifactId>Chimera</artifactId>
+        <artifactId>core</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
     <groupId>org.nwg.edl</groupId>
-    <artifactId>core</artifactId>
+    <artifactId>apacheComet</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <packaging>pom</packaging>
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>false</filtering>
+            </resource>
+        </resources>
+    </build>
 
 
-    <modules>
-        <module>databaseOps</module>
-        <module>logging</module>
-    </modules>
 </project>

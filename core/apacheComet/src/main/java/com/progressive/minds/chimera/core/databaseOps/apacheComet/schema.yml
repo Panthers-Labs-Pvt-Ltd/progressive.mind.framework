@@ -1,0 +1,12 @@
+name: users
+pattern: "users.*\\.csv"
+attributes:
+  - name: id
+    type: long
+  - name: name
+    type: string
+  - name: email
+    type: string
+    required: true
+assertions:
+  - email_not_empty: email IS NOT NULL
