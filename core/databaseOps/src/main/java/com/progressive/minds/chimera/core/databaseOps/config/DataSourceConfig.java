@@ -15,19 +15,21 @@ public class DataSourceConfig {
 
     private static DataSource dataSource;
     static String envName = System.getProperty("CHIMERA_EXE_ENV", "dev");
+    public static DataSource getDataSource() {
 
-    static Map<String, Object> envProperties = getEnvironmentProperties(envName);
-    static Map<String, String> credentials;
-    static String RDSUserName = "";
-    static String RDSPassword = "";
-    static {
+    Map<String, Object> envProperties = getEnvironmentProperties(envName);
+    Map<String, String> credentials;
+    String RDSUserName = "";
+    String RDSPassword = "";
         String cloudProvider = "";
         String rdsSecretName = "";
         String ProjectIdOrVault = "";
 
         try {
             cloudProvider = (String) envProperties.getOrDefault("CloudProvider", "LOCAL");
-            rdsSecretName = (String) envProperties.getOrDefault("RDSSecretName", "Invalid RDS Secret Name");
+            if (!cloudProvider.equalsIgnoreCase("local"))
+            {
+            rdsSecretName = (String) envProperties.get("RDSSecretName");
             if (cloudProvider.equalsIgnoreCase("gcp"))
                 ProjectIdOrVault = (String) envProperties.get("GCPProjectId");
             else if (cloudProvider.equalsIgnoreCase("azure"))
@@ -37,25 +39,25 @@ public class DataSourceConfig {
             credentials = CloudCredentials.getCredentials(cloudProvider, rdsSecretName , ProjectIdOrVault);
             RDSUserName = credentials.get("username");
             RDSPassword = credentials.get("password");
+            }
         } catch (Exception e) {
             throw new ValidationException("Exception While Fetching Cloud Credentials " + cloudProvider + "For Secret"
              + rdsSecretName);
         }
-    }
-
-    static String defaultURL = "jdbc:postgresql://localhost:5432/postgres";
-    static String jdbcURL = (String) envProperties.getOrDefault("url", defaultURL);
-    static String userName = (String) envProperties.getOrDefault("username", RDSUserName);
-    static String password = (String) envProperties.getOrDefault("password", RDSPassword);
-    static String driver = (String) envProperties.getOrDefault("DriverClassName", "org.postgresql.Driver");
-    static String maxPoolSize = (String) envProperties.getOrDefault("MaximumPoolSize", "10");
-    static String minIdle = (String) envProperties.getOrDefault("MinimumIdle", "2");
-    static String idleTimeout = (String) envProperties.getOrDefault("IdleTimeout", "600000");
-    static String maxLifeTime = (String) envProperties.getOrDefault("MaxLifetime", "1800000");
-    static String connectionTimeout = (String) envProperties.getOrDefault("ConnectionTimeout", "30000");
 
 
-    public static DataSource getDataSource() {
+   String defaultURL = "jdbc:postgresql://localhost:5432/postgres";
+   String jdbcURL = (String) envProperties.getOrDefault("url", defaultURL);
+   String userName = (String) envProperties.getOrDefault("username", RDSUserName);
+   String password = (String) envProperties.getOrDefault("password", RDSPassword);
+   String driver = (String) envProperties.getOrDefault("DriverClassName", "org.postgresql.Driver");
+   String maxPoolSize = (String) envProperties.getOrDefault("MaximumPoolSize", "10");
+   String minIdle = (String) envProperties.getOrDefault("MinimumIdle", "2");
+   String idleTimeout = (String) envProperties.getOrDefault("IdleTimeout", "600000");
+   String maxLifeTime = (String) envProperties.getOrDefault("MaxLifetime", "1800000");
+   String connectionTimeout = (String) envProperties.getOrDefault("ConnectionTimeout", "30000");
+
+
         HikariConfig config = new HikariConfig();
 
         if (Objects.equals(envName, "UnitTest")) {
