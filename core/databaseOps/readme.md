@@ -36,6 +36,24 @@ To run this project, you will need to add the following environment variables to
 
 `CHIMERA_EXE_ENV`
 
+## RDS Configuration Paramaters
+
+| Paramater Name  |Paramater Values| Default Values|
+| -------------   |:-------------:|  :-------------:|
+url|DEF| "jdbc:postgresql|DEF|//localhost|DEF|5432/postgres"
+username |DEF| "postgres"
+password |DEF| "root"
+DriverClassName |DEF| "org.postgresql.Driver"
+MaximumPoolSize |DEF| "10"
+MinimumIdle |DEF| "2"
+IdleTimeout |DEF| "600000"
+MaxLifetime |DEF| "1800000"
+ConnectionTimeout |DEF| "30000"
+Default |DEF| "N"
+CloudProvider |DEF| "AWS"
+RDSSecretName |DEF| "AWS SECRET NAME"
+GCPProjectId |DEF| ""
+AZUREKeyVaultURL |DEF| ""
 
 ## Project Structure
 
