@@ -13,8 +13,8 @@ import java.util.Base64;
 
 public class KaggleDataDownloader {
 
-    private static final String KAGGLE_USERNAME = "your_username";
-    private static final String KAGGLE_KEY = "your_api_key";
+    private static  String KAGGLE_USERNAME = "your_username";
+    private static  String KAGGLE_KEY = "your_api_key";
 
     public static void main(String[] args) throws IOException, InterruptedException {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -25,17 +25,15 @@ public class KaggleDataDownloader {
                 throw new RuntimeException("kaggle.json not found in resources.");
             }
             JsonNode rootNode = objectMapper.readTree(inputStream);
-            String username = rootNode.get("username").asText();
-            String key = rootNode.get("key").asText();
+             KAGGLE_USERNAME = rootNode.get("username").asText();
+             KAGGLE_KEY = rootNode.get("key").asText();
 
-            System.out.println("Username: " + username);
-            System.out.println("Key: " + key);
         }
         catch(Exception e){e.printStackTrace();}
 
 
-        String datasetSlug = "datasets/mllion"; // e.g., zillow/zecon
-        String fileName = "One_Direction_All_Songs_wr.csv"; // e.g., Data.csv
+        String datasetSlug = "datasets/mllion";
+        String fileName = "One_Direction_All_Songs_wr.csv";
 
         downloadDatasetFile(datasetSlug, fileName);
     }
