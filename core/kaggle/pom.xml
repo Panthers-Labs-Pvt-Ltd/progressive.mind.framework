@@ -6,20 +6,13 @@
 
     <parent>
         <groupId>org.nwg.edl</groupId>
-        <artifactId>Chimera</artifactId>
+        <artifactId>core</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
     <groupId>org.nwg.edl</groupId>
-    <artifactId>core</artifactId>
+    <artifactId>kaggle</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <packaging>pom</packaging>
 
 
-    <modules>
-        <module>databaseOps</module>
-        <module>logging</module>
-        <module>performanceMatrices</module>
-        <module>kaggle</module>
-    </modules>
 </project>

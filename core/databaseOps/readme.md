@@ -38,14 +38,14 @@ To run this project, you will need to add the following environment variables to
 
 ## RDS Configuration Paramaters
 
-| Paramater Name  |Paramater Values| Default Values|
+| Paramater Name  |Paramater Values| Description|
 | -------------   |:-------------:|  :-------------:|
-url|DEF| "jdbc:postgresql|DEF|//localhost|DEF|5432/postgres"
-username |DEF| "postgres"
-password |DEF| "root"
-DriverClassName |DEF| "org.postgresql.Driver"
-MaximumPoolSize |DEF| "10"
-MinimumIdle |DEF| "2"
+url| JDBC Url| Specify you RDS JDBC URL
+username |User Name | Specify RDS User Name for Non Cloud Source else Not required
+password |RDS Password|| Specify RDS Password for Non Cloud Source else Not required
+DriverClassName |Driver Class Name eg."org.postgresql.Driver"|Mandatory
+MaximumPoolSize |Connection Pool Size| Optional Default value will be 10
+MinimumIdle |Min Idle Time | Min Idle Time in Millisecond Default is 2ms
 IdleTimeout |DEF| "600000"
 MaxLifetime |DEF| "1800000"
 ConnectionTimeout |DEF| "30000"
