@@ -39,7 +39,40 @@ public class FileReader implements DataReader.Files {
         if (SourceType.equals("parquet")) {
             dataFrame = parquet.read(inSparkSession, inPipelineName,inSourcePath, inColumnFilter,  inRowFilter,
                      inCustomConfig,  Limit);
-        } else {
+        }
+        else if (SourceType.equals("json")) {
+            dataFrame = parquet.read(inSparkSession, inPipelineName,inSourcePath, inColumnFilter,  inRowFilter,
+                    inCustomConfig,  Limit);
+        }
+        else if (SourceType.equals("csv")) {
+            dataFrame = parquet.read(inSparkSession, inPipelineName,inSourcePath, inColumnFilter,  inRowFilter,
+                    inCustomConfig,  Limit);
+        }
+        else if (SourceType.equals("txt")) {
+            dataFrame = parquet.read(inSparkSession, inPipelineName,inSourcePath, inColumnFilter,  inRowFilter,
+                    inCustomConfig,  Limit);
+        }
+        else if (SourceType.equals("avro")) {
+            dataFrame = parquet.read(inSparkSession, inPipelineName,inSourcePath, inColumnFilter,  inRowFilter,
+                    inCustomConfig,  Limit);
+        }
+        else if (SourceType.equals("xml")) {
+            dataFrame = parquet.read(inSparkSession, inPipelineName,inSourcePath, inColumnFilter,  inRowFilter,
+                    inCustomConfig,  Limit);
+        }
+        else if (SourceType.equals("sequence")) {
+            dataFrame = parquet.read(inSparkSession, inPipelineName,inSourcePath, inColumnFilter,  inRowFilter,
+                    inCustomConfig,  Limit);
+        }
+        else if (SourceType.equals("binaryFile")) {
+            dataFrame = parquet.read(inSparkSession, inPipelineName,inSourcePath, inColumnFilter,  inRowFilter,
+                    inCustomConfig,  Limit);
+        }
+        else if (SourceType.equals("image")) {
+            dataFrame = parquet.read(inSparkSession, inPipelineName,inSourcePath, inColumnFilter,  inRowFilter,
+                    inCustomConfig,  Limit);
+        }
+        else {
             logger.logError(loggerTagName, "Unsupported Format " + inSourceType);
             System.exit(1);
         }

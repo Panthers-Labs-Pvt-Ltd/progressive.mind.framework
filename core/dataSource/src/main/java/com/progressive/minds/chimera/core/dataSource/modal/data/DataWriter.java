@@ -7,13 +7,15 @@ import org.apache.spark.sql.types.StructType;
 
 public interface DataWriter {
     interface Files {
-        Dataset<Row> write(String inSourceType, SparkSession inSparkSession, String inPipelineName, String inDatabaseNm,
-                          String inTableNm, String inColumnFilter, String inRowFilter, String inCustomConfig);
+        Dataset<Row> write(String inSourceType, SparkSession inSparkSession, String inPipelineName, String inDatabaseName,
+                           String inTableName, Dataset<Row> inSourceDataFrame, String inOutputPath, String inSavingMode,
+                           String inPartitioningKeys, String inSortingKeys, String inDuplicationKeys,
+                           String inExtraColumns, String inExtraColumnsValues, String inCustomConfig,
+                           String inCompressionFormat) throws Exception;
     }
     interface Databases {
-        Dataset<Row> write(String inSourceType, SparkSession inSparkSession, String inPipelineName, String inSourcePath,
-                          String inColumnFilter, String inRowFilter, StructType instructSchema, String inCustomConfig,
-                          String inDelim, String inQuotes, int inLimit);
+        Dataset<Row> write(String inSourceType, SparkSession inSparkSession, String inPipelineName, String inDatabaseNm,
+                           String inTableNm, String inColumnFilter, String inRowFilter, String inCustomConfig);
 
     }
     interface OpenTables {

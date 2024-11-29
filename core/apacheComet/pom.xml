@@ -5,14 +5,14 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.nwg.edl</groupId>
+        <groupId>com.progressive.minds.Chimera</groupId>
         <artifactId>core</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <groupId>org.nwg.edl</groupId>
-    <artifactId>apacheComet</artifactId>
-    <version>1.0-SNAPSHOT</version>
+
+
+    <artifactId>core.apacheComet</artifactId>
     <build>
         <resources>
             <resource>

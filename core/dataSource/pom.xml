@@ -5,20 +5,19 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.nwg.edl</groupId>
+        <groupId>com.progressive.minds.Chimera</groupId>
         <artifactId>core</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <groupId>org.nwg.edl</groupId>
-    <artifactId>dataSource</artifactId>
-    <version>1.0-SNAPSHOT</version>
+
+    <artifactId>core.dataSource</artifactId>
 
 
     <dependencies>
         <dependency>
-            <groupId>org.nwg.edl</groupId>
-            <artifactId>logging</artifactId>
+            <groupId>com.progressive.minds</groupId>
+            <artifactId>core.logging</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
