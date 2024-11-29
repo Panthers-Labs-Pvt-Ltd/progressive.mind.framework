@@ -15,7 +15,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.progressive.minds</groupId>
+            <groupId>com.progressive.minds.Chimera</groupId>
             <artifactId>core.logging</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
