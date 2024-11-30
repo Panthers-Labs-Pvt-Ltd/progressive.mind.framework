@@ -1,15 +1,10 @@
 package com.progressive.minds.chimera.core.dataSource.formats.files;
 
+import static com.progressive.minds.chimera.core.dataSource.utility.commonFunctions.*;
 import com.progressive.minds.chimera.core.logger.ChimeraLogger;
-import com.progressive.minds.chimera.core.dataSource.commonFunctions.*;
-
 import org.apache.spark.sql.*;
-
 import java.util.Arrays;
 import java.util.Locale;
-import java.util.Map;
-
-import static com.progressive.minds.chimera.core.dataSource.commonFunctions.*;
 
 public class parquet {
     private static final String loggerTag = "Parquet File ";

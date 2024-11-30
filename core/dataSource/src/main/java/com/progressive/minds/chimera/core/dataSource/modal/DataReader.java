@@ -1,4 +1,4 @@
-package com.progressive.minds.chimera.core.dataSource.modal.data;
+package com.progressive.minds.chimera.core.dataSource.modal;
 
 import org.apache.spark.sql.SparkSession;
 import org.apache.spark.sql.types.StructType;
@@ -15,8 +15,9 @@ public interface DataReader {
     }
 
     interface Databases {
-        Dataset<Row> read(String inSourceType, SparkSession inSparkSession, String inPipelineName, String inDatabaseNm,
-                          String inTableNm, String inColumnFilter, String inRowFilter, String inCustomConfig);
+
+        Dataset<Row> read(String inSourceType, SparkSession inSparkSession, String inDataSourceNm,
+                          String inSQLQuery, String inCustomConf) throws Exception;
     }
 
     interface OpenTables {

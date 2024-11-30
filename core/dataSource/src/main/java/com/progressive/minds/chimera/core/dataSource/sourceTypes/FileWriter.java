@@ -1,8 +1,7 @@
 package com.progressive.minds.chimera.core.dataSource.sourceTypes;
 
 import com.progressive.minds.chimera.core.dataSource.formats.files.parquet;
-import com.progressive.minds.chimera.core.dataSource.modal.data.DataReader;
-import com.progressive.minds.chimera.core.dataSource.modal.data.DataWriter;
+import com.progressive.minds.chimera.core.dataSource.modal.DataWriter;
 import com.progressive.minds.chimera.core.logger.ChimeraLogger;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;

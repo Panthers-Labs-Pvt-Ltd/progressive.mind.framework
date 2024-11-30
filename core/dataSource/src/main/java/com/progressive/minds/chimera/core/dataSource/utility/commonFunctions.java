@@ -1,4 +1,4 @@
-package com.progressive.minds.chimera.core.dataSource;
+package com.progressive.minds.chimera.core.dataSource.utility;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -11,11 +11,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Arrays;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -23,12 +18,7 @@ import com.progressive.minds.chimera.core.logger.ChimeraLogger;
 import org.apache.spark.sql.*;
 import org.apache.spark.sql.types.*;
 import static org.apache.spark.sql.functions.*;
-import static org.apache.spark.sql.types.DataType.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -174,8 +164,10 @@ public class commonFunctions {
 
         return returnString;
     }
-
-    public Map<String, String> getConfig(String inUserConfig) {
+    public static String capitalize(String input) {
+        return input.substring(0, 1).toUpperCase() + input.substring(1).toLowerCase();
+    }
+    public static Map<String, String> getConfig(String inUserConfig) {
         Map<String, String> map = new HashMap<>();
         String loggerTag = "getConfig";
         String defaultSparkConf = "{\"Key\":\"default\",\"Value\":\"default\"))}";

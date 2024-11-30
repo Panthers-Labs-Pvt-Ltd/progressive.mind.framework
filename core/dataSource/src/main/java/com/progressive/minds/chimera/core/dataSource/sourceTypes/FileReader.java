@@ -1,6 +1,6 @@
 package com.progressive.minds.chimera.core.dataSource.sourceTypes;
 import java.util.Locale;
-import com.progressive.minds.chimera.core.dataSource.modal.data.DataReader;
+import com.progressive.minds.chimera.core.dataSource.modal.DataReader;
 import com.progressive.minds.chimera.core.dataSource.formats.files.*;
 import com.progressive.minds.chimera.core.logger.ChimeraLogger;
 import org.apache.spark.sql.Dataset;
@@ -78,36 +78,4 @@ public class FileReader implements DataReader.Files {
         }
         return dataFrame;
     }
-}/*
-    *//**
-     * @param inSourceType
-     * @param inSparkSession
-     * @param inPipelineName
-     * @param inDatabaseName
-     * @param inTableName
-     * @param inSourceDataFrame
-     * @param inOutputPath
-     * @param inSubFormat
-     * @param inSavingMode
-     * @param inPartitioningKeys
-     * @param inSortingKeys
-     * @param inDuplicationKeys
-     * @param inExtraColumns
-     * @param inExtraColumnsValues
-     * @param inCustomConfig
-     * @param inCompressionFormat
-     * @return
-     *//*
-         public Dataset<Row> read(String inSourceType, SparkSession inSparkSession, String inPipelineName,
-                             String inDatabaseNm, String inTableNm, String inColumnFilter, String inRowFilter,
-                             String inCustomConfig)
-    @Override
-    public Dataset<Row> write(String inSourceType, SparkSession inSparkSession, String inPipelineName,
-                              String inDatabaseName, String inTableName, Dataset<Row> inSourceDataFrame,
-                              String inOutputPath, String inSubFormat, String inSavingMode, String inPartitioningKeys,
-                              String inSortingKeys, String inDuplicationKeys, String inExtraColumns,
-                              String inExtraColumnsValues, String inCustomConfig, String inCompressionFormat) {
-        return null;
-    }
 }
-*/

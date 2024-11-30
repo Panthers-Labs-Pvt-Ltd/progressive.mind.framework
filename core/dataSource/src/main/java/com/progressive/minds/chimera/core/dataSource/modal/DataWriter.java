@@ -1,9 +1,8 @@
-package com.progressive.minds.chimera.core.dataSource.modal.data;
+package com.progressive.minds.chimera.core.dataSource.modal;
 
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
-import org.apache.spark.sql.types.StructType;
 
 public interface DataWriter {
     interface Files {
@@ -14,9 +13,8 @@ public interface DataWriter {
                            String inCompressionFormat) throws Exception;
     }
     interface Databases {
-        Dataset<Row> write(String inSourceType, SparkSession inSparkSession, String inPipelineName, String inDatabaseNm,
-                           String inTableNm, String inColumnFilter, String inRowFilter, String inCustomConfig);
-
+        boolean write(String inSourceType, Dataset<Row> inSourceDataFrame,String inDataSourceNm,
+                      String inDatabaseName, String inTableName, String inSaveMode, String inCustomConf) throws Exception;
     }
     interface OpenTables {
         void openTableFormatsDatawrite();
