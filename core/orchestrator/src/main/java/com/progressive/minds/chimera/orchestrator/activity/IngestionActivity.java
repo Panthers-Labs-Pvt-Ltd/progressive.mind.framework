@@ -4,7 +4,8 @@ import io.temporal.activity.ActivityInterface;
 
 @ActivityInterface
 public interface IngestionActivity {
-    void fetchData(String dataSource);
 
-    void writeToRawLayer(String data);
+  void fetchData(String dataSource);
+
+  void writeToRawLayer(String data);
 }

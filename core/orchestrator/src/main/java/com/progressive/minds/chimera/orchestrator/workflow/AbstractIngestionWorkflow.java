@@ -5,28 +5,28 @@ import io.temporal.workflow.Workflow;
 
 public abstract class AbstractIngestionWorkflow implements BaseWorkflow {
 
-    @Override
-    public void execute(String input) {
-        // Notify workflow started
-        notifyStart(input);
+  @Override
+  public void execute(String input) {
+    // Notify workflow started
+    notifyStart(input);
 
-        // Start child workflows in parallel for each data source
-        String[] dataSources = getDataSources(input);
-        for (String dataSource : dataSources) {
-            ChildWorkflow childWorkflow = Workflow.newChildWorkflowStub(ChildWorkflow.class);
-            Async.procedure(childWorkflow::executeChild, dataSource);
-        }
-
-        // Finalize and send metrics
-        trackMetrics();
-        notifyCompletion();
+    // Start child workflows in parallel for each data source
+    String[] dataSources = getDataSources(input);
+    for (String dataSource : dataSources) {
+      ChildWorkflow childWorkflow = Workflow.newChildWorkflowStub(ChildWorkflow.class);
+      Async.procedure(childWorkflow::executeChild, dataSource);
     }
 
-    protected abstract void notifyStart(String input);
+    // Finalize and send metrics
+    trackMetrics();
+    notifyCompletion();
+  }
 
-    protected abstract String[] getDataSources(String input);
+  protected abstract void notifyStart(String input);
 
-    protected abstract void trackMetrics();
+  protected abstract String[] getDataSources(String input);
 
-    protected abstract void notifyCompletion();
+  protected abstract void trackMetrics();
+
+  protected abstract void notifyCompletion();
 }

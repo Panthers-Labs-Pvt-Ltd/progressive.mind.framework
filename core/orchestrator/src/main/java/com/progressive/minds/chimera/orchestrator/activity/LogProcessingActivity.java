@@ -4,5 +4,6 @@ import io.temporal.activity.ActivityInterface;
 
 @ActivityInterface
 public interface LogProcessingActivity {
-    void aggregateLogs();
+
+  void aggregateLogs();
 }

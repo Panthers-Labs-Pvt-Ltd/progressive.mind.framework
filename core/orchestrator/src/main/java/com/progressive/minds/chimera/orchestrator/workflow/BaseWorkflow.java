@@ -6,6 +6,6 @@ import io.temporal.workflow.WorkflowMethod;
 @WorkflowInterface
 public interface BaseWorkflow {
 
-    @WorkflowMethod
-    void execute(String input);
+  @WorkflowMethod
+  void execute(String input);
 }

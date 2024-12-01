@@ -5,19 +5,20 @@ import io.temporal.workflow.Workflow;
 
 public abstract class AbstractChildWorkflow implements ChildWorkflow {
 
-    private final IngestionActivity ingestionActivity = Workflow.newActivityStub(IngestionActivity.class);
+  private final IngestionActivity ingestionActivity = Workflow.newActivityStub(
+      IngestionActivity.class);
 
-    @Override
-    public void executeChild(String dataSource) {
-        // Fetch data
-        ingestionActivity.fetchData(dataSource);
+  @Override
+  public void executeChild(String dataSource) {
+    // Fetch data
+    ingestionActivity.fetchData(dataSource);
 
-        // Process data
-        String data = processData(dataSource);
+    // Process data
+    String data = processData(dataSource);
 
-        // Write to raw layer
-        ingestionActivity.writeToRawLayer(data);
-    }
+    // Write to raw layer
+    ingestionActivity.writeToRawLayer(data);
+  }
 
-    protected abstract String processData(String dataSource);
+  protected abstract String processData(String dataSource);
 }
