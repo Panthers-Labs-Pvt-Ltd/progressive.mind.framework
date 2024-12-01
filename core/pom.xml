@@ -22,5 +22,6 @@
         <module>performanceMatrices</module>
 -->
         <module>kaggle</module>
+        <module>orchestrator</module>
     </modules>
 </project>
