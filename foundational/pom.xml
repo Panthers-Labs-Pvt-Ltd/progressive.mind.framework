@@ -14,6 +14,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>utilities</module>
+        <module>exception</module>
     </modules>
 
 
