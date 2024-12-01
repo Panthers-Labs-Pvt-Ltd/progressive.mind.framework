@@ -57,9 +57,6 @@
 
 
     <properties>
-
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
         <!-- Recovery dependencies -->
         <apache.httpcomponents.httpcore.version>4.4.14</apache.httpcomponents.httpcore.version>
         <apache.httpcomponents.httpclient.version>4.5.14</apache.httpcomponents.httpclient.version>
@@ -69,7 +66,6 @@
 
         <!--Hibernate dependencies-->
         <sqlite.jdbc.version>3.25.2</sqlite.jdbc.version>
-        <hibernate.version>5.2.16.Final</hibernate.version>
         <sqlite.dialect.version>0.1.2</sqlite.dialect.version>
         <hibernate.version>5.2.16.Final</hibernate.version>
         <jackson.dataformat.csv.version>2.3.0</jackson.dataformat.csv.version>
@@ -545,6 +541,7 @@
     </build>
     <modules>
         <module>core</module>
+        <module>foundational</module>
 
     </modules>
 </project>
