@@ -3,7 +3,7 @@ package com.progressive.minds.chimera.core.dataSource.sourceTypes;
 import com.progressive.minds.chimera.core.databaseOps.utility.CloudCredentials;
 import com.progressive.minds.chimera.core.dataSource.formats.jdbc.jdbc;
 import com.progressive.minds.chimera.core.dataSource.modal.DataReader;
-import com.progressive.minds.chimera.core.logger.ChimeraLogger;
+import com.progressive.minds.chimera.foundational.logger.logger.ChimeraLogger;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;

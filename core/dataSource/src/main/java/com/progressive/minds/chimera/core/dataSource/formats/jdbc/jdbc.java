@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import com.progressive.minds.chimera.core.logger.ChimeraLogger;
+import com.progressive.minds.chimera.foundational.logger.logger.ChimeraLogger;
 import static com.progressive.minds.chimera.core.dataSource.utility.commonFunctions.*;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;

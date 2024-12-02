@@ -14,7 +14,7 @@ import java.util.Arrays;
 import java.util.Map;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.progressive.minds.chimera.core.logger.ChimeraLogger;
+import com.progressive.minds.chimera.foundational.logger.logger.ChimeraLogger;
 import org.apache.spark.sql.*;
 import org.apache.spark.sql.types.*;
 import static org.apache.spark.sql.functions.*;

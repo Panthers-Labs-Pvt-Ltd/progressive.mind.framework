@@ -1,4 +1,4 @@
-package com.progressive.minds.chimera.core.logger;
+package com.progressive.minds.chimera.foundational.logger.logger;
 
 
 import org.apache.logging.log4j.LogManager;
