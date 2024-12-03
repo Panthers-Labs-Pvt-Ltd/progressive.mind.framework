@@ -1,4 +1,4 @@
-package com.progressive.minds.chimera.core.orchestrator;
+package com.progressive.minds.chimera.core.orchestrator.worker;
 
 import com.progressive.minds.chimera.core.orchestrator.activity.impl.IngestionActivityImpl;
 import com.progressive.minds.chimera.core.orchestrator.activity.impl.LogProcessingActivityImpl;
