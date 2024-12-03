@@ -142,6 +142,13 @@
     </properties>
     <!--<repositories><repository><id>gitlab-maven</id><url>https://gitlab.com/manishkumargupta/TestScala.git</url></repository></repositories><distributionManagement><repository><id>gitlab-maven</id><url>https://gitlab.com/manishkumargupta/TestScala.git</url></repository><snapshotRepository><id>gitlab-maven</id><url>https://gitlab.com/manishkumargupta/TestScala.git</url></snapshotRepository></distributionManagement>-->
     <dependencies>
+        <!-- https://mvnrepository.com/artifact/org.zalando/spark-json-schema -->
+        <dependency>
+            <groupId>org.zalando</groupId>
+            <artifactId>spark-json-schema_2.12</artifactId>
+            <version>0.6.3</version>
+        </dependency>
+
         <dependency>
             <groupId>com.google.cloud</groupId>
             <artifactId>google-cloud-secretmanager</artifactId>
