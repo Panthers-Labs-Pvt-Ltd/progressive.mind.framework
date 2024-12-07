@@ -25,7 +25,8 @@ public interface DataReader {
     }
 
     interface NOSQL {
-        void noSQLDatabasesData();
+         Dataset<Row> read(String inSourceType, SparkSession inSparkSession, String inUrl,
+                                 String inCollectionNm, String inCustomConf) throws Exception;
     }
 }
 

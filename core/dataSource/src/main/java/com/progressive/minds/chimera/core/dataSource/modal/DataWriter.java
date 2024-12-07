@@ -20,8 +20,11 @@ public interface DataWriter {
         void openTableFormatsDatawrite();
     }
     interface NOSQL {
-        void noSQLDatabasesDatawrite();
-    }
+        Dataset<Row> write(String inSourceType, SparkSession inSparkSession, String inPipelineName,
+                           String inDatabaseName, String inTableName, Dataset<Row> inSourceDataFrame,
+                           String inOutputPath, String inSavingMode, String inPartitioningKeys,
+                           String inSortingKeys, String inDuplicationKeys, String inExtraColumns,
+                           String inExtraColumnsValues, String inCustomConfig, String inCompressionFormat) throws Exception;    }
 
 
 
