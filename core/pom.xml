@@ -21,6 +21,6 @@
         <module>performanceMatrices</module>
 -->
         <module>orchestrator</module>
-        <module>executionEngine</module>
+        <module>observability</module>
     </modules>
 </project>
