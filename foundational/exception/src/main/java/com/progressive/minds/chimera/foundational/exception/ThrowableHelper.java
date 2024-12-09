@@ -1,6 +1,5 @@
 package com.progressive.minds.chimera.foundational.exception;
 
-import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.util.MinimalPrettyPrinter;
 
 import java.io.IOException;
@@ -9,6 +8,7 @@ import java.util.*;
 import static com.progressive.minds.chimera.foundational.chimeraUtils.ChimeraUtils.*;
 
 
+import com.fasterxml.jackson.core.JsonGenerator;
 public class ThrowableHelper {
 
     private static final ErrorClassesJsonReader errorReader = new ErrorClassesJsonReader(

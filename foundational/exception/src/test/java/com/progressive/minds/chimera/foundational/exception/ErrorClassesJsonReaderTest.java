@@ -9,18 +9,19 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.progressive.minds.chimera.foundational.chimeraUtils.ChimeraUtils.getSparkClassLoader;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class ErrorClassesJsonReaderTest {
 
     private ErrorClassesJsonReader errorClassesJsonReader;
-    private URL mockUrl;
 
     @BeforeEach
     void setUp() {
-        mockUrl = Mockito.mock(URL.class);
-        errorClassesJsonReader = new ErrorClassesJsonReader(Collections.singletonList(mockUrl));
+        errorClassesJsonReader = new ErrorClassesJsonReader(
+                Collections.singletonList(
+                        this.getClass().getClassLoader().getResource("test_errors.json")));
     }
 
     @Test

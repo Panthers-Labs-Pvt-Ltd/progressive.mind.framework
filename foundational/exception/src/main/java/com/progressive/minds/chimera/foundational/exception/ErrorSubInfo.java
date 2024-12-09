@@ -9,7 +9,7 @@ public class ErrorSubInfo {
 
     @JsonIgnore
     public String getMessageTemplate() {
-        return String.join("\n", message);
+        return (message != null) ? String.join("\n", message) : "";
     }
 
     public List<String> getMessage() {
