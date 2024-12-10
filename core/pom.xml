@@ -20,6 +20,8 @@
 <!--
         <module>performanceMatrices</module>
 -->
-        <module>orchestrator</module>
+        <module>orchestration-service</module>
+        <module>flink-service</module>
+        <module>decision-engine</module>
     </modules>
 </project>
