@@ -1,7 +1,7 @@
 {
   "DataSourceException": {
     "message": [
-      "Error Generated Due to Framework -DataSourceException Exception"
+      "Error Generated Due to Framework -DataSourceException Exception. "
     ],
     "subClass": {
       "InvalidInputParameter": {
@@ -54,6 +54,7 @@
           "Error Occurred while writing to data source"
         ]
       }
-    }
+    },
+    "sqlState" : "42704"
   }
 }

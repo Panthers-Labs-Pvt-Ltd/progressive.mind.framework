@@ -23,7 +23,7 @@ public class ThrowableHelper {
         String displayMessage = errorReader.getErrorMessage(errorClass, messageParameters);
         String displayQueryContext = context.isEmpty() ? "" : "\n" + context;
         String prefix = errorClass.startsWith("_LEGACY_ERROR_TEMP_") ? "" : "[" + errorClass + "] ";
-        return prefix + displayMessage + displayQueryContext;
+        return prefix + displayMessage + getSqlState(errorClass) + displayQueryContext;
     }
 
     public static String getSqlState(String errorClass) {

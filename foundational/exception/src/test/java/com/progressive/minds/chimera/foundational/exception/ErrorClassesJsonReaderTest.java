@@ -28,8 +28,8 @@ class ErrorClassesJsonReaderTest {
     void getErrorMessage_withValidErrorClassAndParameters_returnsFormattedMessage() {
         Map<String, String> params = new HashMap<>();
         params.put("param1", "value1");
-        String result = errorClassesJsonReader.getErrorMessage("mainErrorClass", params);
-        assertEquals("Expected formatted message", result);
+        String result = errorClassesJsonReader.getErrorMessage("DataSourceException", params);
+        assertEquals("Error Generated Due to Framework -DataSourceException Exception", result);
     }
 
     @Test
@@ -41,7 +41,7 @@ class ErrorClassesJsonReaderTest {
 
     @Test
     void getMessageTemplate_withValidErrorClass_returnsTemplate() {
-        String result = errorClassesJsonReader.getMessageTemplate("mainErrorClass");
+        String result = errorClassesJsonReader.getMessageTemplate("DataSourceException");
         assertEquals("Expected message template", result);
     }
 
@@ -52,8 +52,8 @@ class ErrorClassesJsonReaderTest {
 
     @Test
     void getSqlState_withValidErrorClass_returnsSqlState() {
-        String result = errorClassesJsonReader.getSqlState("mainErrorClass");
-        assertEquals("Expected SQL state", result);
+        String result = errorClassesJsonReader.getSqlState("DataSourceException");
+        assertEquals("42704", result);
     }
 
     @Test
