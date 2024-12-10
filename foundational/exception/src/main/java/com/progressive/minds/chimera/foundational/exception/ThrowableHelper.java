@@ -1,6 +1,5 @@
 package com.progressive.minds.chimera.foundational.exception;
 
-import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.util.MinimalPrettyPrinter;
 
 import java.io.IOException;
@@ -9,6 +8,7 @@ import java.util.*;
 import static com.progressive.minds.chimera.foundational.chimeraUtils.ChimeraUtils.*;
 
 
+import com.fasterxml.jackson.core.JsonGenerator;
 public class ThrowableHelper {
 
     private static final ErrorClassesJsonReader errorReader = new ErrorClassesJsonReader(
@@ -23,7 +23,7 @@ public class ThrowableHelper {
         String displayMessage = errorReader.getErrorMessage(errorClass, messageParameters);
         String displayQueryContext = context.isEmpty() ? "" : "\n" + context;
         String prefix = errorClass.startsWith("_LEGACY_ERROR_TEMP_") ? "" : "[" + errorClass + "] ";
-        return prefix + displayMessage + displayQueryContext;
+        return prefix + displayMessage + getSqlState(errorClass) + displayQueryContext;
     }
 
     public static String getSqlState(String errorClass) {

@@ -549,5 +549,6 @@
     <modules>
         <module>foundational</module>
         <module>core</module>
+        <module>core/executionEngine</module>
     </modules>
 </project>

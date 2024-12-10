@@ -25,6 +25,7 @@ public class ErrorClassesJsonReader {
                     map1.putAll(map2);
                     return map1;
                 });
+        System.out.print("Error classes: " + errorInfoMap);
     }
 
     public String getErrorMessage(String errorClass, Map<String, String> messageParameters) {

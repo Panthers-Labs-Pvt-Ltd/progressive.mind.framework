@@ -9,26 +9,27 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.progressive.minds.chimera.foundational.chimeraUtils.ChimeraUtils.getSparkClassLoader;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class ErrorClassesJsonReaderTest {
 
     private ErrorClassesJsonReader errorClassesJsonReader;
-    private URL mockUrl;
 
     @BeforeEach
     void setUp() {
-        mockUrl = Mockito.mock(URL.class);
-        errorClassesJsonReader = new ErrorClassesJsonReader(Collections.singletonList(mockUrl));
+        errorClassesJsonReader = new ErrorClassesJsonReader(
+                Collections.singletonList(
+                        this.getClass().getClassLoader().getResource("test_errors.json")));
     }
 
     @Test
     void getErrorMessage_withValidErrorClassAndParameters_returnsFormattedMessage() {
         Map<String, String> params = new HashMap<>();
         params.put("param1", "value1");
-        String result = errorClassesJsonReader.getErrorMessage("mainErrorClass", params);
-        assertEquals("Expected formatted message", result);
+        String result = errorClassesJsonReader.getErrorMessage("DataSourceException", params);
+        assertEquals("Error Generated Due to Framework -DataSourceException Exception", result);
     }
 
     @Test
@@ -40,7 +41,7 @@ class ErrorClassesJsonReaderTest {
 
     @Test
     void getMessageTemplate_withValidErrorClass_returnsTemplate() {
-        String result = errorClassesJsonReader.getMessageTemplate("mainErrorClass");
+        String result = errorClassesJsonReader.getMessageTemplate("DataSourceException");
         assertEquals("Expected message template", result);
     }
 
@@ -51,8 +52,8 @@ class ErrorClassesJsonReaderTest {
 
     @Test
     void getSqlState_withValidErrorClass_returnsSqlState() {
-        String result = errorClassesJsonReader.getSqlState("mainErrorClass");
-        assertEquals("Expected SQL state", result);
+        String result = errorClassesJsonReader.getSqlState("DataSourceException");
+        assertEquals("42704", result);
     }
 
     @Test
