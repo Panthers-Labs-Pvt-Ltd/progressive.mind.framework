@@ -5,7 +5,7 @@ import io.temporal.client.WorkflowClient;
 import io.temporal.client.WorkflowOptions;
 import io.temporal.serviceclient.WorkflowServiceStubs;
 
-public class DecisionEngineClient implements BaseWorkflow {
+public class DecisionEngineClient  {
   public static void main(String[] args) {
     WorkflowServiceStubs serviceStub = WorkflowServiceStubs.newLocalServiceStubs();
 
@@ -18,10 +18,7 @@ public class DecisionEngineClient implements BaseWorkflow {
     BaseWorkflow workflow = client.newWorkflowStub(BaseWorkflow.class, options);
     String folder="/home/manish/Chimera/core/dataSource/src/test/resources/flight_parquet";
     WorkflowClient.start(workflow::execute, folder);
+    System.exit(0);
   }
 
-  @Override
-  public void execute(String input) {
-    System.out.println("Total Records from base workflow execute " + 100);
-  }
 }
