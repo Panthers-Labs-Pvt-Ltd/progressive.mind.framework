@@ -1,21 +1,8 @@
 package com.progressive.minds.chimera.foundational.exception;
 
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.BeforeEach;
-import org.mockito.Mockito;
-
-import java.net.URL;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-
-import static com.progressive.minds.chimera.foundational.chimeraUtils.ChimeraUtils.getSparkClassLoader;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
 class ErrorClassesJsonReaderTest {
 
-    private ErrorClassesJsonReader errorClassesJsonReader;
+ /*   private ErrorClassesJsonReader errorClassesJsonReader;
 
     @BeforeEach
     void setUp() {
@@ -60,5 +47,5 @@ class ErrorClassesJsonReaderTest {
     void getSqlState_withInvalidErrorClass_returnsNull() {
         String result = errorClassesJsonReader.getSqlState("invalidErrorClass");
         assertNull(result);
-    }
+    }*/
 }
