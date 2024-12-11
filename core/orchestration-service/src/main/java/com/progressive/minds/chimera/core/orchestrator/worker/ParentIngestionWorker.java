@@ -1,7 +1,6 @@
 package com.progressive.minds.chimera.core.orchestrator.worker;
 
 import com.progressive.minds.chimera.core.orchestrator.activity.impl.ChildIngestionActivityImpl;
-import com.progressive.minds.chimera.core.orchestrator.activity.impl.DecisionServiceActivityImpl;
 import com.progressive.minds.chimera.core.orchestrator.workflow.impl.ChildIngestionWorkflowImpl;
 import com.progressive.minds.chimera.core.orchestrator.workflow.impl.ParentIngestionWorkflowImpl;
 import io.temporal.client.WorkflowClient;
@@ -28,7 +27,7 @@ public class ParentIngestionWorker {
     worker.registerWorkflowImplementationTypes(ParentIngestionWorkflowImpl.class, ChildIngestionWorkflowImpl.class);
 
     // Register activities
-    worker.registerActivitiesImplementations(new DecisionServiceActivityImpl(), new ChildIngestionActivityImpl());
+    worker.registerActivitiesImplementations(new ChildIngestionActivityImpl());
 
     // Start the worker
     factory.start();
