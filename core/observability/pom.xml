@@ -9,8 +9,9 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>observability</artifactId>
-
+    <groupId>com.progressive.minds.chimera</groupId>
+    <artifactId>core.observability</artifactId>
+    <version>1.0-SNAPSHOT</version>
 <!--    <properties>-->
 <!--        <maven.compiler.source>23</maven.compiler.source>-->
 <!--        <maven.compiler.target>23</maven.compiler.target>-->

@@ -17,12 +17,11 @@
     <modules>
         <module>databaseOps</module>
         <module>dataSource</module>
-<!--
-        <module>performanceMatrices</module>
--->
         <module>observability</module>
         <module>orchestration-service</module>
         <module>flink-service</module>
         <module>decision-engine</module>
+        <module>temporal-example</module>
+        <module>apacheComet</module>
     </modules>
 </project>

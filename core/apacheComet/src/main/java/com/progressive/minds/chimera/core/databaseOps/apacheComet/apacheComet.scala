@@ -1,3 +1,4 @@
+/*
 package com.progressive.minds.chimera.core.databaseOps.apacheComet
 
 import org.apache.spark.sql.SparkSession
@@ -52,3 +53,4 @@ object apacheComet {
     stageMetrics.saveData(aggregatedDF, "/tmp/stagemetrics_report_test2")
   }
 }
+*/
