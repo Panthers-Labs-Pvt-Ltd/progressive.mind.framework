@@ -225,6 +225,12 @@
                 <version>3.5.0</version> <!-- Replace with your Spark version -->
             </dependency>
         <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-metrics</artifactId>
+            <version>3.5.0</version> <!-- Replace with your Spark version -->
+        </dependency>
+
+        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>2.0.9</version> <!-- Example latest -->
