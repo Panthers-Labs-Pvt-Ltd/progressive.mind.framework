@@ -57,7 +57,7 @@ CREATE TABLE IF NOT EXISTS chimera_data_sources_connections (
     active_flag VARCHAR(1) default 'Y' :: CHARACTER VARYING,
     CONSTRAINT pk_data_source_connections PRIMARY KEY (data_source_connection_name),
     CONSTRAINT fk_data_source_type FOREIGN KEY (data_source_type, data_source_sub_type) REFERENCES chimera_data_sources (data_source_type, data_source_sub_type)
-    ON UPDATE CASCADE ON DELETE CASCADE
+    ON delete CASCADE ON update CASCADE
 );
 
 COMMENT ON COLUMN chimera_data_sources_connections.data_source_connection_name IS 'Name of the data source connection';
@@ -141,9 +141,12 @@ CREATE TABLE IF NOT EXISTS chimera_extract_config (
     updated_timestamp TIMESTAMP,
     updated_by VARCHAR(255),
     active_flag VARCHAR(1) default 'Y' :: CHARACTER VARYING,
-    CONSTRAINT fk_pipeline_name FOREIGN KEY (pipeline_name) REFERENCES chimera_pipeline (pipeline_name),
-    CONSTRAINT fk_data_source_type FOREIGN KEY (data_source_type, data_source_sub_type) REFERENCES chimera_data_sources (data_source_type, data_source_sub_type),
+    CONSTRAINT fk_pipeline_name FOREIGN KEY (pipeline_name) REFERENCES chimera_pipeline (pipeline_name)
+     ON delete CASCADE ON update CASCADE,
+    CONSTRAINT fk_data_source_type FOREIGN KEY (data_source_type, data_source_sub_type) REFERENCES chimera_data_sources (data_source_type, data_source_sub_type)
+     ON delete CASCADE ON update CASCADE,
     CONSTRAINT fk_data_source_connection FOREIGN KEY (data_source_connection_name) REFERENCES chimera_data_sources_connections (data_source_connection_name)
+     ON delete CASCADE ON update CASCADE
 );
 
 COMMENT ON COLUMN chimera_extract_config.unique_id IS 'Unique ID for each source';
@@ -183,6 +186,7 @@ CREATE TABLE IF NOT EXISTS chimera_transform_config (
     updated_by VARCHAR(255),
     active_flag VARCHAR(1) default 'Y' :: CHARACTER VARYING,
     CONSTRAINT fk_pipeline_name FOREIGN KEY (pipeline_name) REFERENCES chimera_pipeline (pipeline_name)
+     ON delete CASCADE ON update CASCADE
 );
 
 COMMENT ON COLUMN chimera_transform_config.unique_id IS 'Unique ID for each transformation';
@@ -221,9 +225,12 @@ CREATE TABLE IF NOT EXISTS chimera_persist_config (
     updated_timestamp TIMESTAMP,
     updated_by VARCHAR(255),
      active_flag VARCHAR(1) default 'Y' :: CHARACTER VARYING,
-    CONSTRAINT fk_pipeline_name FOREIGN KEY (pipeline_name) REFERENCES chimera_pipeline (pipeline_name),
-    CONSTRAINT fk_data_sink_type FOREIGN KEY (data_sink_type, data_sink_sub_type) REFERENCES chimera_data_sources (data_source_type, data_source_sub_type),
+    CONSTRAINT fk_pipeline_name FOREIGN KEY (pipeline_name) REFERENCES chimera_pipeline (pipeline_name)
+     ON delete CASCADE ON update CASCADE,
+    CONSTRAINT fk_data_sink_type FOREIGN KEY (data_sink_type, data_sink_sub_type) REFERENCES chimera_data_sources (data_source_type, data_source_sub_type)
+     ON delete CASCADE ON update CASCADE,
     CONSTRAINT fk_data_source_connection FOREIGN KEY (data_source_connection_name) REFERENCES chimera_data_sources_connections (data_source_connection_name)
+     ON delete CASCADE ON update CASCADE
 );
 
 COMMENT ON COLUMN chimera_persist_config.unique_id IS 'Unique ID for each sink';
