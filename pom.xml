@@ -11,26 +11,41 @@
 
     <developers>
         <developer>
-            <id>0001</id><name>Kumar, Manish</name><email>manish.kumar.gupta@outlook.com</email>
+            <id>0001</id>
+            <name>Kumar, Manish</name>
+            <email>manish.kumar.gupta@outlook.com</email>
         </developer>
         <developer>
-            <id>0002</id><name>Mohit Ranjan</name><email>manish.kumar.gupta@outlook.com</email>
+            <id>0002</id>
+            <name>Mohit Ranjan</name>
+            <email>manish.kumar.gupta@outlook.com</email>
         </developer>
         <developer>
-            <id>0003</id><name>Prashant Kumar</name><email>manish.kumar.gupta@outlook.com</email>
+            <id>0003</id>
+            <name>Prashant Kumar</name>
+            <email>manish.kumar.gupta@outlook.com</email>
         </developer>
         <developer>
-            <id>0004</id><name>Vivek</name><email>manish.kumar.gupta@outlook.com</email>
+            <id>0004</id>
+            <name>Vivek</name>
+            <email>manish.kumar.gupta@outlook.com</email>
         </developer>
         <developer>
-            <id>0005</id><name>Abhinav</name><email>manish.kumar.gupta@outlook.com</email>
+            <id>0005</id>
+            <name>Abhinav</name>
+            <email>manish.kumar.gupta@outlook.com</email>
         </developer>
     </developers>
     <inceptionYear>2024</inceptionYear>
     <name>Chimera Data Engineering</name>
-    <description> Data Engineering</description>
+    <description>Data Engineering</description>
     <packaging>pom</packaging>
 
+    <modules>
+        <module>common</module>
+        <module>foundational</module>
+        <module>core</module>
+    </modules>
 
     <dependencyManagement>
         <dependencies>
@@ -42,17 +57,17 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-                <dependency>
-                    <groupId>org.slf4j</groupId>
-                    <artifactId>slf4j-api</artifactId>
-                    <version>2.0.9</version> <!-- Example latest -->
-                </dependency>
-                <dependency>
-                    <groupId>org.slf4j</groupId>
-                    <artifactId>slf4j-simple</artifactId> <!-- Or your chosen binding -->
-                    <version>2.0.9</version>
-                </dependency>
-            </dependencies>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>2.0.9</version> <!-- Example latest -->
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-simple</artifactId> <!-- Or your chosen binding -->
+                <version>2.0.9</version>
+            </dependency>
+        </dependencies>
     </dependencyManagement>
 
 
@@ -198,18 +213,18 @@
             <artifactId>spark-streaming_2.12</artifactId>
             <version>3.5.0</version>
         </dependency>
-            <!-- Spark Core -->
-            <dependency>
-                <groupId>org.apache.spark</groupId>
-                <artifactId>spark-core_2.12</artifactId>
-                <version>3.5.0</version> <!-- Replace with your Spark version -->
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.slf4j</groupId>
-                        <artifactId>slf4j-log4j12</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
+        <!-- Spark Core -->
+        <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-core_2.12</artifactId>
+            <version>3.5.0</version> <!-- Replace with your Spark version -->
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-log4j12</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
 
         <!-- https://mvnrepository.com/artifact/ch.cern.sparkmeasure/spark-measure -->
         <dependency>
@@ -219,17 +234,11 @@
         </dependency>
 
         <!-- Spark SQL -->
-            <dependency>
-                <groupId>org.apache.spark</groupId>
-                <artifactId>spark-sql_2.12</artifactId>
-                <version>3.5.0</version> <!-- Replace with your Spark version -->
-            </dependency>
         <dependency>
             <groupId>org.apache.spark</groupId>
-            <artifactId>spark-metrics</artifactId>
+            <artifactId>spark-sql_2.12</artifactId>
             <version>3.5.0</version> <!-- Replace with your Spark version -->
         </dependency>
-
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
@@ -244,7 +253,7 @@
         <!-- https://mvnrepository.com/artifact/com.ebiznext/comet-spark3 -->
         <!-- https://mvnrepository.com/artifact/org.apache.datafusion/comet-spark-integration-spark3.5 -->
         <!-- https://mvnrepository.com/artifact/org.apache.datafusion/comet-spark-integration-spark3.5 -->
-       <dependency>
+        <dependency>
             <groupId>org.apache.datafusion</groupId>
             <artifactId>comet-spark-spark3.5_2.12</artifactId>
             <version>0.4.0</version>
@@ -254,15 +263,15 @@
             <artifactId>httpclient5</artifactId>
             <version>5.2</version>
         </dependency>
-<!--
+        <!--
 
-        &lt;!&ndash; https://mvnrepository.com/artifact/com.ebiznext/comet-spark3 &ndash;&gt;
-        <dependency>
-            <groupId>com.ebiznext</groupId>
-            <artifactId>comet-spark3_2.12</artifactId>
-            <version>0.2.6</version>
-        </dependency>
--->
+                &lt;!&ndash; https://mvnrepository.com/artifact/com.ebiznext/comet-spark3 &ndash;&gt;
+                <dependency>
+                    <groupId>com.ebiznext</groupId>
+                    <artifactId>comet-spark3_2.12</artifactId>
+                    <version>0.2.6</version>
+                </dependency>
+        -->
 
 
         <!-- https://mvnrepository.com/artifact/io.findify/s3mock -->
@@ -384,7 +393,7 @@
     <build>
         <plugins>
             <plugin>
-                  <groupId>org.sonarsource.scanner.maven</groupId>
+                <groupId>org.sonarsource.scanner.maven</groupId>
                 <artifactId>sonar-maven-plugin</artifactId>
                 <version>3.0.1</version>
             </plugin>
@@ -552,9 +561,5 @@
             </plugin>-->
         </plugins>
     </build>
-    <modules>
-        <module>foundational</module>
-        <module>core</module>
-        <module>core/executionEngine</module>
-    </modules>
+
 </project>
