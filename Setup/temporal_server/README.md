@@ -26,3 +26,8 @@ docker-compose up
 > ⚠️ If you are on an M1 Mac, note that Temporal v1.12 to v1.14 had fatal issues with ARM builds. v1.14.2 onwards should be fine for M1 Macs.
 
 After the Server has started, you can open the Temporal Web UI in your browser: [http://localhost:8080](http://localhost:8080).
+
+Temporal Server Metrics [localhost:8000/metrics]()
+
+Import server-general.json in grafana dashboard:  http://localhost:8085/
+
