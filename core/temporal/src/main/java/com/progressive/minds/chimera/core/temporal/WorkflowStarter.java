@@ -5,7 +5,6 @@ import io.temporal.client.WorkflowOptions;
 import io.temporal.serviceclient.WorkflowServiceStubs;
 import com.progressive.minds.chimera.core.temporal.controller.IngestionWorkflow;
 
-// https://chatgpt.com/share/675dd54d-212c-800c-b484-1b4cae9b22e6
 public class WorkflowStarter {
     public static void main(String[] args) {
         // Create service and client
