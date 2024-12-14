@@ -1,0 +1,15 @@
+#using Kubernetes, deploy the Prometheus Operator, which simplifies configuration with ServiceMonitor resources.
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: spark-monitor
+  labels:
+    app: spark
+spec:
+  selector:
+    matchLabels:
+      app: spark
+  endpoints:
+    - port: metrics
+      path: /metrics/prometheus
+      interval: 10s
