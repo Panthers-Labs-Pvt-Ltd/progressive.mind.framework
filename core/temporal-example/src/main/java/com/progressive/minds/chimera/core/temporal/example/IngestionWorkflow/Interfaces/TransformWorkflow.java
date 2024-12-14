@@ -5,6 +5,29 @@ import io.temporal.workflow.WorkflowMethod;
 
 @WorkflowInterface
 public interface TransformWorkflow {
+    // Input Data
     @WorkflowMethod
-    void executeTransform();
+    void getInputDatasets();
+
+    @WorkflowMethod
+    boolean validateInputDatasets();
+
+    // To Add the Batch details
+    @WorkflowMethod
+    boolean init();
+
+    // Control Checks on Output Data
+    @WorkflowMethod
+    boolean controlChecks();
+
+    // Execution
+    @WorkflowMethod
+    boolean execute();
+
+    @WorkflowMethod
+    boolean isIdempotent();
+
+    @WorkflowMethod
+    void monitorPipeline();
+
 }

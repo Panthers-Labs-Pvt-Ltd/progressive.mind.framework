@@ -4,13 +4,61 @@ import com.progressive.minds.chimera.core.temporal.example.IngestionWorkflow.Int
 import io.temporal.workflow.Workflow;
 
 public class LoadWorkflowImpl implements LoadWorkflow {
+
+    /**
+     *
+     */
     @Override
-    public void executeLoad() {
+    public void getInputDatasets() {
         Workflow.getLogger(LoadWorkflowImpl.class).info("Executing LoadWorkflowImpl workflow.");
-        // Simulate extraction logic here
-        // e.g., Extract data from a database or file
-        Workflow.getLogger(LoadWorkflowImpl.class).info("LoadWorkflowImpl completed.");
+
     }
 
+    /**
+     * @return
+     */
+    @Override
+    public boolean validateInputDatasets() {
+        return false;
+    }
 
+    /**
+     * @return
+     */
+    @Override
+    public boolean init() {
+        return false;
+    }
+
+    /**
+     * @return
+     */
+    @Override
+    public boolean controlChecks() {
+        return false;
+    }
+
+    /**
+     * @return
+     */
+    @Override
+    public boolean execute() {
+        return false;
+    }
+
+    /**
+     * @return
+     */
+    @Override
+    public boolean isIdempotent() {
+        return false;
+    }
+
+    /**
+     *
+     */
+    @Override
+    public void monitorPipeline() {
+
+    }
 }

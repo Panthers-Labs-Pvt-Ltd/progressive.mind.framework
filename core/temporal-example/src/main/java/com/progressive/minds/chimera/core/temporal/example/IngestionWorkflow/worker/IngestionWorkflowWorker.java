@@ -6,7 +6,7 @@ import io.temporal.worker.WorkerFactory;
 import io.temporal.serviceclient.WorkflowServiceStubs;
 import io.temporal.client.WorkflowClient;
 
-public class WorkflowWorker {
+public class IngestionWorkflowWorker {
     public static void main(String[] args) {
         // Connect to Temporal service
         WorkflowServiceStubs service = WorkflowServiceStubs.newInstance();

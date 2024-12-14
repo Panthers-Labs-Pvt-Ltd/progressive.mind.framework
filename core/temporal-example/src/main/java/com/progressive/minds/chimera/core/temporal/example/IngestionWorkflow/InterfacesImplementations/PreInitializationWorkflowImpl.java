@@ -5,11 +5,60 @@ import com.progressive.minds.chimera.core.temporal.example.IngestionWorkflow.Int
 import io.temporal.workflow.Workflow;
 
 public class PreInitializationWorkflowImpl implements PreInitializationWorkflow {
+
+    /**
+     *
+     */
     @Override
-    public void executePreInitialization() {
+    public void getInputDatasets() {
         Workflow.getLogger(PreInitializationWorkflowImpl.class).info("Executing executePreInitialization workflow.");
-        // Simulate extraction logic here
-        // e.g., Extract data from a database or file
-        Workflow.getLogger(PreInitializationWorkflowImpl.class).info("executePreInitialization completed.");
+    }
+
+    /**
+     * @return
+     */
+    @Override
+    public boolean validateInputDatasets() {
+        return false;
+    }
+
+    /**
+     * @return
+     */
+    @Override
+    public boolean init() {
+        return false;
+    }
+
+    /**
+     * @return
+     */
+    @Override
+    public boolean controlChecks() {
+        return false;
+    }
+
+    /**
+     * @return
+     */
+    @Override
+    public boolean execute() {
+        return false;
+    }
+
+    /**
+     * @return
+     */
+    @Override
+    public boolean isIdempotent() {
+        return false;
+    }
+
+    /**
+     *
+     */
+    @Override
+    public void monitorPipeline() {
+
     }
 }

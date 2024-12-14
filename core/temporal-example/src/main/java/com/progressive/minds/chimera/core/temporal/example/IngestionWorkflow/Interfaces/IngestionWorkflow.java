@@ -5,6 +5,7 @@ import io.temporal.workflow.WorkflowMethod;
 
 @WorkflowInterface
 public interface IngestionWorkflow {
+    // Input Data
     @WorkflowMethod
-    void executeIngestionWorkflow();
+    boolean executeIngestionWorkflow(String inputEvent);
 }
