@@ -1,4 +1,4 @@
-package com.progressive.minds.chimera.core.temporal.example;
+package com.progressive.minds.chimera.core.temporal.example.workflow;
 
 import io.temporal.workflow.ChildWorkflowOptions;
 import io.temporal.workflow.Workflow;

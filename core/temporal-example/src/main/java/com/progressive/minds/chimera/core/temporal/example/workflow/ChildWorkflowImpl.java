@@ -1,4 +1,5 @@
-package com.progressive.minds.chimera.core.temporal.example;
+package com.progressive.minds.chimera.core.temporal.example.workflow;
+
 
 
 public class ChildWorkflowImpl implements ChildWorkflow {

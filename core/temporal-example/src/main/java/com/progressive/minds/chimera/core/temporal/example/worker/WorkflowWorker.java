@@ -1,5 +1,7 @@
-package com.progressive.minds.chimera.core.temporal.example;
+package com.progressive.minds.chimera.core.temporal.example.worker;
 
+import com.progressive.minds.chimera.core.temporal.example.workflow.ChildWorkflowImpl;
+import com.progressive.minds.chimera.core.temporal.example.workflow.ParentWorkflowImpl;
 import io.temporal.worker.Worker;
 import io.temporal.worker.WorkerFactory;
 import io.temporal.serviceclient.WorkflowServiceStubs;
