@@ -1,5 +1,3 @@
-package com.progressive.minds.chimera.core.temporal.example;
-
 import io.temporal.activity.ActivityOptions;
 import io.temporal.workflow.Workflow;
 

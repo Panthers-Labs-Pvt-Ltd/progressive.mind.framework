@@ -1,5 +1,3 @@
-package com.progressive.minds.chimera.core.temporal.example;
-
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.List;

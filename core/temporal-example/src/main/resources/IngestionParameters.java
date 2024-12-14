@@ -1,5 +1,3 @@
-package com.progressive.minds.chimera.core.temporal.example;
-
 import java.util.Map;
 
 public class IngestionParameters {
