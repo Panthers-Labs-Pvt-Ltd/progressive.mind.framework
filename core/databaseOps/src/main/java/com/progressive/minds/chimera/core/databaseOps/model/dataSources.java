@@ -1,5 +1,6 @@
 package com.progressive.minds.chimera.core.databaseOps.model;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 /**
@@ -12,15 +13,15 @@ public class dataSources {
     private String description;
     private String readDefaults;
     private String writeDefaults;
-    private LocalDateTime createdTimestamp;
+    private Timestamp createdTimestamp;
     private String createdBy;
-    private LocalDateTime updatedTimestamp;
+    private Timestamp updatedTimestamp;
     private String updatedBy;
     private String activeFlag;
 
     public dataSources(String dataSourceType, String dataSourceSubType, String description, String readDefaults,
-                             String writeDefaults, LocalDateTime createdTimestamp, String createdBy,
-                             LocalDateTime updatedTimestamp, String updatedBy, String activeFlag) {
+                             String writeDefaults, Timestamp createdTimestamp, String createdBy,
+                             Timestamp updatedTimestamp, String updatedBy, String activeFlag) {
         this.dataSourceType = dataSourceType;
         this.dataSourceSubType = dataSourceSubType;
         this.description = description;
@@ -78,11 +79,11 @@ public class dataSources {
         this.writeDefaults = writeDefaults;
     }
 
-    public LocalDateTime getCreatedTimestamp() {
+    public Timestamp getCreatedTimestamp() {
         return createdTimestamp;
     }
 
-    public void setCreatedTimestamp(LocalDateTime createdTimestamp) {
+    public void setCreatedTimestamp(Timestamp createdTimestamp) {
         this.createdTimestamp = createdTimestamp;
     }
 
@@ -94,11 +95,11 @@ public class dataSources {
         this.createdBy = createdBy;
     }
 
-    public LocalDateTime getUpdatedTimestamp() {
+    public Timestamp getUpdatedTimestamp() {
         return updatedTimestamp;
     }
 
-    public void setUpdatedTimestamp(LocalDateTime updatedTimestamp) {
+    public void setUpdatedTimestamp(Timestamp updatedTimestamp) {
         this.updatedTimestamp = updatedTimestamp;
     }
 

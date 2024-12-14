@@ -46,7 +46,7 @@ public class DataSourceConfig {
         }
 
 
-   String defaultURL = "jdbc:postgresql://localhost:5432/postgres";
+   String defaultURL = "jdbc:postgresql://localhost:5432/chimera_db";
    String jdbcURL = (String) envProperties.getOrDefault("url", defaultURL);
    String userName = (String) envProperties.getOrDefault("username", RDSUserName);
    String password = (String) envProperties.getOrDefault("password", RDSPassword);

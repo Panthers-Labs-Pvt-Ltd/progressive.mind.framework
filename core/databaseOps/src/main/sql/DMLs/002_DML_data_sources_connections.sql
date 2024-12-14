@@ -1,4 +1,4 @@
-INSERT INTO chimera_data_sources_connections (data_source_connection_name, data_source_type, data_source_sub_type, database_name, schema_name, authentication_type, host, port, user_name, user_password, role, warehouse, keytab, principal, sslcert, sslkey, sslrootcert, token,
+INSERT INTO data_sources_connections (data_source_connection_name, data_source_type, data_source_sub_type, database_name, schema_name, authentication_type, host, port, user_name, user_password, role, warehouse, keytab, principal, sslcert, sslkey, sslrootcert, token,
 kafka_broker, kafka_key_password, kafka_keystore_location, kafka_keystore_password, kafka_keystore_type, kafka_truststore_location, kafka_truststore_password, kafka_truststore_type) values
 ('Local Postgres connection - chimera', 'Relational', 'Postgres', 'chimera_db', null, 'Username&Password', 'localhost', 5432, 'chimera', 'chimera123', null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null)
 ON CONFLICT DO NOTHING;
