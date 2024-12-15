@@ -19,9 +19,12 @@
         <module>dataSource</module>
         <module>observability</module>
         <module>orchestration-service</module>
-        <module>flink-service</module>
+<!--
+         <module>data-lineage</module>
+
+-->
+        <module>temporal</module>
         <module>decision-engine</module>
-        <module>temporal-example</module>
         <module>apacheComet</module>
     </modules>
 </project>

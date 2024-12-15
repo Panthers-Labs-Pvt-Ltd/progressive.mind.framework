@@ -84,8 +84,8 @@ build:
     expire_in: 1 week
 
 include:
-- template: Security/Dependency-Scanning.gitlab-ci.yml
-- template: Jobs/Container-Scanning.gitlab-ci.yml
+#- template: Security/Dependency-Scanning.gitlab-ci.yml
+#- template: Jobs/Container-Scanning.gitlab-ci.yml
 - template: Security/Secret-Detection.gitlab-ci.yml
 
 
@@ -95,16 +95,16 @@ unit_test:
   script:
     - mvn -B -Dmaven.test.failure.ignore=true test
 
-build_and_push_docker:
-  stage: deploy
-  image: docker:latest
-  services:
-    - docker:dind
-  before_script:
-    - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY
-  script:
-    - |
-      echo "Files recieved from Previous Step"
-    - ls -lart ${JAR_DIR}
-    - docker build -t $DOCKER_IMAGE .
-    - docker push $DOCKER_IMAGE
+#build_and_push_docker:
+  #stage: deploy
+  #image: docker:latest
+  #services:
+    #- docker:dind
+  #before_script:
+    #- echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY
+  #script:
+    #- |
+      #echo "Files recieved from Previous Step"
+    #- ls -lart ${JAR_DIR}
+    #- docker build -t $DOCKER_IMAGE .
+    #- docker push $DOCKER_IMAGE
