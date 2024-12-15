@@ -10,7 +10,6 @@ public class WorkflowStarter {
         // Create service and client
         WorkflowServiceStubs service = WorkflowServiceStubs.newInstance();
         WorkflowClient client = WorkflowClient.newInstance(service);
-
         // Get a stub for the parent workflow
         IngestionWorkflow ingestionWorkflow = client.newWorkflowStub(
                 IngestionWorkflow.class,
