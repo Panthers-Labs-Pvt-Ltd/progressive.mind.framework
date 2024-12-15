@@ -10,11 +10,13 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <groupId>com.progressive.minds</groupId>
+    <groupId>com.progressive.minds.chimera</groupId>
     <artifactId>common</artifactId>
     <packaging>pom</packaging>
     <modules>
         <module>tags</module>
+        <module>kvstore</module>
+        <module>util</module>
     </modules>
 
 </project>

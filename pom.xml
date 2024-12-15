@@ -111,7 +111,7 @@
         <scala.version>${scala.major.version}.${scala.minor.version}</scala.version>
 
         <!-- Spark and its dependencies -->
-        <spark.version>3.3.0</spark.version>
+        <spark.version>3.5.0</spark.version>
         <spark.kafka.sql.version>0-10</spark.kafka.sql.version>
         <hadoop.version>3.3.3</hadoop.version>
 
@@ -203,21 +203,17 @@
             <groupId>software.amazon.awssdk</groupId>
             <artifactId>secretsmanager</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.apache.spark</groupId>
-            <artifactId>spark-sql-kafka-0-10_2.12</artifactId>
-            <version>3.5.0</version>
-        </dependency>
+
+        <!-- Spark start-->
         <dependency>
             <groupId>org.apache.spark</groupId>
             <artifactId>spark-streaming_2.12</artifactId>
-            <version>3.5.0</version>
+            <version>${spark.version}</version>
         </dependency>
-        <!-- Spark Core -->
         <dependency>
             <groupId>org.apache.spark</groupId>
             <artifactId>spark-core_2.12</artifactId>
-            <version>3.5.0</version> <!-- Replace with your Spark version -->
+            <version>${spark.version}</version> <!-- Replace with your Spark version -->
             <exclusions>
                 <exclusion>
                     <groupId>org.slf4j</groupId>
@@ -225,20 +221,34 @@
                 </exclusion>
             </exclusions>
         </dependency>
-
+        <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-sql_2.12</artifactId>
+            <version>${spark.version}</version> <!-- Replace with your Spark version -->
+        </dependency>
+        <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-avro_2.12</artifactId>
+            <version>${spark.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-sql-kafka-0-10_2.12</artifactId>
+            <version>${spark.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-token-provider-kafka-0-10_2.12</artifactId>
+            <version>${spark.version}</version>
+        </dependency>
         <!-- https://mvnrepository.com/artifact/ch.cern.sparkmeasure/spark-measure -->
         <dependency>
             <groupId>ch.cern.sparkmeasure</groupId>
             <artifactId>spark-measure_2.12</artifactId>
             <version>0.24</version>
         </dependency>
+        <!-- Spark end-->
 
-        <!-- Spark SQL -->
-        <dependency>
-            <groupId>org.apache.spark</groupId>
-            <artifactId>spark-sql_2.12</artifactId>
-            <version>3.5.0</version> <!-- Replace with your Spark version -->
-        </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
@@ -293,7 +303,6 @@
             <version>2.2.222</version>
             <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-core</artifactId>
@@ -306,17 +315,10 @@
             <version>${log4j.api.version}</version> <!-- Use the latest version -->
         </dependency>
         <dependency>
-            <groupId>org.apache.spark</groupId>
-            <artifactId>spark-avro_2.12</artifactId>
-            <version>3.3.0</version>
-        </dependency>
-
-        <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <version>42.7.4</version>
         </dependency>
-
         <dependency>
             <groupId>org.scala-lang</groupId>
             <artifactId>scala-library</artifactId>
@@ -332,17 +334,10 @@
             <artifactId>scala-reflect</artifactId>
             <version>2.12.16</version>
         </dependency>
-
-
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-pool2</artifactId>
             <version>2.11.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.spark</groupId>
-            <artifactId>spark-token-provider-kafka-0-10_2.12</artifactId>
-            <version>3.3.0</version>
         </dependency>
 
         <dependency>
