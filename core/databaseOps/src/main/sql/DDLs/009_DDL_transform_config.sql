@@ -13,7 +13,6 @@ CREATE TABLE IF NOT EXISTS transform_config (
     CONSTRAINT fk_pipeline_name FOREIGN KEY (pipeline_name) REFERENCES data_pipelines (pipeline_name)
      ON delete CASCADE ON update CASCADE
 );
-
 COMMENT ON COLUMN transform_config.unique_id IS 'Unique ID for each transformation';
 COMMENT ON COLUMN transform_config.pipeline_name IS 'Name of the pipeline. This needs to be defined in pipeline';
 COMMENT ON COLUMN transform_config.sequence_number IS 'Sequence No. If a pipeline has multiple sources, this field can be used to sequence the sources';

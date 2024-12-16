@@ -1,10 +1,8 @@
-package com.progressive.minds.chimera.core.databaseOps.repository;
+package com.progressive.minds.chimera.core.databaseOps.repository.metadata;
 
 import com.progressive.minds.chimera.core.databaseOps.config.DataSourceConfig;
 import com.progressive.minds.chimera.core.databaseOps.exception.DatabaseException;
-import com.progressive.minds.chimera.core.databaseOps.model.dataSources;
 import com.progressive.minds.chimera.core.databaseOps.model.metadata.dataSources;
-import org.json.JSONObject;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -44,25 +42,59 @@ public class dataSourcesRepository {
 
     public void putDataSources(dataSources dataSource) {
         String query = "INSERT INTO data_sources (data_source_type, data_source_sub_type, description, read_defaults, write_defaults" +
-                ", created_by,  active_flag) values (?, ?, ?, ?, ?, ?, ?)";
+                ", created_timestamp, created_by,  updated_timestamp, updated_by, active_flag) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection connection = DataSourceConfig.getDataSource().getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
+            connection.setAutoCommit(true);
             preparedStatement.setString(1, dataSource.getDataSourceType());
             preparedStatement.setString(2, dataSource.getDataSourceSubType());
             preparedStatement.setString(3, dataSource.getDescription());
-            preparedStatement.setObject(4, dataSource.getReadDefaults());
-            preparedStatement.setObject(5, dataSource.getWriteDefaults());
-            preparedStatement.setString(6, dataSource.getCreatedBy());
-            preparedStatement.setString(7, dataSource.getActiveFlag());
-            int rowsInserted = preparedStatement.executeUpdate();
-            connection.commit();
-            System.out.println("rowsInserted : " + rowsInserted);
-        } catch (Exception e) {
-            throw new DatabaseException("Error saving user to the database.", e);
+            preparedStatement.setString(4, dataSource.getReadDefaults());
+            preparedStatement.setString(5, dataSource.getWriteDefaults());
+            preparedStatement.setTimestamp(6, new Timestamp(System.currentTimeMillis()));
+            preparedStatement.setString(7, dataSource.getCreatedBy());
+            preparedStatement.setTimestamp(8, dataSource.getUpdatedTimestamp());
+            preparedStatement.setString(9, dataSource.getUpdatedBy());
+            preparedStatement.setString(10, dataSource.getActiveFlag());
+            preparedStatement.executeUpdate();
+        } catch (SQLException sqlEx) {
+            handleSQLException(sqlEx);
+        } catch (Exception ex) {
+        // Handle any other exceptions
+            String errorMessage = "Unexpected error while saving data source: " + ex.getMessage();
+            throw new DatabaseException(errorMessage, ex);
+    }
+}
+
+    private void handleSQLException(SQLException sqlEx) {
+        String sqlState = sqlEx.getSQLState();
+        int errorCode = sqlEx.getErrorCode();
+
+        if ("08001".equals(sqlState)) {
+            // SQL State 08001: Unable to connect to the database
+            throw new DatabaseException("Database connection error: " + sqlEx.getMessage(), sqlEx);
+        } else if ("23000".equals(sqlState)) {
+            // SQL State 23000: Integrity constraint violation
+            throw new DatabaseException("Data integrity violation: " + sqlEx.getMessage(), sqlEx);
+        } else if ("23505".equals(sqlState)) {
+            // SQL State 23505: Duplicate Key Violation
+            throw new DatabaseException("A Record with the given key already exists. " + sqlEx.getMessage(), sqlEx);
+        }  else if ("23514".equals(sqlState)) {
+        // SQL State 23514: Duplicate Key Violation
+            throw new DatabaseException("Check Constraint is violated. Check the valid Fileds combination. " + sqlEx.getMessage(), sqlEx);
+        } else if ("42000".equals(sqlState)) {
+            // SQL State 42000: Syntax error or access violation
+            throw new DatabaseException("SQL syntax error or access violation: " + sqlEx.getMessage(), sqlEx);
+        } else {
+            // Default case for unhandled SQL exceptions
+            String errorMessage = String.format("Unhandled SQL exception [SQLState: %s, ErrorCode: %d]: %s",
+                    sqlState, errorCode, sqlEx.getMessage());
+            throw new DatabaseException(errorMessage, sqlEx);
         }
     }
+
 
     public void putDataSources(List<dataSources> dataSources) {
         if (!dataSources.isEmpty()) {
@@ -119,8 +151,8 @@ public class dataSourcesRepository {
         dataSource.setDataSourceType(resultSet.getString("data_source_type"));
         dataSource.setDataSourceSubType(resultSet.getString("data_source_sub_type"));
         dataSource.setDescription(resultSet.getString("description"));
-        dataSource.setDescription(resultSet.getString("read_defaults"));
-        dataSource.setDescription(resultSet.getString("write_defaults"));
+        dataSource.setReadDefaults(resultSet.getString("read_defaults"));
+        dataSource.setWriteDefaults(resultSet.getString("write_defaults"));
         dataSource.setCreatedTimestamp(resultSet.getTimestamp("created_timestamp"));
         dataSource.setCreatedBy(resultSet.getString("created_by"));
         dataSource.setUpdatedTimestamp(resultSet.getTimestamp("updated_timestamp"));

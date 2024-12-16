@@ -1,8 +1,8 @@
-package com.progressive.minds.chimera.core.databaseOps.repository;
+package com.progressive.minds.chimera.core.databaseOps.repository.metadata;
 
 import com.progressive.minds.chimera.core.databaseOps.config.DataSourceConfig;
 import com.progressive.minds.chimera.core.databaseOps.exception.DatabaseException;
-import com.progressive.minds.chimera.core.databaseOps.model.transformConfig;
+import com.progressive.minds.chimera.core.databaseOps.model.metadata.transformConfig;
 
 import java.sql.*;
 import java.util.ArrayList;
