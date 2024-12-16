@@ -1,4 +1,4 @@
-insert into chimera_data_sources (data_source_type, data_source_sub_type, description, read_defaults, write_defaults) values
+insert into data_sources (data_source_type, data_source_sub_type, description, read_defaults, write_defaults) values
 ('Relational', 'Postgres', 'Postgres Database', null, null),
 ('Relational', 'MySql', 'MYSQL Database', null, null),
 ('Files', 'Parquet', 'File Format Parquet', null, null),
