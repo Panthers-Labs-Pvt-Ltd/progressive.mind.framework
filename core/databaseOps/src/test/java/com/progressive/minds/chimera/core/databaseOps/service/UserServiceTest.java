@@ -2,11 +2,10 @@ package com.progressive.minds.chimera.core.databaseOps.service;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import com.progressive.minds.chimera.core.databaseOps.config.DataSourceConfig;
 import com.progressive.minds.chimera.core.databaseOps.exception.ValidationException;
-import com.progressive.minds.chimera.core.databaseOps.model.User;
-import com.progressive.minds.chimera.core.databaseOps.repository.UserRepository;
-import com.progressive.minds.chimera.core.databaseOps.service.user.UserService;
+import com.progressive.minds.chimera.core.databaseOps.model.example.User;
+import com.progressive.minds.chimera.core.databaseOps.repository.example.UserRepository;
+import com.progressive.minds.chimera.core.databaseOps.service.example.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

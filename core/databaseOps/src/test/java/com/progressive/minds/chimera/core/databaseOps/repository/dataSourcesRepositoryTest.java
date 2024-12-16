@@ -1,7 +1,8 @@
 package com.progressive.minds.chimera.core.databaseOps.repository;
 
 import com.progressive.minds.chimera.core.databaseOps.config.DataSourceConfig;
-import com.progressive.minds.chimera.core.databaseOps.model.dataSources;
+import com.progressive.minds.chimera.core.databaseOps.model.metadata.dataSources;
+import com.progressive.minds.chimera.core.databaseOps.repository.metadata.dataSourcesRepository;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,7 +12,7 @@ import java.util.*;
 
 public class dataSourcesRepositoryTest {
 
-    private dataSourcesRepository dataSourcesRepository;
+    private com.progressive.minds.chimera.core.databaseOps.repository.metadata.dataSourcesRepository dataSourcesRepository;
     private DataSource dataSource;
 
     @BeforeEach

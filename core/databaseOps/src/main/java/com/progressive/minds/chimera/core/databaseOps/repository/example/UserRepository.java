@@ -1,8 +1,8 @@
-package com.progressive.minds.chimera.core.databaseOps.repository;
+package com.progressive.minds.chimera.core.databaseOps.repository.example;
 
 import com.progressive.minds.chimera.core.databaseOps.config.DataSourceConfig;
 import com.progressive.minds.chimera.core.databaseOps.exception.DatabaseException;
-import com.progressive.minds.chimera.core.databaseOps.model.User;
+import com.progressive.minds.chimera.core.databaseOps.model.example.User;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

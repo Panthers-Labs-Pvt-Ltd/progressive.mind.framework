@@ -1,9 +1,9 @@
-package com.progressive.minds.chimera.core.databaseOps.service.user;
+package com.progressive.minds.chimera.core.databaseOps.service.example;
 
 import com.progressive.minds.chimera.core.databaseOps.exception.DatabaseException;
 import com.progressive.minds.chimera.core.databaseOps.exception.ValidationException;
-import com.progressive.minds.chimera.core.databaseOps.model.User;
-import com.progressive.minds.chimera.core.databaseOps.repository.UserRepository;
+import com.progressive.minds.chimera.core.databaseOps.model.example.User;
+import com.progressive.minds.chimera.core.databaseOps.repository.example.UserRepository;
 import com.progressive.minds.chimera.core.databaseOps.validation.*;
 
 import java.util.List;

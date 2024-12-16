@@ -2,7 +2,8 @@ package com.progressive.minds.chimera.core.databaseOps.repository;
 
 import static org.junit.jupiter.api.Assertions.*;
 import com.progressive.minds.chimera.core.databaseOps.config.DataSourceConfig;
-import com.progressive.minds.chimera.core.databaseOps.model.User;
+import com.progressive.minds.chimera.core.databaseOps.model.example.User;
+import com.progressive.minds.chimera.core.databaseOps.repository.example.UserRepository;
 import org.h2.tools.RunScript;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,8 +12,6 @@ import org.junit.jupiter.api.Test;
 import javax.sql.DataSource;
 import java.io.FileReader;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 public class UserRepositoryTest {
 

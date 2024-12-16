@@ -1,35 +1,31 @@
-package com.progressive.minds.chimera.core.databaseOps.model;
+package com.progressive.minds.chimera.core.databaseOps.model.metadata;
 
 import java.sql.Timestamp;
 
-
 /**
- * Represents a Transform Configuration entity.
+ * Represents a Chimera Pipeline entity.
  */
-public class transformConfig {
+public class dataPipelines {
 
-    private int uniqueId;
     private String pipelineName;
-    private Integer sequenceNumber;
-    private String sqlText;
-    private String transformDataframeName;
+    private String pipelineDescription;
+    private String processMode;
+    private String runFrequency;
     private Timestamp createdTimestamp;
     private String createdBy;
     private Timestamp updatedTimestamp;
     private String updatedBy;
     private String activeFlag;
 
-    public transformConfig() {
-    }
+    public dataPipelines() {}
 
-    public transformConfig(int uniqueId, String pipelineName, Integer sequenceNumber, String sqlText,
-                           String transformDataframeName, Timestamp createdTimestamp, String createdBy,
-                           Timestamp updatedTimestamp, String updatedBy, String activeFlag) {
-        this.uniqueId = uniqueId;
+    public dataPipelines(String pipelineName, String pipelineDescription, String processMode,
+                         String runFrequency, Timestamp createdTimestamp, String createdBy,
+                         Timestamp updatedTimestamp, String updatedBy, String activeFlag) {
         this.pipelineName = pipelineName;
-        this.sequenceNumber = sequenceNumber;
-        this.sqlText = sqlText;
-        this.transformDataframeName = transformDataframeName;
+        this.pipelineDescription = pipelineDescription;
+        this.processMode = processMode;
+        this.runFrequency = runFrequency;
         this.createdTimestamp = createdTimestamp;
         this.createdBy = createdBy;
         this.updatedTimestamp = updatedTimestamp;
@@ -39,14 +35,6 @@ public class transformConfig {
 
     // Getters and Setters
 
-    public int getUniqueId() {
-        return uniqueId;
-    }
-
-    public void setUniqueId(int uniqueId) {
-        this.uniqueId = uniqueId;
-    }
-
     public String getPipelineName() {
         return pipelineName;
     }
@@ -55,28 +43,28 @@ public class transformConfig {
         this.pipelineName = pipelineName;
     }
 
-    public Integer getSequenceNumber() {
-        return sequenceNumber;
+    public String getPipelineDescription() {
+        return pipelineDescription;
     }
 
-    public void setSequenceNumber(Integer sequenceNumber) {
-        this.sequenceNumber = sequenceNumber;
+    public void setPipelineDescription(String pipelineDescription) {
+        this.pipelineDescription = pipelineDescription;
     }
 
-    public String getSqlText() {
-        return sqlText;
+    public String getProcessMode() {
+        return processMode;
     }
 
-    public void setSqlText(String sqlText) {
-        this.sqlText = sqlText;
+    public void setProcessMode(String processMode) {
+        this.processMode = processMode;
     }
 
-    public String getTransformDataframeName() {
-        return transformDataframeName;
+    public String getRunFrequency() {
+        return runFrequency;
     }
 
-    public void setTransformDataframeName(String transformDataframeName) {
-        this.transformDataframeName = transformDataframeName;
+    public void setRunFrequency(String runFrequency) {
+        this.runFrequency = runFrequency;
     }
 
     public Timestamp getCreatedTimestamp() {
@@ -123,12 +111,11 @@ public class transformConfig {
 
     @Override
     public String toString() {
-        return "TransformConfig{" +
-                "uniqueId=" + uniqueId +
-                ", pipelineName='" + pipelineName + '\'' +
-                ", sequenceNumber=" + sequenceNumber +
-                ", sqlText='" + sqlText + '\'' +
-                ", transformDataframeName='" + transformDataframeName + '\'' +
+        return "ChimeraPipeline{" +
+                "pipelineName='" + pipelineName + '\'' +
+                ", pipelineDescription='" + pipelineDescription + '\'' +
+                ", processMode='" + processMode + '\'' +
+                ", runFrequency='" + runFrequency + '\'' +
                 ", createdTimestamp=" + createdTimestamp +
                 ", createdBy='" + createdBy + '\'' +
                 ", updatedTimestamp=" + updatedTimestamp +
@@ -137,4 +124,3 @@ public class transformConfig {
                 '}';
     }
 }
-

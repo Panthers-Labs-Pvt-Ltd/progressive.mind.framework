@@ -1,9 +1,9 @@
-package com.progressive.minds.chimera.core.databaseOps.service;
+package com.progressive.minds.chimera.core.databaseOps.service.metadata;
 
 import com.progressive.minds.chimera.core.databaseOps.exception.DatabaseException;
 import com.progressive.minds.chimera.core.databaseOps.exception.ValidationException;
-import com.progressive.minds.chimera.core.databaseOps.model.dataSources;
-import com.progressive.minds.chimera.core.databaseOps.repository.dataSourcesRepository;
+import com.progressive.minds.chimera.core.databaseOps.model.metadata.dataSources;
+import com.progressive.minds.chimera.core.databaseOps.repository.metadata.dataSourcesRepository;
 
 import java.util.List;
 import java.util.Map;
