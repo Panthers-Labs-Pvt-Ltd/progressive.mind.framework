@@ -1,0 +1,4 @@
+metrics.reporter.prom.class: org.apache.flink.metrics.prometheus.PrometheusReporter
+metrics.reporter.prom.port: 9249-9250
+#metrics.reporter.prom.class: Specifies the Prometheus reporter class.
+#metrics.reporter.prom.port: Defines the port range for exposing metrics. Ensure this port range is available in your environment.
