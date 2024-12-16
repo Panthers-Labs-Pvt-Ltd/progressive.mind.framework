@@ -1,8 +1,8 @@
 package com.progressive.minds.chimera.core.databaseOps;
 
-import com.progressive.minds.chimera.core.databaseOps.model.User;
-import com.progressive.minds.chimera.core.databaseOps.repository.UserRepository;
-import com.progressive.minds.chimera.core.databaseOps.service.user.UserService;
+import com.progressive.minds.chimera.core.databaseOps.model.example.User;
+import com.progressive.minds.chimera.core.databaseOps.repository.example.UserRepository;
+import com.progressive.minds.chimera.core.databaseOps.service.example.UserService;
 
 import java.util.List;
 import java.util.Scanner;

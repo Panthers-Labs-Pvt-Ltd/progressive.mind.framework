@@ -1,7 +1,6 @@
-package com.progressive.minds.chimera.core.databaseOps.model;
+package com.progressive.minds.chimera.core.databaseOps.model.metadata;
 
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 
 /**
  * Represents a Chimera Data Source Connection entity.

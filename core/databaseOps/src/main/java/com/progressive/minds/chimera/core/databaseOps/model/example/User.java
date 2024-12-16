@@ -1,4 +1,4 @@
-package com.progressive.minds.chimera.core.databaseOps.model;
+package com.progressive.minds.chimera.core.databaseOps.model.example;
 
 public class User {
     private int id;

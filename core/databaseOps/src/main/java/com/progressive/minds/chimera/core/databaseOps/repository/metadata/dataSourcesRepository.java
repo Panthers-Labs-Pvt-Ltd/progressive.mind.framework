@@ -1,8 +1,8 @@
-package com.progressive.minds.chimera.core.databaseOps.repository;
+package com.progressive.minds.chimera.core.databaseOps.repository.metadata;
+
 import com.progressive.minds.chimera.core.databaseOps.config.DataSourceConfig;
 import com.progressive.minds.chimera.core.databaseOps.exception.DatabaseException;
-import com.progressive.minds.chimera.core.databaseOps.model.dataPipelines;
-
+import com.progressive.minds.chimera.core.databaseOps.model.metadata.dataSources;
 import org.json.JSONObject;
 
 import java.sql.*;
@@ -12,15 +12,16 @@ import java.util.Map;
 
 import static com.progressive.minds.chimera.core.databaseOps.utility.ColumnExtractor.extractGetterColumnNames;
 
-public class dataPipelinesRepository {
-    List<String> columnNames = extractGetterColumnNames(dataPipelines.class);
+
+public class dataSourcesRepository {
+    List<String> columnNames = extractGetterColumnNames(dataSources.class);
     int columnCount = columnNames.size();
     String questionMarks = "?".repeat(columnCount).replace("", ", ").strip().substring(1);
 
-    public List<dataPipelines> getAllDataPipelines() {
-        List<dataPipelines> dataPipelines = new ArrayList<>();
+    public List<dataSources> getAllDataSources() {
+        List<dataSources> dataSources = new ArrayList<>();
         //      String query = "SELECT " + String.join(", ", columnNames) + " FROM data_sources";
-        String query = "SELECT * FROM data_pipelines";
+        String query = "SELECT * FROM data_sources";
 //TODO: need to set the variables in the model class same as column names in the table.
 //TODO : hard coding of the table name should be removed
 
@@ -29,31 +30,39 @@ public class dataPipelinesRepository {
              ResultSet resultSet = preparedStatement.executeQuery()) {
 
             while (resultSet.next()) {
-                dataPipelines dp = mapResultSetToDataPipelines(resultSet);
-                dataPipelines.add(dp);
+                dataSources ds = mapResultSetToDataSource(resultSet);
+                dataSources.add(ds);
             }
         } catch (Exception e) {
             throw new DatabaseException("Error fetching dataSources from the database.", e);
         }
 
-        return dataPipelines;
+        return dataSources;
     }
 
 
-    public void putDataPipelines(dataPipelines dataPipelines) {
-        String query = "INSERT INTO data_pipelines (pipeline_name, pipeline_description, process_mode, run_frequency," +
-                " created_by, active_flag) " +
-                "values (?, ?, ?, ?, ?, ?)";
+    public void putDataSources(dataSources dataSource) {
+        String query = "INSERT INTO data_sources (data_source_type, data_source_sub_type, description, read_defaults, write_defaults" +
+                ", created_by,  active_flag) values (?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection connection = DataSourceConfig.getDataSource().getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
-            preparedStatement.setString(1, dataPipelines.getPipelineName());
-            preparedStatement.setString(2, dataPipelines.getPipelineDescription());
-            preparedStatement.setString(3, dataPipelines.getProcessMode());
-            preparedStatement.setString(4, dataPipelines.getRunFrequency());
-            preparedStatement.setString(5, dataPipelines.getCreatedBy());
-            preparedStatement.setString(6, dataPipelines.getActiveFlag());
+            preparedStatement.setString(1, dataSource.getDataSourceType());
+            preparedStatement.setString(2, dataSource.getDataSourceSubType());
+            preparedStatement.setString(3, dataSource.getDescription());
+            if (dataSource.getReadDefaults() == null || dataSource.getReadDefaults().isEmpty()) {
+                preparedStatement.setObject(4, "{}", Types.OTHER);
+            } else {
+                preparedStatement.setObject(4, dataSource.getReadDefaults().toString(), Types.OTHER);
+            }
+            if (dataSource.getWriteDefaults() == null || dataSource.getWriteDefaults().isEmpty()) {
+                preparedStatement.setObject(5, "{}", Types.OTHER);
+            } else {
+                preparedStatement.setObject(5, dataSource.getWriteDefaults().toString(), Types.OTHER);
+            }
+            preparedStatement.setString(6, dataSource.getCreatedBy());
+            preparedStatement.setString(7, dataSource.getActiveFlag());
             int rowsInserted = preparedStatement.executeUpdate();
             connection.commit();
             System.out.println("rowsInserted : " + rowsInserted);
@@ -62,15 +71,15 @@ public class dataPipelinesRepository {
         }
     }
 
-    public void putDataPipelines(List<dataPipelines> dataPipelines) {
-        if (!dataPipelines.isEmpty()) {
-            dataPipelines.forEach(dp -> putDataPipelines(dp));
+    public void putDataSources(List<dataSources> dataSources) {
+        if (!dataSources.isEmpty()) {
+            dataSources.forEach(ds -> putDataSources(ds));
         }
     }
 
-    public List<dataPipelines> getDataPipelinesWithFilters(Map<String, Object> filters) {
+    public List<dataSources> getDataSourcesWithFilters(Map<String, Object> filters) {
         // Base query with no filters
-        StringBuilder queryBuilder = new StringBuilder("SELECT * FROM data_pipelines WHERE 1=1");
+        StringBuilder queryBuilder = new StringBuilder("SELECT * FROM data_sources WHERE 1=1");
         List<Object> parameters = new ArrayList<>();
 
         // Iterate over the filters map and build the query dynamically
@@ -86,7 +95,7 @@ public class dataPipelinesRepository {
         //TODO: Add more filter conditions / Operators
 
         // Execute the query and return the results
-        List<dataPipelines> result = new ArrayList<>();
+        List<dataSources> result = new ArrayList<>();
         try (Connection connection = DataSourceConfig.getDataSource().getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
@@ -98,8 +107,8 @@ public class dataPipelinesRepository {
             // Execute the query
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 while (resultSet.next()) {
-                    dataPipelines dp = mapResultSetToDataPipelines(resultSet); // Map each row to a dataSources object
-                    result.add(dp);
+                    dataSources ds = mapResultSetToDataSource(resultSet); // Map each row to a dataSources object
+                    result.add(ds);
                 }
             }
 
@@ -112,28 +121,38 @@ public class dataPipelinesRepository {
 
     }
 
-    private dataPipelines mapResultSetToDataPipelines(ResultSet resultSet) throws SQLException {
-        dataPipelines dp = new dataPipelines();
-        dp.setPipelineName(resultSet.getString("pipeline_name"));
-        dp.setPipelineDescription(resultSet.getString("pipeline_description"));
-        dp.setProcessMode(resultSet.getString("process_mode"));
-        dp.setRunFrequency(resultSet.getString("run_frequency"));
-        dp.setCreatedTimestamp(resultSet.getTimestamp("created_timestamp"));
-        dp.setCreatedBy(resultSet.getString("created_by"));
-        dp.setUpdatedTimestamp(resultSet.getTimestamp("updated_timestamp"));
-        dp.setUpdatedBy(resultSet.getString("updated_by"));
-        dp.setActiveFlag(resultSet.getString("active_flag"));
-
-        return dp;
+    private dataSources mapResultSetToDataSource(ResultSet resultSet) throws SQLException {
+        dataSources dataSource = new dataSources();
+        dataSource.setDataSourceType(resultSet.getString("data_source_type"));
+        dataSource.setDataSourceSubType(resultSet.getString("data_source_sub_type"));
+        dataSource.setDescription(resultSet.getString("description"));
+        String readDefaultsJsonString = resultSet.getString("read_defaults");
+        if (readDefaultsJsonString != null && !readDefaultsJsonString.isEmpty()) {
+            dataSource.setReadDefaults(new JSONObject(readDefaultsJsonString));
+        } else {
+            dataSource.setReadDefaults(new JSONObject()); // Set an empty JSONObject or handle accordingly
+        }
+        String writeDefaultsJsonString = resultSet.getString("write_defaults");
+        if (writeDefaultsJsonString != null && !writeDefaultsJsonString.isEmpty()) {
+            dataSource.setWriteDefaults(new JSONObject(writeDefaultsJsonString));
+        } else {
+            dataSource.setWriteDefaults(new JSONObject()); // Set an empty JSONObject or handle accordingly
+        }
+        dataSource.setCreatedTimestamp(resultSet.getTimestamp("created_timestamp"));
+        dataSource.setCreatedBy(resultSet.getString("created_by"));
+        dataSource.setUpdatedTimestamp(resultSet.getTimestamp("updated_timestamp"));
+        dataSource.setUpdatedBy(resultSet.getString("updated_by"));
+        dataSource.setActiveFlag(resultSet.getString("active_flag"));
+        return dataSource;
 
     }
 
-    public int updateDataPipelines(Map<String, Object> updateFields, Map<String, Object> filters) {
+    public int updateDataSources(Map<String, Object> updateFields, Map<String, Object> filters) {
         if (updateFields == null || updateFields.isEmpty()) {
             throw new IllegalArgumentException("Update fields cannot be null or empty");
         }
 
-        StringBuilder queryBuilder = new StringBuilder("UPDATE data_pipelines SET ");
+        StringBuilder queryBuilder = new StringBuilder("UPDATE data_sources SET ");
         //TODO: Add updated_timestamp and updatedBy columns
         List<String> updateClauses = new ArrayList<>();
 
@@ -182,8 +201,8 @@ public class dataPipelinesRepository {
         }
     }
 
-    public int deleteFromDataPipelines(Map<String, Object> filters) {
-        StringBuilder queryBuilder = new StringBuilder("DELETE FROM data_pipelines");
+    public int deleteFromDataSources(Map<String, Object> filters) {
+        StringBuilder queryBuilder = new StringBuilder("DELETE FROM data_sources");
 
         // Add WHERE clause if filters are provided
         if (filters != null && !filters.isEmpty()) {
@@ -218,3 +237,5 @@ public class dataPipelinesRepository {
         }
     }
 }
+
+
