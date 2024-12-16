@@ -1,6 +1,7 @@
 package com.progressive.minds.chimera.core.databaseOps.model;
 
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
+
 
 /**
  * Represents a Transform Configuration entity.
@@ -12,9 +13,9 @@ public class transformConfig {
     private Integer sequenceNumber;
     private String sqlText;
     private String transformDataframeName;
-    private LocalDateTime createdTimestamp;
+    private Timestamp createdTimestamp;
     private String createdBy;
-    private LocalDateTime updatedTimestamp;
+    private Timestamp updatedTimestamp;
     private String updatedBy;
     private String activeFlag;
 
@@ -22,8 +23,8 @@ public class transformConfig {
     }
 
     public transformConfig(int uniqueId, String pipelineName, Integer sequenceNumber, String sqlText,
-                           String transformDataframeName, LocalDateTime createdTimestamp, String createdBy,
-                           LocalDateTime updatedTimestamp, String updatedBy, String activeFlag) {
+                           String transformDataframeName, Timestamp createdTimestamp, String createdBy,
+                           Timestamp updatedTimestamp, String updatedBy, String activeFlag) {
         this.uniqueId = uniqueId;
         this.pipelineName = pipelineName;
         this.sequenceNumber = sequenceNumber;
@@ -78,11 +79,11 @@ public class transformConfig {
         this.transformDataframeName = transformDataframeName;
     }
 
-    public LocalDateTime getCreatedTimestamp() {
+    public Timestamp getCreatedTimestamp() {
         return createdTimestamp;
     }
 
-    public void setCreatedTimestamp(LocalDateTime createdTimestamp) {
+    public void setCreatedTimestamp(Timestamp createdTimestamp) {
         this.createdTimestamp = createdTimestamp;
     }
 
@@ -94,11 +95,11 @@ public class transformConfig {
         this.createdBy = createdBy;
     }
 
-    public LocalDateTime getUpdatedTimestamp() {
+    public Timestamp getUpdatedTimestamp() {
         return updatedTimestamp;
     }
 
-    public void setUpdatedTimestamp(LocalDateTime updatedTimestamp) {
+    public void setUpdatedTimestamp(Timestamp updatedTimestamp) {
         this.updatedTimestamp = updatedTimestamp;
     }
 

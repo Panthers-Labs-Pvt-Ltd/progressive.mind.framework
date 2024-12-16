@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS extract_config (
     row_filter TEXT,
     column_filter TEXT,
     extract_dataframe_name VARCHAR(255),
-    source_configuration JSON,
+    source_configuration TEXT,
     table_name VARCHAR(255),
     schema_name VARCHAR(255),
     sql_text TEXT,

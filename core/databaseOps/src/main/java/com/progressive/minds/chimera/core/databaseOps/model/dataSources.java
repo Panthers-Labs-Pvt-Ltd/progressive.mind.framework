@@ -1,9 +1,9 @@
 package com.progressive.minds.chimera.core.databaseOps.model;
 
-import org.json.JSONObject;
+
 
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
+
 
 /**
  * Represents a Chimera Data Source entity.
@@ -13,16 +13,16 @@ public class dataSources {
     private String dataSourceType;
     private String dataSourceSubType;
     private String description;
-    private JSONObject readDefaults;
-    private JSONObject writeDefaults;
+    private String readDefaults;
+    private String writeDefaults;
     private Timestamp createdTimestamp;
     private String createdBy;
     private Timestamp updatedTimestamp;
     private String updatedBy;
     private String activeFlag;
 
-    public dataSources(String dataSourceType, String dataSourceSubType, String description, JSONObject readDefaults,
-                             JSONObject writeDefaults, Timestamp createdTimestamp, String createdBy,
+    public dataSources(String dataSourceType, String dataSourceSubType, String description, String readDefaults,
+                             String writeDefaults, Timestamp createdTimestamp, String createdBy,
                              Timestamp updatedTimestamp, String updatedBy, String activeFlag) {
         this.dataSourceType = dataSourceType;
         this.dataSourceSubType = dataSourceSubType;
@@ -65,19 +65,19 @@ public class dataSources {
         this.description = description;
     }
 
-    public JSONObject getReadDefaults() {
+    public String getReadDefaults() {
         return readDefaults;
     }
 
-    public void setReadDefaults(JSONObject readDefaults) {
+    public void setReadDefaults(String readDefaults) {
         this.readDefaults = readDefaults;
     }
 
-    public JSONObject getWriteDefaults() {
+    public String getWriteDefaults() {
         return writeDefaults;
     }
 
-    public void setWriteDefaults(JSONObject writeDefaults) {
+    public void setWriteDefaults(String writeDefaults) {
         this.writeDefaults = writeDefaults;
     }
 

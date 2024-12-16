@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS persist_config (
     target_path TEXT,
     write_mode VARCHAR(255) CHECK (write_mode IN ('Overwrite', 'Append')),
     data_source_connection_name VARCHAR(255),
-    sink_configuration JSON,
+    sink_configuration TEXT,
     sort_columns TEXT,
     dedup_columns TEXT,
     kafka_topic VARCHAR(255),
@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS persist_config (
     created_by VARCHAR(255) DEFAULT CURRENT_USER,
     updated_timestamp TIMESTAMP,
     updated_by VARCHAR(255),
-     active_flag VARCHAR(1) default 'Y' :: CHARACTER VARYING,
+    active_flag VARCHAR(1) default 'Y' :: CHARACTER VARYING,
     CONSTRAINT fk_pipeline_name FOREIGN KEY (pipeline_name) REFERENCES data_pipelines (pipeline_name) ON delete CASCADE ON update CASCADE,
     CONSTRAINT fk_data_sink_type FOREIGN KEY (data_sink_type, data_sink_sub_type) REFERENCES data_sources (data_source_type, data_source_sub_type) ON delete CASCADE ON update CASCADE,
     CONSTRAINT fk_data_source_connection FOREIGN KEY (data_source_connection_name) REFERENCES data_sources_connections (data_source_connection_name) ON delete CASCADE ON update CASCADE

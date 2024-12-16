@@ -2,7 +2,7 @@ package com.progressive.minds.chimera.core.databaseOps.repository;
 
 import com.progressive.minds.chimera.core.databaseOps.config.DataSourceConfig;
 import com.progressive.minds.chimera.core.databaseOps.exception.DatabaseException;
-import com.progressive.minds.chimera.core.databaseOps.model.dataSources;
+import com.progressive.minds.chimera.core.databaseOps.model.extractConfig;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -11,16 +11,15 @@ import java.util.Map;
 
 import static com.progressive.minds.chimera.core.databaseOps.utility.ColumnExtractor.extractGetterColumnNames;
 
-
-public class dataSourcesRepository {
-    List<String> columnNames = extractGetterColumnNames(dataSources.class);
+public class extractConfigRepository {
+    List<String> columnNames = extractGetterColumnNames(extractConfig.class);
     int columnCount = columnNames.size();
     String questionMarks = "?".repeat(columnCount).replace("", ", ").strip().substring(1);
 
-    public List<dataSources> getAllDataSources() {
-        List<dataSources> dataSources = new ArrayList<>();
+    public List<extractConfig> getAllExtractConfig() {
+        List<extractConfig> extractConfigs = new ArrayList<>();
         //      String query = "SELECT " + String.join(", ", columnNames) + " FROM data_sources";
-        String query = "SELECT * FROM data_sources";
+        String query = "SELECT * FROM extract_config";
 //TODO: need to set the variables in the model class same as column names in the table.
 //TODO : hard coding of the table name should be removed
 
@@ -29,31 +28,49 @@ public class dataSourcesRepository {
              ResultSet resultSet = preparedStatement.executeQuery()) {
 
             while (resultSet.next()) {
-                dataSources ds = mapResultSetToDataSource(resultSet);
-                dataSources.add(ds);
+                extractConfig ec = mapResultSetToExtractConfig(resultSet);
+                extractConfigs.add(ec);
             }
         } catch (Exception e) {
             throw new DatabaseException("Error fetching dataSources from the database.", e);
         }
 
-        return dataSources;
+        return extractConfigs;
     }
 
 
-    public void putDataSources(dataSources dataSource) {
-        String query = "INSERT INTO data_sources (data_source_type, data_source_sub_type, description, read_defaults, write_defaults" +
-                ", created_by,  active_flag) values (?, ?, ?, ?, ?, ?, ?)";
+    public void putExtractConfig(extractConfig extractConfig) {
+        String query = "INSERT INTO extract_config (unique_id, pipeline_name, sequence_number, data_source_type, " +
+                "data_source_sub_type, file_name, file_path, schema_path, row_filter, column_filter, extract_dataframe_name," +
+                " source_configuration, table_name, schema_name, sql_text, kafka_consumer_topic, kafka_consumer_group, " +
+                "kafka_start_offset, data_source_connection_name, created_by, active_flag) " +
+                "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection connection = DataSourceConfig.getDataSource().getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
-            preparedStatement.setString(1, dataSource.getDataSourceType());
-            preparedStatement.setString(2, dataSource.getDataSourceSubType());
-            preparedStatement.setString(3, dataSource.getDescription());
-            preparedStatement.setObject(4, dataSource.getReadDefaults());
-            preparedStatement.setObject(5, dataSource.getWriteDefaults());
-            preparedStatement.setString(6, dataSource.getCreatedBy());
-            preparedStatement.setString(7, dataSource.getActiveFlag());
+            preparedStatement.setInt(1, extractConfig.getUniqueId());
+            preparedStatement.setString(2, extractConfig.getPipelineName());
+            preparedStatement.setInt(3, extractConfig.getSequenceNumber());
+            preparedStatement.setString(4, extractConfig.getDataSourceType());
+            preparedStatement.setString(5, extractConfig.getDataSourceSubType());
+            preparedStatement.setString(6, extractConfig.getFileName());
+            preparedStatement.setString(7, extractConfig.getFilePath());
+            preparedStatement.setString(8, extractConfig.getSchemaPath());
+            preparedStatement.setString(9, extractConfig.getRowFilter());
+            preparedStatement.setString(10, extractConfig.getColumnFilter());
+            preparedStatement.setString(11, extractConfig.getExtractDataframeName());
+            preparedStatement.setString(12, extractConfig.getSourceConfiguration());
+            preparedStatement.setString(13, extractConfig.getTableName());
+            preparedStatement.setString(14, extractConfig.getSchemaName());
+            preparedStatement.setString(15, extractConfig.getSqlText());
+            preparedStatement.setString(16, extractConfig.getKafkaConsumerTopic());
+            preparedStatement.setString(17, extractConfig.getKafkaConsumerGroup());
+            preparedStatement.setString(18, extractConfig.getKafkaStartOffset());
+            preparedStatement.setString(19, extractConfig.getDataSourceConnectionName());
+            preparedStatement.setString(20, extractConfig.getCreatedBy());
+            preparedStatement.setString(21, extractConfig.getActiveFlag());
+
             int rowsInserted = preparedStatement.executeUpdate();
             connection.commit();
             System.out.println("rowsInserted : " + rowsInserted);
@@ -62,15 +79,15 @@ public class dataSourcesRepository {
         }
     }
 
-    public void putDataSources(List<dataSources> dataSources) {
-        if (!dataSources.isEmpty()) {
-            dataSources.forEach(ds -> putDataSources(ds));
+    public void putExtractConfig(List<extractConfig> extractConfig) {
+        if (!extractConfig.isEmpty()) {
+            extractConfig.forEach(ec -> putExtractConfig(ec));
         }
     }
 
-    public List<dataSources> getDataSourcesWithFilters(Map<String, Object> filters) {
+    public List<extractConfig> getExtractConfigWithFilters(Map<String, Object> filters) {
         // Base query with no filters
-        StringBuilder queryBuilder = new StringBuilder("SELECT * FROM data_sources WHERE 1=1");
+        StringBuilder queryBuilder = new StringBuilder("SELECT * FROM extract_config WHERE 1=1");
         List<Object> parameters = new ArrayList<>();
 
         // Iterate over the filters map and build the query dynamically
@@ -86,7 +103,7 @@ public class dataSourcesRepository {
         //TODO: Add more filter conditions / Operators
 
         // Execute the query and return the results
-        List<dataSources> result = new ArrayList<>();
+        List<extractConfig> result = new ArrayList<>();
         try (Connection connection = DataSourceConfig.getDataSource().getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
@@ -98,8 +115,8 @@ public class dataSourcesRepository {
             // Execute the query
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 while (resultSet.next()) {
-                    dataSources ds = mapResultSetToDataSource(resultSet); // Map each row to a dataSources object
-                    result.add(ds);
+                    extractConfig dsc = mapResultSetToExtractConfig(resultSet); // Map each row to a dataSources object
+                    result.add(dsc);
                 }
             }
 
@@ -112,28 +129,43 @@ public class dataSourcesRepository {
 
     }
 
-    private dataSources mapResultSetToDataSource(ResultSet resultSet) throws SQLException {
-        dataSources dataSource = new dataSources();
-        dataSource.setDataSourceType(resultSet.getString("data_source_type"));
-        dataSource.setDataSourceSubType(resultSet.getString("data_source_sub_type"));
-        dataSource.setDescription(resultSet.getString("description"));
-        dataSource.setDescription(resultSet.getString("read_defaults"));
-        dataSource.setDescription(resultSet.getString("write_defaults"));
-        dataSource.setCreatedTimestamp(resultSet.getTimestamp("created_timestamp"));
-        dataSource.setCreatedBy(resultSet.getString("created_by"));
-        dataSource.setUpdatedTimestamp(resultSet.getTimestamp("updated_timestamp"));
-        dataSource.setUpdatedBy(resultSet.getString("updated_by"));
-        dataSource.setActiveFlag(resultSet.getString("active_flag"));
-        return dataSource;
+    private extractConfig mapResultSetToExtractConfig(ResultSet resultSet) throws SQLException {
+        extractConfig ec = new extractConfig();
+        ec.setUniqueId(resultSet.getInt("unique_id"));
+        ec.setPipelineName(resultSet.getString("pipeline_name"));
+        ec.setSequenceNumber(resultSet.getInt("sequence_number"));
+        ec.setDataSourceType(resultSet.getString("data_source_type"));
+        ec.setDataSourceSubType(resultSet.getString("data_source_sub_type"));
+        ec.setFileName(resultSet.getString("file_name"));
+        ec.setFilePath(resultSet.getString("file_path"));
+        ec.setSchemaPath(resultSet.getString("schema_path"));
+        ec.setRowFilter(resultSet.getString("row_filter"));
+        ec.setColumnFilter(resultSet.getString("column_filter"));
+        ec.setExtractDataframeName(resultSet.getString("extract_dataframe_name"));
+        ec.setSourceConfiguration(resultSet.getString("source_configuration"));
+        ec.setTableName(resultSet.getString("table_name"));
+        ec.setSchemaName(resultSet.getString("schema_name"));
+        ec.setSqlText(resultSet.getString("sql_text"));
+        ec.setKafkaConsumerTopic(resultSet.getString("kafka_consumer_topic"));
+        ec.setKafkaConsumerGroup(resultSet.getString("kafka_consumer_group"));
+        ec.setKafkaStartOffset(resultSet.getString("kafka_start_offset"));
+        ec.setDataSourceConnectionName(resultSet.getString("data_source_connection_name"));
+        ec.setCreatedTimestamp(resultSet.getTimestamp("created_timestamp"));
+        ec.setCreatedBy(resultSet.getString("created_by"));
+        ec.setUpdatedTimestamp(resultSet.getTimestamp("updated_timestamp"));
+        ec.setUpdatedBy(resultSet.getString("updated_by"));
+        ec.setActiveFlag(resultSet.getString("active_flag"));
+
+        return ec;
 
     }
 
-    public int updateDataSources(Map<String, Object> updateFields, Map<String, Object> filters) {
+    public int updateExtractConfig(Map<String, Object> updateFields, Map<String, Object> filters) {
         if (updateFields == null || updateFields.isEmpty()) {
             throw new IllegalArgumentException("Update fields cannot be null or empty");
         }
 
-        StringBuilder queryBuilder = new StringBuilder("UPDATE data_sources SET ");
+        StringBuilder queryBuilder = new StringBuilder("UPDATE extract_config SET ");
         //TODO: Add updated_timestamp and updatedBy columns
         List<String> updateClauses = new ArrayList<>();
 
@@ -173,17 +205,17 @@ public class dataSourcesRepository {
             }
 
             // Execute update and return affected row count
-            int returncode = preparedStatement.executeUpdate();
+            int returnCode = preparedStatement.executeUpdate();
             connection.commit();
-            return returncode;
+            return returnCode;
 
         } catch (Exception e) {
             throw new DatabaseException("Error updating users in the database.", e);
         }
     }
 
-    public int deleteFromDataSources(Map<String, Object> filters) {
-        StringBuilder queryBuilder = new StringBuilder("DELETE FROM data_sources");
+    public int deleteFromExtractConfig(Map<String, Object> filters) {
+        StringBuilder queryBuilder = new StringBuilder("DELETE FROM extract_config");
 
         // Add WHERE clause if filters are provided
         if (filters != null && !filters.isEmpty()) {
@@ -218,5 +250,3 @@ public class dataSourcesRepository {
         }
     }
 }
-
-

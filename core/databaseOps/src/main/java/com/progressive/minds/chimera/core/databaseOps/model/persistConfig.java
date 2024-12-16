@@ -1,7 +1,7 @@
 package com.progressive.minds.chimera.core.databaseOps.model;
 
-import java.time.LocalDateTime;
-import org.json.JSONObject;
+
+import java.sql.Timestamp;
 
 /**
  * Represents a Persist Configuration entity.
@@ -21,15 +21,15 @@ public class persistConfig {
     private String targetPath; // Target file path
     private String writeMode; // Write mode ('Overwrite' or 'Append')
     private String dataSourceConnectionName; // Data source connection name
-    private JSONObject sinkConfiguration; // Sink configuration in JSON format
+    private String sinkConfiguration; // Sink configuration in JSON format
     private String sortColumns; // Columns to sort data
     private String dedupColumns; // Columns for deduplication
     private String kafkaTopic; // Kafka topic name
     private String kafkaKey; // Kafka key
     private String kafkaMessage; // Kafka message
-    private LocalDateTime createdTimestamp; // Record creation timestamp
+    private Timestamp createdTimestamp; // Record creation timestamp
     private String createdBy; // Record created by
-    private LocalDateTime updatedTimestamp; // Record update timestamp
+    private Timestamp updatedTimestamp; // Record update timestamp
     private String updatedBy; // Record updated by
     private String activeFlag; // Denotes if the record is active ('Y' or 'N')
 
@@ -39,9 +39,9 @@ public class persistConfig {
     public persistConfig(int uniqueId, String pipelineName, Integer sequenceNumber, String dataSinkType, String dataSinkSubType,
                          String targetDatabaseName, String targetTableName, String targetSchemaName, String partitionKeys,
                          String targetSqlText, String targetPath, String writeMode, String dataSourceConnectionName,
-                         JSONObject sinkConfiguration, String sortColumns, String dedupColumns, String kafkaTopic,
-                         String kafkaKey, String kafkaMessage, LocalDateTime createdTimestamp, String createdBy,
-                         LocalDateTime updatedTimestamp, String updatedBy, String activeFlag) {
+                         String sinkConfiguration, String sortColumns, String dedupColumns, String kafkaTopic,
+                         String kafkaKey, String kafkaMessage, Timestamp createdTimestamp, String createdBy,
+                         Timestamp updatedTimestamp, String updatedBy, String activeFlag) {
         this.uniqueId = uniqueId;
         this.pipelineName = pipelineName;
         this.sequenceNumber = sequenceNumber;
@@ -174,11 +174,11 @@ public class persistConfig {
         this.dataSourceConnectionName = dataSourceConnectionName;
     }
 
-    public JSONObject getSinkConfiguration() {
+    public String getSinkConfiguration() {
         return sinkConfiguration;
     }
 
-    public void setSinkConfiguration(JSONObject sinkConfiguration) {
+    public void setSinkConfiguration(String sinkConfiguration) {
         this.sinkConfiguration = sinkConfiguration;
     }
 
@@ -222,11 +222,11 @@ public class persistConfig {
         this.kafkaMessage = kafkaMessage;
     }
 
-    public LocalDateTime getCreatedTimestamp() {
+    public Timestamp getCreatedTimestamp() {
         return createdTimestamp;
     }
 
-    public void setCreatedTimestamp(LocalDateTime createdTimestamp) {
+    public void setCreatedTimestamp(Timestamp createdTimestamp) {
         this.createdTimestamp = createdTimestamp;
     }
 
@@ -238,11 +238,11 @@ public class persistConfig {
         this.createdBy = createdBy;
     }
 
-    public LocalDateTime getUpdatedTimestamp() {
+    public Timestamp getUpdatedTimestamp() {
         return updatedTimestamp;
     }
 
-    public void setUpdatedTimestamp(LocalDateTime updatedTimestamp) {
+    public void setUpdatedTimestamp(Timestamp updatedTimestamp) {
         this.updatedTimestamp = updatedTimestamp;
     }
 

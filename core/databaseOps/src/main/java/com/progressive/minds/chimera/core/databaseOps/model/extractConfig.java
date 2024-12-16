@@ -1,7 +1,7 @@
 package com.progressive.minds.chimera.core.databaseOps.model;
 
-import java.time.LocalDateTime;
-import org.json.JSONObject;
+import java.sql.Timestamp;
+
 
 /**
  * Represents an Extract Configuration entity.
@@ -19,7 +19,7 @@ public class extractConfig {
     private String rowFilter;
     private String columnFilter;
     private String extractDataframeName;
-    private JSONObject sourceConfiguration;
+    private String sourceConfiguration;
     private String tableName;
     private String schemaName;
     private String sqlText;
@@ -27,9 +27,9 @@ public class extractConfig {
     private String kafkaConsumerGroup;
     private String kafkaStartOffset;
     private String dataSourceConnectionName;
-    private LocalDateTime createdTimestamp;
+    private Timestamp createdTimestamp;
     private String createdBy;
-    private LocalDateTime updatedTimestamp;
+    private Timestamp updatedTimestamp;
     private String updatedBy;
     private String activeFlag;
 
@@ -38,10 +38,10 @@ public class extractConfig {
 
     public extractConfig(int uniqueId, String pipelineName, Integer sequenceNumber, String dataSourceType,
                          String dataSourceSubType, String fileName, String filePath, String schemaPath,
-                         String rowFilter, String columnFilter, String extractDataframeName, JSONObject sourceConfiguration,
+                         String rowFilter, String columnFilter, String extractDataframeName, String sourceConfiguration,
                          String tableName, String schemaName, String sqlText, String kafkaConsumerTopic, String kafkaConsumerGroup,
-                         String kafkaStartOffset, String dataSourceConnectionName, LocalDateTime createdTimestamp,
-                         String createdBy, LocalDateTime updatedTimestamp, String updatedBy, String activeFlag) {
+                         String kafkaStartOffset, String dataSourceConnectionName, Timestamp createdTimestamp,
+                         String createdBy, Timestamp updatedTimestamp, String updatedBy, String activeFlag) {
         this.uniqueId = uniqueId;
         this.pipelineName = pipelineName;
         this.sequenceNumber = sequenceNumber;
@@ -158,11 +158,11 @@ public class extractConfig {
         this.extractDataframeName = extractDataframeName;
     }
 
-    public JSONObject getSourceConfiguration() {
+    public String getSourceConfiguration() {
         return sourceConfiguration;
     }
 
-    public void setSourceConfiguration(JSONObject sourceConfiguration) {
+    public void setSourceConfiguration(String sourceConfiguration) {
         this.sourceConfiguration = sourceConfiguration;
     }
 
@@ -222,11 +222,11 @@ public class extractConfig {
         this.dataSourceConnectionName = dataSourceConnectionName;
     }
 
-    public LocalDateTime getCreatedTimestamp() {
+    public Timestamp getCreatedTimestamp() {
         return createdTimestamp;
     }
 
-    public void setCreatedTimestamp(LocalDateTime createdTimestamp) {
+    public void setCreatedTimestamp(Timestamp createdTimestamp) {
         this.createdTimestamp = createdTimestamp;
     }
 
@@ -238,11 +238,11 @@ public class extractConfig {
         this.createdBy = createdBy;
     }
 
-    public LocalDateTime getUpdatedTimestamp() {
+    public Timestamp getUpdatedTimestamp() {
         return updatedTimestamp;
     }
 
-    public void setUpdatedTimestamp(LocalDateTime updatedTimestamp) {
+    public void setUpdatedTimestamp(Timestamp updatedTimestamp) {
         this.updatedTimestamp = updatedTimestamp;
     }
 
