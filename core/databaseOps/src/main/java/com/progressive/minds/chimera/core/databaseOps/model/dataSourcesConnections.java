@@ -1,5 +1,6 @@
 package com.progressive.minds.chimera.core.databaseOps.model;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 /**
@@ -33,9 +34,9 @@ public class dataSourcesConnections {
     private String kafkaTruststoreLocation;
     private String kafkaTruststorePassword;
     private String kafkaKeyPassword;
-    private LocalDateTime createdTimestamp;
+    private Timestamp createdTimestamp;
     private String createdBy;
-    private LocalDateTime updatedTimestamp;
+    private Timestamp updatedTimestamp;
     private String updatedBy;
     private String activeFlag;
 
@@ -48,8 +49,8 @@ public class dataSourcesConnections {
                                   String sslRootCert, String token, String kafkaBroker, String kafkaKeystoreType,
                                   String kafkaKeystoreLocation, String kafkaKeystorePassword,
                                   String kafkaTruststoreType, String kafkaTruststoreLocation, String kafkaTruststorePassword,
-                                  String kafkaKeyPassword, LocalDateTime createdTimestamp, String createdBy,
-                                  LocalDateTime updatedTimestamp, String updatedBy, String activeFlag) {
+                                  String kafkaKeyPassword, Timestamp createdTimestamp, String createdBy,
+                                  Timestamp updatedTimestamp, String updatedBy, String activeFlag) {
         this.dataSourceConnectionName = dataSourceConnectionName;
         this.dataSourceType = dataSourceType;
         this.dataSourceSubType = dataSourceSubType;
@@ -295,11 +296,11 @@ public class dataSourcesConnections {
         this.kafkaKeyPassword = kafkaKeyPassword;
     }
 
-    public LocalDateTime getCreatedTimestamp() {
+    public Timestamp getCreatedTimestamp() {
         return createdTimestamp;
     }
 
-    public void setCreatedTimestamp(LocalDateTime createdTimestamp) {
+    public void setCreatedTimestamp(Timestamp createdTimestamp) {
         this.createdTimestamp = createdTimestamp;
     }
 
@@ -311,11 +312,11 @@ public class dataSourcesConnections {
         this.createdBy = createdBy;
     }
 
-    public LocalDateTime getUpdatedTimestamp() {
+    public Timestamp getUpdatedTimestamp() {
         return updatedTimestamp;
     }
 
-    public void setUpdatedTimestamp(LocalDateTime updatedTimestamp) {
+    public void setUpdatedTimestamp(Timestamp updatedTimestamp) {
         this.updatedTimestamp = updatedTimestamp;
     }
 
