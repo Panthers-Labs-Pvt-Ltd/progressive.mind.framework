@@ -44,8 +44,8 @@ public class dataSourcesConnectionRepository {
                 " host, port, database_name, schema_name, authentication_type, user_name, user_password, role, warehouse," +
                 " principal, keytab, sslcert, sslkey, sslrootcert, token, kafka_broker, kafka_keystore_type," +
                 " kafka_keystore_location, kafka_keystore_password, kafka_truststore_type, kafka_truststore_location," +
-                " kafka_truststore_password, kafka_key_password, created_by, active_flag) " +
-                "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                " kafka_truststore_password, kafka_key_password, created_by, created_timestamp, updated_by, updated_timestamp, active_flag) " +
+                "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection connection = DataSourceConfig.getDataSource().getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
@@ -77,12 +77,49 @@ public class dataSourcesConnectionRepository {
             preparedStatement.setString(25, dataSourceConnections.getKafkaTruststorePassword());
             preparedStatement.setString(26, dataSourceConnections.getKafkaKeyPassword());
             preparedStatement.setString(27, dataSourceConnections.getCreatedBy());
-            preparedStatement.setString(28, dataSourceConnections.getActiveFlag());
+            preparedStatement.setTimestamp(28, new Timestamp(System.currentTimeMillis()));
+            preparedStatement.setString(29, dataSourceConnections.getUpdatedBy());
+            preparedStatement.setTimestamp(30, dataSourceConnections.getUpdatedTimestamp());
+            preparedStatement.setString(31, dataSourceConnections.getActiveFlag());
             int rowsInserted = preparedStatement.executeUpdate();
             connection.commit();
             System.out.println("rowsInserted : " + rowsInserted);
-        } catch (Exception e) {
-            throw new DatabaseException("Error saving user to the database.", e);
+        } catch (SQLException sqlEx) {
+            handleSQLException(sqlEx);
+        } catch (Exception ex) {
+            // Handle any other exceptions
+            String errorMessage = "Unexpected error while saving data sources Connections: " + ex.getMessage();
+            throw new DatabaseException(errorMessage, ex);
+        }
+    }
+
+    private void handleSQLException(SQLException sqlEx) {
+        String sqlState = sqlEx.getSQLState();
+        int errorCode = sqlEx.getErrorCode();
+
+        if ("08001".equals(sqlState)) {
+            // SQL State 08001: Unable to connect to the database
+            throw new DatabaseException("Database connection error: " + sqlEx.getMessage(), sqlEx);
+        } else if ("23000".equals(sqlState)) {
+            // SQL State 23000: Integrity constraint violation
+            throw new DatabaseException("Data integrity violation: " + sqlEx.getMessage(), sqlEx);
+        } else if ("23503".equals(sqlState)) {
+            // SQL State 23505: Foreign Key Violation
+            throw new DatabaseException("Foreign Key Violation. Record is missing in Parent Table." + sqlEx.getMessage(), sqlEx);
+        } else if ("23505".equals(sqlState)) {
+            // SQL State 23505: Duplicate Key Violation
+            throw new DatabaseException("A Record with the given key already exists. " + sqlEx.getMessage(), sqlEx);
+        }  else if ("23514".equals(sqlState)) {
+            // SQL State 23514: Duplicate Key Violation
+            throw new DatabaseException("Check Constraint is violated. Check the valid Fileds combination. " + sqlEx.getMessage(), sqlEx);
+        } else if ("42000".equals(sqlState)) {
+            // SQL State 42000: Syntax error or access violation
+            throw new DatabaseException("SQL syntax error or access violation: " + sqlEx.getMessage(), sqlEx);
+        } else {
+            // Default case for unhandled SQL exceptions
+            String errorMessage = String.format("Unhandled SQL exception [SQLState: %s, ErrorCode: %d]: %s",
+                    sqlState, errorCode, sqlEx.getMessage());
+            throw new DatabaseException(errorMessage, sqlEx);
         }
     }
 

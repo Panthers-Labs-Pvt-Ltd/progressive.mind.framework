@@ -65,8 +65,8 @@ public class dataSourcesRepository {
         // Handle any other exceptions
             String errorMessage = "Unexpected error while saving data source: " + ex.getMessage();
             throw new DatabaseException(errorMessage, ex);
+        }
     }
-}
 
     private void handleSQLException(SQLException sqlEx) {
         String sqlState = sqlEx.getSQLState();
@@ -78,6 +78,9 @@ public class dataSourcesRepository {
         } else if ("23000".equals(sqlState)) {
             // SQL State 23000: Integrity constraint violation
             throw new DatabaseException("Data integrity violation: " + sqlEx.getMessage(), sqlEx);
+        } else if ("23503".equals(sqlState)) {
+            // SQL State 23505: Foreign Key Violation
+            throw new DatabaseException("Foreign Key Violation. Record is missing in Parent Table." + sqlEx.getMessage(), sqlEx);
         } else if ("23505".equals(sqlState)) {
             // SQL State 23505: Duplicate Key Violation
             throw new DatabaseException("A Record with the given key already exists. " + sqlEx.getMessage(), sqlEx);
