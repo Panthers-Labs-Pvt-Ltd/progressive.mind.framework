@@ -1,19 +1,18 @@
 package com.progressive.minds.chimera.core.dataSource.sourceTypes;
 
-import com.progressive.minds.chimera.core.dataSource.formats.files.parquet;
 import com.progressive.minds.chimera.core.dataSource.formats.nosql.nosql;
 import com.progressive.minds.chimera.core.dataSource.modal.DataReader;
-import com.progressive.minds.chimera.foundational.logger.logger.ChimeraLogger;
+import com.progressive.minds.chimera.foundational.logging.ChimeraLogger;
+import com.progressive.minds.chimera.foundational.logging.ChimeraLoggerFactory;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
-import org.apache.spark.sql.types.StructType;
 
 import java.util.Locale;
 
 public class DocumentDBReader implements DataReader.NOSQL {
 
-    private final ChimeraLogger logger = new ChimeraLogger(this.getClass());
+    private static final ChimeraLogger logger = ChimeraLoggerFactory.getLogger(DocumentDBReader.class);
     private String loggerTagName = "File Reader";
 
     /**
@@ -30,7 +29,7 @@ public class DocumentDBReader implements DataReader.NOSQL {
     public Dataset<Row> read(String inSourceType, SparkSession inSparkSession, String inUrl,
                                           String inCollectionNm, String inCustomConf) throws Exception {
 
-        logger.logInfo(loggerTagName, "Initiating Reading....");
+        logger.logInfo("Initiating Reading....");
         Dataset<Row> dataFrame = inSparkSession.emptyDataFrame();
 
         String SourceType = inSourceType.toLowerCase(Locale.ROOT);
@@ -39,7 +38,7 @@ public class DocumentDBReader implements DataReader.NOSQL {
                      inCollectionNm,  inCustomConf);
         }
         else {
-            logger.logError(loggerTagName, "Unsupported Format " + inSourceType);
+            logger.logError("Unsupported Format " + inSourceType);
             System.exit(1);
         }
         return dataFrame;

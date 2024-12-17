@@ -1,14 +1,16 @@
 package com.progressive.minds.chimera.core.dataSource.formats.files;
 
 import static com.progressive.minds.chimera.core.dataSource.utility.commonFunctions.*;
-import com.progressive.minds.chimera.foundational.logger.logger.ChimeraLogger;
+
+import com.progressive.minds.chimera.foundational.logging.ChimeraLogger;
+import com.progressive.minds.chimera.foundational.logging.ChimeraLoggerFactory;
 import org.apache.spark.sql.*;
 import java.util.Arrays;
 import java.util.Locale;
 
 public class parquet {
     private static final String loggerTag = "Parquet File ";
-    private static final ChimeraLogger logger = new ChimeraLogger(parquet.class);
+    private static final ChimeraLogger logger = ChimeraLoggerFactory.getLogger(parquet.class);
     private static final String DEFAULT_COMPRESSION_FORMAT = "snappy";
 
     /**
@@ -26,7 +28,7 @@ public class parquet {
                                     String inSourcePath, String inColumnFilter, String inRowFilter,
                                     String inCustomConfig, Integer Limit) {
 
-        logger.logInfo(loggerTag, "Initiated Parquet File Reading For Pipeline :" + inPipelineName);
+        logger.logInfo("Initiated Parquet File Reading For Pipeline :" + inPipelineName);
 
         String[] columnArray = inColumnFilter != null && !inColumnFilter.isEmpty() ?
                 inColumnFilter.split(",") : new String[0];
@@ -52,7 +54,7 @@ public class parquet {
                         .where(inRowFilter).limit(Limit);
             }
         } catch (Exception e) {
-            logger.logError(loggerTag, " Parquet File Reading For Pipeline :" + inPipelineName
+            logger.logError(" Parquet File Reading For Pipeline :" + inPipelineName
                     + " Failed With Error " + e.getMessage());
         }
         return dataFrame;
@@ -98,7 +100,7 @@ public class parquet {
                 ? inCompressionFormat.toLowerCase(Locale.ROOT)
                 : DEFAULT_COMPRESSION_FORMAT;
 
-        logger.logInfo(loggerTag, String.format(
+        logger.logInfo(String.format(
                 "Pipeline Name: %s, Compression format: %s, Write mode: %s",
                 inPipelineName, inCompressionFormat, inSavingMode
         ));
@@ -109,37 +111,37 @@ public class parquet {
 
         try {
             if (inExtraColumns != null && !inExtraColumns.isEmpty()) {
-                logger.logInfo(loggerTag, "Appending Extra Columns and Values to DataFrame");
+                logger.logInfo("Appending Extra Columns and Values to DataFrame");
                 tableDataFrame = mergeColumnsToDataFrame(tableDataFrame, inExtraColumns, inExtraColumnsValues);
-                logger.logInfo(loggerTag, "Extra Columns and Values have been mapped to DataFrame");
+                logger.logInfo("Extra Columns and Values have been mapped to DataFrame");
             }
 
             if (inSortingKeys != null && !inSortingKeys.isBlank()) {
-                logger.logInfo(loggerTag, "Executing Sorting Process on DataFrame");
+                logger.logInfo("Executing Sorting Process on DataFrame");
                 tableDataFrame = sortDataFrame(tableDataFrame, inSortingKeys,true);
-                logger.logInfo(loggerTag, "Sorting on DataFrame Executed Successfully");
+                logger.logInfo("Sorting on DataFrame Executed Successfully");
             }
 
             if (inDuplicationKeys != null && !inDuplicationKeys.isBlank()) {
-                logger.logInfo(loggerTag, "Executing Deduplication Process on DataFrame");
-                logger.logInfo(loggerTag, "Source records count (Before Deduplication): " + tableDataFrame.count());
+                logger.logInfo("Executing Deduplication Process on DataFrame");
+                logger.logInfo("Source records count (Before Deduplication): " + tableDataFrame.count());
                 tableDataFrame = DropDuplicatesOnKey(inDuplicationKeys, tableDataFrame);
-                logger.logInfo(loggerTag, "Target records count (After Deduplication): " + tableDataFrame.count());
-                logger.logInfo(loggerTag, "Deduplication on DataFrame Executed Successfully");
+                logger.logInfo("Target records count (After Deduplication): " + tableDataFrame.count());
+                logger.logInfo("Deduplication on DataFrame Executed Successfully");
             }
 
             if (inPartitioningKeys == null || inPartitioningKeys.isEmpty()) {
-                logger.logInfo(loggerTag, "Saving data into Non-Partitioned Table " + tableAndSchemaName);
+                logger.logInfo("Saving data into Non-Partitioned Table " + tableAndSchemaName);
 
                 if (!inSparkSession.catalog().tableExists(tableAndSchemaName)) {
-                    logger.logInfo(loggerTag, "Creating table " + tableAndSchemaName + " and writing data");
+                    logger.logInfo("Creating table " + tableAndSchemaName + " and writing data");
                     tableDataFrame.write()
                             .format("parquet")
                             .option("path", inOutputPath)
                             .mode(SaveMode.Append)
                             .saveAsTable(tableAndSchemaName);
                 } else {
-                    logger.logInfo(loggerTag, "Writing data into existing Table " + tableAndSchemaName);
+                    logger.logInfo("Writing data into existing Table " + tableAndSchemaName);
                     tableDataFrame.write()
                             .mode(SaveMode.valueOf(inSavingMode))
                             .option("compression", COMPRESSION_FORMAT)
@@ -155,7 +157,7 @@ public class parquet {
                 }
 
                 if (!inSparkSession.catalog().tableExists(tableAndSchemaName)) {
-                    logger.logInfo(loggerTag, "Creating table " + tableAndSchemaName + " and writing data");
+                    logger.logInfo("Creating table " + tableAndSchemaName + " and writing data");
                     tableDataFrame.write()
                             .format("parquet")
                             .option("path", inOutputPath)
@@ -163,7 +165,7 @@ public class parquet {
                             .partitionBy(partitioningKeys)
                             .saveAsTable(tableAndSchemaName);
                 } else {
-                    logger.logInfo(loggerTag, "Writing data into existing Table " + tableAndSchemaName);
+                    logger.logInfo("Writing data into existing Table " + tableAndSchemaName);
                     tableDataFrame.write()
                             .mode(SaveMode.valueOf(inSavingMode))
                             .partitionBy(partitioningKeys)
@@ -171,10 +173,10 @@ public class parquet {
                 }
             }
 
-            logger.logInfo(loggerTag, "Data Writing Process Completed for " + tableAndSchemaName + " with Status: " + status);
+            logger.logInfo("Data Writing Process Completed for " + tableAndSchemaName + " with Status: " + status);
 
         } catch (Exception e) {
-            logger.logError(loggerTag, "::" + e);
+            logger.logError("::" + e);
             throw new Exception("DataSourceException.DataSourceWrite");
         }
 

@@ -156,6 +156,7 @@
         <commons-csv.version>1.9.0</commons-csv.version>
     </properties>
     <!--<repositories><repository><id>gitlab-maven</id><url>https://gitlab.com/manishkumargupta/TestScala.git</url></repository></repositories><distributionManagement><repository><id>gitlab-maven</id><url>https://gitlab.com/manishkumargupta/TestScala.git</url></repository><snapshotRepository><id>gitlab-maven</id><url>https://gitlab.com/manishkumargupta/TestScala.git</url></snapshotRepository></distributionManagement>-->
+
     <dependencies>
         <!-- https://mvnrepository.com/artifact/org.zalando/spark-json-schema -->
         <dependency>
@@ -304,6 +305,11 @@
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-api</artifactId>
             <version>${log4j.api.version}</version> <!-- Use the latest version -->
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-layout-template-json</artifactId>
+            <version>${log4j.api.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.spark</groupId>

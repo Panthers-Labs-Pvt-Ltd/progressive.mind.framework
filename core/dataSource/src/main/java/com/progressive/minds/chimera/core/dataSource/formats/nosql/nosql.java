@@ -1,12 +1,12 @@
 package com.progressive.minds.chimera.core.dataSource.formats.nosql;
 
-import com.progressive.minds.chimera.foundational.logger.logger.ChimeraLogger;
+import com.progressive.minds.chimera.foundational.logging.ChimeraLogger;
+import com.progressive.minds.chimera.foundational.logging.ChimeraLoggerFactory;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
@@ -15,7 +15,7 @@ import static com.progressive.minds.chimera.core.dataSource.utility.commonFuncti
 public class nosql {
 
     private static final String loggerTag = "Document DB ";
-    private static final ChimeraLogger logger = new ChimeraLogger(nosql.class);
+    private static final ChimeraLogger logger = ChimeraLoggerFactory.getLogger(nosql.class);
     private static final String DEFAULT_COMPRESSION_FORMAT = "zlib,snappy";
     private static final String defaultConf = "[{\"Key\":\"partitioner\",\"value\":\"MongoPaginateBySizePartitioner\"}]";
     private static final String defaultWriteConf = "[{\"Key\":\"maxBatchSize\",\"Value\":\"512\"}]";
@@ -27,7 +27,7 @@ public class nosql {
         //Read Other Options -  partitionKey pipeline
 
         try {
-            logger.logInfo(inSourceTyp, "Read Options: " + inCustomConf);
+            logger.logInfo(inSourceTyp + " - Read Options: " + inCustomConf);
             String readOptions = isNullOrBlank(inCustomConf) ? defaultConf : inCustomConf;
             Map<String, String> extraOptions = getConfig(readOptions);
 
@@ -45,7 +45,7 @@ public class nosql {
                     .load();
 
         } catch (Exception e) {
-            logger.logError(inSourceTyp + " Data Source", "Error executing While reading from MonogDB: " + inCollectionNm, e);
+            logger.logError(inSourceTyp + " Data Source - Error executing While reading from MonogDB: " + inCollectionNm, e);
             throw new Exception("DataSourceException.SQLException");
         }
     }
@@ -70,8 +70,8 @@ public class nosql {
                 ? inCompressionFormat.toLowerCase(Locale.ROOT)
                 : DEFAULT_COMPRESSION_FORMAT;
 
-        logger.logInfo(loggerTag, String.format(
-                "Pipeline Name: %s, Compression format: %s, Write mode: %s",
+        logger.logInfo(loggerTag + String.format(
+                " - Pipeline Name: %s, Compression format: %s, Write mode: %s",
                 inPipelineName, inCompressionFormat, inSaveMode
         ));
         String writeOptions = isNullOrBlank(inCustomConf) ? defaultWriteConf : inCustomConf;
@@ -85,27 +85,27 @@ public class nosql {
 
         try {
             if (inExtraColumns != null && !inExtraColumns.isEmpty()) {
-                logger.logInfo(loggerTag, "Appending Extra Columns and Values to DataFrame");
+                logger.logInfo("Appending Extra Columns and Values to DataFrame");
                 tableDataFrame = mergeColumnsToDataFrame(tableDataFrame, inExtraColumns, inExtraColumnsValues);
-                logger.logInfo(loggerTag, "Extra Columns and Values have been mapped to DataFrame");
+                logger.logInfo("Extra Columns and Values have been mapped to DataFrame");
             }
 
             if (inSortingKeys != null && !inSortingKeys.isBlank()) {
-                logger.logInfo(loggerTag, "Executing Sorting Process on DataFrame");
+                logger.logInfo("Executing Sorting Process on DataFrame");
                 tableDataFrame = sortDataFrame(tableDataFrame, inSortingKeys, true);
-                logger.logInfo(loggerTag, "Sorting on DataFrame Executed Successfully");
+                logger.logInfo("Sorting on DataFrame Executed Successfully");
             }
 
             if (inDuplicationKeys != null && !inDuplicationKeys.isBlank()) {
-                logger.logInfo(loggerTag, "Executing Deduplication Process on DataFrame");
-                logger.logInfo(loggerTag, "Source records count (Before Deduplication): " + tableDataFrame.count());
+                logger.logInfo("Executing Deduplication Process on DataFrame");
+                logger.logInfo("Source records count (Before Deduplication): " + tableDataFrame.count());
                 tableDataFrame = DropDuplicatesOnKey(inDuplicationKeys, tableDataFrame);
-                logger.logInfo(loggerTag, "Target records count (After Deduplication): " + tableDataFrame.count());
-                logger.logInfo(loggerTag, "Deduplication on DataFrame Executed Successfully");
+                logger.logInfo("Target records count (After Deduplication): " + tableDataFrame.count());
+                logger.logInfo("Deduplication on DataFrame Executed Successfully");
             }
 
             if (inPartitioningKeys == null || inPartitioningKeys.isEmpty()) {
-                logger.logInfo(loggerTag, "Saving data into Collection " + inCollectionNm);
+                logger.logInfo("Saving data into Collection " + inCollectionNm);
 
                 tableDataFrame.write()
                         .format("mongodb")
@@ -125,7 +125,7 @@ public class nosql {
                     throw new Exception("DataQualityException.PARTITION_NULL_CHECK");
                 }
 
-                logger.logInfo(loggerTag, "Creating Collection " + inCollectionNm + " and writing data");
+                logger.logInfo("Creating Collection " + inCollectionNm + " and writing data");
                 tableDataFrame.write()
                         .format("mongodb")
                         .option("database", inDatabaseName)
@@ -136,11 +136,11 @@ public class nosql {
                         .mode(inSaveMode)
                         .save();
 
-                logger.logInfo(loggerTag, "Data Writing Process Completed for " + inCollectionNm + " with Status: " + status);
+                logger.logInfo("Data Writing Process Completed for " + inCollectionNm + " with Status: " + status);
 
             }
         } catch (Exception e) {
-            logger.logError(loggerTag, "::" + e);
+            logger.logError("NoSQL ::" + e);
             throw new Exception("DataSourceException.DataSourceWrite");
         }
 

@@ -4,8 +4,10 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import com.progressive.minds.chimera.foundational.logger.logger.ChimeraLogger;
 import static com.progressive.minds.chimera.core.dataSource.utility.commonFunctions.*;
+
+import com.progressive.minds.chimera.foundational.logging.ChimeraLogger;
+import com.progressive.minds.chimera.foundational.logging.ChimeraLoggerFactory;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
@@ -13,7 +15,7 @@ import org.apache.spark.sql.SparkSession;
 public class jdbc {
 
     private static final String loggerTag = "JDBC ";
-    private static final ChimeraLogger logger = new ChimeraLogger(jdbc.class);
+    private static final ChimeraLogger logger = ChimeraLoggerFactory.getLogger(jdbc.class);
 
     private static final String defaultConf = "[{\"Key\":\"pushDownPredicate\",\"value\":\"true\"}]";
     private static final String defaultWriteConf = "[{\"Key\":\"queryTimeout\",\"Value\":\"0\"}]";
@@ -37,7 +39,7 @@ public class jdbc {
         // validateInputs(inSourceType, inJDBCUrl, inUserName, inPassword, inSQLQuery);
 
         try {
-            logger.logInfo(inSourceTyp + " Table", "Read Options: " + inCustomConf);
+            logger.logInfo(inSourceTyp + " Table - Read Options: " + inCustomConf);
             String readOptions = isNullOrBlank(inCustomConf) ? defaultConf : inCustomConf;
             Map<String, String> extraOptions = getConfig(readOptions);
 
@@ -48,7 +50,7 @@ public class jdbc {
                     "");
 
             if (isNullOrBlank(driverType)) {
-                logger.logError(inSourceTyp, "Invalid Driver Specified for " + inSourceTyp);
+                logger.logError(inSourceTyp + "- Invalid Driver Specified for " + inSourceTyp);
                 throw new Exception("DataSourceException.InvalidJDBCDriver");
             }
 
@@ -65,7 +67,7 @@ public class jdbc {
                     .load();
 
         } catch (Exception e) {
-            logger.logError(inSourceTyp + " Data Source", "Error executing SQL Query: " + inSQLQuery, e);
+            logger.logError(inSourceTyp + " Data Source - Error executing SQL Query: " + inSQLQuery, e);
             throw new Exception("DataSourceException.SQLException");
         }
     }
@@ -84,7 +86,7 @@ public class jdbc {
             String numPartitions = extraOptions.getOrDefault("numPartitions", "4");
             String batchSize = extraOptions.getOrDefault("batchsize", "5000");
 
-            logger.logInfo(inSourceTyp + " Writer", "JDBC URL: " + inJDBCUrl);
+            logger.logInfo(inSourceTyp + " Writer - JDBC URL: " + inJDBCUrl);
 
             String driver = extraOptions.getOrDefault("driver", driverMap.getOrDefault(inSourceType.toLowerCase(Locale.ROOT), ""));
             if (isNullOrBlank(driver)) {
@@ -106,11 +108,11 @@ public class jdbc {
                     .mode(inSaveMode)
                     .save();
 
-            logger.logInfo(inSourceTyp + " Writer", "Data Write Process Completed successfully");
+            logger.logInfo(inSourceTyp + " Writer - Data Write Process Completed successfully");
             return true;
 
         } catch (Exception e) {
-            logger.logError(inSourceTyp + " Data Source", "Error writing data to table: " + inTableName, e);
+            logger.logError(inSourceTyp + " Data Source- Error writing data to table: " + inTableName, e);
             throw new Exception("DataSourceException.SQLException");
         }
     }

@@ -2,6 +2,8 @@ package com.progressive.minds.chimera.core.dataSource.utility;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.progressive.minds.chimera.foundational.logging.ChimeraLogger;
+import com.progressive.minds.chimera.foundational.logging.ChimeraLoggerFactory;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import java.io.BufferedReader;
@@ -14,7 +16,6 @@ import java.util.Arrays;
 import java.util.Map;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.progressive.minds.chimera.foundational.logger.logger.ChimeraLogger;
 import org.apache.spark.sql.*;
 import org.apache.spark.sql.types.*;
 import static org.apache.spark.sql.functions.*;
@@ -23,7 +24,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class commonFunctions {
-    private static final ChimeraLogger logger = new ChimeraLogger(commonFunctions.class);
+    private static final ChimeraLogger logger = ChimeraLoggerFactory.getLogger(commonFunctions.class);
     private static String loggerTagName = "Common Functions";
 
     public static Dataset<Row> renamePartitionKeysCase(Dataset<Row> dataframe, String partitionBy) {
@@ -98,7 +99,7 @@ public class commonFunctions {
                     if (sourceDataframe.columns().toString().contains(e)) {
                         existFlag = false;
                         // Assuming logger is a logger instance
-                        logger.logInfo("[Deduplication]", "De Duplication Column Not Exist in DataFrame");
+                        logger.logInfo("[Deduplication]- De Duplication Column Not Exist in DataFrame");
                     }
                 }
                 if (existFlag) {
@@ -157,7 +158,7 @@ public class commonFunctions {
         for (HashMap<String, String> item : userConfig) {
             if (search.equals(item.get("Key"))) {
                 returnString = item.get("Value");
-                logger.logInfo("UserConfig", "Config for Key [" + search + "] and Value is [" + returnString + "] ");
+                logger.logInfo("UserConfig - Config for Key [" + search + "] and Value is [" + returnString + "] ");
                 break;
             }
         }
@@ -173,18 +174,18 @@ public class commonFunctions {
         String defaultSparkConf = "{\"Key\":\"default\",\"Value\":\"default\"))}";
 
         String userConf = (inUserConfig != null) ? inUserConfig : defaultSparkConf;
-        logger.logInfo(loggerTag, "Setting User Defined and default Config for Key " + inUserConfig);
+        logger.logInfo("Setting User Defined and default Config for Key " + inUserConfig);
 
         List<HashMap<String, String>> userConfig = new Gson().fromJson(userConf,
                 new TypeToken<List<HashMap<String, String>>>() {}.getType());
 
-        logger.logInfo(loggerTag, "User Config " + userConfig);
+        logger.logInfo("User Config " + userConfig);
 
         for (HashMap<String, String> item : userConfig) {
             map.put(item.get("Key"), item.get("Value"));
         }
 
-        logger.logInfo(loggerTag, "User Config mapping Completed " + map.toString());
+        logger.logInfo("User Config mapping Completed " + map.toString());
 
         return map;
     }
@@ -208,7 +209,7 @@ public class commonFunctions {
                 defaultConfigJson.append(line);
             }
 
-            logger.logInfo(loggerTag, String.format("Setting User Defined and default Config for Key %s", search));
+            logger.logInfo(String.format("Setting User Defined and default Config for Key %s", search));
 
             List<HashMap<String, String>> userConfig = new Gson().fromJson(userConf,
                     new TypeToken<List<HashMap<String, String>>>(){}.getType());
@@ -220,8 +221,7 @@ public class commonFunctions {
             for (HashMap<String, String> item : userConfig) {
                 if (search.equals(item.get("Key"))) {
                     returnString = item.get("Value");
-                    logger.logInfo(loggerTag,
-                            String.format("User Defined Config for Key %s = %s", search, returnString));
+                    logger.logInfo(String.format("User Defined Config for Key %s = %s", search, returnString));
                     break;
                 }
             }
@@ -231,8 +231,7 @@ public class commonFunctions {
                 for (HashMap<String, String> item : defaultConfig) {
                     if (search.equals(item.get("propertyname"))) {
                         returnString = item.get("defaultvalue");
-                        logger.logInfo(loggerTag,
-                                String.format("User Defined Config for Key %s = %s", search, returnString));
+                        logger.logInfo(String.format("User Defined Config for Key %s = %s", search, returnString));
                         break;
                     }
                 }
@@ -421,16 +420,15 @@ public class commonFunctions {
                 break;
 
             default:
-                logger.logWarning("Data Type Caster", "Invalid Schema DataType Found for " + colName + " and Data Type " + typeString);
-                logger.logWarning("Data Type Caster", "Interpreting As StringType for Spark and Continuing");
+                logger.logWarning("Data Type Caster - Invalid Schema DataType Found for " + colName + " and Data Type " + typeString);
+                logger.logWarning("Data Type Caster - Interpreting As StringType for Spark and Continuing");
                 returnDataType = DataTypes.StringType;
         }
         return returnDataType;
     }
 
     private static void auditConversion(String colName, String typeString, String sparkType) {
-        logger.logWarning("Data Type Caster",
-                "Interpreting As " + typeString + " for Spark Data Type " + sparkType + " For Column " + colName);
+        logger.logWarning("Data Type Caster - Interpreting As " + typeString + " for Spark Data Type " + sparkType + " For Column " + colName);
     }
 
     private static Map<String, Integer> getDecimalScale(int precision, int scale) {
@@ -459,8 +457,8 @@ public class commonFunctions {
     }
 
     public StructType constructStructSchema(String inboundSchema, String appName) throws Exception {
-        logger.logInfo("constructStructSchema", "constructStructSchema Started");
-        logger.logInfo("constructStructSchema", "InboundSchema is " + inboundSchema);
+        logger.logInfo("constructStructSchema Started");
+        logger.logInfo("InboundSchema is " + inboundSchema);
         StructType structSchema = new StructType();
         try {
             List<HashMap<String, String>> listObj = new Gson().fromJson(inboundSchema,
@@ -472,10 +470,10 @@ public class commonFunctions {
                         Boolean.parseBoolean(item.get("Nullable")));
             }
         } catch (Exception e) {
-            logger.logError("ProcessEvent", e.getMessage());
+            logger.logError("ProcessEvent - "+  e.getMessage());
             throw new Exception("EDLExecutionException.UNCAUGHT EXCEPTION");
         }
-        logger.logInfo("ProcessEvent", "constructStructSchema Completed");
+        logger.logInfo("ProcessEvent - constructStructSchema Completed");
         return structSchema;
     }
     public static Dataset<Row> mergeColumnsToDataFrame(Dataset<Row> tableDataFrame, String colName, String colValue) {

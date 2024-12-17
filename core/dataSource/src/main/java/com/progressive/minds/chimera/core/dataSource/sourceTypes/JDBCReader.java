@@ -3,7 +3,8 @@ package com.progressive.minds.chimera.core.dataSource.sourceTypes;
 import com.progressive.minds.chimera.core.databaseOps.utility.CloudCredentials;
 import com.progressive.minds.chimera.core.dataSource.formats.jdbc.jdbc;
 import com.progressive.minds.chimera.core.dataSource.modal.DataReader;
-import com.progressive.minds.chimera.foundational.logger.logger.ChimeraLogger;
+import com.progressive.minds.chimera.foundational.logging.ChimeraLogger;
+import com.progressive.minds.chimera.foundational.logging.ChimeraLoggerFactory;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
@@ -12,7 +13,7 @@ import java.util.Map;
 
 public class JDBCReader implements DataReader.Databases {
 
-    private final ChimeraLogger logger = new ChimeraLogger(this.getClass());
+    private static final ChimeraLogger logger = ChimeraLoggerFactory.getLogger(JDBCReader.class);
     private final String loggerTagName = "JDBC Reader";
 
 
@@ -20,7 +21,7 @@ public class JDBCReader implements DataReader.Databases {
     @Override
     public Dataset<Row> read(String inSourceType, SparkSession inSparkSession, String inDataSourceNm,
                              String inSQLQuery, String inCustomConf) throws Exception {
-        logger.logInfo(loggerTagName, "Initiating JDBC Reader....");
+        logger.logInfo("Initiating JDBC Reader....");
 
         Dataset<Row> dataFrame = inSparkSession.emptyDataFrame();
 

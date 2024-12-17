@@ -3,7 +3,8 @@ package com.progressive.minds.chimera.foundational.exception;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.module.scala.DefaultScalaModule;
-import com.progressive.minds.chimera.foundational.logger.logger.ChimeraLogger;
+import com.progressive.minds.chimera.foundational.logging.ChimeraLogger;
+import com.progressive.minds.chimera.foundational.logging.ChimeraLoggerFactory;
 import org.apache.commons.text.StringSubstitutor;
 
 
@@ -14,11 +15,11 @@ import java.util.*;
 public class ErrorClassesJsonReader {
 
     private final Map<String, ErrorInfo> errorInfoMap;
-    ChimeraLogger logger = new ChimeraLogger(ErrorClassesJsonReader.class);
+    private ChimeraLogger logger = ChimeraLoggerFactory.getLogger(ErrorClassesJsonReader.class);
 
     public ErrorClassesJsonReader(List<URL> jsonFileURLs) {
         if (jsonFileURLs.isEmpty()) {
-            logger.logError("ErrorClassesJsonReader", "JSON file URLs must not be empty");
+            logger.logError("JSON file URLs must not be empty");
             throw new IllegalArgumentException("JSON file URLs must not be empty");
         }
         this.errorInfoMap = jsonFileURLs.stream()
@@ -27,7 +28,7 @@ public class ErrorClassesJsonReader {
                     map1.putAll(map2);
                     return map1;
                 });
-        logger.logInfo("ErrorClassesJsonReader", "Error classes: " + errorInfoMap);
+        logger.logInfo("Error classes: " + errorInfoMap);
     }
 
     // write a function on a HapMap to map a key value to "null" if the value of the key is null
