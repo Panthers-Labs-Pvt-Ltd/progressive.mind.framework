@@ -1,0 +1,5 @@
+transport:
+  type: s3
+  endpoint: https://my-minio.example.com
+  bucketName: events
+  fileNamePrefix: my/service/events/event
