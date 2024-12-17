@@ -11,5 +11,6 @@
 
     <groupId>com.progressive.minds.chimera</groupId>
     <artifactId>core.executionEngine</artifactId>
+    <version>1.0-SNAPSHOT</version>
 
 </project>

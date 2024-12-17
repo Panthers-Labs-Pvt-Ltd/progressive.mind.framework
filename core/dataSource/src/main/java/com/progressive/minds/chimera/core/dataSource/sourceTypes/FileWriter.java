@@ -2,7 +2,8 @@ package com.progressive.minds.chimera.core.dataSource.sourceTypes;
 
 import com.progressive.minds.chimera.core.dataSource.formats.files.parquet;
 import com.progressive.minds.chimera.core.dataSource.modal.DataWriter;
-import com.progressive.minds.chimera.foundational.logger.logger.ChimeraLogger;
+import com.progressive.minds.chimera.foundational.logging.ChimeraLogger;
+import com.progressive.minds.chimera.foundational.logging.ChimeraLoggerFactory;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
@@ -11,7 +12,7 @@ import java.util.Locale;
 
 public class FileWriter  implements DataWriter.Files{
 
-    private final ChimeraLogger logger = new ChimeraLogger(this.getClass());
+    private static final ChimeraLogger logger = ChimeraLoggerFactory.getLogger(FileWriter.class);
     private String loggerTagName = "File Writer";
     /**
      * @param inSourceType
@@ -37,7 +38,7 @@ public class FileWriter  implements DataWriter.Files{
                               String inOutputPath, String inSavingMode, String inPartitioningKeys,
                               String inSortingKeys, String inDuplicationKeys, String inExtraColumns,
                               String inExtraColumnsValues, String inCustomConfig, String inCompressionFormat) throws Exception {
-        logger.logInfo(loggerTagName, "Initiating Writing....");
+        logger.logInfo("Initiating Writing....");
         Dataset<Row> dataFrame = inSparkSession.emptyDataFrame();
         String SourceType = inSourceType.toLowerCase(Locale.ROOT);
         if (SourceType.equals("parquet")) {
@@ -86,7 +87,7 @@ public class FileWriter  implements DataWriter.Files{
                     inExtraColumns,inExtraColumnsValues,inCustomConfig) ;
         }
         else {
-            logger.logError(loggerTagName, "Unsupported Format " + inSourceType);
+            logger.logError("Unsupported Format " + inSourceType);
             System.exit(1);
         }
     return dataFrame;
