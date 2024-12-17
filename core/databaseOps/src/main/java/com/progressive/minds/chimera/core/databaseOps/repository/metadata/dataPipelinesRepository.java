@@ -30,18 +30,21 @@ public class dataPipelinesRepository {
                 dataPipelines dp = mapResultSetToDataPipelines(resultSet);
                 dataPipelines.add(dp);
             }
-        } catch (Exception e) {
-            throw new DatabaseException("Error fetching dataSources from the database.", e);
+        } catch (SQLException sqlEx) {
+            handleSQLException(sqlEx);
+        } catch (Exception ex) {
+            // Handle any other exceptions
+            String errorMessage = "Unexpected error while saving data sources Connections: " + ex.getMessage();
+            throw new DatabaseException(errorMessage, ex);
         }
-
         return dataPipelines;
     }
 
 
     public void putDataPipelines(dataPipelines dataPipelines) {
         String query = "INSERT INTO data_pipelines (pipeline_name, pipeline_description, process_mode, run_frequency," +
-                " created_by, active_flag) " +
-                "values (?, ?, ?, ?, ?, ?)";
+                " created_by, created_timestamp, updated_by, updated_timestamp, active_flag) " +
+                "values (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection connection = DataSourceConfig.getDataSource().getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
@@ -51,12 +54,49 @@ public class dataPipelinesRepository {
             preparedStatement.setString(3, dataPipelines.getProcessMode());
             preparedStatement.setString(4, dataPipelines.getRunFrequency());
             preparedStatement.setString(5, dataPipelines.getCreatedBy());
-            preparedStatement.setString(6, dataPipelines.getActiveFlag());
+            preparedStatement.setTimestamp(6, new Timestamp(System.currentTimeMillis()));
+            preparedStatement.setString(7, dataPipelines.getUpdatedBy());
+            preparedStatement.setTimestamp(8, dataPipelines.getUpdatedTimestamp());
+            preparedStatement.setString(9, dataPipelines.getActiveFlag());
             int rowsInserted = preparedStatement.executeUpdate();
             connection.commit();
             System.out.println("rowsInserted : " + rowsInserted);
-        } catch (Exception e) {
-            throw new DatabaseException("Error saving user to the database.", e);
+        } catch (SQLException sqlEx) {
+            handleSQLException(sqlEx);
+        } catch (Exception ex) {
+            // Handle any other exceptions
+            String errorMessage = "Unexpected error while saving data sources Connections: " + ex.getMessage();
+            throw new DatabaseException(errorMessage, ex);
+        }
+    }
+
+    private void handleSQLException(SQLException sqlEx) {
+        String sqlState = sqlEx.getSQLState();
+        int errorCode = sqlEx.getErrorCode();
+
+        if ("08001".equals(sqlState)) {
+            // SQL State 08001: Unable to connect to the database
+            throw new DatabaseException("Database connection error: " + sqlEx.getMessage(), sqlEx);
+        } else if ("23000".equals(sqlState)) {
+            // SQL State 23000: Integrity constraint violation
+            throw new DatabaseException("Data integrity violation: " + sqlEx.getMessage(), sqlEx);
+        } else if ("23503".equals(sqlState)) {
+            // SQL State 23505: Foreign Key Violation
+            throw new DatabaseException("Foreign Key Violation. Record is missing in Parent Table." + sqlEx.getMessage(), sqlEx);
+        } else if ("23505".equals(sqlState)) {
+            // SQL State 23505: Duplicate Key Violation
+            throw new DatabaseException("A Record with the given key already exists. " + sqlEx.getMessage(), sqlEx);
+        } else if ("23514".equals(sqlState)) {
+            // SQL State 23514: Duplicate Key Violation
+            throw new DatabaseException("Check Constraint is violated. Check the valid Fileds combination. " + sqlEx.getMessage(), sqlEx);
+        } else if ("42000".equals(sqlState)) {
+            // SQL State 42000: Syntax error or access violation
+            throw new DatabaseException("SQL syntax error or access violation: " + sqlEx.getMessage(), sqlEx);
+        } else {
+            // Default case for unhandled SQL exceptions
+            String errorMessage = String.format("Unhandled SQL exception [SQLState: %s, ErrorCode: %d]: %s",
+                    sqlState, errorCode, sqlEx.getMessage());
+            throw new DatabaseException(errorMessage, sqlEx);
         }
     }
 
@@ -101,9 +141,14 @@ public class dataPipelinesRepository {
                 }
             }
 
-        } catch (SQLException e) {
-            throw new DatabaseException("Error executing dynamic SELECT query", e);
+        } catch (SQLException sqlEx) {
+            handleSQLException(sqlEx);
+        } catch (Exception ex) {
+            // Handle any other exceptions
+            String errorMessage = "Unexpected error while saving data sources Connections: " + ex.getMessage();
+            throw new DatabaseException(errorMessage, ex);
         }
+
 
         return result;
 
@@ -127,6 +172,7 @@ public class dataPipelinesRepository {
     }
 
     public int updateDataPipelines(Map<String, Object> updateFields, Map<String, Object> filters) {
+        int returncode = 0;
         if (updateFields == null || updateFields.isEmpty()) {
             throw new IllegalArgumentException("Update fields cannot be null or empty");
         }
@@ -169,18 +215,20 @@ public class dataPipelinesRepository {
                     preparedStatement.setObject(index++, value);
                 }
             }
-
-            // Execute update and return affected row count
-            int returncode = preparedStatement.executeUpdate();
+            returncode = preparedStatement.executeUpdate();
             connection.commit();
-            return returncode;
-
-        } catch (Exception e) {
-            throw new DatabaseException("Error updating users in the database.", e);
+        } catch (SQLException sqlEx) {
+            handleSQLException(sqlEx);
+        } catch (Exception ex) {
+            // Handle any other exceptions
+            String errorMessage = "Unexpected error while saving data sources Connections: " + ex.getMessage();
+            throw new DatabaseException(errorMessage, ex);
         }
+        return returncode;
     }
 
     public int deleteFromDataPipelines(Map<String, Object> filters) {
+        int returnCode =0;
         StringBuilder queryBuilder = new StringBuilder("DELETE FROM data_pipelines");
 
         // Add WHERE clause if filters are provided
@@ -207,12 +255,17 @@ public class dataPipelinesRepository {
             }
 
             // Execute delete and return affected row count
-            int returnCode = preparedStatement.executeUpdate();
+            returnCode = preparedStatement.executeUpdate();
             connection.commit();
-            return returnCode;
 
-        } catch (Exception e) {
-            throw new DatabaseException("Error deleting users from the database.", e);
+
+        } catch (SQLException sqlEx) {
+            handleSQLException(sqlEx);
+        } catch (Exception ex) {
+            // Handle any other exceptions
+            String errorMessage = "Unexpected error while saving data sources Connections: " + ex.getMessage();
+            throw new DatabaseException(errorMessage, ex);
         }
+        return returnCode;
     }
 }

@@ -31,10 +31,13 @@ public class extractConfigRepository {
                 extractConfig ec = mapResultSetToExtractConfig(resultSet);
                 extractConfigs.add(ec);
             }
-        } catch (Exception e) {
-            throw new DatabaseException("Error fetching dataSources from the database.", e);
+        } catch (SQLException sqlEx) {
+            handleSQLException(sqlEx);
+        } catch (Exception ex) {
+            // Handle any other exceptions
+            String errorMessage = "Unexpected error while saving data sources Connections: " + ex.getMessage();
+            throw new DatabaseException(errorMessage, ex);
         }
-
         return extractConfigs;
     }
 
@@ -43,8 +46,8 @@ public class extractConfigRepository {
         String query = "INSERT INTO extract_config (unique_id, pipeline_name, sequence_number, data_source_type, " +
                 "data_source_sub_type, file_name, file_path, schema_path, row_filter, column_filter, extract_dataframe_name," +
                 " source_configuration, table_name, schema_name, sql_text, kafka_consumer_topic, kafka_consumer_group, " +
-                "kafka_start_offset, data_source_connection_name, created_by, active_flag) " +
-                "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                "kafka_start_offset, data_source_connection_name, created_timestamp, created_by, updated_by, updated_timestamp, active_flag) " +
+                "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection connection = DataSourceConfig.getDataSource().getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
@@ -68,14 +71,51 @@ public class extractConfigRepository {
             preparedStatement.setString(17, extractConfig.getKafkaConsumerGroup());
             preparedStatement.setString(18, extractConfig.getKafkaStartOffset());
             preparedStatement.setString(19, extractConfig.getDataSourceConnectionName());
-            preparedStatement.setString(20, extractConfig.getCreatedBy());
-            preparedStatement.setString(21, extractConfig.getActiveFlag());
+            preparedStatement.setTimestamp(20, new Timestamp(System.currentTimeMillis()));
+            preparedStatement.setString(21, extractConfig.getCreatedBy());
+            preparedStatement.setString(22, extractConfig.getUpdatedBy());
+            preparedStatement.setTimestamp(23, extractConfig.getUpdatedTimestamp());
+            preparedStatement.setString(24, extractConfig.getActiveFlag());
 
             int rowsInserted = preparedStatement.executeUpdate();
             connection.commit();
             System.out.println("rowsInserted : " + rowsInserted);
-        } catch (Exception e) {
-            throw new DatabaseException("Error saving user to the database.", e);
+        } catch (SQLException sqlEx) {
+            handleSQLException(sqlEx);
+        } catch (Exception ex) {
+            // Handle any other exceptions
+            String errorMessage = "Unexpected error while saving data sources Connections: " + ex.getMessage();
+            throw new DatabaseException(errorMessage, ex);
+        }
+    }
+
+    private void handleSQLException(SQLException sqlEx) {
+        String sqlState = sqlEx.getSQLState();
+        int errorCode = sqlEx.getErrorCode();
+
+        if ("08001".equals(sqlState)) {
+            // SQL State 08001: Unable to connect to the database
+            throw new DatabaseException("Database connection error: " + sqlEx.getMessage(), sqlEx);
+        } else if ("23000".equals(sqlState)) {
+            // SQL State 23000: Integrity constraint violation
+            throw new DatabaseException("Data integrity violation: " + sqlEx.getMessage(), sqlEx);
+        } else if ("23503".equals(sqlState)) {
+            // SQL State 23505: Foreign Key Violation
+            throw new DatabaseException("Foreign Key Violation. Record is missing in Parent Table." + sqlEx.getMessage(), sqlEx);
+        } else if ("23505".equals(sqlState)) {
+            // SQL State 23505: Duplicate Key Violation
+            throw new DatabaseException("A Record with the given key already exists. " + sqlEx.getMessage(), sqlEx);
+        } else if ("23514".equals(sqlState)) {
+            // SQL State 23514: Duplicate Key Violation
+            throw new DatabaseException("Check Constraint is violated. Check the valid Fileds combination. " + sqlEx.getMessage(), sqlEx);
+        } else if ("42000".equals(sqlState)) {
+            // SQL State 42000: Syntax error or access violation
+            throw new DatabaseException("SQL syntax error or access violation: " + sqlEx.getMessage(), sqlEx);
+        } else {
+            // Default case for unhandled SQL exceptions
+            String errorMessage = String.format("Unhandled SQL exception [SQLState: %s, ErrorCode: %d]: %s",
+                    sqlState, errorCode, sqlEx.getMessage());
+            throw new DatabaseException(errorMessage, sqlEx);
         }
     }
 
@@ -120,10 +160,13 @@ public class extractConfigRepository {
                 }
             }
 
-        } catch (SQLException e) {
-            throw new DatabaseException("Error executing dynamic SELECT query", e);
+        } catch (SQLException sqlEx) {
+            handleSQLException(sqlEx);
+        } catch (Exception ex) {
+            // Handle any other exceptions
+            String errorMessage = "Unexpected error while saving data sources Connections: " + ex.getMessage();
+            throw new DatabaseException(errorMessage, ex);
         }
-
         return result;
 
 
@@ -161,6 +204,7 @@ public class extractConfigRepository {
     }
 
     public int updateExtractConfig(Map<String, Object> updateFields, Map<String, Object> filters) {
+        int returnCode = 0;
         if (updateFields == null || updateFields.isEmpty()) {
             throw new IllegalArgumentException("Update fields cannot be null or empty");
         }
@@ -205,16 +249,22 @@ public class extractConfigRepository {
             }
 
             // Execute update and return affected row count
-            int returnCode = preparedStatement.executeUpdate();
+            returnCode = preparedStatement.executeUpdate();
             connection.commit();
-            return returnCode;
 
-        } catch (Exception e) {
-            throw new DatabaseException("Error updating users in the database.", e);
+
+        } catch (SQLException sqlEx) {
+            handleSQLException(sqlEx);
+        } catch (Exception ex) {
+            // Handle any other exceptions
+            String errorMessage = "Unexpected error while saving data sources Connections: " + ex.getMessage();
+            throw new DatabaseException(errorMessage, ex);
         }
+        return returnCode;
     }
 
     public int deleteFromExtractConfig(Map<String, Object> filters) {
+        int returnCode = 0;
         StringBuilder queryBuilder = new StringBuilder("DELETE FROM extract_config");
 
         // Add WHERE clause if filters are provided
@@ -241,12 +291,15 @@ public class extractConfigRepository {
             }
 
             // Execute delete and return affected row count
-            int returnCode = preparedStatement.executeUpdate();
+            returnCode = preparedStatement.executeUpdate();
             connection.commit();
-            return returnCode;
-
-        } catch (Exception e) {
-            throw new DatabaseException("Error deleting users from the database.", e);
+        } catch (SQLException sqlEx) {
+            handleSQLException(sqlEx);
+        } catch (Exception ex) {
+            // Handle any other exceptions
+            String errorMessage = "Unexpected error while saving data sources Connections: " + ex.getMessage();
+            throw new DatabaseException(errorMessage, ex);
         }
+        return returnCode;
     }
 }
