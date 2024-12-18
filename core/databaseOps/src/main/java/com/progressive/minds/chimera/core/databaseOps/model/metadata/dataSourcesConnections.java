@@ -18,9 +18,6 @@ public class dataSourcesConnections {
     private String userName;
     private String userPassword;
     private String cloudProvider;
-
-
-
     private String secretName;
     private String gcpProjectId;
     private String azureKeyVaultUrl;
