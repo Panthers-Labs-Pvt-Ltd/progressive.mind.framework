@@ -204,7 +204,7 @@ public class testDataSourcesRepository {
             Map<String, Object> updateFields = new HashMap<>();
             updateFields.put("description", "New Description");
 
-            dataSourcesRepository.updateDataSources(updateFields, filter);
+            dataSourcesRepository.updateDataSources(updateFields, filter, "PK");
             List<dataSources> selectList = dataSourcesRepository.getDataSourcesWithFilters(filter);
             assertEquals("New Description", selectList.get(0).getDescription());
             Map<String, Object> deleteFilter = new HashMap<>();

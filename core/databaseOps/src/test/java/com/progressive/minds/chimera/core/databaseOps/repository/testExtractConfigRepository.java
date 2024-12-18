@@ -44,7 +44,7 @@ public class testExtractConfigRepository {
                 new Timestamp(System.currentTimeMillis()), "PK", null, null, "Y");
         dataSourcesConnections dsc = new dataSourcesConnections("Postgres_Local_Test_Connection",
                 "Relational", "Postgres", "localhost", 5432, "chimera_db",
-                null, "Username&Password", "chimera", "chimera123",
+                null, "Username&Password", "chimera", "chimera123", null, null, null, null,
                 null, null, null, null, null,null,null,null,
                 null,null,null,null,null,
                 null,null,null, new Timestamp(System.currentTimeMillis()),"PK",
@@ -52,7 +52,7 @@ public class testExtractConfigRepository {
         dataPipelines dp = new dataPipelines("TestPipeline", "Pipeline to unit test",
                 "Batch", "23 * * *",  new Timestamp(System.currentTimeMillis()), "PK",
                 null, null, "Y");
-        extractConfig ec = new extractConfig(1, "TestPipeline", 1, "Relational",
+        extractConfig ec = new extractConfig( "TestPipeline", 1, "Relational",
                 "Postgres", null, null, null, null, null,
                 "extractDF", null, "sampleTable", "public",
                 "select * from sampleTable;", null, null, null,
@@ -92,7 +92,7 @@ public class testExtractConfigRepository {
                 new Timestamp(System.currentTimeMillis()), "PK", null, null, "Y");
         dataSourcesConnections dsc = new dataSourcesConnections("Postgres_Local_Test_Connection",
                 "Relational", "Postgres", "localhost", 5432, "chimera_db",
-                null, "Username&Password", "chimera", "chimera123",
+                null, "Username&Password", "chimera", "chimera123", null, null, null, null,
                 null, null, null, null, null,null,null,null,
                 null,null,null,null,null,
                 null,null,null, new Timestamp(System.currentTimeMillis()),"PK",
@@ -100,7 +100,7 @@ public class testExtractConfigRepository {
         dataPipelines dp = new dataPipelines("TestPipeline1", "Pipeline to unit test",
                 "Batch", "23 * * *",  new Timestamp(System.currentTimeMillis()), "PK",
                 null, null, "Y");
-        extractConfig ec = new extractConfig(1, "TestPipeline", 1, "Relational",
+        extractConfig ec = new extractConfig("TestPipeline", 1, "Relational",
                 "Postgres", null, null, null, null, null,
                 "extractDF", null, "sampleTable", "public",
                 "select * from sampleTable;", null, null, null,
@@ -141,7 +141,7 @@ public class testExtractConfigRepository {
                 new Timestamp(System.currentTimeMillis()), "PK", null, null, "Y");
         dataSourcesConnections dsc = new dataSourcesConnections("Postgres_Local_Test_Connection",
                 "Relational", "Postgres", "localhost", 5432, "chimera_db",
-                null, "Username&Password", "chimera", "chimera123",
+                null, "Username&Password", "chimera", "chimera123", null, null, null, null,
                 null, null, null, null, null,null,null,null,
                 null,null,null,null,null,
                 null,null,null, new Timestamp(System.currentTimeMillis()),"PK",
@@ -149,13 +149,13 @@ public class testExtractConfigRepository {
         dataPipelines dp = new dataPipelines("TestPipeline", "Pipeline to unit test",
                 "Batch", "23 * * *",  new Timestamp(System.currentTimeMillis()), "PK",
                 null, null, "Y");
-        extractConfig ec = new extractConfig(1, "TestPipeline", 1, "Relational",
+        extractConfig ec = new extractConfig( "TestPipeline", 1, "Relational",
                 "Postgres", null, null, null, null, null,
                 "extractDF", null, "sampleTable", "public",
                 "select * from sampleTable;", null, null, null,
                 "Postgres_Local_Test_Connection", new Timestamp(System.currentTimeMillis()),
                 "PK", null, null, "Y");
-        extractConfig ec1 = new extractConfig(2, "TestPipeline", 1, "Relational",
+        extractConfig ec1 = new extractConfig( "TestPipeline", 1, "Relational",
                 "Postgres", null, null, null, null, null,
                 "extractDF", null, "sampleTable1", "public",
                 "select * from sampleTable;", null, null, null,
@@ -174,8 +174,9 @@ public class testExtractConfigRepository {
             extractConfigRepository.putExtractConfig(ecList);
             System.out.println("Insert Operation Successful on extract_config.");
         } catch (Exception e) {
-            assertEquals("A Record with the given key already exists. ERROR: duplicate key value violates unique constraint \"pk_chimera_data_sources\"\n" +
-                    "  Detail: Key (data_source_type, data_source_sub_type)=(Relational, Postgres) already exists.", e.getMessage());
+            System.out.println("ErrorMessage - " + e.getMessage());
+            String actualErrorMessage = e.getMessage();
+            assertTrue(actualErrorMessage.contains("A Record with the given key already exists. ERROR: duplicate key value violates unique constraint "));
         } finally {
             Map<String, Object> filter = new HashMap<>();
             filter.put("data_source_type", "Relational");
@@ -197,20 +198,20 @@ public class testExtractConfigRepository {
         dataSourcesConnections dsc = new dataSourcesConnections("Postgres_Local_Test_Connection",
                 "Relational", "Postgres", "localhost", 5432, "chimera_db",
                 null, "Username&Password", "chimera", "chimera123",
-                null, null, null, null, null,null,null,null,
+                null, null, null, null, null,null,null,null, null, null, null, null,
                 null,null,null,null,null,
                 null,null,null, new Timestamp(System.currentTimeMillis()),"PK",
                 null, null, "Y");
         dataPipelines dp = new dataPipelines("TestPipeline", "Pipeline to unit test",
                 "Batch", "23 * * *",  new Timestamp(System.currentTimeMillis()), "PK",
                 null, null, "Y");
-        extractConfig ec = new extractConfig(1, "TestPipeline", 1, "Relational",
+        extractConfig ec = new extractConfig("TestPipeline", 1, "Relational",
                 "Postgres", null, null, null, null, null,
                 "extractDF", null, "sampleTable", "public",
                 "select * from sampleTable;", null, null, null,
                 "Postgres_Local_Test_Connection", new Timestamp(System.currentTimeMillis()),
                 "PK", null, null, "Y");
-        extractConfig ec1 = new extractConfig(2, "TestPipeline", 1, "Relational",
+        extractConfig ec1 = new extractConfig( "TestPipeline", 2, "Relational",
                 "Postgres", null, null, null, null, null,
                 "extractDF", null, "sampleTable1", "public",
                 "select * from sampleTable;", null, null, null,
@@ -234,7 +235,6 @@ public class testExtractConfigRepository {
             List<extractConfig> selectList = extractConfigRepository.getAllExtractConfig();
             assertTrue(!selectList.isEmpty());
             assertEquals(2, selectList.size());
-            assertEquals(ecList.get(0).getUniqueId(), selectList.get(0).getUniqueId());
             assertEquals(ecList.get(0).getPipelineName(), selectList.get(0).getPipelineName());
             assertEquals(ecList.get(0).getSequenceNumber(), selectList.get(0).getSequenceNumber());
             assertEquals(ecList.get(0).getDataSourceType(), selectList.get(0).getDataSourceType());
@@ -258,7 +258,6 @@ public class testExtractConfigRepository {
             assertEquals(ecList.get(0).getUpdatedTimestamp(), selectList.get(0).getUpdatedTimestamp());
             assertEquals(ecList.get(0).getActiveFlag(), selectList.get(0).getActiveFlag());
 
-            assertEquals(ecList.get(1).getUniqueId(), selectList.get(1).getUniqueId());
             assertEquals(ecList.get(1).getPipelineName(), selectList.get(1).getPipelineName());
             assertEquals(ecList.get(1).getSequenceNumber(), selectList.get(1).getSequenceNumber());
             assertEquals(ecList.get(1).getDataSourceType(), selectList.get(1).getDataSourceType());
@@ -302,20 +301,20 @@ public class testExtractConfigRepository {
         dataSourcesConnections dsc = new dataSourcesConnections("Postgres_Local_Test_Connection",
                 "Relational", "Postgres", "localhost", 5432, "chimera_db",
                 null, "Username&Password", "chimera", "chimera123",
-                null, null, null, null, null,null,null,null,
+                null, null, null, null, null,null,null,null, null, null, null, null,
                 null,null,null,null,null,
                 null,null,null, new Timestamp(System.currentTimeMillis()),"PK",
                 null, null, "Y");
         dataPipelines dp = new dataPipelines("TestPipeline", "Pipeline to unit test",
                 "Batch", "23 * * *",  new Timestamp(System.currentTimeMillis()), "PK",
                 null, null, "Y");
-        extractConfig ec = new extractConfig(1, "TestPipeline", 1, "Relational",
+        extractConfig ec = new extractConfig( "TestPipeline", 1, "Relational",
                 "Postgres", null, null, null, null, null,
                 "extractDF", null, "sampleTable", "public",
                 "select * from sampleTable;", null, null, null,
                 "Postgres_Local_Test_Connection", new Timestamp(System.currentTimeMillis()),
                 "PK", null, null, "Y");
-        extractConfig ec1 = new extractConfig(2, "TestPipeline", 1, "Relational",
+        extractConfig ec1 = new extractConfig( "TestPipeline", 2, "Relational",
                 "Postgres", null, null, null, null, null,
                 "extractDF", null, "sampleTable1", "public",
                 "select * from sampleTable;", null, null, null,
@@ -341,7 +340,6 @@ public class testExtractConfigRepository {
             List<extractConfig> selectList = extractConfigRepository.getExtractConfigWithFilters(selFilter);
             assertTrue(!selectList.isEmpty());
             assertEquals(1, selectList.size());
-            assertEquals(ecList.get(1).getUniqueId(), selectList.get(0).getUniqueId());
             assertEquals(ecList.get(1).getPipelineName(), selectList.get(0).getPipelineName());
             assertEquals(ecList.get(1).getSequenceNumber(), selectList.get(0).getSequenceNumber());
             assertEquals(ecList.get(1).getDataSourceType(), selectList.get(0).getDataSourceType());
@@ -389,20 +387,20 @@ public class testExtractConfigRepository {
         dataSourcesConnections dsc = new dataSourcesConnections("Postgres_Local_Test_Connection",
                 "Relational", "Postgres", "localhost", 5432, "chimera_db",
                 null, "Username&Password", "chimera", "chimera123",
-                null, null, null, null, null,null,null,null,
+                null, null, null, null, null,null,null,null, null, null, null, null,
                 null,null,null,null,null,
                 null,null,null, new Timestamp(System.currentTimeMillis()),"PK",
                 null, null, "Y");
         dataPipelines dp = new dataPipelines("TestPipeline", "Pipeline to unit test",
                 "Batch", "23 * * *",  new Timestamp(System.currentTimeMillis()), "PK",
                 null, null, "Y");
-        extractConfig ec = new extractConfig(1, "TestPipeline", 1, "Relational",
+        extractConfig ec = new extractConfig( "TestPipeline", 1, "Relational",
                 "Postgres", null, null, null, null, null,
                 "extractDF", null, "sampleTable", "public",
                 "select * from sampleTable;", null, null, null,
                 "Postgres_Local_Test_Connection", new Timestamp(System.currentTimeMillis()),
                 "PK", null, null, "Y");
-        extractConfig ec1 = new extractConfig(2, "TestPipeline", 1, "Relational",
+        extractConfig ec1 = new extractConfig( "TestPipeline", 2, "Relational",
                 "Postgres", null, null, null, null, null,
                 "extractDF", null, "sampleTable1", "public",
                 "select * from sampleTable;", null, null, null,
@@ -429,7 +427,7 @@ public class testExtractConfigRepository {
             Map<String, Object> updateFields = new HashMap<>();
             updateFields.put("extract_dataframe_name", "New_DF");
 
-            extractConfigRepository.updateExtractConfig(updateFields, filter);
+            extractConfigRepository.updateExtractConfig(updateFields, filter, "PK");
             List<extractConfig> selectList = extractConfigRepository.getExtractConfigWithFilters(filter);
             assertEquals("New_DF", selectList.get(0).getExtractDataframeName());
             Map<String, Object> DelFilter = new HashMap<>();

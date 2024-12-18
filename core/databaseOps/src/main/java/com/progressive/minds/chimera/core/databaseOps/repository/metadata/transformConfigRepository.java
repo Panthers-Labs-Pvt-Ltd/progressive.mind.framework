@@ -44,23 +44,22 @@ public class transformConfigRepository {
 
 
     public void putTransformConfig(transformConfig transformConfig) {
-        String query = "INSERT INTO transform_config (unique_id, pipeline_name, sequence_number, sql_text, " +
+        String query = "INSERT INTO transform_config (pipeline_name, sequence_number, sql_text, " +
                 "transform_dataframe_name, created_timestamp, created_by, updated_by, updated_timestamp, active_flag) " +
-                "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                "values (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection connection = DataSourceConfig.getDataSource().getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
-            preparedStatement.setInt(1, transformConfig.getUniqueId());
-            preparedStatement.setString(2, transformConfig.getPipelineName());
-            preparedStatement.setInt(3, transformConfig.getSequenceNumber());
-            preparedStatement.setString(4, transformConfig.getSqlText());
-            preparedStatement.setString(5, transformConfig.getTransformDataframeName());
-            preparedStatement.setTimestamp(6, new Timestamp(System.currentTimeMillis()));
-            preparedStatement.setString(7, transformConfig.getCreatedBy());
-            preparedStatement.setString(8, transformConfig.getUpdatedBy());
-            preparedStatement.setTimestamp(9, transformConfig.getUpdatedTimestamp());
-            preparedStatement.setString(10, transformConfig.getActiveFlag());
+            preparedStatement.setString(1, transformConfig.getPipelineName());
+            preparedStatement.setInt(2, transformConfig.getSequenceNumber());
+            preparedStatement.setString(3, transformConfig.getSqlText());
+            preparedStatement.setString(4, transformConfig.getTransformDataframeName());
+            preparedStatement.setTimestamp(5, new Timestamp(System.currentTimeMillis()));
+            preparedStatement.setString(6, transformConfig.getCreatedBy());
+            preparedStatement.setString(7, transformConfig.getUpdatedBy());
+            preparedStatement.setTimestamp(8, transformConfig.getUpdatedTimestamp());
+            preparedStatement.setString(9, transformConfig.getActiveFlag());
 
             int rowsInserted = preparedStatement.executeUpdate();
             connection.commit();
@@ -161,7 +160,6 @@ public class transformConfigRepository {
 
     private transformConfig mapResultSetToTransformConfig(ResultSet resultSet) throws SQLException {
         transformConfig tc = new transformConfig();
-        tc.setUniqueId(resultSet.getInt("unique_id"));
         tc.setPipelineName(resultSet.getString("pipeline_name"));
         tc.setSequenceNumber(resultSet.getInt("sequence_number"));
         tc.setSqlText(resultSet.getString("sql_text"));
@@ -176,14 +174,17 @@ public class transformConfigRepository {
 
     }
 
-    public int updateTransformConfig(Map<String, Object> updateFields, Map<String, Object> filters) {
+    public int updateTransformConfig(Map<String, Object> updateFields, Map<String, Object> filters, String updatedBy) {
         int returnCode =0;
         if (updateFields == null || updateFields.isEmpty()) {
             throw new IllegalArgumentException("Update fields cannot be null or empty");
         }
 
+        //add updated_timestamp and updated_by columns in the updateFields Maps
+        updateFields.put("updated_timestamp", new Timestamp(System.currentTimeMillis()));
+        updateFields.put("updated_by", updatedBy);
+
         StringBuilder queryBuilder = new StringBuilder("UPDATE transform_config SET ");
-        //TODO: Add updated_timestamp and updatedBy columns
         List<String> updateClauses = new ArrayList<>();
 
         // Build SET clause

@@ -38,21 +38,21 @@ public class testPersistConfigRepository {
     }
 
     @Test
-    void testPutExtractConfigs_validSingleRecord_1()  {
+    void testPutPersistConfigs_validSingleRecord_1()  {
         // Arrange
         dataSources ds = new dataSources("Relational", "Postgres", "Postgres Database", "{\"Key\":\"value\"}", "{\"Key\":\"value\"}",
                 new Timestamp(System.currentTimeMillis()), "PK", null, null, "Y");
         dataSourcesConnections dsc = new dataSourcesConnections("Postgres_Local_Test_Connection",
                 "Relational", "Postgres", "localhost", 5432, "chimera_db",
                 null, "Username&Password", "chimera", "chimera123",
-                null, null, null, null, null,null,null,null,
+                null, null, null, null, null,null,null,null, null, null, null, null,
                 null,null,null,null,null,
                 null,null,null, new Timestamp(System.currentTimeMillis()),"PK",
                 null, null, "Y");
         dataPipelines dp = new dataPipelines("TestPipeline", "Pipeline to unit test",
                 "Batch", "23 * * *",  new Timestamp(System.currentTimeMillis()), "PK",
                 null, null, "Y");
-        persistConfig ec = new persistConfig(1, "TestPipeline", 1, "Relational",
+        persistConfig ec = new persistConfig( "TestPipeline", 1, "Relational",
                 "Postgres", "targetDB", "targetTable", "targetSchema",
                 null, null, null, "Append",
                 "Postgres_Local_Test_Connection", null, null, null,
@@ -88,21 +88,21 @@ public class testPersistConfigRepository {
     }
 
     @Test
-    void testPutExtractConfig_invalidSingleRecord_2()  {
+    void testPutPersistConfig_invalidSingleRecord_2()  {
         // Arrange
         dataSources ds = new dataSources("Relational", "Postgres", "Postgres Database", "{\"Key\":\"value\"}", "{\"Key\":\"value\"}",
                 new Timestamp(System.currentTimeMillis()), "PK", null, null, "Y");
         dataSourcesConnections dsc = new dataSourcesConnections("Postgres_Local_Test_Connection",
                 "Relational", "Postgres", "localhost", 5432, "chimera_db",
                 null, "Username&Password", "chimera", "chimera123",
-                null, null, null, null, null,null,null,null,
+                null, null, null, null, null,null,null,null, null, null, null, null,
                 null,null,null,null,null,
                 null,null,null, new Timestamp(System.currentTimeMillis()),"PK",
                 null, null, "Y");
         dataPipelines dp = new dataPipelines("TestPipeline1", "Pipeline to unit test",
                 "Batch", "23 * * *",  new Timestamp(System.currentTimeMillis()), "PK",
                 null, null, "Y");
-        persistConfig ec = new persistConfig(1, "TestPipeline", 1, "Relational",
+        persistConfig ec = new persistConfig( "TestPipeline", 1, "Relational",
                 "Postgres", "targetDB", "targetTable", "targetSchema",
                 null, null, null, "Append",
                 "Postgres_Local_Test_Connection", null, null, null,
@@ -120,7 +120,7 @@ public class testPersistConfigRepository {
         } catch (Exception e) {
             System.out.println("ErrorMessage - " + e.getMessage());
             String actualMessage = e.getMessage();
-            assertTrue(actualMessage.contains("Foreign Key Violation. Record is missing in Parent Table."),
+            assertTrue(actualMessage.contains("A Record with the given key already exists."),
                     "Expected 'Foreign Key Violation. Record is missing in Parent Table.' in the error message.");
         } finally {
             Map<String, Object> filter = new HashMap<>();
@@ -139,13 +139,13 @@ public class testPersistConfigRepository {
     }
 
     @Test
-    void testExtractPipelines_validMultipleRecord_3()  {
+    void testPersistPipelines_validMultipleRecord_3()  {
         // Arrange
         dataSources ds = new dataSources("Relational", "Postgres", "Postgres Database", "{\"Key\":\"value\"}", "{\"Key\":\"value\"}",
                 new Timestamp(System.currentTimeMillis()), "PK", null, null, "Y");
         dataSourcesConnections dsc = new dataSourcesConnections("Postgres_Local_Test_Connection",
                 "Relational", "Postgres", "localhost", 5432, "chimera_db",
-                null, "Username&Password", "chimera", "chimera123",
+                null, "Username&Password", "chimera", "chimera123", null, null, null, null,
                 null, null, null, null, null,null,null,null,
                 null,null,null,null,null,
                 null,null,null, new Timestamp(System.currentTimeMillis()),"PK",
@@ -153,13 +153,13 @@ public class testPersistConfigRepository {
         dataPipelines dp = new dataPipelines("TestPipeline", "Pipeline to unit test",
                 "Batch", "23 * * *",  new Timestamp(System.currentTimeMillis()), "PK",
                 null, null, "Y");
-        persistConfig pc = new persistConfig(1, "TestPipeline", 1, "Relational",
+        persistConfig pc = new persistConfig( "TestPipeline", 1, "Relational",
                 "Postgres", "targetDB", "targetTable", "targetSchema",
                 null, null, null, "Append",
                 "Postgres_Local_Test_Connection", null, null, null,
                 null, null, null, new Timestamp(System.currentTimeMillis()), "PK",
                 null, null, "Y" );
-        persistConfig pc1 = new persistConfig(2, "TestPipeline", 1, "Relational",
+        persistConfig pc1 = new persistConfig( "TestPipeline", 2, "Relational",
                 "Postgres", "targetDB1", "targetTable1", "targetSchema1",
                 null, null, null, "Append",
                 "Postgres_Local_Test_Connection", null, null, null,
@@ -197,26 +197,26 @@ public class testPersistConfigRepository {
     }
 
     @Test
-    void testGetAllExtractConfigs_4 () {
+    void testGetAllPersistConfigs_4 () {
         dataSources ds = new dataSources("Relational", "Postgres", "Postgres Database", "{\"Key\":\"value\"}", "{\"Key\":\"value\"}",
                 new Timestamp(System.currentTimeMillis()), "PK", null, null, "Y");
         dataSourcesConnections dsc = new dataSourcesConnections("Postgres_Local_Test_Connection",
                 "Relational", "Postgres", "localhost", 5432, "chimera_db",
                 null, "Username&Password", "chimera", "chimera123",
-                null, null, null, null, null,null,null,null,
+                null, null, null, null, null,null,null,null, null, null, null, null,
                 null,null,null,null,null,
                 null,null,null, new Timestamp(System.currentTimeMillis()),"PK",
                 null, null, "Y");
         dataPipelines dp = new dataPipelines("TestPipeline", "Pipeline to unit test",
                 "Batch", "23 * * *",  new Timestamp(System.currentTimeMillis()), "PK",
                 null, null, "Y");
-        persistConfig pc = new persistConfig(1, "TestPipeline", 1, "Relational",
+        persistConfig pc = new persistConfig( "TestPipeline", 1, "Relational",
                 "Postgres", "targetDB", "targetTable", "targetSchema",
                 null, null, null, "Append",
                 "Postgres_Local_Test_Connection", null, null, null,
                 null, null, null, new Timestamp(System.currentTimeMillis()), "PK",
                 null, null, "Y" );
-        persistConfig pc1 = new persistConfig(2, "TestPipeline", 1, "Relational",
+        persistConfig pc1 = new persistConfig( "TestPipeline", 2, "Relational",
                 "Postgres", "targetDB1", "targetTable1", "targetSchema1",
                 null, null, null, "Append",
                 "Postgres_Local_Test_Connection", null, null, null,
@@ -241,7 +241,6 @@ public class testPersistConfigRepository {
             List<persistConfig> selectList = persistConfigRepository.getAllPersistConfig();
             assertTrue(!selectList.isEmpty());
             assertEquals(2, selectList.size());
-            assertEquals(pcList.get(0).getUniqueId(), selectList.get(0).getUniqueId());
             assertEquals(pcList.get(0).getPipelineName(), selectList.get(0).getPipelineName());
             assertEquals(pcList.get(0).getSequenceNumber(), selectList.get(0).getSequenceNumber());
             assertEquals(pcList.get(0).getDataSinkType(), selectList.get(0).getDataSinkType());
@@ -265,7 +264,6 @@ public class testPersistConfigRepository {
             assertEquals(pcList.get(0).getUpdatedTimestamp(), selectList.get(0).getUpdatedTimestamp());
             assertEquals(pcList.get(0).getActiveFlag(), selectList.get(0).getActiveFlag());
 
-            assertEquals(pcList.get(1).getUniqueId(), selectList.get(1).getUniqueId());
             assertEquals(pcList.get(1).getPipelineName(), selectList.get(1).getPipelineName());
             assertEquals(pcList.get(1).getSequenceNumber(), selectList.get(1).getSequenceNumber());
             assertEquals(pcList.get(1).getDataSinkType(), selectList.get(1).getDataSinkType());
@@ -305,26 +303,26 @@ public class testPersistConfigRepository {
     }
 
     @Test
-    void testGetExtractConfigWithFilters_5() {
+    void testGetPersistConfigWithFilters_5() {
         dataSources ds = new dataSources("Relational", "Postgres", "Postgres Database", "{\"Key\":\"value\"}", "{\"Key\":\"value\"}",
                 new Timestamp(System.currentTimeMillis()), "PK", null, null, "Y");
         dataSourcesConnections dsc = new dataSourcesConnections("Postgres_Local_Test_Connection",
                 "Relational", "Postgres", "localhost", 5432, "chimera_db",
                 null, "Username&Password", "chimera", "chimera123",
-                null, null, null, null, null,null,null,null,
+                null, null, null, null, null,null,null,null, null, null, null, null,
                 null,null,null,null,null,
                 null,null,null, new Timestamp(System.currentTimeMillis()),"PK",
                 null, null, "Y");
         dataPipelines dp = new dataPipelines("TestPipeline", "Pipeline to unit test",
                 "Batch", "23 * * *",  new Timestamp(System.currentTimeMillis()), "PK",
                 null, null, "Y");
-        persistConfig pc = new persistConfig(1, "TestPipeline", 1, "Relational",
+        persistConfig pc = new persistConfig( "TestPipeline", 1, "Relational",
                 "Postgres", "targetDB", "targetTable", "targetSchema",
                 null, null, null, "Append",
                 "Postgres_Local_Test_Connection", null, null, null,
                 null, null, null, new Timestamp(System.currentTimeMillis()), "PK",
                 null, null, "Y" );
-        persistConfig pc1 = new persistConfig(2, "TestPipeline", 1, "Relational",
+        persistConfig pc1 = new persistConfig( "TestPipeline", 2, "Relational",
                 "Postgres", "targetDB1", "targetTable1", "targetSchema1",
                 null, null, null, "Append",
                 "Postgres_Local_Test_Connection", null, null, null,
@@ -351,7 +349,6 @@ public class testPersistConfigRepository {
             List<persistConfig> selectList = persistConfigRepository.getPersistConfigWithFilters(selFilter);
             assertTrue(!selectList.isEmpty());
             assertEquals(1, selectList.size());
-            assertEquals(pcList.get(1).getUniqueId(), selectList.get(0).getUniqueId());
             assertEquals(pcList.get(1).getPipelineName(), selectList.get(0).getPipelineName());
             assertEquals(pcList.get(1).getSequenceNumber(), selectList.get(0).getSequenceNumber());
             assertEquals(pcList.get(1).getDataSinkType(), selectList.get(0).getDataSinkType());
@@ -395,26 +392,26 @@ public class testPersistConfigRepository {
     }
 
     @Test
-    void testUpdateDataSourcesConnections_6() {
+    void testUpdatePersistConfigs_6() {
         dataSources ds = new dataSources("Relational", "Postgres", "Postgres Database", "{\"Key\":\"value\"}", "{\"Key\":\"value\"}",
                 new Timestamp(System.currentTimeMillis()), "PK", null, null, "Y");
         dataSourcesConnections dsc = new dataSourcesConnections("Postgres_Local_Test_Connection",
                 "Relational", "Postgres", "localhost", 5432, "chimera_db",
                 null, "Username&Password", "chimera", "chimera123",
-                null, null, null, null, null,null,null,null,
+                null, null, null, null, null,null,null,null, null, null, null, null,
                 null,null,null,null,null,
                 null,null,null, new Timestamp(System.currentTimeMillis()),"PK",
                 null, null, "Y");
         dataPipelines dp = new dataPipelines("TestPipeline", "Pipeline to unit test",
                 "Batch", "23 * * *",  new Timestamp(System.currentTimeMillis()), "PK",
                 null, null, "Y");
-        persistConfig pc = new persistConfig(1, "TestPipeline", 1, "Relational",
+        persistConfig pc = new persistConfig( "TestPipeline", 1, "Relational",
                 "Postgres", "targetDB", "targetTable", "targetSchema",
                 null, null, null, "Append",
                 "Postgres_Local_Test_Connection", null, null, null,
                 null, null, null, new Timestamp(System.currentTimeMillis()), "PK",
                 null, null, "Y" );
-        persistConfig pc1 = new persistConfig(2, "TestPipeline", 1, "Relational",
+        persistConfig pc1 = new persistConfig( "TestPipeline", 2, "Relational",
                 "Postgres", "targetDB1", "targetTable1", "targetSchema1",
                 null, null, null, "Append",
                 "Postgres_Local_Test_Connection", null, null, null,
@@ -442,7 +439,7 @@ public class testPersistConfigRepository {
             Map<String, Object> updateFields = new HashMap<>();
             updateFields.put("write_mode", "Overwrite");
 
-            persistConfigRepository.updatePersistConfig(updateFields, sfilter);
+            persistConfigRepository.updatePersistConfig(updateFields, sfilter, "PK");
             List<persistConfig> selectList = persistConfigRepository.getPersistConfigWithFilters(sfilter);
             assertEquals("Overwrite", selectList.get(0).getWriteMode());
             Map<String, Object> filter = new HashMap<>();

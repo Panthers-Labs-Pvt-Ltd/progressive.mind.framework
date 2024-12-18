@@ -43,39 +43,38 @@ public class extractConfigRepository {
 
 
     public void putExtractConfig(extractConfig extractConfig) {
-        String query = "INSERT INTO extract_config (unique_id, pipeline_name, sequence_number, data_source_type, " +
+        String query = "INSERT INTO extract_config (pipeline_name, sequence_number, data_source_type, " +
                 "data_source_sub_type, file_name, file_path, schema_path, row_filter, column_filter, extract_dataframe_name," +
                 " source_configuration, table_name, schema_name, sql_text, kafka_consumer_topic, kafka_consumer_group, " +
                 "kafka_start_offset, data_source_connection_name, created_timestamp, created_by, updated_by, updated_timestamp, active_flag) " +
-                "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection connection = DataSourceConfig.getDataSource().getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
-            preparedStatement.setInt(1, extractConfig.getUniqueId());
-            preparedStatement.setString(2, extractConfig.getPipelineName());
-            preparedStatement.setInt(3, extractConfig.getSequenceNumber());
-            preparedStatement.setString(4, extractConfig.getDataSourceType());
-            preparedStatement.setString(5, extractConfig.getDataSourceSubType());
-            preparedStatement.setString(6, extractConfig.getFileName());
-            preparedStatement.setString(7, extractConfig.getFilePath());
-            preparedStatement.setString(8, extractConfig.getSchemaPath());
-            preparedStatement.setString(9, extractConfig.getRowFilter());
-            preparedStatement.setString(10, extractConfig.getColumnFilter());
-            preparedStatement.setString(11, extractConfig.getExtractDataframeName());
-            preparedStatement.setString(12, extractConfig.getSourceConfiguration());
-            preparedStatement.setString(13, extractConfig.getTableName());
-            preparedStatement.setString(14, extractConfig.getSchemaName());
-            preparedStatement.setString(15, extractConfig.getSqlText());
-            preparedStatement.setString(16, extractConfig.getKafkaConsumerTopic());
-            preparedStatement.setString(17, extractConfig.getKafkaConsumerGroup());
-            preparedStatement.setString(18, extractConfig.getKafkaStartOffset());
-            preparedStatement.setString(19, extractConfig.getDataSourceConnectionName());
-            preparedStatement.setTimestamp(20, new Timestamp(System.currentTimeMillis()));
-            preparedStatement.setString(21, extractConfig.getCreatedBy());
-            preparedStatement.setString(22, extractConfig.getUpdatedBy());
-            preparedStatement.setTimestamp(23, extractConfig.getUpdatedTimestamp());
-            preparedStatement.setString(24, extractConfig.getActiveFlag());
+            preparedStatement.setString(1, extractConfig.getPipelineName());
+            preparedStatement.setInt(2, extractConfig.getSequenceNumber());
+            preparedStatement.setString(3, extractConfig.getDataSourceType());
+            preparedStatement.setString(4, extractConfig.getDataSourceSubType());
+            preparedStatement.setString(5, extractConfig.getFileName());
+            preparedStatement.setString(6, extractConfig.getFilePath());
+            preparedStatement.setString(7, extractConfig.getSchemaPath());
+            preparedStatement.setString(8, extractConfig.getRowFilter());
+            preparedStatement.setString(9, extractConfig.getColumnFilter());
+            preparedStatement.setString(10, extractConfig.getExtractDataframeName());
+            preparedStatement.setString(11, extractConfig.getSourceConfiguration());
+            preparedStatement.setString(12, extractConfig.getTableName());
+            preparedStatement.setString(13, extractConfig.getSchemaName());
+            preparedStatement.setString(14, extractConfig.getSqlText());
+            preparedStatement.setString(15, extractConfig.getKafkaConsumerTopic());
+            preparedStatement.setString(16, extractConfig.getKafkaConsumerGroup());
+            preparedStatement.setString(17, extractConfig.getKafkaStartOffset());
+            preparedStatement.setString(18, extractConfig.getDataSourceConnectionName());
+            preparedStatement.setTimestamp(19, new Timestamp(System.currentTimeMillis()));
+            preparedStatement.setString(20, extractConfig.getCreatedBy());
+            preparedStatement.setString(21, extractConfig.getUpdatedBy());
+            preparedStatement.setTimestamp(22, extractConfig.getUpdatedTimestamp());
+            preparedStatement.setString(23, extractConfig.getActiveFlag());
 
             int rowsInserted = preparedStatement.executeUpdate();
             connection.commit();
@@ -174,7 +173,6 @@ public class extractConfigRepository {
 
     private extractConfig mapResultSetToExtractConfig(ResultSet resultSet) throws SQLException {
         extractConfig ec = new extractConfig();
-        ec.setUniqueId(resultSet.getInt("unique_id"));
         ec.setPipelineName(resultSet.getString("pipeline_name"));
         ec.setSequenceNumber(resultSet.getInt("sequence_number"));
         ec.setDataSourceType(resultSet.getString("data_source_type"));
@@ -203,14 +201,17 @@ public class extractConfigRepository {
 
     }
 
-    public int updateExtractConfig(Map<String, Object> updateFields, Map<String, Object> filters) {
+    public int updateExtractConfig(Map<String, Object> updateFields, Map<String, Object> filters, String updatedBy) {
         int returnCode = 0;
         if (updateFields == null || updateFields.isEmpty()) {
             throw new IllegalArgumentException("Update fields cannot be null or empty");
         }
 
+        //add updated_timestamp and updated_by columns in the updateFields Maps
+        updateFields.put("updated_timestamp", new Timestamp(System.currentTimeMillis()));
+        updateFields.put("updated_by", updatedBy);
+
         StringBuilder queryBuilder = new StringBuilder("UPDATE extract_config SET ");
-        //TODO: Add updated_timestamp and updatedBy columns
         List<String> updateClauses = new ArrayList<>();
 
         // Build SET clause

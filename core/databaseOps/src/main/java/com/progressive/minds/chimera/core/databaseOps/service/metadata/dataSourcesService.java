@@ -24,16 +24,19 @@ public class dataSourcesService {
         dataSourcesRepository.putDataSources(dataSource);
     }
 
-    public int updateDataSource(Map<String, Object> updateFields, Map<String, Object> filters) {
+    public int updateDataSource(Map<String, Object> updateFields, Map<String, Object> filters, String updatedBy) {
         if (updateFields == null || updateFields.isEmpty()) {
             throw new ValidationException("Update fields cannot be null or empty.");
+        }
+        if (updatedBy == null || updatedBy.isEmpty()) {
+            throw new ValidationException("UpdatedBy  field cannot be null or empty.");
         }
 //        if (filters == null || filters.isEmpty()) {
 //            throw new ValidationException("Filters cannot be null or empty for update operation.");
 //        }
 
         try {
-            return dataSourcesRepository.updateDataSources(updateFields, filters);
+            return dataSourcesRepository.updateDataSources(updateFields, filters, updatedBy);
         } catch (DatabaseException e) {
             throw new DatabaseException("Error updating users.", e);
         }

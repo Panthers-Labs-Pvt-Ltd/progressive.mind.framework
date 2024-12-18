@@ -182,14 +182,14 @@ public class testDataPipelinesRepository {
             Map<String, Object> updateFields = new HashMap<>();
             updateFields.put("active_flag", "N");
 
-            dataPipelinesRepository.updateDataPipelines(updateFields, filter);
+            dataPipelinesRepository.updateDataPipelines(updateFields, filter, "PK");
             List<dataPipelines> selectList = dataPipelinesRepository.getDataPipelinesWithFilters(updateFields);
             assertEquals("N", selectList.get(0).getActiveFlag());
             Map<String, Object> deleteFilter = new HashMap<>();
            // filter.put("data_source_type", "Relational");
             //filter.put("data_source_sub_type", "Postgres");
-            int rowNum = dataPipelinesRepository.deleteFromDataPipelines(deleteFilter);
-            System.out.println("No. of Rows successfully Deleted : " + rowNum);
+  //          int rowNum = dataPipelinesRepository.deleteFromDataPipelines(deleteFilter);
+   //         System.out.println("No. of Rows successfully Deleted : " + rowNum);
         }
 
     }

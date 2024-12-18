@@ -44,39 +44,38 @@ public class persistConfigRepository {
 
 
     public void putPersistConfig(persistConfig persistConfig) {
-        String query = "INSERT INTO persist_config (unique_id, pipeline_name, sequence_number, data_sink_type, data_sink_sub_type," +
+        String query = "INSERT INTO persist_config (pipeline_name, sequence_number, data_sink_type, data_sink_sub_type," +
                 " target_database_name, target_table_name, target_schema_name, partition_keys, target_sql_text, target_path," +
                 " write_mode, data_source_connection_name, sink_configuration, sort_columns, dedup_columns, " +
                 "kafka_topic, kafka_key, kafka_message, created_timestamp, created_by, updated_by, updated_timestamp, active_flag) " +
-                "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection connection = DataSourceConfig.getDataSource().getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
-            preparedStatement.setInt(1, persistConfig.getUniqueId());
-            preparedStatement.setString(2, persistConfig.getPipelineName());
-            preparedStatement.setInt(3, persistConfig.getSequenceNumber());
-            preparedStatement.setString(4, persistConfig.getDataSinkType());
-            preparedStatement.setString(5, persistConfig.getDataSinkSubType());
-            preparedStatement.setString(6, persistConfig.getTargetDatabaseName());
-            preparedStatement.setString(7, persistConfig.getTargetTableName());
-            preparedStatement.setString(8, persistConfig.getTargetSchemaName());
-            preparedStatement.setString(9, persistConfig.getPartitionKeys());
-            preparedStatement.setString(10, persistConfig.getTargetSqlText());
-            preparedStatement.setString(11, persistConfig.getTargetPath());
-            preparedStatement.setString(12, persistConfig.getWriteMode());
-            preparedStatement.setString(13, persistConfig.getDataSourceConnectionName());
-            preparedStatement.setString(14, persistConfig.getSinkConfiguration());
-            preparedStatement.setString(15, persistConfig.getSortColumns());
-            preparedStatement.setString(16, persistConfig.getDedupColumns());
-            preparedStatement.setString(17, persistConfig.getKafkaTopic());
-            preparedStatement.setString(18, persistConfig.getKafkaKey());
-            preparedStatement.setString(19, persistConfig.getKafkaMessage());
-            preparedStatement.setTimestamp(20, new Timestamp(System.currentTimeMillis()));
-            preparedStatement.setString(21, persistConfig.getCreatedBy());
-            preparedStatement.setString(22, persistConfig.getUpdatedBy());
-            preparedStatement.setTimestamp(23, persistConfig.getUpdatedTimestamp());
-            preparedStatement.setString(24, persistConfig.getActiveFlag());
+            preparedStatement.setString(1, persistConfig.getPipelineName());
+            preparedStatement.setInt(2, persistConfig.getSequenceNumber());
+            preparedStatement.setString(3, persistConfig.getDataSinkType());
+            preparedStatement.setString(4, persistConfig.getDataSinkSubType());
+            preparedStatement.setString(5, persistConfig.getTargetDatabaseName());
+            preparedStatement.setString(6, persistConfig.getTargetTableName());
+            preparedStatement.setString(7, persistConfig.getTargetSchemaName());
+            preparedStatement.setString(8, persistConfig.getPartitionKeys());
+            preparedStatement.setString(9, persistConfig.getTargetSqlText());
+            preparedStatement.setString(10, persistConfig.getTargetPath());
+            preparedStatement.setString(11, persistConfig.getWriteMode());
+            preparedStatement.setString(12, persistConfig.getDataSourceConnectionName());
+            preparedStatement.setString(13, persistConfig.getSinkConfiguration());
+            preparedStatement.setString(14, persistConfig.getSortColumns());
+            preparedStatement.setString(15, persistConfig.getDedupColumns());
+            preparedStatement.setString(16, persistConfig.getKafkaTopic());
+            preparedStatement.setString(17, persistConfig.getKafkaKey());
+            preparedStatement.setString(18, persistConfig.getKafkaMessage());
+            preparedStatement.setTimestamp(19, new Timestamp(System.currentTimeMillis()));
+            preparedStatement.setString(20, persistConfig.getCreatedBy());
+            preparedStatement.setString(21, persistConfig.getUpdatedBy());
+            preparedStatement.setTimestamp(22, persistConfig.getUpdatedTimestamp());
+            preparedStatement.setString(23, persistConfig.getActiveFlag());
 
             int rowsInserted = preparedStatement.executeUpdate();
             connection.commit();
@@ -176,7 +175,6 @@ public class persistConfigRepository {
 
     private persistConfig mapResultSetToPersistConfig(ResultSet resultSet) throws SQLException {
         persistConfig pc = new persistConfig();
-        pc.setUniqueId(resultSet.getInt("unique_id"));
         pc.setPipelineName(resultSet.getString("pipeline_name"));
         pc.setSequenceNumber(resultSet.getInt("sequence_number"));
         pc.setDataSinkType(resultSet.getString("data_sink_type"));
@@ -205,14 +203,17 @@ public class persistConfigRepository {
 
     }
 
-    public int updatePersistConfig(Map<String, Object> updateFields, Map<String, Object> filters) {
+    public int updatePersistConfig(Map<String, Object> updateFields, Map<String, Object> filters, String updatedBy) {
         int returnCode =0;
         if (updateFields == null || updateFields.isEmpty()) {
             throw new IllegalArgumentException("Update fields cannot be null or empty");
         }
 
+        //add updated_timestamp and updated_by columns in the updateFields Maps
+        updateFields.put("updated_timestamp", new Timestamp(System.currentTimeMillis()));
+        updateFields.put("updated_by", updatedBy);
+
         StringBuilder queryBuilder = new StringBuilder("UPDATE persist_config SET ");
-        //TODO: Add updated_timestamp and updatedBy columns
         List<String> updateClauses = new ArrayList<>();
 
         // Build SET clause

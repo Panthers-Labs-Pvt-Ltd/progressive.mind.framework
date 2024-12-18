@@ -42,7 +42,7 @@ public class testDataSourcesConnectionsRepository {
 
         dataSourcesConnections dsc = new dataSourcesConnections("Postgres_Local_Test_Connection",
                 "Relational", "Postgres", "localhost", 5432, "chimera_db",
-                null, "Username&Password", "chimera", "chimera123",
+                null, "Username&Password", "chimera", "chimera123", null, null, null, null,
                 null, null, null, null, null,null,null,null,
                 null,null,null,null,null,
                 null,null,null, new Timestamp(System.currentTimeMillis()),"PK",
@@ -74,7 +74,7 @@ public class testDataSourcesConnectionsRepository {
         dataSourcesConnections dsc = new dataSourcesConnections("Postgres_Local_Test_Connection",
                 "Relational", "Postgres", "localhost", 5432, "chimera_db",
                 null, "Username123&Password", "chimera", "chimera123",
-                null, null, null, null, null,null,null,null,
+                null, null, null, null, null,null,null,null, null, null, null, null,
                 null,null,null,null,null,
                 null,null,null, new Timestamp(System.currentTimeMillis()),"PK",
                 null, null, "Y");
@@ -107,14 +107,14 @@ public class testDataSourcesConnectionsRepository {
         List<dataSourcesConnections> dscList = new ArrayList<dataSourcesConnections>();
         dataSourcesConnections dsc = new dataSourcesConnections("Postgres_Local_Test_Connection",
                 "Relational", "Postgres", "localhost", 5432, "chimera_db",
-                null, "Username&Password", "chimera", "chimera123",
+                null, "Username&Password", "chimera", "chimera123", null, null, null, null,
                 null, null, null, null, null,null,null,null,
                 null,null,null,null,null,
                 null,null,null, new Timestamp(System.currentTimeMillis()),"PK",
                 null, null, "Y");
         dataSourcesConnections dsc1 = new dataSourcesConnections("Postgres_Local_Test_Connection_new",
                 "Relational", "Postgres", "localhost", 5432, "chimera_db",
-                null, "Username&Password", "admin", "admin",
+                null, "Username&Password", "admin", "admin", null, null, null, null,
                 null, null, null, null, null,null,null,null,
                 null,null,null,null,null,
                 null,null,null, new Timestamp(System.currentTimeMillis()),"PK",
@@ -149,14 +149,14 @@ public class testDataSourcesConnectionsRepository {
         dataSourcesConnections dsc = new dataSourcesConnections("Postgres_Local_Test_Connection",
                 "Relational", "Postgres", "localhost", 5432, "chimera_db",
                 null, "Username&Password", "chimera", "chimera123",
-                null, null, null, null, null,null,null,null,
+                null, null, null, null, null,null,null,null, null, null, null, null,
                 null,null,null,null,null,
                 null,null,null, new Timestamp(System.currentTimeMillis()),"PK",
                 null, null, "Y");
         dataSourcesConnections dsc1 = new dataSourcesConnections("Postgres_Local_Test_Connection_new",
                 "Relational", "Postgres", "localhost", 5432, "chimera_db",
                 null, "Username&Password", "admin", "admin",
-                null, null, null, null, null,null,null,null,
+                null, null, null, null, null,null,null,null, null, null, null, null,
                 null,null,null,null,null,
                 null,null,null, new Timestamp(System.currentTimeMillis()),"PK",
                 null, null, "Y");
@@ -260,14 +260,14 @@ public class testDataSourcesConnectionsRepository {
         dataSourcesConnections dsc = new dataSourcesConnections("Postgres_Local_Test_Connection",
                 "Relational", "Postgres", "localhost", 5432, "chimera_db",
                 null, "Username&Password", "chimera", "chimera123",
-                null, null, null, null, null,null,null,null,
+                null, null, null, null, null,null,null,null, null, null, null, null,
                 null,null,null,null,null,
                 null,null,null, new Timestamp(System.currentTimeMillis()),"PK",
                 null, null, "Y");
         dataSourcesConnections dsc1 = new dataSourcesConnections("Postgres_Local_Test_Connection_new",
                 "Relational", "Postgres", "localhost", 5432, "chimera_db",
                 null, "Username&Password", "admin", "admin",
-                null, null, null, null, null,null,null,null,
+                null, null, null, null, null,null,null,null, null, null, null, null,
                 null,null,null,null,null,
                 null,null,null, new Timestamp(System.currentTimeMillis()),"PK",
                 null, null, "Y");
@@ -340,14 +340,14 @@ public class testDataSourcesConnectionsRepository {
         dataSourcesConnections dsc = new dataSourcesConnections("Postgres_Local_Test_Connection",
                 "Relational", "Postgres", "localhost", 5432, "chimera_db",
                 null, "Username&Password", "chimera", "chimera123",
-                null, null, null, null, null,null,null,null,
+                null, null, null, null, null,null,null,null, null, null, null, null,
                 null,null,null,null,null,
                 null,null,null, new Timestamp(System.currentTimeMillis()),"PK",
                 null, null, "Y");
         dataSourcesConnections dsc1 = new dataSourcesConnections("Postgres_Local_Test_Connection_new",
                 "Relational", "Postgres", "localhost", 5432, "chimera_db",
                 null, "Username&Password", "admin", "admin",
-                null, null, null, null, null,null,null,null,
+                null, null, null, null, null,null,null,null, null, null, null, null,
                 null,null,null,null,null,
                 null,null,null, new Timestamp(System.currentTimeMillis()),"PK",
                 null, null, "Y");
@@ -367,7 +367,7 @@ public class testDataSourcesConnectionsRepository {
             Map<String, Object> updateFields = new HashMap<>();
             updateFields.put("sslcert", "New Description");
 
-            dataSourcesConnectionRepository.updateDataSourcesConnections(updateFields, filter);
+            dataSourcesConnectionRepository.updateDataSourcesConnections(updateFields, filter, "PK");
             List<dataSourcesConnections> selectList = dataSourcesConnectionRepository.getDataSourcesConnectionsWithFilters(filter);
             assertEquals("New Description", selectList.get(0).getSslCert());
             Map<String, Object> deleteFilter = new HashMap<>();

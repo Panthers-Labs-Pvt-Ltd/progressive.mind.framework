@@ -1,6 +1,5 @@
 
 CREATE TABLE IF NOT EXISTS transform_config (
-    unique_id SERIAL PRIMARY KEY,
     pipeline_name VARCHAR(500) NOT NULL,
     sequence_number INTEGER,
     sql_text TEXT NOT NULL,
@@ -10,10 +9,10 @@ CREATE TABLE IF NOT EXISTS transform_config (
     updated_timestamp TIMESTAMP,
     updated_by VARCHAR(255),
     active_flag VARCHAR(1) default 'Y' :: CHARACTER VARYING,
+    CONSTRAINT pk_transform_config PRIMARY KEY (pipeline_name, sequence_number),
     CONSTRAINT fk_pipeline_name FOREIGN KEY (pipeline_name) REFERENCES data_pipelines (pipeline_name)
      ON delete CASCADE ON update CASCADE
 );
-COMMENT ON COLUMN transform_config.unique_id IS 'Unique ID for each transformation';
 COMMENT ON COLUMN transform_config.pipeline_name IS 'Name of the pipeline. This needs to be defined in pipeline';
 COMMENT ON COLUMN transform_config.sequence_number IS 'Sequence No. If a pipeline has multiple sources, this field can be used to sequence the sources';
 COMMENT ON COLUMN transform_config.sql_text IS 'The SQL Text to do the transformation';

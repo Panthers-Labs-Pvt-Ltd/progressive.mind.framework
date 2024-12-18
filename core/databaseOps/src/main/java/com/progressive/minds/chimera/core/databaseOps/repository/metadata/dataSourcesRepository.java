@@ -165,13 +165,16 @@ public class dataSourcesRepository {
 
     }
 
-    public int updateDataSources(Map<String, Object> updateFields, Map<String, Object> filters) {
+    public int updateDataSources(Map<String, Object> updateFields, Map<String, Object> filters, String updatedBy) {
         if (updateFields == null || updateFields.isEmpty()) {
             throw new IllegalArgumentException("Update fields cannot be null or empty");
         }
 
+        //add updated_timestamp and updated_by columns in the updateFields Maps
+        updateFields.put("updated_timestamp", new Timestamp(System.currentTimeMillis()));
+        updateFields.put("updated_by", updatedBy);
+
         StringBuilder queryBuilder = new StringBuilder("UPDATE data_sources SET ");
-        //TODO: Add updated_timestamp and updatedBy columns
         List<String> updateClauses = new ArrayList<>();
 
         // Build SET clause

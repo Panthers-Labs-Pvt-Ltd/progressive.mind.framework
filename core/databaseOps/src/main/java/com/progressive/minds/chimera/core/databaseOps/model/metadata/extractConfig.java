@@ -7,8 +7,6 @@ import java.sql.Timestamp;
  * Represents an Extract Configuration entity.
  */
 public class extractConfig {
-
-    private int uniqueId;
     private String pipelineName;
     private Integer sequenceNumber;
     private String dataSourceType;
@@ -36,13 +34,12 @@ public class extractConfig {
     public extractConfig() {
     }
 
-    public extractConfig(int uniqueId, String pipelineName, Integer sequenceNumber, String dataSourceType,
+    public extractConfig(String pipelineName, Integer sequenceNumber, String dataSourceType,
                          String dataSourceSubType, String fileName, String filePath, String schemaPath,
                          String rowFilter, String columnFilter, String extractDataframeName, String sourceConfiguration,
                          String tableName, String schemaName, String sqlText, String kafkaConsumerTopic, String kafkaConsumerGroup,
                          String kafkaStartOffset, String dataSourceConnectionName, Timestamp createdTimestamp,
                          String createdBy, Timestamp updatedTimestamp, String updatedBy, String activeFlag) {
-        this.uniqueId = uniqueId;
         this.pipelineName = pipelineName;
         this.sequenceNumber = sequenceNumber;
         this.dataSourceType = dataSourceType;
@@ -69,14 +66,6 @@ public class extractConfig {
     }
 
     // Getters and Setters
-
-    public int getUniqueId() {
-        return uniqueId;
-    }
-
-    public void setUniqueId(int uniqueId) {
-        this.uniqueId = uniqueId;
-    }
 
     public String getPipelineName() {
         return pipelineName;
@@ -267,7 +256,6 @@ public class extractConfig {
     @Override
     public String toString() {
         return "ExtractConfig{" +
-                "uniqueId=" + uniqueId +
                 ", pipelineName='" + pipelineName + '\'' +
                 ", sequenceNumber=" + sequenceNumber +
                 ", dataSourceType='" + dataSourceType + '\'' +

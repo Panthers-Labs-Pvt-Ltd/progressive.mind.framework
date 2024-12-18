@@ -12,9 +12,9 @@ import java.util.Map;
 import static com.progressive.minds.chimera.core.databaseOps.utility.ColumnExtractor.extractGetterColumnNames;
 
 public class dataSourcesConnectionRepository {
-    List<String> columnNames = extractGetterColumnNames(dataSourcesConnections.class);
-    int columnCount = columnNames.size();
-    String questionMarks = "?".repeat(columnCount).replace("", ", ").strip().substring(1);
+//    List<String> columnNames = extractGetterColumnNames(dataSourcesConnections.class);
+//    int columnCount = columnNames.size();
+//    String questionMarks = "?".repeat(columnCount).replace("", ", ").strip().substring(1);
 
     public List<dataSourcesConnections> getAllDataSourcesConnections() {
         List<dataSourcesConnections> dataSourcesConnections = new ArrayList<>();
@@ -41,11 +41,12 @@ public class dataSourcesConnectionRepository {
 
     public void putDataSourcesConnections(dataSourcesConnections dataSourceConnections) {
         String query = "INSERT INTO data_sources_connections (data_source_connection_name, data_source_type, data_source_sub_type," +
-                " host, port, database_name, schema_name, authentication_type, user_name, user_password, role, warehouse," +
+                " host, port, database_name, schema_name, authentication_type, user_name, user_password, cloud_provider, role," +
+                " secret_name, gcp_project_id, azure_key_vault_url, warehouse," +
                 " principal, keytab, sslcert, sslkey, sslrootcert, token, kafka_broker, kafka_keystore_type," +
                 " kafka_keystore_location, kafka_keystore_password, kafka_truststore_type, kafka_truststore_location," +
                 " kafka_truststore_password, kafka_key_password, created_by, created_timestamp, updated_by, updated_timestamp, active_flag) " +
-                "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection connection = DataSourceConfig.getDataSource().getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
@@ -60,27 +61,31 @@ public class dataSourcesConnectionRepository {
             preparedStatement.setString(8, dataSourceConnections.getAuthenticationType());
             preparedStatement.setString(9, dataSourceConnections.getUserName());
             preparedStatement.setString(10, dataSourceConnections.getUserPassword());
-            preparedStatement.setString(11, dataSourceConnections.getRole());
-            preparedStatement.setString(12, dataSourceConnections.getWarehouse());
-            preparedStatement.setString(13, dataSourceConnections.getPrincipal());
-            preparedStatement.setString(14, dataSourceConnections.getKeytab());
-            preparedStatement.setString(15, dataSourceConnections.getSslCert());
-            preparedStatement.setString(16, dataSourceConnections.getSslKey());
-            preparedStatement.setString(17, dataSourceConnections.getSslRootCert());
-            preparedStatement.setString(18, dataSourceConnections.getToken());
-            preparedStatement.setString(19, dataSourceConnections.getKafkaBroker());
-            preparedStatement.setString(20, dataSourceConnections.getKafkaKeystoreType());
-            preparedStatement.setString(21, dataSourceConnections.getKafkaKeystoreLocation());
-            preparedStatement.setString(22, dataSourceConnections.getKafkaKeystorePassword());
-            preparedStatement.setString(23, dataSourceConnections.getKafkaTruststoreType());
-            preparedStatement.setString(24, dataSourceConnections.getKafkaTruststoreLocation());
-            preparedStatement.setString(25, dataSourceConnections.getKafkaTruststorePassword());
-            preparedStatement.setString(26, dataSourceConnections.getKafkaKeyPassword());
-            preparedStatement.setString(27, dataSourceConnections.getCreatedBy());
-            preparedStatement.setTimestamp(28, new Timestamp(System.currentTimeMillis()));
-            preparedStatement.setString(29, dataSourceConnections.getUpdatedBy());
-            preparedStatement.setTimestamp(30, dataSourceConnections.getUpdatedTimestamp());
-            preparedStatement.setString(31, dataSourceConnections.getActiveFlag());
+            preparedStatement.setString(11, dataSourceConnections.getCloudProvider());
+            preparedStatement.setString(12, dataSourceConnections.getSecretName());
+            preparedStatement.setString(13, dataSourceConnections.getGcpProjectId());
+            preparedStatement.setString(14, dataSourceConnections.getAzureKeyVaultUrl());
+            preparedStatement.setString(15, dataSourceConnections.getRole());
+            preparedStatement.setString(16, dataSourceConnections.getWarehouse());
+            preparedStatement.setString(17, dataSourceConnections.getPrincipal());
+            preparedStatement.setString(18, dataSourceConnections.getKeytab());
+            preparedStatement.setString(19, dataSourceConnections.getSslCert());
+            preparedStatement.setString(20, dataSourceConnections.getSslKey());
+            preparedStatement.setString(21, dataSourceConnections.getSslRootCert());
+            preparedStatement.setString(22, dataSourceConnections.getToken());
+            preparedStatement.setString(23, dataSourceConnections.getKafkaBroker());
+            preparedStatement.setString(24, dataSourceConnections.getKafkaKeystoreType());
+            preparedStatement.setString(25, dataSourceConnections.getKafkaKeystoreLocation());
+            preparedStatement.setString(26, dataSourceConnections.getKafkaKeystorePassword());
+            preparedStatement.setString(27, dataSourceConnections.getKafkaTruststoreType());
+            preparedStatement.setString(28, dataSourceConnections.getKafkaTruststoreLocation());
+            preparedStatement.setString(29, dataSourceConnections.getKafkaTruststorePassword());
+            preparedStatement.setString(30, dataSourceConnections.getKafkaKeyPassword());
+            preparedStatement.setString(31, dataSourceConnections.getCreatedBy());
+            preparedStatement.setTimestamp(32, new Timestamp(System.currentTimeMillis()));
+            preparedStatement.setString(33, dataSourceConnections.getUpdatedBy());
+            preparedStatement.setTimestamp(34, dataSourceConnections.getUpdatedTimestamp());
+            preparedStatement.setString(35, dataSourceConnections.getActiveFlag());
             int rowsInserted = preparedStatement.executeUpdate();
             connection.commit();
             System.out.println("rowsInserted : " + rowsInserted);
@@ -185,6 +190,10 @@ public class dataSourcesConnectionRepository {
         dsc.setAuthenticationType(resultSet.getString("authentication_type"));
         dsc.setUserName(resultSet.getString("user_name"));
         dsc.setUserPassword(resultSet.getString("user_password"));
+        dsc.setCloudProvider(resultSet.getString("cloud_provider"));
+        dsc.setSecretName(resultSet.getString("secret_name"));
+        dsc.setGcpProjectId(resultSet.getString("gcp_project_id"));
+        dsc.setAzureKeyVaultUrl(resultSet.getString("azure_key_vault_url"));
         dsc.setRole(resultSet.getString("role"));
         dsc.setWarehouse(resultSet.getString("warehouse"));
         dsc.setPrincipal(resultSet.getString("principal"));
@@ -211,13 +220,16 @@ public class dataSourcesConnectionRepository {
 
     }
 
-    public int updateDataSourcesConnections(Map<String, Object> updateFields, Map<String, Object> filters) {
+    public int updateDataSourcesConnections(Map<String, Object> updateFields, Map<String, Object> filters, String updatedBy) {
         if (updateFields == null || updateFields.isEmpty()) {
             throw new IllegalArgumentException("Update fields cannot be null or empty");
         }
 
+        //add updated_timestamp and updated_by columns in the updateFields Maps
+        updateFields.put("updated_timestamp", new Timestamp(System.currentTimeMillis()));
+        updateFields.put("updated_by", updatedBy);
+
         StringBuilder queryBuilder = new StringBuilder("UPDATE data_sources_connections SET ");
-        //TODO: Add updated_timestamp and updatedBy columns
         List<String> updateClauses = new ArrayList<>();
 
         // Build SET clause

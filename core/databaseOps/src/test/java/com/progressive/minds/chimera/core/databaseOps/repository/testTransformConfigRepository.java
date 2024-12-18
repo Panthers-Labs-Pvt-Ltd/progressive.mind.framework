@@ -34,7 +34,7 @@ public class testTransformConfigRepository {
         dataPipelines dp = new dataPipelines("TestPipeline", "Pipeline to unit test",
                 "Batch", "23 * * *",  new Timestamp(System.currentTimeMillis()), "PK",
                 null, null, "Y");
-        transformConfig tc = new transformConfig(1, "TestPipeline", 1,
+        transformConfig tc = new transformConfig("TestPipeline", 1,
                 "select * from table;", "transform_DF",
                 new Timestamp(System.currentTimeMillis()), "PK", null, null, "Y");
         try {
@@ -62,7 +62,7 @@ public class testTransformConfigRepository {
         dataPipelines dp = new dataPipelines("TestPipeline", "Pipeline to unit test",
                 "Batch", "23 * * *",  new Timestamp(System.currentTimeMillis()), "PK",
                 null, null, "Y");
-        transformConfig tc = new transformConfig(1, "TestPipeline1", 1,
+        transformConfig tc = new transformConfig("TestPipeline1", 1,
                 "select * from table;", "transform_DF",
                 new Timestamp(System.currentTimeMillis()), "PK", null, null, "Y");
         try {
@@ -90,10 +90,10 @@ public class testTransformConfigRepository {
         dataPipelines dp = new dataPipelines("TestPipeline", "Pipeline to unit test",
                 "Batch", "23 * * *",  new Timestamp(System.currentTimeMillis()), "PK",
                 null, null, "Y");
-        transformConfig tc = new transformConfig(1, "TestPipeline", 1,
+        transformConfig tc = new transformConfig( "TestPipeline", 1,
                 "select * from table;", "transform_DF",
                 new Timestamp(System.currentTimeMillis()), "PK", null, null, "Y");
-        transformConfig tc1 = new transformConfig(2, "TestPipeline", 1,
+        transformConfig tc1 = new transformConfig("TestPipeline", 2,
                 "select * from table1;", "transform_DF",
                 new Timestamp(System.currentTimeMillis()), "PK", null, null, "Y");
         List<transformConfig> tcList = new ArrayList<transformConfig>();
@@ -121,10 +121,10 @@ public class testTransformConfigRepository {
         dataPipelines dp = new dataPipelines("TestPipeline", "Pipeline to unit test",
                 "Batch", "23 * * *",  new Timestamp(System.currentTimeMillis()), "PK",
                 null, null, "Y");
-        transformConfig tc = new transformConfig(1, "TestPipeline", 1,
+        transformConfig tc = new transformConfig( "TestPipeline", 1,
                 "select * from table;", "transform_DF",
                 new Timestamp(System.currentTimeMillis()), "PK", null, null, "Y");
-        transformConfig tc1 = new transformConfig(2, "TestPipeline", 1,
+        transformConfig tc1 = new transformConfig( "TestPipeline", 2,
                 "select * from table1;", "transform_DF",
                 new Timestamp(System.currentTimeMillis()), "PK", null, null, "Y");
         List<transformConfig> tcList = new ArrayList<transformConfig>();
@@ -141,7 +141,6 @@ public class testTransformConfigRepository {
             List<transformConfig> selectList = transformConfigRepository.getAllTransformConfig();
             assertTrue(!selectList.isEmpty());
             assertEquals(2, selectList.size());
-            assertEquals(tcList.get(0).getUniqueId(), selectList.get(0).getUniqueId());
             assertEquals(tcList.get(0).getPipelineName(), selectList.get(0).getPipelineName());
             assertEquals(tcList.get(0).getSequenceNumber(), selectList.get(0).getSequenceNumber());
             assertEquals(tcList.get(0).getSqlText(), selectList.get(0).getSqlText());
@@ -151,7 +150,7 @@ public class testTransformConfigRepository {
             assertEquals(tcList.get(0).getUpdatedTimestamp(), selectList.get(0).getUpdatedTimestamp());
             assertEquals(tcList.get(0).getActiveFlag(), selectList.get(0).getActiveFlag());
 
-            assertEquals(tcList.get(1).getUniqueId(), selectList.get(1).getUniqueId());
+
             assertEquals(tcList.get(1).getPipelineName(), selectList.get(1).getPipelineName());
             assertEquals(tcList.get(1).getSequenceNumber(), selectList.get(1).getSequenceNumber());
             assertEquals(tcList.get(1).getSqlText(), selectList.get(1).getSqlText());
@@ -174,10 +173,10 @@ public class testTransformConfigRepository {
         dataPipelines dp = new dataPipelines("TestPipeline", "Pipeline to unit test",
                 "Batch", "23 * * *",  new Timestamp(System.currentTimeMillis()), "PK",
                 null, null, "Y");
-        transformConfig tc = new transformConfig(1, "TestPipeline", 1,
+        transformConfig tc = new transformConfig( "TestPipeline", 1,
                 "select * from table;", "transform_DF",
                 new Timestamp(System.currentTimeMillis()), "PK", null, null, "Y");
-        transformConfig tc1 = new transformConfig(2, "TestPipeline", 1,
+        transformConfig tc1 = new transformConfig( "TestPipeline", 2,
                 "select * from table1;", "transform_DF",
                 new Timestamp(System.currentTimeMillis()), "PK", null, null, "Y");
         List<transformConfig> tcList = new ArrayList<transformConfig>();
@@ -192,11 +191,10 @@ public class testTransformConfigRepository {
             System.out.println("Insert Op not required");
         } finally {
             Map<String, Object> selFilter = new HashMap<>();
-            selFilter.put("unique_id", 2);
+            selFilter.put("sequence_number", 2);
             List<transformConfig> selectList = transformConfigRepository.getTransformConfigWithFilters(selFilter);
             assertTrue(!selectList.isEmpty());
             assertEquals(1, selectList.size());
-            assertEquals(tcList.get(1).getUniqueId(), selectList.get(0).getUniqueId());
             assertEquals(tcList.get(1).getPipelineName(), selectList.get(0).getPipelineName());
             assertEquals(tcList.get(1).getSequenceNumber(), selectList.get(0).getSequenceNumber());
             assertEquals(tcList.get(1).getSqlText(), selectList.get(0).getSqlText());
@@ -223,10 +221,10 @@ public class testTransformConfigRepository {
         dataPipelines dp = new dataPipelines("TestPipeline", "Pipeline to unit test",
                 "Batch", "23 * * *",  new Timestamp(System.currentTimeMillis()), "PK",
                 null, null, "Y");
-        transformConfig tc = new transformConfig(1, "TestPipeline", 1,
+        transformConfig tc = new transformConfig( "TestPipeline", 1,
                 "select * from table;", "transform_DF",
                 new Timestamp(System.currentTimeMillis()), "PK", null, null, "Y");
-        transformConfig tc1 = new transformConfig(2, "TestPipeline", 1,
+        transformConfig tc1 = new transformConfig( "TestPipeline", 2,
                 "select * from table1;", "transform_DF",
                 new Timestamp(System.currentTimeMillis()), "PK", null, null, "Y");
         List<transformConfig> tcList = new ArrayList<transformConfig>();
@@ -241,12 +239,12 @@ public class testTransformConfigRepository {
             System.out.println("Insert Op not required");
         } finally {
             Map<String, Object> filter = new HashMap<>();
-            filter.put("unique_id", 2);
+            filter.put("sequence_number", 2);
 
             Map<String, Object> updateFields = new HashMap<>();
             updateFields.put("transform_dataframe_name", "New_DF");
 
-            transformConfigRepository.updateTransformConfig(updateFields, filter);
+            transformConfigRepository.updateTransformConfig(updateFields, filter, "PK");
             List<transformConfig> selectList = transformConfigRepository.getTransformConfigWithFilters(filter);
             assertEquals("New_DF", selectList.get(0).getTransformDataframeName());
 

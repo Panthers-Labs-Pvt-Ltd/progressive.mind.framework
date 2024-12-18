@@ -8,7 +8,6 @@ import java.sql.Timestamp;
  */
 public class transformConfig {
 
-    private int uniqueId;
     private String pipelineName;
     private Integer sequenceNumber;
     private String sqlText;
@@ -22,10 +21,9 @@ public class transformConfig {
     public transformConfig() {
     }
 
-    public transformConfig(int uniqueId, String pipelineName, Integer sequenceNumber, String sqlText,
+    public transformConfig(String pipelineName, Integer sequenceNumber, String sqlText,
                            String transformDataframeName, Timestamp createdTimestamp, String createdBy,
                            Timestamp updatedTimestamp, String updatedBy, String activeFlag) {
-        this.uniqueId = uniqueId;
         this.pipelineName = pipelineName;
         this.sequenceNumber = sequenceNumber;
         this.sqlText = sqlText;
@@ -38,14 +36,6 @@ public class transformConfig {
     }
 
     // Getters and Setters
-
-    public int getUniqueId() {
-        return uniqueId;
-    }
-
-    public void setUniqueId(int uniqueId) {
-        this.uniqueId = uniqueId;
-    }
 
     public String getPipelineName() {
         return pipelineName;
@@ -124,7 +114,6 @@ public class transformConfig {
     @Override
     public String toString() {
         return "TransformConfig{" +
-                "uniqueId=" + uniqueId +
                 ", pipelineName='" + pipelineName + '\'' +
                 ", sequenceNumber=" + sequenceNumber +
                 ", sqlText='" + sqlText + '\'' +
