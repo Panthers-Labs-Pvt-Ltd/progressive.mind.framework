@@ -1,5 +1,8 @@
 package com.progressive.minds.chimera.core.datalineage;
 
+import com.progressive.minds.chimera.core.datalineage.models.OpenLineageTransportTypes;
+import com.progressive.minds.chimera.foundational.logging.ChimeraLogger;
+import com.progressive.minds.chimera.foundational.logging.ChimeraLoggerFactory;
 import io.openlineage.client.OpenLineage;
 import io.openlineage.client.OpenLineageClient;
 import io.openlineage.client.OpenLineage.RunEvent;
@@ -26,6 +29,8 @@ import java.util.UUID;
  * My first openlinage client code
  */
 public class OpenLineageClientTest  {
+    ChimeraLogger LineageLogger =  ChimeraLoggerFactory.getLogger(OpenLineageTransportTypes.class);
+
     public static void main(String[] args) {
 
         try {

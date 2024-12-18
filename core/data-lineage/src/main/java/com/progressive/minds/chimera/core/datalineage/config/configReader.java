@@ -1,11 +1,12 @@
-package com.progressive.minds.chimera.core.datalineage.models.Transport;
+package com.progressive.minds.chimera.core.datalineage.config;
 
+import com.progressive.minds.chimera.core.datalineage.models.OpenLineageTransportTypes;
 import com.progressive.minds.chimera.foundational.logging.ChimeraLogger;
 import com.progressive.minds.chimera.foundational.logging.ChimeraLoggerFactory;
 import org.yaml.snakeyaml.Yaml;
 
-import java.io.IOException;
-import java.io.InputStream;
+import javax.annotation.Nullable;
+import java.io.*;
 import java.util.*;
 
 public class configReader {
@@ -36,7 +37,32 @@ public class configReader {
         }
     }
 
-    public static Map<String, Object> getEnvironmentProperties(String transportType) throws IOException {
+    public static InputStream getConfigs(String orgName, String userConfig, String defaultFileName) throws FileNotFoundException {
+        InputStream inputStream = new InputStream() {
+            @Override
+            public int read() {
+                return -1;
+            }
+        };
+
+        LineageLogger.logInfo("Reading Configs For " + orgName);
+
+        if (null != userConfig && new File(userConfig).exists() && new File(userConfig).isFile()) {
+            inputStream = new FileInputStream(userConfig);
+            LineageLogger.logInfo("User Config Exists ....");
+
+        }
+        else {
+            LineageLogger.logInfo("User Config File not found so local file will be actioned");
+            inputStream = configReader.class.getClassLoader().getResourceAsStream(defaultFileName);
+            LineageLogger.logInfo("In Jar " + defaultFileName + " Exist");
+        }
+        LineageLogger.logInfo(" Config File read Completed");
+        return inputStream;
+    }
+
+    public static Map<String, Object> getEnvironmentProperties(String transportType, String inOrg,
+                                                               @Nullable String UserConfig) throws IOException {
         Yaml yaml = new Yaml();
         List<String> validTransportTypes = new ArrayList<>();
         validTransportTypes.add("gcp");
@@ -49,37 +75,49 @@ public class configReader {
         validTransportTypes.add("composite");
 
         boolean found = validTransportTypes.stream().anyMatch(transportType.toLowerCase(Locale.ROOT).trim()::equals);
-
+        Map<String, Object> data = Map.of();
         if (!found) {
             LineageLogger.logError("RuntimeException Invalid Transport Type Selected " + transportType);
-
             throw new RuntimeException("Invalid Transport Type Selected " + transportType);
-        } else {
-            try (InputStream inputStream = configReader.class.getClassLoader()
-                    .getResourceAsStream("Transport/" + transportType + ".yaml")) {
+        }
+        else if (!UserConfig.contains(transportType + ".yaml")){
+            // UserConfig.substring(UserConfig.lastIndexOf('/') + 1) Extract File Name
+            LineageLogger.logError("RuntimeException Invalid User Config File For  " + transportType);
+            LineageLogger.logError(transportType + " is not matching with file name " + UserConfig,
+                    new IOException("Invalid User Config File For  " + transportType));
+        }
+        else {
+            String ConfigFileName = "Transport/" + transportType + ".yaml";
+            try (InputStream inputStream = getConfigs(inOrg, UserConfig, ConfigFileName))
+                    {
                 if (inputStream == null) {
-                    throw new IllegalArgumentException("File not found: rdsConfig.yml");
+                    LineageLogger.logError(transportType + " Input Stream is Null " + UserConfig,
+                            new IOException("Input Stream is Null For  " + transportType));
                 }
                 // Parse YAML into a Map
-                Map<String, Object> data = yaml.load(inputStream);
+                data = yaml.load(inputStream);
                 Map<String, Object> flattenedMap = new HashMap<>();
                 flattenMap("", data, flattenedMap);
                 // Print all key-value pairs from the flattened map
                 for (Map.Entry<String, Object> entry : flattenedMap.entrySet()) {
-                    LineageLogger.logDebug("Key: " + entry.getKey() + " | Value: " + entry.getValue());
+                    LineageLogger.logInfo("Key: " + entry.getKey() + " | Value: " + entry.getValue());
 
                 }
 
-                return (Map<String, Object>) data.get("transport");
                 } catch (IOException e) {
+                LineageLogger.logError(transportType + " Input Stream is Null " + UserConfig,
+                        new IOException("Input Stream is Null For  " + transportType));
+
                 LineageLogger.logError(transportType+ " Configuration Not Found", e);
                 throw new RuntimeException(e);
             }
             catch (Exception e) {
-                LineageLogger.logError("Exception Occurred During Config Read", e);
+                LineageLogger.logError("Exception Occurred During Config Read" + UserConfig,
+                        new IOException("Exception Occurred During Config Read" , e));
                 return null;
             }
         }
+        return (Map<String, Object>) data.get("transport");
     }
 }
 

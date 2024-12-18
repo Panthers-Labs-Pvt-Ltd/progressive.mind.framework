@@ -1,6 +1,7 @@
 package com.progressive.minds.chimera.core.datalineage.models.Transport;
 
-import com.progressive.minds.chimera.core.datalineage.models.SharedLogger;
+import com.progressive.minds.chimera.core.datalineage.SharedLogger;
+import com.progressive.minds.chimera.core.datalineage.models.OpenLineageTransportTypes;
 import io.openlineage.client.OpenLineageClient;
 import io.openlineage.client.transports.s3.S3TransportConfig;
 import io.openlineage.client.transports.s3.S3Transport;

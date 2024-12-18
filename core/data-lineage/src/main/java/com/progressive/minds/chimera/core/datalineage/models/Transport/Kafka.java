@@ -3,7 +3,8 @@ package com.progressive.minds.chimera.core.datalineage.models.Transport;
 import java.util.List;
 import java.util.Properties;
 
-import com.progressive.minds.chimera.core.datalineage.models.SharedLogger;
+import com.progressive.minds.chimera.core.datalineage.SharedLogger;
+import com.progressive.minds.chimera.core.datalineage.models.OpenLineageTransportTypes;
 import io.openlineage.client.OpenLineageClient;
 import io.openlineage.client.transports.KafkaConfig;
 import io.openlineage.client.transports.KafkaTransport;

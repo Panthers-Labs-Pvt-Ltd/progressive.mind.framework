@@ -1,6 +1,5 @@
-package com.progressive.minds.chimera.core.datalineage.models.Transport;
+package com.progressive.minds.chimera.core.datalineage.models;
 
-import com.progressive.minds.chimera.core.dataSource.sourceTypes.NOSQLReader;
 import com.progressive.minds.chimera.foundational.logging.ChimeraLogger;
 import com.progressive.minds.chimera.foundational.logging.ChimeraLoggerFactory;
 import io.openlineage.client.OpenLineageClient;
