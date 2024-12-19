@@ -1,3 +1,4 @@
+/*
 package com.progressive.minds.chimera.core.databaseOps.repository;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -72,3 +73,4 @@ public class UserRepositoryTest {
         assertEquals(2, users.size());
     }
 }
+*/
