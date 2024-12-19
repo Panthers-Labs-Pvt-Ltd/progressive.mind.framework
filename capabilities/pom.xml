@@ -13,6 +13,7 @@
     <groupId>com.progressive.minds.chimera</groupId>
     <artifactId>capabilities</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
 
     <modules>
         <module>DataObservability</module>
