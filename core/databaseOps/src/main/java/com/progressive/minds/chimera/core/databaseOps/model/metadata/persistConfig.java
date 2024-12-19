@@ -7,8 +7,6 @@ import java.sql.Timestamp;
  * Represents a Persist Configuration entity.
  */
 public class persistConfig {
-
-    private int uniqueId; // Unique identifier
     private String pipelineName; // Name of the associated pipeline
     private Integer sequenceNumber; // Sequence number for execution
     private String dataSinkType; // Type of the data sink
@@ -36,13 +34,12 @@ public class persistConfig {
     public persistConfig() {
     }
 
-    public persistConfig(int uniqueId, String pipelineName, Integer sequenceNumber, String dataSinkType, String dataSinkSubType,
+    public persistConfig( String pipelineName, Integer sequenceNumber, String dataSinkType, String dataSinkSubType,
                          String targetDatabaseName, String targetTableName, String targetSchemaName, String partitionKeys,
                          String targetSqlText, String targetPath, String writeMode, String dataSourceConnectionName,
                          String sinkConfiguration, String sortColumns, String dedupColumns, String kafkaTopic,
                          String kafkaKey, String kafkaMessage, Timestamp createdTimestamp, String createdBy,
                          Timestamp updatedTimestamp, String updatedBy, String activeFlag) {
-        this.uniqueId = uniqueId;
         this.pipelineName = pipelineName;
         this.sequenceNumber = sequenceNumber;
         this.dataSinkType = dataSinkType;
@@ -69,14 +66,6 @@ public class persistConfig {
     }
 
     // Getters and Setters
-
-    public int getUniqueId() {
-        return uniqueId;
-    }
-
-    public void setUniqueId(int uniqueId) {
-        this.uniqueId = uniqueId;
-    }
 
     public String getPipelineName() {
         return pipelineName;
@@ -267,7 +256,6 @@ public class persistConfig {
     @Override
     public String toString() {
         return "PersistConfig{" +
-                "uniqueId=" + uniqueId +
                 ", pipelineName='" + pipelineName + '\'' +
                 ", sequenceNumber=" + sequenceNumber +
                 ", dataSinkType='" + dataSinkType + '\'' +

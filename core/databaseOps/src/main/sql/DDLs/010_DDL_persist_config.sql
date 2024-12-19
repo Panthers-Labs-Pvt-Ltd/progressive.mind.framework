@@ -1,5 +1,4 @@
 CREATE TABLE IF NOT EXISTS persist_config (
-    unique_id SERIAL PRIMARY KEY,
     pipeline_name VARCHAR(500) NOT NULL,
     sequence_number INTEGER,
     data_sink_type VARCHAR(255) NOT NULL,
@@ -23,12 +22,12 @@ CREATE TABLE IF NOT EXISTS persist_config (
     updated_timestamp TIMESTAMP,
     updated_by VARCHAR(255),
     active_flag VARCHAR(1) default 'Y' :: CHARACTER VARYING,
+    CONSTRAINT pk_persist_config PRIMARY KEY (pipeline_name, sequence_number),
     CONSTRAINT fk_pipeline_name FOREIGN KEY (pipeline_name) REFERENCES data_pipelines (pipeline_name) ON delete CASCADE ON update CASCADE,
     CONSTRAINT fk_data_sink_type FOREIGN KEY (data_sink_type, data_sink_sub_type) REFERENCES data_sources (data_source_type, data_source_sub_type) ON delete CASCADE ON update CASCADE,
     CONSTRAINT fk_data_source_connection FOREIGN KEY (data_source_connection_name) REFERENCES data_sources_connections (data_source_connection_name) ON delete CASCADE ON update CASCADE
 );
 
-COMMENT ON COLUMN persist_config.unique_id IS 'Unique ID for each sink';
 COMMENT ON COLUMN persist_config.pipeline_name IS 'Name of the pipeline. This needs to be defined in pipeline';
 COMMENT ON COLUMN persist_config.sequence_number IS 'Sequence No. If a pipeline has multiple sinks, this field can be used to sequence the sinks';
 COMMENT ON COLUMN persist_config.data_sink_type IS 'Type of the data sink. Referenced from data_sources';

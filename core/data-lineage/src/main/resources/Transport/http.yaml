@@ -1,0 +1,14 @@
+transport:
+  type: http
+  url: http://localhost:5000
+  endpoint: /api/v1/lineage
+  urlParams:
+    param0: value0
+    param1: value1
+  timeoutInMillis: 5000
+  auth:
+    type: api_key
+    api_key: f38d2189-c603-4b46-bdea-e573a3b5a7d5
+  headers:
+    X-Some-Extra-Header: abc
+  compression: gzip

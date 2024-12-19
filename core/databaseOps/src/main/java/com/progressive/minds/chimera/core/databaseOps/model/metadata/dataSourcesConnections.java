@@ -17,6 +17,10 @@ public class dataSourcesConnections {
     private String authenticationType;
     private String userName;
     private String userPassword;
+    private String cloudProvider;
+    private String secretName;
+    private String gcpProjectId;
+    private String azureKeyVaultUrl;
     private String role;
     private String warehouse;
     private String principal;
@@ -43,7 +47,8 @@ public class dataSourcesConnections {
 
     public dataSourcesConnections(String dataSourceConnectionName, String dataSourceType, String dataSourceSubType,
                                   String host, Integer port, String databaseName, String schemaName,
-                                  String authenticationType, String userName, String userPassword, String role,
+                                  String authenticationType, String userName, String userPassword, String cloudProvider,
+                                  String secretName, String gcpProjectId, String azureKeyVaultUrl, String role,
                                   String warehouse, String principal, String keytab, String sslCert, String sslKey,
                                   String sslRootCert, String token, String kafkaBroker, String kafkaKeystoreType,
                                   String kafkaKeystoreLocation, String kafkaKeystorePassword,
@@ -60,6 +65,10 @@ public class dataSourcesConnections {
         this.authenticationType = authenticationType;
         this.userName = userName;
         this.userPassword = userPassword;
+        this.cloudProvider = cloudProvider;
+        this.secretName = secretName;
+        this.gcpProjectId = gcpProjectId;
+        this.azureKeyVaultUrl = azureKeyVaultUrl;
         this.role = role;
         this.warehouse = warehouse;
         this.principal = principal;
@@ -165,6 +174,37 @@ public class dataSourcesConnections {
 
     public void setUserPassword(String userPassword) {
         this.userPassword = userPassword;
+    }
+    public String getCloudProvider() {
+        return cloudProvider;
+    }
+
+    public void setCloudProvider(String cloudProvider) {
+        this.cloudProvider = cloudProvider;
+    }
+
+    public String getSecretName() {
+        return secretName;
+    }
+
+    public void setSecretName(String secretName) {
+        this.secretName = secretName;
+    }
+
+    public String getGcpProjectId() {
+        return gcpProjectId;
+    }
+
+    public void setGcpProjectId(String gcpProjectId) {
+        this.gcpProjectId = gcpProjectId;
+    }
+
+    public String getAzureKeyVaultUrl() {
+        return azureKeyVaultUrl;
+    }
+
+    public void setAzureKeyVaultUrl(String azureKeyVaultUrl) {
+        this.azureKeyVaultUrl = azureKeyVaultUrl;
     }
 
     public String getRole() {
@@ -350,6 +390,10 @@ public class dataSourcesConnections {
                 ", authenticationType='" + authenticationType + '\'' +
                 ", userName='" + userName + '\'' +
                 ", userPassword='******' " +
+                ", cloudProvider='" + cloudProvider + '\'' +
+                ", secretName='" + secretName + '\'' +
+                ", gcpProjectId='" + gcpProjectId + '\'' +
+                ", azureKeyVaultUrl='" + azureKeyVaultUrl + '\'' +
                 ", role='" + role + '\'' +
                 ", warehouse='" + warehouse + '\'' +
                 ", principal='" + principal + '\'' +

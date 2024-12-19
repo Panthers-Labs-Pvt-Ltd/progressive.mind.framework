@@ -9,6 +9,10 @@ CREATE TABLE IF NOT EXISTS data_sources_connections (
     authentication_type VARCHAR(255) NOT NULL,
     user_name VARCHAR(255),
     user_password VARCHAR(255),
+    cloud_provider VARCHAR(255),
+    secret_name VARCHAR(500),
+    gcp_project_id VARCHAR(500),
+    azure_key_vault_url VARCHAR(500),
     role VARCHAR(255),
     warehouse VARCHAR(255),
     principal TEXT,
@@ -31,7 +35,7 @@ CREATE TABLE IF NOT EXISTS data_sources_connections (
     updated_by varchar(255),
     active_flag VARCHAR(1) default 'Y' :: CHARACTER VARYING,
     CONSTRAINT pk_data_source_connections PRIMARY KEY (data_source_connection_name),
-    CONSTRAINT check_authentication_type CHECK (authentication_type IN ('Username&Password', 'kerberos', 'token')),
+    CONSTRAINT check_authentication_type CHECK (authentication_type IN ('Username&Password', 'Kerberos', 'Token', 'SecretManager')),
     CONSTRAINT auth_user_pass_check CHECK ((authentication_type = 'Username&Password' AND user_name IS NOT NULL AND user_password IS NOT NULL) OR authentication_type <> 'Username&Password'),
     CONSTRAINT check_active_flag CHECK (active_flag IN ('Y', 'N')),
     CONSTRAINT fk_data_source_type FOREIGN KEY (data_source_type, data_source_sub_type) REFERENCES data_sources (data_source_type, data_source_sub_type)
@@ -50,6 +54,10 @@ COMMENT ON COLUMN data_sources_connections.schema_name IS 'Name of the schema to
 COMMENT ON COLUMN data_sources_connections.authentication_type IS 'Type of Authentication to be used for establishing connectivity. Valid Values: Username & Password, SSL, Kerberos';
 COMMENT ON COLUMN data_sources_connections.user_name IS 'Username to be used in authentication while connecting to the source';
 COMMENT ON COLUMN data_sources_connections.user_password IS 'Password to be used in authentication while connecting to the source';
+COMMENT ON COLUMN data_sources_connections.cloud_provider IS 'Cloud SecretManager Service is hosted. Mandatory if authentication_type is SecretManager. Eg. AWS / GCP / Azure.';
+COMMENT ON COLUMN data_sources_connections.secret_name IS 'SecretName on the secretManager. Mandatory if authentication_type is SecretManager.';
+COMMENT ON COLUMN data_sources_connections.gcp_project_id IS 'GCP Project ID. Mandatory if cloud_provider is GCP.';
+COMMENT ON COLUMN data_sources_connections.azure_key_vault_url IS 'URL of Azure Key Vault. Mandatory if cloud_provider id Azure.';
 COMMENT ON COLUMN data_sources_connections.role IS 'Role to be used while establishing the connectivity';
 COMMENT ON COLUMN data_sources_connections.warehouse IS 'Warehouse with which connectivity needs to be established';
 COMMENT ON COLUMN data_sources_connections.principal IS 'Used for Kerberos Authentication.';
