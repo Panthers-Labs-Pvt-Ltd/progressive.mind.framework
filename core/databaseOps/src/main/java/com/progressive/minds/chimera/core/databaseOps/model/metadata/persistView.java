@@ -49,192 +49,192 @@ public class persistView {
     private String kafkaTruststorePassword;
     private String kafkaKeyPassword;
 
-    public String getPipelineName() {
-        return pipelineName;
+    public void setPipelineName(String pipelineName) {
+        this.pipelineName = pipelineName;
     }
 
-    public Integer getSequenceNumber() {
-        return sequenceNumber;
+    public void setSequenceNumber(Integer sequenceNumber) {
+        this.sequenceNumber = sequenceNumber;
     }
 
-    public String getDataSinkType() {
-        return dataSinkType;
+    public void setDataSinkType(String dataSinkType) {
+        this.dataSinkType = dataSinkType;
     }
 
-    public String getDataSinkSubType() {
-        return dataSinkSubType;
+    public void setDataSinkSubType(String dataSinkSubType) {
+        this.dataSinkSubType = dataSinkSubType;
     }
 
-    public String getTargetDatabaseName() {
-        return targetDatabaseName;
+    public void setTargetDatabaseName(String targetDatabaseName) {
+        this.targetDatabaseName = targetDatabaseName;
     }
 
-    public String getTargetTableName() {
-        return targetTableName;
+    public void setTargetTableName(String targetTableName) {
+        this.targetTableName = targetTableName;
     }
 
-    public String getTargetSchemaName() {
-        return targetSchemaName;
+    public void setTargetSchemaName(String targetSchemaName) {
+        this.targetSchemaName = targetSchemaName;
     }
 
-    public String getPartitionKeys() {
-        return partitionKeys;
+    public void setPartitionKeys(String partitionKeys) {
+        this.partitionKeys = partitionKeys;
     }
 
-    public String getTargetSqlText() {
-        return targetSqlText;
+    public void setTargetSqlText(String targetSqlText) {
+        this.targetSqlText = targetSqlText;
     }
 
-    public String getTargetPath() {
-        return targetPath;
+    public void setTargetPath(String targetPath) {
+        this.targetPath = targetPath;
     }
 
-    public String getWriteMode() {
-        return writeMode;
+    public void setWriteMode(String writeMode) {
+        this.writeMode = writeMode;
     }
 
-    public String getDataSourceConnectionName() {
-        return dataSourceConnectionName;
+    public void setDataSourceConnectionName(String dataSourceConnectionName) {
+        this.dataSourceConnectionName = dataSourceConnectionName;
     }
 
-    public String getSinkConfiguration() {
-        return sinkConfiguration;
+    public void setSinkConfiguration(String sinkConfiguration) {
+        this.sinkConfiguration = sinkConfiguration;
     }
 
-    public String getSortColumns() {
-        return sortColumns;
+    public void setSortColumns(String sortColumns) {
+        this.sortColumns = sortColumns;
     }
 
-    public String getDedupColumns() {
-        return dedupColumns;
+    public void setDedupColumns(String dedupColumns) {
+        this.dedupColumns = dedupColumns;
     }
 
-    public String getKafkaTopic() {
-        return kafkaTopic;
+    public void setKafkaTopic(String kafkaTopic) {
+        this.kafkaTopic = kafkaTopic;
     }
 
-    public String getKafkaKey() {
-        return kafkaKey;
+    public void setKafkaKey(String kafkaKey) {
+        this.kafkaKey = kafkaKey;
     }
 
-    public String getKafkaMessage() {
-        return kafkaMessage;
+    public void setKafkaMessage(String kafkaMessage) {
+        this.kafkaMessage = kafkaMessage;
     }
 
-    public String getReadDefaults() {
-        return readDefaults;
+    public void setReadDefaults(String readDefaults) {
+        this.readDefaults = readDefaults;
     }
 
-    public String getWriteDefaults() {
-        return writeDefaults;
+    public void setWriteDefaults(String writeDefaults) {
+        this.writeDefaults = writeDefaults;
     }
 
-    public String getHost() {
-        return host;
+    public void setHost(String host) {
+        this.host = host;
     }
 
-    public Integer getPort() {
-        return port;
+    public void setPort(Integer port) {
+        this.port = port;
     }
 
-    public String getConnectionDatabaseName() {
-        return connectionDatabaseName;
+    public void setConnectionDatabaseName(String connectionDatabaseName) {
+        this.connectionDatabaseName = connectionDatabaseName;
     }
 
-    public String getConnectionSchemaName() {
-        return connectionSchemaName;
+    public void setConnectionSchemaName(String connectionSchemaName) {
+        this.connectionSchemaName = connectionSchemaName;
     }
 
-    public String getAuthenticationType() {
-        return authenticationType;
+    public void setAuthenticationType(String authenticationType) {
+        this.authenticationType = authenticationType;
     }
 
-    public String getUserName() {
-        return userName;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
-    public String getUserPassword() {
-        return userPassword;
+    public void setUserPassword(String userPassword) {
+        this.userPassword = userPassword;
     }
 
-    public String getCloudProvider() {
-        return cloudProvider;
+    public void setCloudProvider(String cloudProvider) {
+        this.cloudProvider = cloudProvider;
     }
 
-    public String getSecretName() {
-        return secretName;
+    public void setSecretName(String secretName) {
+        this.secretName = secretName;
     }
 
-    public String getGcpProjectId() {
-        return gcpProjectId;
+    public void setGcpProjectId(String gcpProjectId) {
+        this.gcpProjectId = gcpProjectId;
     }
 
-    public String getAzureKeyVaultUrl() {
-        return azureKeyVaultUrl;
+    public void setAzureKeyVaultUrl(String azureKeyVaultUrl) {
+        this.azureKeyVaultUrl = azureKeyVaultUrl;
     }
 
-    public String getRole() {
-        return role;
+    public void setRole(String role) {
+        this.role = role;
     }
 
-    public String getWarehouse() {
-        return warehouse;
+    public void setWarehouse(String warehouse) {
+        this.warehouse = warehouse;
     }
 
-    public String getPrincipal() {
-        return principal;
+    public void setPrincipal(String principal) {
+        this.principal = principal;
     }
 
-    public String getKeytab() {
-        return keytab;
+    public void setKeytab(String keytab) {
+        this.keytab = keytab;
     }
 
-    public String getSslCert() {
-        return sslCert;
+    public void setSslCert(String sslCert) {
+        this.sslCert = sslCert;
     }
 
-    public String getSslKey() {
-        return sslKey;
+    public void setSslKey(String sslKey) {
+        this.sslKey = sslKey;
     }
 
-    public String getSslRootCert() {
-        return sslRootCert;
+    public void setSslRootCert(String sslRootCert) {
+        this.sslRootCert = sslRootCert;
     }
 
-    public String getToken() {
-        return token;
+    public void setToken(String token) {
+        this.token = token;
     }
 
-    public String getKafkaBroker() {
-        return kafkaBroker;
+    public void setKafkaBroker(String kafkaBroker) {
+        this.kafkaBroker = kafkaBroker;
     }
 
-    public String getKafkaKeystoreType() {
-        return kafkaKeystoreType;
+    public void setKafkaKeystoreType(String kafkaKeystoreType) {
+        this.kafkaKeystoreType = kafkaKeystoreType;
     }
 
-    public String getKafkaKeystoreLocation() {
-        return kafkaKeystoreLocation;
+    public void setKafkaKeystoreLocation(String kafkaKeystoreLocation) {
+        this.kafkaKeystoreLocation = kafkaKeystoreLocation;
     }
 
-    public String getKafkaKeystorePassword() {
-        return kafkaKeystorePassword;
+    public void setKafkaKeystorePassword(String kafkaKeystorePassword) {
+        this.kafkaKeystorePassword = kafkaKeystorePassword;
     }
 
-    public String getKafkaTruststoreType() {
-        return kafkaTruststoreType;
+    public void setKafkaTruststoreType(String kafkaTruststoreType) {
+        this.kafkaTruststoreType = kafkaTruststoreType;
     }
 
-    public String getKafkaTruststoreLocation() {
-        return kafkaTruststoreLocation;
+    public void setKafkaTruststoreLocation(String kafkaTruststoreLocation) {
+        this.kafkaTruststoreLocation = kafkaTruststoreLocation;
     }
 
-    public String getKafkaTruststorePassword() {
-        return kafkaTruststorePassword;
+    public void setKafkaTruststorePassword(String kafkaTruststorePassword) {
+        this.kafkaTruststorePassword = kafkaTruststorePassword;
     }
 
-    public String getKafkaKeyPassword() {
-        return kafkaKeyPassword;
+    public void setKafkaKeyPassword(String kafkaKeyPassword) {
+        this.kafkaKeyPassword = kafkaKeyPassword;
     }
 
     @Override
