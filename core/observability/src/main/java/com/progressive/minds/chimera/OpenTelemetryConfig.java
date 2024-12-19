@@ -16,7 +16,7 @@ public class OpenTelemetryConfig {
     public static OpenTelemetry initializeTelemetry() {
         // Define resource attributes (e.g., application name)
         Resource resource = Resource.getDefault()
-                .merge(Resource.create((Attributes) ResourceAttributes.SERVICE_NAME, "SparkApp"));
+                .merge(Resource.create(Attributes.of(ResourceAttributes.SERVICE_NAME, "SparkApp")));
 
         // Configure a logging span exporter for traces
         LoggingSpanExporter spanExporter = new LoggingSpanExporter();
