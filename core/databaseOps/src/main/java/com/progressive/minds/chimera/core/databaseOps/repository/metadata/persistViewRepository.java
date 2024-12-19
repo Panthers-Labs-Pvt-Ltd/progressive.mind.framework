@@ -19,7 +19,7 @@ public class persistViewRepository {
     public List<persistView> getAllPersistDetails() {
         List<persistView> persistDetails = new ArrayList<>();
         //      String query = "SELECT " + String.join(", ", columnNames) + " FROM data_sources";
-        String query = "SELECT * FROM persist_view";
+        String query = "SELECT * FROM persist_view order by pipeline_name, sequence_number";
 //TODO: need to set the variables in the model class same as column names in the table.
 //TODO : hard coding of the table name should be removed
 

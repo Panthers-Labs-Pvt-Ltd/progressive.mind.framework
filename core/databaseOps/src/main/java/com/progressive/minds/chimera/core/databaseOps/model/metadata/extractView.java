@@ -102,6 +102,194 @@ public class extractView {
                 '}';
     }
 
+    public String getPipelineName() {
+        return pipelineName;
+    }
+
+    public Integer getSequenceNumber() {
+        return sequenceNumber;
+    }
+
+    public String getDataSourceType() {
+        return dataSourceType;
+    }
+
+    public String getDataSourceSubType() {
+        return dataSourceSubType;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public String getSchemaPath() {
+        return schemaPath;
+    }
+
+    public String getRowFilter() {
+        return rowFilter;
+    }
+
+    public String getColumnFilter() {
+        return columnFilter;
+    }
+
+    public String getExtractDataframeName() {
+        return extractDataframeName;
+    }
+
+    public String getSourceConfiguration() {
+        return sourceConfiguration;
+    }
+
+    public String getTableName() {
+        return tableName;
+    }
+
+    public String getSchemaName() {
+        return schemaName;
+    }
+
+    public String getSqlText() {
+        return sqlText;
+    }
+
+    public String getKafkaConsumerTopic() {
+        return kafkaConsumerTopic;
+    }
+
+    public String getKafkaConsumerGroup() {
+        return kafkaConsumerGroup;
+    }
+
+    public String getKafkaStartOffset() {
+        return kafkaStartOffset;
+    }
+
+    public String getDataSourceConnectionName() {
+        return dataSourceConnectionName;
+    }
+
+    public String getReadDefaults() {
+        return readDefaults;
+    }
+
+    public String getWriteDefaults() {
+        return writeDefaults;
+    }
+
+    public String getHost() {
+        return host;
+    }
+
+    public Integer getPort() {
+        return port;
+    }
+
+    public String getConnectionDatabaseName() {
+        return connectionDatabaseName;
+    }
+
+    public String getConnectionSchemaName() {
+        return connectionSchemaName;
+    }
+
+    public String getAuthenticationType() {
+        return authenticationType;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public String getUserPassword() {
+        return userPassword;
+    }
+
+    public String getCloudProvider() {
+        return cloudProvider;
+    }
+
+    public String getSecretName() {
+        return secretName;
+    }
+
+    public String getGcpProjectId() {
+        return gcpProjectId;
+    }
+
+    public String getAzureKeyVaultUrl() {
+        return azureKeyVaultUrl;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public String getWarehouse() {
+        return warehouse;
+    }
+
+    public String getPrincipal() {
+        return principal;
+    }
+
+    public String getKeytab() {
+        return keytab;
+    }
+
+    public String getSslCert() {
+        return sslCert;
+    }
+
+    public String getSslKey() {
+        return sslKey;
+    }
+
+    public String getSslRootCert() {
+        return sslRootCert;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public String getKafkaBroker() {
+        return kafkaBroker;
+    }
+
+    public String getKafkaKeystoreType() {
+        return kafkaKeystoreType;
+    }
+
+    public String getKafkaKeystoreLocation() {
+        return kafkaKeystoreLocation;
+    }
+
+    public String getKafkaKeystorePassword() {
+        return kafkaKeystorePassword;
+    }
+
+    public String getKafkaTruststoreType() {
+        return kafkaTruststoreType;
+    }
+
+    public String getKafkaTruststoreLocation() {
+        return kafkaTruststoreLocation;
+    }
+
+    public String getKafkaTruststorePassword() {
+        return kafkaTruststorePassword;
+    }
+
+    public String getKafkaKeyPassword() {
+        return kafkaKeyPassword;
+    }
+
     public void setPipelineName(String pipelineName) {
         this.pipelineName = pipelineName;
     }

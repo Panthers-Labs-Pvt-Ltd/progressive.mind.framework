@@ -237,6 +237,194 @@ public class persistView {
         this.kafkaKeyPassword = kafkaKeyPassword;
     }
 
+    public String getPipelineName() {
+        return pipelineName;
+    }
+
+    public Integer getSequenceNumber() {
+        return sequenceNumber;
+    }
+
+    public String getDataSinkType() {
+        return dataSinkType;
+    }
+
+    public String getDataSinkSubType() {
+        return dataSinkSubType;
+    }
+
+    public String getTargetDatabaseName() {
+        return targetDatabaseName;
+    }
+
+    public String getTargetTableName() {
+        return targetTableName;
+    }
+
+    public String getTargetSchemaName() {
+        return targetSchemaName;
+    }
+
+    public String getPartitionKeys() {
+        return partitionKeys;
+    }
+
+    public String getTargetSqlText() {
+        return targetSqlText;
+    }
+
+    public String getTargetPath() {
+        return targetPath;
+    }
+
+    public String getWriteMode() {
+        return writeMode;
+    }
+
+    public String getDataSourceConnectionName() {
+        return dataSourceConnectionName;
+    }
+
+    public String getSinkConfiguration() {
+        return sinkConfiguration;
+    }
+
+    public String getSortColumns() {
+        return sortColumns;
+    }
+
+    public String getDedupColumns() {
+        return dedupColumns;
+    }
+
+    public String getKafkaTopic() {
+        return kafkaTopic;
+    }
+
+    public String getKafkaKey() {
+        return kafkaKey;
+    }
+
+    public String getKafkaMessage() {
+        return kafkaMessage;
+    }
+
+    public String getReadDefaults() {
+        return readDefaults;
+    }
+
+    public String getWriteDefaults() {
+        return writeDefaults;
+    }
+
+    public String getHost() {
+        return host;
+    }
+
+    public Integer getPort() {
+        return port;
+    }
+
+    public String getConnectionDatabaseName() {
+        return connectionDatabaseName;
+    }
+
+    public String getConnectionSchemaName() {
+        return connectionSchemaName;
+    }
+
+    public String getAuthenticationType() {
+        return authenticationType;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public String getUserPassword() {
+        return userPassword;
+    }
+
+    public String getCloudProvider() {
+        return cloudProvider;
+    }
+
+    public String getSecretName() {
+        return secretName;
+    }
+
+    public String getGcpProjectId() {
+        return gcpProjectId;
+    }
+
+    public String getAzureKeyVaultUrl() {
+        return azureKeyVaultUrl;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public String getWarehouse() {
+        return warehouse;
+    }
+
+    public String getPrincipal() {
+        return principal;
+    }
+
+    public String getKeytab() {
+        return keytab;
+    }
+
+    public String getSslCert() {
+        return sslCert;
+    }
+
+    public String getSslKey() {
+        return sslKey;
+    }
+
+    public String getSslRootCert() {
+        return sslRootCert;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public String getKafkaBroker() {
+        return kafkaBroker;
+    }
+
+    public String getKafkaKeystoreType() {
+        return kafkaKeystoreType;
+    }
+
+    public String getKafkaKeystoreLocation() {
+        return kafkaKeystoreLocation;
+    }
+
+    public String getKafkaKeystorePassword() {
+        return kafkaKeystorePassword;
+    }
+
+    public String getKafkaTruststoreType() {
+        return kafkaTruststoreType;
+    }
+
+    public String getKafkaTruststoreLocation() {
+        return kafkaTruststoreLocation;
+    }
+
+    public String getKafkaTruststorePassword() {
+        return kafkaTruststorePassword;
+    }
+
+    public String getKafkaKeyPassword() {
+        return kafkaKeyPassword;
+    }
+
     @Override
     public String toString() {
         return "persistView{" +

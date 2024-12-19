@@ -19,7 +19,7 @@ public class extractViewRepository {
     public List<extractView> getAllExtractDetails() {
         List<extractView> extractConfigs = new ArrayList<>();
         //      String query = "SELECT " + String.join(", ", columnNames) + " FROM data_sources";
-        String query = "SELECT * FROM extract_view";
+        String query = "SELECT * FROM extract_view order by pipeline_name, sequence_number";
 //TODO: need to set the variables in the model class same as column names in the table.
 //TODO : hard coding of the table name should be removed
 
@@ -134,8 +134,8 @@ public class extractViewRepository {
         ec.setColumnFilter(resultSet.getString("column_filter"));
         ec.setExtractDataframeName(resultSet.getString("extract_dataframe_name"));
         ec.setSourceConfiguration(resultSet.getString("source_configuration"));
-        ec.setTableName(resultSet.getString("table_name"));
-        ec.setSchemaName(resultSet.getString("schema_name"));
+        ec.setTableName(resultSet.getString("source_table_name"));
+        ec.setSchemaName(resultSet.getString("source_schema_name"));
         ec.setSqlText(resultSet.getString("sql_text"));
         ec.setKafkaConsumerTopic(resultSet.getString("kafka_consumer_topic"));
         ec.setKafkaConsumerGroup(resultSet.getString("kafka_consumer_group"));
