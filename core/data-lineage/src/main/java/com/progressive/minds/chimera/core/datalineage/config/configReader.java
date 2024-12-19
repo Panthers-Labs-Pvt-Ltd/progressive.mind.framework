@@ -80,7 +80,7 @@ public class configReader {
             LineageLogger.logError("RuntimeException Invalid Transport Type Selected " + transportType);
             throw new RuntimeException("Invalid Transport Type Selected " + transportType);
         }
-        else if (!UserConfig.contains(transportType + ".yaml")){
+        else if (UserConfig != null && !UserConfig.contains(transportType + ".yaml")){
             // UserConfig.substring(UserConfig.lastIndexOf('/') + 1) Extract File Name
             LineageLogger.logError("RuntimeException Invalid User Config File For  " + transportType);
             LineageLogger.logError(transportType + " is not matching with file name " + UserConfig,
