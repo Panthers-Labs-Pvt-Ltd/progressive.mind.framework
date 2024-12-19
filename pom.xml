@@ -140,6 +140,7 @@
         <maven.compiler.plugin.version>3.11.0</maven.compiler.plugin.version>
         <checkstyle-maven-plugin.version>3.0.0</checkstyle-maven-plugin.version>
         <scalatest.maven.plugin.version>2.1.0</scalatest.maven.plugin.version>
+        <scalatest.version>3.2.17</scalatest.version>
 
         <!-- Key dependencies -->
         <kafka.clients.version>3.1.0</kafka.clients.version>
@@ -158,6 +159,13 @@
     <!--<repositories><repository><id>gitlab-maven</id><url>https://gitlab.com/manishkumargupta/TestScala.git</url></repository></repositories><distributionManagement><repository><id>gitlab-maven</id><url>https://gitlab.com/manishkumargupta/TestScala.git</url></repository><snapshotRepository><id>gitlab-maven</id><url>https://gitlab.com/manishkumargupta/TestScala.git</url></snapshotRepository></distributionManagement>-->
 
     <dependencies>
+        <dependency>
+            <groupId>org.scalatest</groupId>
+            <artifactId>scalatest_${scala.major.version}</artifactId>
+            <version>${scalatest.version}</version>
+            <scope>test</scope>
+        </dependency>
+
         <!-- https://mvnrepository.com/artifact/org.zalando/spark-json-schema -->
         <dependency>
             <groupId>org.zalando</groupId>
