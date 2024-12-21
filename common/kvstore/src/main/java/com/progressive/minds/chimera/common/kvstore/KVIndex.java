@@ -47,7 +47,7 @@ public @interface KVIndex {
     String value() default NATURAL_INDEX_NAME;
 
     /**
-     * The name of the parent index of this index. By default there is no parent index, so the
+     * The name of the parent index of this index. By default, there is no parent index, so the
      * generated data can be retrieved without having to provide a parent value.
      *
      * <p>
