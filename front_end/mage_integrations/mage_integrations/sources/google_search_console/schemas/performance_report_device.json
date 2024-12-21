@@ -1,0 +1,31 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "site_url": {
+      "type": ["null", "string"]
+    },
+    "search_type": {
+      "type": ["null", "string"]
+    },
+    "date": {
+      "type": ["null", "string"],
+      "format": "date-time"
+    },
+    "device": {
+      "type": ["null", "string"]
+    },
+    "clicks": {
+      "type": ["null", "integer"]
+    },
+    "impressions": {
+      "type": ["null", "integer"]
+    },
+    "ctr": {
+      "type": ["null", "number"]
+    },
+    "position": {
+      "type": ["null", "number"]
+    }
+  }
+}

@@ -18,5 +18,6 @@
     <modules>
         <module>DataObservability</module>
         <module>DataManagement</module>
+        <module>DataQuality</module>
     </modules>
 </project>
