@@ -23,5 +23,6 @@
         <module>temporal</module>
         <module>decision-engine</module>
         <module>apacheComet</module>
+        <module>api-service</module>
     </modules>
 </project>

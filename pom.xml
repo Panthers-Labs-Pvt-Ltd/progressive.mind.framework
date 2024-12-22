@@ -156,6 +156,13 @@
         <code.gson.version>2.9.0</code.gson.version>
         <commons-text.version>1.10.0</commons-text.version>
         <commons-csv.version>1.9.0</commons-csv.version>
+
+        <spring-boot.version>3.3.5</spring-boot.version>
+
+        <!--Test Dependency versions -->
+        <junit.jupiter.version>5.10.0</junit.jupiter.version>
+        <mockito.inline.version>5.2.0</mockito.inline.version>
+
     </properties>
     <!--<repositories><repository><id>gitlab-maven</id><url>https://gitlab.com/manishkumargupta/TestScala.git</url></repository></repositories><distributionManagement><repository><id>gitlab-maven</id><url>https://gitlab.com/manishkumargupta/TestScala.git</url></repository><snapshotRepository><id>gitlab-maven</id><url>https://gitlab.com/manishkumargupta/TestScala.git</url></snapshotRepository></distributionManagement>-->
 
@@ -210,13 +217,13 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <version>5.10.0</version>
+            <version>${junit.jupiter.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <version>5.5.0</version>
+            <artifactId>mockito-inline</artifactId>
+            <version>${mockito.inline.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
