@@ -65,6 +65,3 @@ UPDATE data_sources
 SET read_defaults = '{"host": "localhost"}',
 write_defaults = '{"Invalid Json"}' where data_source_type = 'Files' AND data_source_sub_type = 'Json';
 
-truncate data_sources cascade ;
-
-

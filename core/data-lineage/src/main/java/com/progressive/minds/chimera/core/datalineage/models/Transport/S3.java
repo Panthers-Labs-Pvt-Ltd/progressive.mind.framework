@@ -6,7 +6,7 @@ import io.openlineage.client.OpenLineageClient;
 import io.openlineage.client.transports.s3.S3TransportConfig;
 import io.openlineage.client.transports.s3.S3Transport;
 /**
- * the S3 Transport emits OpenLineage events to a S3 Bucket Directly.
+ * the S3 Transport emits OpenLineageChimera events to a S3 Bucket Directly.
  * Configuration
  * type - string, must be "s3". Required.
  * endpoint - string, the endpoint for S3 compliant service like MinIO, Ceph, etc. Optional

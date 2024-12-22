@@ -12,14 +12,14 @@ import java.io.IOException;
 
 
 /**
- * the GCP Transport emits OpenLineage events to a GCP.
+ * the GCP Transport emits OpenLineageChimera events to a GCP.
  * Configuration
  * type - string, must be "gcplineage". Required.
  * endpoint - string, specifies the endpoint to which events are sent, default value is datalineage.googleapis.com:443. Optional.
  * projectId - string, the project quota identifier. If not provided, it is determined based on user credentials. Optional.
  * location - string, Dataplex location. Optional, default: "us".
  * credentialsFile - string, path to the Service Account credentials JSON file. Optional, if not provided Application Default Credentials are used
- * mode - enum that specifies the type of client used for publishing OpenLineage events to GCP Lineage service.
+ * mode - enum that specifies the type of client used for publishing OpenLineageChimera events to GCP Lineage service.
  * Possible values: sync (synchronous) or async (asynchronous). Optional, default: async.
  * <p>
  * Behavior

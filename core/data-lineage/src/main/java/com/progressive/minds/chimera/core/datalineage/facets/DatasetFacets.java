@@ -1,4 +1,4 @@
-package com.progressive.minds.chimera.core.datalineage.models;
+package com.progressive.minds.chimera.core.datalineage.facets;
 
 import com.progressive.minds.chimera.core.datalineage.models.metadata.extractMetadata;
 import io.openlineage.client.OpenLineage;
@@ -9,13 +9,13 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class OpenLineageFactes {
-
+public class DatasetFacets {
     /**
-     * OpenLineage.DocumentationDatasetFacet is a facet in OpenLineage used to capture documentation-related
+     * OpenLineageChimera.DocumentationDatasetFacet is a facet in OpenLineageChimera used to capture documentation-related
      * metadata for a dataset. This facet is useful for adding extra documentation information, such as descriptions,
      * comments, and other helpful notes related to a dataset.
      * @param openLineageProducer
@@ -24,20 +24,20 @@ public class OpenLineageFactes {
      * @return DocumentationDatasetFacet
      */
     public static OpenLineage.DocumentationDatasetFacet
-                  getDocumentationDatasetFacet(OpenLineage openLineageProducer,
-                                               String Description,  @Nullable Map<String, String> extraInfo) {
+    getDocumentationDatasetFacet(OpenLineage openLineageProducer,
+                                 String Description,  @Nullable Map<String, String> extraInfo) {
 
         OpenLineage.DocumentationDatasetFacetBuilder docInputFacet =
                 openLineageProducer.newDocumentationDatasetFacetBuilder();
-                extraInfo.forEach(docInputFacet::put);
-                docInputFacet.description(Description);
+        extraInfo.forEach(docInputFacet::put);
+        docInputFacet.description(Description);
         return docInputFacet.build();
     }
 
     public static OpenLineage.DatasourceDatasetFacet
-                  getDatasourceDatasetFacet(OpenLineage openLineageProducer,
-                                            String dataSourceName, String dataSourceURI,
-                                            @Nullable Map<String, String> extraInfo) throws URISyntaxException {
+    getDatasourceDatasetFacet(OpenLineage openLineageProducer,
+                              String dataSourceName, String dataSourceURI,
+                              @Nullable Map<String, String> extraInfo) throws URISyntaxException {
         OpenLineage.DatasourceDatasetFacetBuilder dataSourceFacet = openLineageProducer.newDatasourceDatasetFacetBuilder();
         extraInfo.forEach(dataSourceFacet::put);
         dataSourceFacet.name(dataSourceName).uri(new URI(dataSourceURI));
@@ -45,7 +45,7 @@ public class OpenLineageFactes {
     }
 
     /**
-     * OpenLineage.SchemaDatasetFacet is a facet in OpenLineage used to capture schema-related metadata about a dataset.
+     * OpenLineageChimera.SchemaDatasetFacet is a facet in OpenLineageChimera used to capture schema-related metadata about a dataset.
      * This facet typically includes the fields (or columns) of the dataset, their names, types,
      * and other related properties.
      * @param openLineageProducer
@@ -70,8 +70,8 @@ public class OpenLineageFactes {
     }
 
     /**
-     *  OpenLineage.SymlinksDatasetFacet is used to capture and represent symlinks (symbolic links) that are associated
-     *  with a dataset in the OpenLineage framework. Symbolic links are references to other files or directories in the
+     *  OpenLineageChimera.SymlinksDatasetFacet is used to capture and represent symlinks (symbolic links) that are associated
+     *  with a dataset in the OpenLineageChimera framework. Symbolic links are references to other files or directories in the
      *  filesystem, which can point to the original dataset or other datasets. This facet helps track these symlinks
      *  and provides metadata about them, which is useful in data lineage and data tracking scenarios
      * @param openLineageProducer
@@ -79,7 +79,7 @@ public class OpenLineageFactes {
      * @return
      */
     public static OpenLineage.SymlinksDatasetFacet getSymlinksDatasetFacet (OpenLineage openLineageProducer,
-                                                                           @Nullable List<Map<String, String>> symlinkUris)  {
+                                                                            @Nullable List<Map<String, String>> symlinkUris)  {
 
         // Example dynamic input for symlinks
     /*    List<Map<String, String>> symlinkData = List.of(
@@ -111,13 +111,13 @@ public class OpenLineageFactes {
         OpenLineage.SymlinksDatasetFacet symlinksDatasetFacet = openLineageProducer.newSymlinksDatasetFacetBuilder()
                 .identifiers(symlinkIdentifiers)
                 .build();
-    return symlinksDatasetFacet;
+        return symlinksDatasetFacet;
     }
 
 
     /**
-     * OpenLineage.LifecycleStateChangeDatasetFacet is used to capture lifecycle state changes for datasets in the
-     * OpenLineage framework. This facet provides metadata related to changes in the state of a dataset, such as when
+     * OpenLineageChimera.LifecycleStateChangeDatasetFacet is used to capture lifecycle state changes for datasets in the
+     * OpenLineageChimera framework. This facet provides metadata related to changes in the state of a dataset, such as when
      * it is created, modified, dropped, or altered. It helps track the transitions and changes in a dataset's
      * lifecycle, which is crucial for data lineage, governance, and monitoring in data workflows.
      *
@@ -139,7 +139,7 @@ public class OpenLineageFactes {
      * @return
      */
     public static OpenLineage.LifecycleStateChangeDatasetFacet getDataSetStateChange(OpenLineage openLineageProducer,
-                   String DatasetName , String DatasetNamespace, String stageChange )  {
+                                                                                     String DatasetName , String DatasetNamespace, String stageChange )  {
 
         // Possible Values for LifecycleStateChange ALTER,CREATE, DROP,OVERWRITE,RENAME,TRUNCATE;
 
@@ -159,7 +159,7 @@ public class OpenLineageFactes {
     }
 
     /**
-     * OpenLineage.OwnershipDatasetFacet is used in OpenLineage to capture metadata about the ownership of a dataset.
+     * OpenLineageChimera.OwnershipDatasetFacet is used in OpenLineageChimera to capture metadata about the ownership of a dataset.
      *      This facet helps track information about the entities (users, teams, organizations, etc.) that own or manage a
      *      particular dataset. Ownership information is important for understanding who is responsible for the dataset and
      *      can help ensure compliance, governance, and security policies are properly implemented.
@@ -178,41 +178,65 @@ public class OpenLineageFactes {
      */
     public static OpenLineage.OwnershipDatasetFacet
     getDatasetOwners(OpenLineage openLineageProducer,
-                        @Nullable Map<String, String> ownerInfo)  {
+                     @Nullable Map<String, String> ownerInfo)  {
 
-       // Extract owner fields from the map
-       String name = ownerInfo.getOrDefault("name", "Unknown");
-       String type = ownerInfo.getOrDefault("type", "Unknown");
-       List<OpenLineage.OwnershipDatasetFacetOwners> owners = new ArrayList<>();
+        // Extract owner fields from the map
+        assert ownerInfo != null;
+        String name = ownerInfo.getOrDefault("name", "Unknown");
+        String type = ownerInfo.getOrDefault("type", "Unknown");
+        List<OpenLineage.OwnershipDatasetFacetOwners> owners = new ArrayList<>();
 
-       owners.add(openLineageProducer.newOwnershipDatasetFacetOwnersBuilder()
-               .name(name)
-               .type(type)
-               .build()
-       );
+        owners.add(openLineageProducer.newOwnershipDatasetFacetOwnersBuilder()
+                .name(name)
+                .type(type)
+                .build()
+        );
 
-       OpenLineage.OwnershipDatasetFacet ownershipFacet = openLineageProducer.newOwnershipDatasetFacetBuilder()
-               .owners(owners)
-               .build();
+        OpenLineage.OwnershipDatasetFacet ownershipFacet = openLineageProducer.newOwnershipDatasetFacetBuilder()
+                .owners(owners)
+                .build();
 
 
-       OpenLineage.OwnershipDatasetFacetOwnersBuilder ownersFacet= openLineageProducer.newOwnershipDatasetFacetOwnersBuilder();
-       return ownershipFacet;
+        OpenLineage.OwnershipDatasetFacetOwnersBuilder ownersFacet= openLineageProducer.newOwnershipDatasetFacetOwnersBuilder();
+        return ownershipFacet;
+    }
+
+    private static Map<String, String> SourceTypesConfig(Integer SequenceNumber, extractMetadata inExtractMetadata)
+    {
+        String SourceType = inExtractMetadata.getDataSourceType().toLowerCase(Locale.ROOT);
+        switch (SourceType) {
+            case "files" -> {
+                System.out.print("Your logic here 0");
+            }
+            case "relational" -> {
+                System.out.print("Your logic here 1");
+            }
+            case "nosql" -> {
+                System.out.print("Your logic here 2 ");
+            }
+            case "stream" -> {
+                System.out.print("Your logic here 3");
+            }
+            default -> {
+                System.out.print("Your logic here 4");
+            }
+        }
+        return null;
     }
 
 
     /**
-     * OpenLineage.InputDatasetFacet is used to capture metadata about input datasets in OpenLineage, specifically
+     * OpenLineageChimera.InputDatasetFacet is used to capture metadata about input datasets in OpenLineageChimera, specifically
      * the datasets that are consumed or used in a process, job, or transformation. This facet is important for
      * tracking data lineage, as it helps link input datasets to the outputs generated by a specific transformation
      * or job.
      * Use Cases :-
      *
      * Data Lineage Tracking: keeps track the source of data in a job or transformation pipeline. By associating input
-     * datasets with their respective outputs, OpenLineage allows you to visualize the flow of data from one
+     * datasets with their respective outputs, OpenLineageChimera allows you to visualize the flow of data from one
      * system or process to another.
      *
-     * Understanding Dependencies: By capturing which datasets are used as inputs to a job or task, OpenLineage helps
+     * Understanding Dependencies: By capturing which datasets are used as inputs to a job or task, OpenLineageChimera helps
      * to map dependencies. Understanding these relationships is crucial for identifying downstream impacts of
      * changes to input datasets.
      *
@@ -226,14 +250,17 @@ public class OpenLineageFactes {
      * @throws URISyntaxException
      */
     public static OpenLineage.InputDatasetFacet
-    getInputDatasetFacet(OpenLineage openLineageProducer,
-                         extractMetadata inExtractMetadata,  @Nullable Map<String, String> extraInfo)
+    InputDatasetFacet(OpenLineage openLineageProducer,
+                         extractMetadata inExtractMetadata, @Nullable Map<String, String> extraInfo)
             throws URISyntaxException {
-                OpenLineage.InputDatasetFacet inputs = (OpenLineage.InputDatasetFacet) List.of(openLineageProducer
-                        .newInputDatasetBuilder()
-                        .namespace(inExtractMetadata.getNameSpace())
-                        .name(inExtractMetadata.getFileName())
-                        .facets(openLineageProducer.newDatasetFacetsBuilder()
+
+
+
+        return (OpenLineage.InputDatasetFacet) List.of(openLineageProducer
+                .newInputDatasetBuilder()
+                .namespace(inExtractMetadata.getNameSpace())
+                .name(inExtractMetadata.getFileName())
+                .facets(openLineageProducer.newDatasetFacetsBuilder()
                         .dataSource(getDatasourceDatasetFacet(openLineageProducer,
                                 inExtractMetadata.getDataSourceConnectionName(),inExtractMetadata.getDataSourceType(),
                                 null))
@@ -241,18 +268,16 @@ public class OpenLineageFactes {
                                 inExtractMetadata.getPipelineName(), extraInfo))
                         .build())
                 .build());
-
-        return inputs;
     }
 
     /**
-     * OpenLineage.OutputDatasetFacet is used in OpenLineage to capture metadata about output datasets in data
+     * OpenLineageChimera.OutputDatasetFacet is used in OpenLineageChimera to capture metadata about output datasets in data
      * processing jobs or transformations. The facet provides details about datasets that are produced or generated
      * as a result of a transformation or pipeline. This information is crucial for tracking the flow of data from
      * one stage to the next, enabling end-to-end data lineage tracking.
      * Use Cases :-
      *
-     * Data Lineage Tracking: By tracking the output datasets produced by a job or transformation, OpenLineage allows
+     * Data Lineage Tracking: By tracking the output datasets produced by a job or transformation, OpenLineageChimera allows
      * you to visualize the entire data flow, from input to output. This provides a clear picture of how data is
      * transformed through various stages of a pipeline.
      *
@@ -269,10 +294,10 @@ public class OpenLineageFactes {
      * @throws URISyntaxException
      */
     public static OpenLineage.OutputDataset
-            getOutputDatasetFacet(OpenLineage openLineageProducer,  extractMetadata inExtractMetadata,
-                                  @Nullable Map<String, String> persistInfo) throws URISyntaxException {
+    OutputDataset(OpenLineage openLineageProducer,  extractMetadata inExtractMetadata,
+                          @Nullable Map<String, String> persistInfo) throws URISyntaxException {
 
-        /*OpenLineage.DatasetFacets DF = openLineageProducer.newDatasetFacetsBuilder()
+        /*OpenLineageChimera.DatasetFacets DF = openLineageProducer.newDatasetFacetsBuilder()
                 .schema(buildSchema(extractDf.schema))
                 .dataSource(getDatasourceDatasetFacet(openLineageProducer,
                         inExtractMetadata.getDataSourceConnectionName(),inExtractMetadata.getDataSourceType(),
@@ -287,7 +312,7 @@ public class OpenLineageFactes {
                 inExtractMetadata.getPipelineName(), persistInfo);
 
         OpenLineage.DatasourceDatasetFacet dataSource = getDatasourceDatasetFacet(openLineageProducer,
-        inExtractMetadata.getDataSourceConnectionName(),inExtractMetadata.getDataSourceType(),
+                inExtractMetadata.getDataSourceConnectionName(),inExtractMetadata.getDataSourceType(),
                 null);
 
         OpenLineage.DatasetVersionDatasetFacet version = openLineageProducer.newDatasetVersionDatasetFacet("1");
@@ -318,7 +343,7 @@ public class OpenLineageFactes {
                 .put("DatasetName",outputDatasetFacet)
                 .build();
 
-        OpenLineage.OutputDataset output = openLineageProducer
+        return openLineageProducer
                 .newOutputDatasetBuilder()
                 .facets(datasetFacets)
                 .outputFacets(outputFacets)
@@ -326,6 +351,5 @@ public class OpenLineageFactes {
                 .name("")
                 .outputFacets(outputFacets)
                 .facets(datasetFacets).build();
-       return  output;
     }
 }

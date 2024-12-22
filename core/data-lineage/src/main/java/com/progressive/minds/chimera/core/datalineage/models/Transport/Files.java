@@ -7,7 +7,7 @@ import io.openlineage.client.transports.FileConfig;
 import io.openlineage.client.transports.FileTransport;
 
 /**
- * the FileTransport emits OpenLineage events to a given file.
+ * the FileTransport emits OpenLineageChimera events to a given file.
  * Configuration
  * type - string, must be "file". Required.
  * location - string specifying the path of the file. Required.

@@ -42,6 +42,7 @@ public class OpenLineageClientTest  {
             // emit the event
             client.emit(event);
 
+
         } catch (Exception e) {
             e.printStackTrace();
         }

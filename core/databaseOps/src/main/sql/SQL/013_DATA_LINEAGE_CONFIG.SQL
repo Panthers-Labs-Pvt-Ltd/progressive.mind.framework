@@ -1,12 +1,11 @@
-create table if not exists data_lineage
+create table if not exists DATA_LINEAGE_CONFIG
 (
-row_num 				   bigserial,
+LineageId UUID DEFAULT gen_random_uuid() PRIMARY KEY,
 batch_id			       varchar(500) ,
-pipeline_nm		           varchar(255),
-database_nm		           varchar(255),
-table_nm		           varchar(255),
-namespace		           varchar(255),
-lineage_json 			   text,
+pipeline_name		           varchar(255),
+database_name		           varchar(255),
+table_name		           varchar(255),
+lineage_metadata 			   text,
 reserved_5					varchar(500),
 reserved_4					varchar(500),
 reserved_3					varchar(500),

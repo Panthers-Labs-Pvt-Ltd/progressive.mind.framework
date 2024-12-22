@@ -1,6 +1,6 @@
-CREATE TABLE OrganizationTypes
+CREATE TABLE Organization_Types
 (
-ORG_TYPE_ID       bigserial PRIMARY KEY,
+ORG_TYPE_ID UUID DEFAULT gen_random_uuid() PRIMARY KEY,
 ORY_TYPE_NAME         VARCHAR(50),
 ORG_TYPE_DESC       VARCHAR(4000),
 USER_FIELD_1   VARCHAR(500),

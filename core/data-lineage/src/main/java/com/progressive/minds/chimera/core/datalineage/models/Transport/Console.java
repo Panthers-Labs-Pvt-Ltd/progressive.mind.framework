@@ -8,7 +8,7 @@ import io.openlineage.client.transports.ConsoleTransport;
 
 
 /**
- * This straightforward transport emits OpenLineage events directly to the console through a logger.
+ * This straightforward transport emits OpenLineageChimera events directly to the console through a logger.
  *
  * Configuration
  *No additional configuration is required.

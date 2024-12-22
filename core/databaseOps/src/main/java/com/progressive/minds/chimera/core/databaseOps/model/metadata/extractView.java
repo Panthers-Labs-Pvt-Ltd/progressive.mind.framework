@@ -2,6 +2,9 @@ package com.progressive.minds.chimera.core.databaseOps.model.metadata;
 
 public class extractView {
     private String pipelineName;
+    private String pipelineDescription;
+    private String processMode;
+    private String runFrequency;
     private Integer sequenceNumber;
     private String dataSourceType;
     private String dataSourceSubType;
@@ -53,6 +56,9 @@ public class extractView {
     public String toString() {
         return "extractView{" +
                 "pipelineName='" + pipelineName + '\'' +
+                "pipelineDescription='" + pipelineDescription + '\'' +
+                "processMode='" + processMode + '\'' +
+                "runFrequency='" + runFrequency + '\'' +
                 ", sequenceNumber=" + sequenceNumber +
                 ", dataSourceType='" + dataSourceType + '\'' +
                 ", dataSourceSubType='" + dataSourceSubType + '\'' +
@@ -101,6 +107,19 @@ public class extractView {
                 ", kafkaKeyPassword='" + kafkaKeyPassword + '\'' +
                 '}';
     }
+
+
+    public String getPipelineDescription() {
+        return pipelineDescription;
+    }
+    public String getProcessMode() {
+        return processMode;
+    }
+    public String getRunFrequency() {
+        return runFrequency;
+    }
+
+
 
     public String getPipelineName() {
         return pipelineName;
