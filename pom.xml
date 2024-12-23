@@ -46,6 +46,7 @@
         <module>foundational</module>
         <module>core</module>
         <module>capabilities</module>
+        <module>datahub-web-react</module>
     </modules>
 
     <dependencyManagement>
