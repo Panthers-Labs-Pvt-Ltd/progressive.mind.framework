@@ -10,7 +10,6 @@ import oshi.hardware.NetworkIF;
 import oshi.hardware.HardwareAbstractionLayer;
 
 import java.io.IOException;
-import java.util.Timer;
 import java.util.TimerTask;
 
 /**
@@ -26,7 +25,7 @@ import java.util.TimerTask;
  * Default JVM Metrics:
  * The DefaultExports.initialize() method registers JVM-related metrics (e.g., garbage collection, memory pools) to provide additional observability.
  */
-public class PrometheusMetricsDaemon {
+public class MetricsCollectorDaemon {
 
     private static final SystemInfo systemInfo = new SystemInfo();
     private static final HardwareAbstractionLayer hardware = systemInfo.getHardware();
