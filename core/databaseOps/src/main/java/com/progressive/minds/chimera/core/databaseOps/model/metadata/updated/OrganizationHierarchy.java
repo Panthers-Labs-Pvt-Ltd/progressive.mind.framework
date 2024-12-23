@@ -1,30 +1,77 @@
 package com.progressive.minds.chimera.core.databaseOps.model.metadata.updated;
 
+import com.progressive.minds.chimera.core.databaseOps.annotation.Column;
+import com.progressive.minds.chimera.core.databaseOps.annotation.Id;
+import com.progressive.minds.chimera.core.databaseOps.annotation.Table;
+
 import java.util.Date;
 import java.util.UUID;
 
+@Table(name = "organization_hierarchy")
 public class OrganizationHierarchy {
 
+    @Id
+    @Column(name = "org_id")
     private UUID orgId;
+
+    @Column(name ="parent_org_id")
     private UUID parentOrgId;
+
+    @Column(name ="org_type_id")
     private UUID orgTypeId;
+
+    @Column(name ="org_name")
     private String orgName;
+
+    @Column(name ="coo_owner")
     private String cooOwner;
+
+    @Column(name ="ops_lead")
     private String opsLead;
+
+    @Column(name ="tech_lead")
     private String techLead;
+
+    @Column(name ="bus_owner")
     private String busOwner;
+
+    @Column(name ="org_desc")
     private String orgDesc;
+
+    @Column(name ="org_email")
     private String orgEmail;
+
+    @Column(name ="org_ci")
     private String orgCi;
+
+    @Column(name ="user_field_1")
     private String userField1;
+
+    @Column(name ="user_field_2")
     private String userField2;
+
+    @Column(name ="user_field_3")
     private String userField3;
+
+    @Column(name ="user_field_4")
     private String userField4;
+
+    @Column(name ="user_field_5")
     private String userField5;
+
+    @Column(name ="status")
     private String status;
+
+    @Column(name ="inserted_user")
     private String insertedUser;
+
+    @Column(name ="insert_dt")
     private Date insertDt;
+
+    @Column(name ="modified_by")
     private String modifiedBy;
+
+    @Column(name ="update_dt")
     private Date updateDt;
 
     // Getters and Setters
