@@ -1,0 +1,70 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@api": [
+        "api/index"
+      ],
+      "@api/*": [
+        "api/*"
+      ],
+      "@components/*": [
+        "components/*"
+      ],
+      "@context/*": [
+        "context/*"
+      ],
+      "@hocs/*": [
+        "hocs/*"
+      ],
+      "@interfaces/*": [
+        "interfaces/*"
+      ],
+      "@mana/*": [
+        "mana/*"
+      ],
+      "@oracle/*": [
+        "oracle/*"
+      ],
+      "@public/*": [
+        "public/*"
+      ],
+      "@storage/*": [
+        "storage/*"
+      ],
+      "@styles/*": [
+        "styles/*"
+      ],
+      "@utils/*": [
+        "utils/*"
+      ]
+    },
+    "target": "es6",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": false,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "incremental": true
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "workers/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}
