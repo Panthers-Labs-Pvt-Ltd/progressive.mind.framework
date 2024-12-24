@@ -1,22 +1,53 @@
 package com.progressive.minds.chimera.core.databaseOps.model.metadata.updated;
 
+import com.progressive.minds.chimera.core.databaseOps.annotation.Column;
+import com.progressive.minds.chimera.core.databaseOps.annotation.Id;
+import com.progressive.minds.chimera.core.databaseOps.annotation.Table;
+
 import java.util.Date;
 import java.util.UUID;
 
+@Table(name = "organization_types")
 public class OrganizationTypes {
 
+    @Id
+    @Column(name = "org_type_id")
     private UUID orgTypeId;
+    
+    @Column(name ="org_type_name")
     private String orgTypeName;
+
+    @Column(name ="org_type_desc")
     private String orgTypeDesc;
+
+    @Column(name ="user_field_1")
     private String userField1;
+
+    @Column(name ="user_field_2")
     private String userField2;
+
+    @Column(name ="user_field_3")
     private String userField3;
+
+    @Column(name ="user_field_4")
     private String userField4;
+
+    @Column(name ="user_field_5")
     private String userField5;
+
+    @Column(name ="status")
     private String status;
+
+    @Column(name ="inserted_user")
     private String insertedUser;
+
+    @Column(name ="insert_dt")
     private Date insertDt;
+
+    @Column(name ="modified_by")
     private String modifiedBy;
+
+    @Column(name ="update_dt")
     private Date updateDt;
 
     // Getters and Setters
