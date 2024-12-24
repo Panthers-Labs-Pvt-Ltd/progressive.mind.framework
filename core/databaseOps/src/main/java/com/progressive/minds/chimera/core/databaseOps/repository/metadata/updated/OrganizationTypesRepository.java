@@ -36,26 +36,30 @@ public class OrganizationTypesRepository {
         return returnList;
     }
 
-    public void saveOrganizationTypes(OrganizationTypes organizationTypes) throws SQLException {
+    public Integer saveOrganizationTypes(OrganizationTypes organizationTypes) throws SQLException {
         int recordsImpacted = executeInsert(organizationTypes.getClass(), organizationTypes);
         System.out.println("Total Records " + recordsImpacted);
+        return recordsImpacted;
     }
 
-    public void saveOrganizationTypes(List<OrganizationTypes> organizationTypes) throws SQLException {
+    public Integer saveOrganizationTypes(List<OrganizationTypes> organizationTypes) throws SQLException {
         int recordsImpacted = executeInsert(organizationTypes.get(0).getClass(), organizationTypes);
         System.out.println("Total Records " + recordsImpacted);
+        return recordsImpacted;
     }
 
-    public void updateOrganizationTypes(OrganizationTypes organizationTypes) throws SQLException,
+    public Integer updateOrganizationTypes(OrganizationTypes organizationTypes) throws SQLException,
             IllegalAccessException {
         int recordsImpacted = executeUpdate(organizationTypes.getClass());
         System.out.println("Total Records " + recordsImpacted);
+        return recordsImpacted;
     }
 
 
-    public void deleteOrganizationTypes(OrganizationTypes organizationTypes) throws SQLException,
+    public Integer deleteOrganizationTypes(OrganizationTypes organizationTypes) throws SQLException,
             IllegalAccessException {
         int recordsImpacted = executeDelete(organizationTypes.getClass());
         System.out.println("Total Records " + recordsImpacted);
+        return recordsImpacted;
     }
 }
