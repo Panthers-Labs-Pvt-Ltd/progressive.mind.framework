@@ -108,10 +108,10 @@ public class RepositoryHelper {
     private static String getMultiInsertSQLQuery(Class<?> clazz, List<Object> tempList) {
         StringBuilder sqlQuery = new StringBuilder();
         String tableName = clazz.getSimpleName().toLowerCase(); // Get the table name (assuming it matches the class name)
-
+        String ColumnList = extractColumnNames(clazz);
         // Start the INSERT statement
-        sqlQuery.append("INSERT INTO ").append(tableName).append(" (");
-
+        sqlQuery.append("INSERT INTO ").append(tableName).append(" (").append(ColumnList).append(") VALUES ");
+/*
         // Get the fields (columns)
         Field[] fields = clazz.getDeclaredFields();
         for (int i = 0; i < fields.length; i++) {
@@ -119,8 +119,9 @@ public class RepositoryHelper {
             if (i < fields.length - 1) {
                 sqlQuery.append(", ");
             }
-        }
-        sqlQuery.append(") VALUES ");
+        }*/
+
+        Field[] fields = clazz.getDeclaredFields();
 
         // Add the value placeholders for each object in the tempList
         for (int i = 0; i < tempList.size(); i++) {
