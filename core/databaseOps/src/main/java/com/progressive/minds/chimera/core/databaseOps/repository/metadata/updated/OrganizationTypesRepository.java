@@ -14,9 +14,6 @@ public class OrganizationTypesRepository {
     public List<OrganizationTypes> getAllOrganizationTypes() {
         List<OrganizationTypes> returnList = new ArrayList<>();
         int recordsProcessed = executeSelect(OrganizationTypes.class, returnList);
-
-        System.out.println("Records processed: " + recordsProcessed);
-        returnList.forEach(System.out::println);
         return returnList;
     }
 
@@ -29,20 +26,17 @@ public class OrganizationTypesRepository {
 
     public Integer saveOrganizationTypes(OrganizationTypes organizationTypes) throws SQLException {
         int recordsImpacted = executeInsert(organizationTypes.getClass(), organizationTypes);
-        System.out.println("Total Records " + recordsImpacted);
         return recordsImpacted;
     }
 
     public Integer saveOrganizationTypes(List<OrganizationTypes> organizationTypes) throws SQLException {
         int recordsImpacted = executeInsert(organizationTypes.get(0).getClass(), organizationTypes);
-        System.out.println("Total Records " + recordsImpacted);
         return recordsImpacted;
     }
 
     public Integer updateOrganizationTypes(OrganizationTypes organizationTypes) throws SQLException,
             IllegalAccessException {
         int recordsImpacted = executeUpdate(organizationTypes.getClass());
-        System.out.println("Total Records " + recordsImpacted);
         return recordsImpacted;
     }
 
@@ -50,7 +44,6 @@ public class OrganizationTypesRepository {
     public Integer deleteOrganizationTypes(OrganizationTypes organizationTypes) throws SQLException,
             IllegalAccessException {
         int recordsImpacted = executeDelete(organizationTypes.getClass());
-        System.out.println("Total Records " + recordsImpacted);
         return recordsImpacted;
     }
 }

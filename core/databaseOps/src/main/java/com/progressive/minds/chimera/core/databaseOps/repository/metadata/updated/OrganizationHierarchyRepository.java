@@ -14,35 +14,28 @@ public class OrganizationHierarchyRepository {
     public List<OrganizationHierarchy> getAllOrganizationHierarchy() {
         List<OrganizationHierarchy> returnList = new ArrayList<>();
         int recordsProcessed = executeSelect(OrganizationHierarchy.class, returnList);
-
-        System.out.println("Records processed: " + recordsProcessed);
-        returnList.forEach(System.out::println);
         return returnList;
     }
 
     public List<OrganizationHierarchy> getAllOrganizationHierarchy(Map<String, Object> filters) {
         List<OrganizationHierarchy> returnList;
             returnList = executeSelect(OrganizationHierarchy.class, filters);
-            returnList.forEach(System.out::println);
             return returnList;
     }
 
     public Integer saveOrganizationHierarchy(OrganizationHierarchy organizationHierarchy) throws SQLException {
         int recordsImpacted = executeInsert(organizationHierarchy.getClass(), organizationHierarchy);
-        System.out.println("Total Records " + recordsImpacted);
         return recordsImpacted;
     }
 
     public Integer saveOrganizationHierarchy(List<OrganizationHierarchy> organizationHierarchy) throws SQLException {
         int recordsImpacted = executeInsert(organizationHierarchy.get(0).getClass(), organizationHierarchy);
-        System.out.println("Total Records " + recordsImpacted);
         return recordsImpacted;
     }
 
     public Integer updateOrganizationHierarchy(OrganizationHierarchy organizationHierarchy) throws SQLException,
             IllegalAccessException {
         int recordsImpacted = executeUpdate(organizationHierarchy.getClass());
-        System.out.println("Total Records " + recordsImpacted);
         return recordsImpacted;
     }
 
@@ -50,7 +43,6 @@ public class OrganizationHierarchyRepository {
     public Integer deleteOrganizationHierarchy(OrganizationHierarchy organizationHierarchy) throws SQLException,
             IllegalAccessException {
         int recordsImpacted = executeDelete(organizationHierarchy.getClass());
-        System.out.println("Total Records " + recordsImpacted);
         return recordsImpacted;
     }
 }
