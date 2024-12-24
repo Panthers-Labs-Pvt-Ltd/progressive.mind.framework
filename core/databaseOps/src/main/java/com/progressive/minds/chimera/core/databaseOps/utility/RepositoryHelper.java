@@ -5,21 +5,13 @@ import com.progressive.minds.chimera.core.databaseOps.annotation.Id;
 import com.progressive.minds.chimera.core.databaseOps.annotation.Table;
 import com.progressive.minds.chimera.core.databaseOps.config.DataSourceConfig;
 import com.progressive.minds.chimera.core.databaseOps.exception.DatabaseException;
-import com.sun.source.tree.BinaryTree;
-import com.zaxxer.hikari.pool.HikariProxyPreparedStatement;
-
 import java.sql.PreparedStatement;
 import java.util.List;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.math.BigDecimal;
 import java.sql.*;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static java.lang.String.format;
@@ -68,10 +60,7 @@ public class RepositoryHelper {
         return format("INSERT INTO %s ( %s) Values (%s)", TableName, Fields, QuestionMarks);
     }
 
-    public static Integer executeOrUpdateStatements(Class<?> clazz, Object temp) throws SQLException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
-        //Object temp = clazz.getDeclaredConstructor().newInstance();
-
-
+    public static Integer executeOrUpdateStatements(Class<?> clazz, Object temp) throws SQLException {
         Field[] fields = clazz.getDeclaredFields();
         String SQLQuery = getSQLQuery(clazz);
         String errorMessage = "";
@@ -144,7 +133,7 @@ public class RepositoryHelper {
         return resultList.size();
     }
 
-    public static void populateFields(Object obj, ResultSet resultSet) throws Exception {
+    private static void populateFields(Object obj, ResultSet resultSet) throws Exception {
         Class<?> clazz = obj.getClass();
 
         for (Field field : clazz.getDeclaredFields()) {
@@ -277,7 +266,7 @@ public class RepositoryHelper {
         whereClause.setLength(whereClause.length() - 4);
 
         // Final SQL query
-        String sql = "UPDATE " + tableName + " " + setClause.toString() + " " + whereClause.toString();
+        String sql = "UPDATE " + tableName + " " + setClause + " " + whereClause;
 
         try (Connection connection = DataSourceConfig.getDataSource().getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
