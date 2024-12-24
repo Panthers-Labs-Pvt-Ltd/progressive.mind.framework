@@ -1,14 +1,11 @@
 package com.progressive.minds.chimera.core.databaseOps.repository.metadata.updated;
 
 import java.util.List;
-import java.lang.reflect.InvocationTargetException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Map;
 
-import com.progressive.minds.chimera.core.databaseOps.exception.DatabaseException;
 import com.progressive.minds.chimera.core.databaseOps.model.metadata.updated.OrganizationTypes;
-
 import static com.progressive.minds.chimera.core.databaseOps.utility.RepositoryHelper.*;
 
 
@@ -25,15 +22,9 @@ public class OrganizationTypesRepository {
 
     public List<OrganizationTypes> getAllOrganizationTypes(Map<String, Object> filters) {
         List<OrganizationTypes> returnList;
-        try {
             returnList = executeSelect(OrganizationTypes.class, filters);
             returnList.forEach(System.out::println);
-
-        } catch (Exception ex) {
-            String errorMessage = "Unexpected error while saving data sources Connections: " + ex.getMessage();
-            throw new DatabaseException(errorMessage, ex);
-        }
-        return returnList;
+            return returnList;
     }
 
     public Integer saveOrganizationTypes(OrganizationTypes organizationTypes) throws SQLException {
