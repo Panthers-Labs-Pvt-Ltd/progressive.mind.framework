@@ -38,7 +38,7 @@ public class OrganizationTypesRepository {
 
     public void saveOrganizationTypes(OrganizationTypes organizationTypes) throws SQLException,
             InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-        int recordsImpacted = executeOrUpdateStatements(organizationTypes.getClass(), organizationTypes);
+        int recordsImpacted = executeInsert(organizationTypes.getClass(), organizationTypes);
         System.out.println("Total Records " + recordsImpacted);
     }
 

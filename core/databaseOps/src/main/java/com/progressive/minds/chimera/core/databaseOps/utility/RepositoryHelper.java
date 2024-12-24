@@ -60,7 +60,7 @@ public class RepositoryHelper {
         return format("INSERT INTO %s ( %s) Values (%s)", TableName, Fields, QuestionMarks);
     }
 
-    public static Integer executeOrUpdateStatements(Class<?> clazz, Object temp) throws SQLException {
+    public static Integer executeInsert(Class<?> clazz, Object temp) throws SQLException {
         Field[] fields = clazz.getDeclaredFields();
         String SQLQuery = getSQLQuery(clazz);
         String errorMessage = "";
@@ -105,6 +105,110 @@ public class RepositoryHelper {
         }
     }
 
+    private static String getMultiInsertSQLQuery(Class<?> clazz, List<Object> tempList) {
+        StringBuilder sqlQuery = new StringBuilder();
+        String tableName = clazz.getSimpleName().toLowerCase(); // Get the table name (assuming it matches the class name)
+
+        // Start the INSERT statement
+        sqlQuery.append("INSERT INTO ").append(tableName).append(" (");
+
+        // Get the fields (columns)
+        Field[] fields = clazz.getDeclaredFields();
+        for (int i = 0; i < fields.length; i++) {
+            sqlQuery.append(fields[i].getName());
+            if (i < fields.length - 1) {
+                sqlQuery.append(", ");
+            }
+        }
+        sqlQuery.append(") VALUES ");
+
+        // Add the value placeholders for each object in the tempList
+        for (int i = 0; i < tempList.size(); i++) {
+            sqlQuery.append("(");
+            for (int j = 0; j < fields.length; j++) {
+                sqlQuery.append("?");
+                if (j < fields.length - 1) {
+                    sqlQuery.append(", ");
+                }
+            }
+            sqlQuery.append(")");
+            if (i < tempList.size() - 1) {
+                sqlQuery.append(", ");
+            }
+        }
+
+        return sqlQuery.toString();
+    }
+
+    //Multi Insert
+    public static Integer executeInsert(Class<?> clazz, List<Object> tempList) throws SQLException {
+        Field[] fields = clazz.getDeclaredFields();
+        String SQLQuery = getMultiInsertSQLQuery(clazz, tempList); // Assumes this method generates the correct insert SQL query
+        String errorMessage = "";
+        Connection connection = DataSourceConfig.getDataSource().getConnection();
+
+        try (
+             PreparedStatement preparedStatement = connection.prepareStatement(SQLQuery)) {
+
+            // Disable auto-commit to improve performance during batch insert
+            connection.setAutoCommit(false);
+
+            // Loop through all objects in tempList to add their data as batch inserts
+            for (Object temp : tempList) {
+                int parameterIndex = 1;
+
+                for (Field field : fields) {
+                    field.setAccessible(true); // Allow access to private fields
+                    Object value = field.get(temp); // Get the field value from the object
+
+                    if (value != null) {
+                        if (value instanceof String) {
+                            preparedStatement.setString(parameterIndex, (String) value);
+                        } else if (value instanceof Integer) {
+                            preparedStatement.setInt(parameterIndex, (Integer) value);
+                        } else if (value instanceof Timestamp) {
+                            preparedStatement.setTimestamp(parameterIndex, (Timestamp) value);
+                        } else if (value instanceof Boolean) {
+                            preparedStatement.setBoolean(parameterIndex, (Boolean) value);
+                        } else {
+                            preparedStatement.setObject(parameterIndex, value); // Default for other types
+                        }
+                    } else {
+                        preparedStatement.setNull(parameterIndex, java.sql.Types.NULL); // Set null if the field value is null
+                    }
+                    parameterIndex++;
+                }
+
+                // Add the current prepared statement to the batch
+                preparedStatement.addBatch();
+            }
+
+            // Execute the batch of inserts
+            int[] rowsInserted = preparedStatement.executeBatch();
+
+            // Commit the transaction to ensure all inserts are finalized
+            connection.commit();
+
+            // Return the total number of rows inserted
+            return rowsInserted.length;
+
+        } catch (SQLException sqlEx) {
+            errorMessage = "Unexpected error while saving data pipelines: " + sqlEx.getMessage();
+            throw new SQLException(errorMessage, sqlEx);
+        } catch (Exception ex) {
+            errorMessage = "Unexpected error while saving data pipelines: " + ex.getMessage();
+            throw new DatabaseException(errorMessage, ex);
+        } finally {
+            // Reset auto-commit to true in case the connection is reused
+            try {
+                if (connection != null && !connection.isClosed()) {
+                    connection.setAutoCommit(true);
+                }
+            } catch (SQLException e) {
+                // Log or handle the exception if necessary
+            }
+        }
+    }
 
 
     public static <T> Integer executeSelect(Class<T> clazz, List<T> resultList) {
