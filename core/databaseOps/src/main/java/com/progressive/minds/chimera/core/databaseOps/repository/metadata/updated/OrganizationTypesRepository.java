@@ -36,23 +36,14 @@ public class OrganizationTypesRepository {
         return returnList;
     }
 
-    public void saveOrganizationTypes(OrganizationTypes organizationTypes) throws SQLException,
-            InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+    public void saveOrganizationTypes(OrganizationTypes organizationTypes) throws SQLException {
         int recordsImpacted = executeInsert(organizationTypes.getClass(), organizationTypes);
         System.out.println("Total Records " + recordsImpacted);
     }
 
-    public void saveOrganizationTypes(List<OrganizationTypes> OrganizationTypes) {
-        if (!OrganizationTypes.isEmpty()) {
-            OrganizationTypes.forEach(rec -> {
-                try {
-                    saveOrganizationTypes(rec);
-                } catch (SQLException | InvocationTargetException | NoSuchMethodException | InstantiationException |
-                         IllegalAccessException e) {
-                    throw new RuntimeException(e);
-                }
-            });
-        }
+    public void saveOrganizationTypes(List<OrganizationTypes> organizationTypes) throws SQLException {
+        int recordsImpacted = executeInsert(organizationTypes.get(0).getClass(), organizationTypes);
+        System.out.println("Total Records " + recordsImpacted);
     }
 
     public void updateOrganizationTypes(OrganizationTypes organizationTypes) throws SQLException,
