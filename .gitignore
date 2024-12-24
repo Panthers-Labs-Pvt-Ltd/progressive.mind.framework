@@ -313,8 +313,6 @@ playwright-report/
 mlfow.db
 mlruns/
 package-lock.json
-package.json
-test.py
 
 # Node.js
 node_modules/
