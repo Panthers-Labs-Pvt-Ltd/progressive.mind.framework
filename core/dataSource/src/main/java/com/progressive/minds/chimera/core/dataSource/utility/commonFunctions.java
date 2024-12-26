@@ -4,6 +4,9 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.progressive.minds.chimera.foundational.logging.ChimeraLogger;
 import com.progressive.minds.chimera.foundational.logging.ChimeraLoggerFactory;
+import org.apache.iceberg.catalog.Catalog;
+import org.apache.iceberg.catalog.TableIdentifier;
+import org.apache.iceberg.spark.SparkCatalog;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import java.io.BufferedReader;
@@ -510,4 +513,21 @@ public class commonFunctions {
         // Sort the DataFrame
         return dataFrame.sort(sortColumns);
     }
+
+    public static boolean tableExists(SparkSession spark, String catalogName, String databaseName, String tableName) {
+        boolean exists;
+        try {
+            // Execute a SQL query to check if the table exists by limiting the rows
+            spark.sql("SELECT 1 FROM " + catalogName + "." + databaseName + "." + tableName + " LIMIT 1").count();
+            exists = true; // If no exception is thrown, the table exists
+        } catch (Exception e) {
+            // If an exception is caught, assume the table does not exist
+            exists = false;
+        }
+        return exists;
+    }
+
+
+
 }
+

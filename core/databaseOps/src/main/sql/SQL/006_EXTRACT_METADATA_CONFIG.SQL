@@ -1,8 +1,3 @@
--- public.extract_metadata_config definition
-
--- Drop table
-
--- DROP TABLE public.extract_metadata_config;
 
 CREATE TABLE PUBLIC.EXTRACT_METADATA_CONFIG (
     EXTRACT_ID UUID DEFAULT GEN_RANDOM_UUID() PRIMARY KEY,
@@ -30,5 +25,5 @@ GRANT ALL ON TABLE public.extract_metadata_config TO postgres;
 -- public.extract_metadata_config foreign keys
 
 ALTER TABLE public.extract_metadata_config ADD CONSTRAINT fk_data_source_connection FOREIGN KEY (DATA_SOURCE_CONNECTION_ID) REFERENCES public.data_sources_connections(CONNECTION_ID) ON DELETE CASCADE ON UPDATE CASCADE;
-ALTER TABLE public.extract_metadata_config ADD CONSTRAINT fk_data_source_type FOREIGN KEY (DATA_SOURCE_CONNECTION_ID) REFERENCES public.data_sources(data_source_id) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE public.extract_metadata_config ADD CONSTRAINT fk_data_source_type FOREIGN KEY (DATA_SOURCE_CONNECTION_ID) REFERENCES public.data_sources_types(data_source_id) ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE public.extract_metadata_config ADD CONSTRAINT fk_pipeline_id FOREIGN KEY (PIPELINE_ID) REFERENCES public.data_pipelines(PIPELINE_ID) ON DELETE CASCADE ON UPDATE CASCADE;

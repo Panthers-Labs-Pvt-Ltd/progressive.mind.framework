@@ -21,7 +21,8 @@ public interface DataReader {
     }
 
     interface OpenTables {
-        void openTableFormatsData();
+        Dataset<Row> read(String inSourceType, SparkSession inSparkSession, String inDatabaseName,
+                          String inTableName, String columnFilter, String rowFilter, String inCustomConf) throws Exception;
     }
 
     interface NOSQL {
