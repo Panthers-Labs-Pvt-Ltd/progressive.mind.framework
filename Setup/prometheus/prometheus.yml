@@ -38,3 +38,6 @@ scrape_configs:
       - targets:
           - 'flink-jobmanager:9249'  # JobManager metrics endpoint
           - 'flink-taskmanager:9249' # TaskManager metrics endpoint
+  - job_name: 'grafana'
+    static_configs:
+        - targets: [ 'grafana:3000' ]
