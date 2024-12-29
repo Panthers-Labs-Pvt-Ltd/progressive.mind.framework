@@ -4,6 +4,6 @@ WORKDIR /app
 
 COPY target/core.api-service-1.0-SNAPSHOT.jar /app/api-service-1.0-SNAPSHOT.jar
 
-EXPOSE 9009
+EXPOSE 8080
 
 ENTRYPOINT ["java", "-jar", "api-service-1.0-SNAPSHOT.jar"]

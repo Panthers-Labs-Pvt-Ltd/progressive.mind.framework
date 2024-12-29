@@ -1,0 +1,17 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb  # Persistent H2 database
+    driverClassName: org.h2.Driver
+    username: sa
+    password: password
+    hikari:
+      maximumPoolSize: 5  # Optional: You can set a max pool size for the H2 DB
+    initialization-mode: always
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+

@@ -22,7 +22,5 @@ public class DataIngestClient {
     BaseWorkflow workflow = client.newWorkflowStub(BaseWorkflow.class, options);
 
     WorkflowClient.start(workflow::execute, "kafka-topic");
-
-    System.exit(0);
   }
 }
