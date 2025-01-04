@@ -67,6 +67,40 @@ Apache Flink handles real-time observability data streams for low-latency proces
 1. **Clone the Repository**
 
 
+# Observability Project Roadmap
+
+This is the roadmap for the observability project visualized using a Mermaid Gantt chart.
+
+```mermaid
+gantt
+    title Observability Project Roadmap
+    dateFormat  YYYY-MM-DD
+    axisFormat  %d-%b
+
+    section Completed (Day 0-30)
+    Setup Prometheus and Grafana :done, 2024-12-01, 2024-12-30
+
+    section Current Goals (Day 30-60)
+    Plug-and-Play Grafana Templates :active, 2024-12-31, 2025-01-30
+    Metrics for Spark and Kubernetes :active, 2024-12-31, 2025-01-30
+    Log Aggregation :logging, 2025-01-15, 2025-02-15
+
+    section Future Goals (Day 60-90)
+    Setup and integrate open telemetry :tracing, 2025-01-15, 2025-02-29
+    Setup Alerts and Notifications :alerts, 2025-02-01, 2025-03-01
+    AI/ML Integration :ai-ml, 2025-02-01, 2025-03-01
+```
+# Explanation of the Plan
+
+Setup Prometheus and Grafana: Basic configuration and operational setup.
+
+Plug-and-Play Grafana Templates: Develop reusable data models in Grafana to make it easier to create visualizations.
+Add Metrics for Spark and Kubernetes: Include metrics relevant to your application (e.g., Spark job performance) and infrastructure (e.g., Kubernetes node health).
+
+Setup Alerts and Notifications: Configure alerts in Grafana based on dashboard thresholds for real-time issue detection.
+Integrate AI/ML Models: Plan and implement AI/ML features for predictive analysis and anomaly detection.
+
+
 
 #### Discussions 
 ### Chapters & Topics:
