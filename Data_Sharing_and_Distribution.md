@@ -166,3 +166,17 @@ By using GraphQL, you can provide a flexible and efficient way for clients to ac
 - **Data Sharing Integration**: Integrate shared tables with analytics tools, reporting platforms, and other data systems to enable seamless data sharing and analysis.
 
 By following these industry best practices, you can ensure secure, efficient, and compliant data sharing and distribution within your organization.
+
+## Roadmap
+
+```mermaid
+gantt
+    title A Gnatt Diagram
+    dateFormat  YYYY-MM-DD
+    section Section
+        A task           :a1, 2022-01-01, 30d
+        Another task     :after a1  , 20d
+    section Another
+        Task in sec      :2022-01-15  , 12d
+        another task     : 24d
+```
