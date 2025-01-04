@@ -24,6 +24,14 @@
 
 Data governance is a critical aspect of managing data effectively in an organization. It involves defining policies, procedures, and standards to ensure data quality, security, and compliance. In a self-serve data platform like Chimera, data governance plays a crucial role in enabling users to access and analyze data while maintaining data integrity and security.
 
+
+- Overview of Data Management
+- Data Catalog
+- Data Quality and Lineage
+- Data Governance
+- Configuration and Setup
+- Best Practices
+
 Key aspects of data governance in Chimera include:
 1. **Policy Enforcement**: Chimera enforces data governance policies to ensure compliance with regulatory requirements.
 2. **Audit Trails**: Comprehensive audit trails provide visibility into data access and usage.

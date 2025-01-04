@@ -1,5 +1,11 @@
 # Data Visualization
 
+- Overview of Data Visualization
+- Supported Visualization Tools
+- Creating Dashboards and Reports
+- Configuration and Setup
+- Best Practices
+- 
 1. **Interactive Dashboards**: Users can create interactive dashboards to visualize data and gain insights.
 2. **Customizable Charts**: Chimera provides a variety of chart types and customization options to suit different visualization needs.
 3. **Real-time Updates**: Dashboards can be configured to update in real-time, enabling users to monitor live data streams.

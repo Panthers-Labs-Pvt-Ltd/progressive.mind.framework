@@ -11,6 +11,13 @@
   * [Table-Based Sharing](#table-based-sharing)
 <!-- TOC -->
 
+- Overview of Data Sharing
+- Data Marketplaces
+- Access Control and Permissions
+- Distribution Channels
+- Configuration and Setup
+- Best Practices
+
 ## API-Based Sharing
 
 - **Authentication and Authorization**: Use OAuth2 or similar protocols to secure API access. Implement role-based access control (RBAC) to restrict data access based on user roles.

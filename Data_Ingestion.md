@@ -11,6 +11,15 @@
   * [Roadmap](#roadmap)
 <!-- TOC -->
 
+
+- Overview of Data Ingestion
+- Supported Data Sources
+- Data Ingestion Methods
+  - Batch Processing
+  - Real-time Stream Processing
+- Configuration and Setup
+- Best Practices
+
 ## Features
 
 1. **Connect Data Sources**: Users connect various data sources (e.g., databases, APIs, file systems) to Chimera.

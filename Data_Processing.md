@@ -2,6 +2,13 @@
 
 Data processing involves transforming raw data into a structured format that is suitable for analysis and visualization. Chimera provides tools and capabilities to support data processing workflows, including data transformation, orchestration, and monitoring.
 
+- Overview of Data Processing
+- State Machines and Orchestrators
+- Data Transformation and Enrichment
+- Processing Pipelines
+- Configuration and Setup
+- Best Practices
+
 ## Features
 
 1. **Data Transformation**: Users define data transformation rules to clean, enrich, and prepare data for analysis.
