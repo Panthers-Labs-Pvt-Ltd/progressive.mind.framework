@@ -41,8 +41,7 @@ INSERT INTO DATA_SOURCES(data_source_type, data_source_sub_type, description, da
 ('NoSql', 'Cassandra', 'Cassandra DB', null, null, null, 'PK', null, null),
 ('NoSql', 'Mongodb', 'Mongo DB', null, null, null, 'PK', null, null),
 ('Stream', 'Kafka', 'Streaming - Kafka', null, null, null, 'PK', null, null),
-('Stream', 'Pulsar', 'Streaming - Pulsar', null, null, null, 'PK', null, null)
-);
+('Stream', 'Pulsar', 'Streaming - Pulsar', null, null, null, 'PK', null, null);
 
 select * from data_sources;
 
