@@ -1,0 +1,10 @@
+{
+  "database": "",
+  "host": "",
+  "password": "",
+  "port": 5432,
+  "schema": "",
+  "username": "",
+  "replication_slot": "",
+  "publication_name": ""
+}

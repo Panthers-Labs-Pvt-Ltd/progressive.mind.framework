@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: grafana
+  namespace: observability
+  labels:
+    app: grafana
+spec:
+  type: ClusterIP # Can be NodePort or LoadBalancer for external access
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80 # External port (accessible by other services or users)
+      targetPort: 3000 # Internal port (mapped to containerPort in Deployment)
+  selector:
+    app: grafana

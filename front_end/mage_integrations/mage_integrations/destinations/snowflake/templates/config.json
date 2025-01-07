@@ -1,0 +1,12 @@
+{
+  "account": "",
+  "database": "",
+  "disable_double_quotes": false,
+  "password": "",
+  "role": "",
+  "schema": "",
+  "table": "",
+  "username": "",
+  "warehouse": "",
+  "use_batch_load": true
+}

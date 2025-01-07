@@ -1,0 +1,60 @@
+{
+  "DataSourceException": {
+    "message": [
+      "Error Generated Due to Framework -DataSourceException Exception. "
+    ],
+    "subClass": {
+      "InvalidInputParameter": {
+        "message": [
+          "Input provided by user is invalid. Please check."
+        ]
+      },
+      "SQLException": {
+        "message": [
+          "Error detected while interacting with DataSource"
+        ]
+      },
+      "UnsupportedDataSources": {
+        "message": [
+          "Unsupported Data Source, OBDEF is supporting MS SQL Server, Oracle, PostgreSQL, Maria DB, MY SQL & Snowflake Databases as well as Parquet / Avro / Csv / Json / Delta / Iceberg / Cobol / Excel(XLSX) / ORC File Formats"
+        ]
+      },
+      "FileNotFound": {
+        "message": [
+          "File Not Found Exception"
+        ]
+      },
+      "MultipleFileFound": {
+        "message": [
+          "Multiple File found with same pattern or name"
+        ]
+      },
+      "UnsupportedSchemaType": {
+        "message": [
+          "only YML, JSON, avsc,and jsd schema supported"
+        ]
+      },
+      "UNCAUGHT_EXCEPTION": {
+        "message": [
+          "UNCAUGHT_EXCEPTION"
+        ]
+      },
+      "InvalidSchema": {
+        "message": [
+          "Invalid schema, accepted schema is yml or Json format"
+        ]
+      },
+      "DataSourceReadError": {
+        "message": [
+          "Error occurred while reading from data source"
+        ]
+      },
+      "DataSourceWriteError": {
+        "message": [
+          "Error Occurred while writing to data source"
+        ]
+      }
+    },
+    "sqlState" : "42704"
+  }
+}

@@ -1,0 +1,10 @@
+transport:
+  type: kafka
+  topicName: openlineage.events
+  properties:
+    bootstrap.servers: localhost:9092,another.host:9092
+    acks: all
+    retries: 3
+    key.serializer: org.apache.kafka.common.serialization.StringSerializer
+    value.serializer: org.apache.kafka.common.serialization.StringSerializer
+  messageKey: some-value
