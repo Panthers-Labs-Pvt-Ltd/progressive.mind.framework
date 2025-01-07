@@ -1,3 +1,5 @@
+DROP TABLE IF EXISTS ORGANIZATION_HIERARCHY CASCADE;
+
 CREATE TABLE IF NOT EXISTS ORGANIZATION_HIERARCHY (
 ORG_HIER_NAME       VARCHAR(250),
 ORG_TYPE_NAME       VARCHAR(250),
@@ -25,7 +27,6 @@ CONSTRAINT fk_hier_type_org_type_name FOREIGN KEY (ORG_TYPE_NAME) REFERENCES ORG
 );
 
 INSERT INTO ORGANIZATION_HIERARCHY (org_hier_name, org_type_name, parent_org_name, coo_owner, ops_lead, tech_lead, bus_owner, org_desc, org_email, org_ci, user_field_1, user_field_2, user_field_3, user_field_4, user_field_5, created_by, updated_timestamp, updated_by) values
-('Chimera', 'Panther Labs', null, 'Abhinav', 'Prashant', 'Manish', 'Mahim', 'Chimera Product', 'chimera@pantherlabs.com', null, null, null, null, null, null, 'PK', null, null)
-);
+('Chimera', 'Panther Labs', null, 'Abhinav', 'Prashant', 'Manish', 'Mahim', 'Chimera Product', 'chimera@pantherlabs.com', null, null, null, null, null, null, 'PK', null, null);
 
 select * from organization_hierarchy;
