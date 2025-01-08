@@ -9,8 +9,8 @@ application:
       DriverClassName : "org.h2.Driver"
     dev:
       url: "jdbc:postgresql://localhost:5432/chimera_db"
-      username : "postgres"
-      password : "root"
+      username : "chimera"
+      password : "chimera123"
       DriverClassName : "org.postgresql.Driver"
       MaximumPoolSize : "10"
       MinimumIdle : "2"
