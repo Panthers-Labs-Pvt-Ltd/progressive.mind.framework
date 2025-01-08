@@ -1,6 +1,6 @@
-package com.progressive.minds.chimera.mapper;
+package com.progressive.minds.chimera.repository;
 
-import com.progressive.minds.chimera.model.Pipeline;
+import com.progressive.minds.chimera.entity.Pipeline;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -9,7 +9,7 @@ import org.apache.ibatis.annotations.Update;
 import java.util.List;
 
 @Mapper
-public interface PipelineMapper {
+public interface PipelineRepository {
 
     @Select("SELECT * FROM pipelines WHERE id = #{id}")
     Pipeline getPipelineById(int id);

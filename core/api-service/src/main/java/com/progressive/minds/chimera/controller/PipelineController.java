@@ -1,7 +1,8 @@
 package com.progressive.minds.chimera.controller;
 
-import com.progressive.minds.chimera.model.Pipeline;
+import com.progressive.minds.chimera.entity.Pipeline;
 import com.progressive.minds.chimera.service.PipelineService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +15,7 @@ public class PipelineController {
 
     private PipelineService pipelineService;
 
-    // Constructor injection
+    @Autowired
     public PipelineController(PipelineService pipelineService) {
         this.pipelineService = pipelineService;
     }

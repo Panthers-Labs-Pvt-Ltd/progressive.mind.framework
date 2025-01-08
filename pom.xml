@@ -70,6 +70,14 @@
                 <artifactId>slf4j-simple</artifactId> <!-- Or your chosen binding -->
                 <version>2.0.9</version>
             </dependency>
+                <!-- Spring Cloud Dependencies BOM -->
+                <dependency>
+                    <groupId>org.springframework.cloud</groupId>
+                    <artifactId>spring-cloud-dependencies</artifactId>
+                    <version>${spring-cloud.version}</version>
+                    <type>pom</type>
+                    <scope>import</scope>
+                </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -153,13 +161,15 @@
         <!-- Helper and utility dependencies -->
         <google.guava.version>31.1-jre</google.guava.version>
         <snake.yaml.version>1.33</snake.yaml.version>
-        <lombok.version>1.18.24</lombok.version>
+        <lombok.version>1.18.36</lombok.version>
+        <org.mapstruct.version>1.6.3</org.mapstruct.version>
         <json.simple.version>1.1.1</json.simple.version>
         <code.gson.version>2.9.0</code.gson.version>
         <commons-text.version>1.10.0</commons-text.version>
         <commons-csv.version>1.9.0</commons-csv.version>
 
         <spring-boot.version>3.4.1</spring-boot.version>
+        <spring-cloud.version>2024.0.0</spring-cloud.version>
 
         <!--Test Dependency versions -->
         <junit.jupiter.version>5.10.0</junit.jupiter.version>
@@ -437,6 +447,18 @@
             <version>20240303</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+            <version>${org.mapstruct.version}</version>
+            <scope>provided</scope>
+        </dependency>
 
     </dependencies>
     <build>
@@ -491,6 +513,18 @@
                 <version>${maven.compiler.plugin.version}</version>
                 <configuration>
                     <release>${maven.compiler.source}</release>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.mapstruct</groupId>
+                            <artifactId>mapstruct-processor</artifactId>
+                            <version>${org.mapstruct.version}</version>
+                        </path>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>${lombok.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
                 </configuration>
             </plugin>
             <!-- Testing -->
