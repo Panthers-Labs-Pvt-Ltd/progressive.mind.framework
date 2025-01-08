@@ -1,9 +1,9 @@
 DROP TABLE IF EXISTS NOSQL_EXTRACT_METADATA_CONFIG CASCADE;
 
 CREATE TABLE IF NOT EXISTS NOSQL_EXTRACT_METADATA_CONFIG (
-  DATA_SOURCE_CONNECTION_NAME   VARCHAR(255),
+--  DATA_SOURCE_CONNECTION_NAME   VARCHAR(255),
   COLLECTION                    VARCHAR(4000),
-  SOURCE_CONFIGURATION 	        TEXT,
+ -- SOURCE_CONFIGURATION 	        TEXT,
   PARTITIONER                   VARCHAR(255),
   CONSTRAINT fk_data_source_connection FOREIGN KEY (DATA_SOURCE_CONNECTION_NAME) REFERENCES DATA_SOURCES_CONNECTIONS(DATA_SOURCE_CONNECTION_NAME) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT fk_pipeline_name FOREIGN KEY (PIPELINE_NAME) REFERENCES DATA_PIPELINES(PIPELINE_NAME) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -13,10 +13,12 @@ CREATE TABLE IF NOT EXISTS NOSQL_EXTRACT_METADATA_CONFIG (
 
 
   INSERT INTO NOSQL_EXTRACT_METADATA_CONFIG (PIPELINE_NAME, SEQUENCE_NUMBER, EXTRACT_SOURCE_TYPE, EXTRACT_SOURCE_SUB_TYPE, DATA_SOURCE_CONNECTION_NAME, COLLECTION, SOURCE_CONFIGURATION, PARTITIONER, dataframe_name, PREDECESSOR_SEQUENCES, SUCCESSOR_SEQUENCES, ROW_FILTER, COLUMN_FILTER, created_by, updated_timestamp, updated_by) VALUES
-  ('Test_Pipeline', 1, 'NoSql', 'Mongodb', 'Chimera_Postgres_Local_connection', 'myCollection', '{"key": "value"}', 'defaultPartitioner', 'inpur_df', 0, 2, null, null, 'admin', null, null);
+  ('Test_Pipeline', 2, 'NoSql', 'Mongodb', 'Chimera_Postgres_Local_connection', 'myCollection', '{"key": "value"}', 'defaultPartitioner', 'inpur_df', 0, 2, null, null, 'admin', null, null);
 
 
   select * from nosql_extract_metadata_config;
+
+
 
 
 
