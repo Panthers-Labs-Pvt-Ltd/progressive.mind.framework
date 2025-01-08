@@ -1,4 +1,0 @@
-INSERT INTO persist_config (pipeline_name, sequence_number, data_sink_type, data_sink_sub_type, target_database_name, target_table_name, target_schema_name, partition_keys, target_sql_text, target_path, write_mode, data_source_connection_name, sink_configuration, sort_columns, dedup_columns, kafka_topic, kafka_key, kafka_message, created_by, updated_by, updated_timestamp, active_flag) values
-('TestPipeline', 1, 'Relational', 'Postgres', 'local_db', 'testTable', null, null, null, null, 'Append', 'Chimera_Local_Connection', null, null, null, null, null, null, 'PK',null, null, 'Y'),
-('TestPipeline', 2, 'Relational', 'Postgres', 'local_db', 'testTable', null, null, null, null, 'Append', 'Chimera_Local_Connection', null, null, null, null, null, null, 'PK',null, null, 'Y')
-ON CONFLICT DO NOTHING;
