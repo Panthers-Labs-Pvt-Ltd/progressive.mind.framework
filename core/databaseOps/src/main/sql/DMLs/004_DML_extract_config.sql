@@ -1,4 +1,0 @@
-INSERT INTO extract_config (pipeline_name, sequence_number, data_source_type, data_source_sub_type, file_name, file_path, schema_path, row_filter, column_filter, extract_dataframe_name, source_configuration, table_name, schema_name, sql_text, kafka_consumer_topic, kafka_consumer_group, kafka_start_offset, data_source_connection_name, created_by, updated_by, updated_timestamp, active_flag) values
-('TestPipeline',1, 'Files', 'Parquet', '*.parquet', 'home/chimera/data/input/parquet/', null, null, null, 'exDF', null, null, null, null, null, null, null, null, 'PK', null, null, 'Y'),
-('TestPipeline', '2', 'Files', 'Json', '*.json', 'home/chimera/data/input/parquet/', null, null, null, 'exDF1', null, null, null, null, null, null, null, null, 'PK', null, null, 'Y')
-ON CONFLICT DO NOTHING;
