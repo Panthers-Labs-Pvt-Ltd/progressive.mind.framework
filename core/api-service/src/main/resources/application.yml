@@ -40,7 +40,7 @@ security:
 
 resilience4j.circuitbreaker:
   instances:
-    pipelines:
+    externalService:
       registerHealthIndicator: true
       slidingWindowSize: 10
       permittedNumberOfCallsInHalfOpenState: 3
@@ -52,14 +52,10 @@ resilience4j.circuitbreaker:
 
 resilience4j.ratelimiter:
   instances:
-    backendA:
+    externalService:
       limitForPeriod: 10
       limitRefreshPeriod: 1s
       timeoutDuration: 0
       registerHealthIndicator: true
       eventConsumerBufferSize: 100
-    backendB:
-      limitForPeriod: 6
-      limitRefreshPeriod: 500ms
-      timeoutDuration: 3s
 

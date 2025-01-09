@@ -1,8 +1,8 @@
 package com.progressive.minds.chimera.service;
 
 
+import com.progressive.minds.chimera.entity.DataPipeline;
 import com.progressive.minds.chimera.repository.PipelineRepository;
-import com.progressive.minds.chimera.entity.Pipeline;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,15 +14,15 @@ public class PipelineService {
     @Autowired
     private PipelineRepository pipelineRepository;
 
-    public List<Pipeline> getAllPipelines() {
+    public List<DataPipeline> getAllPipelines() {
         return pipelineRepository.getAllPipelines();
     }
 
-    public void insertPipeline(Pipeline pipeline) {
+    public void insertPipeline(DataPipeline pipeline) {
         pipelineRepository.insertPipeline(pipeline);
     }
 
-    public void updatePipeline(int id, Pipeline pipeline) {
+    public void updatePipeline(int id, DataPipeline pipeline) {
         pipelineRepository.updatePipeline(id, pipeline);
     }
 }
