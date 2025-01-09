@@ -4,7 +4,7 @@ spring:
   application:
     name: chimera_api_service
   datasource:
-    url: jdbc:postgresql://127.0.0.1:5432/postgres # PostgreSQL for default environment
+    url: jdbc:postgresql://127.0.0.1:5432/postgres?currentSchema=data_pipeline # PostgreSQL for default environment
     driverClassName: org.postgresql.Driver
     username: postgres
     password: password
@@ -13,6 +13,10 @@ spring:
       maxLifetime: 1200000 # 20 minutes
       maximumPoolSize: 10 # Maximum connections in the pool
       minimumIdle: 1 # Minimum idle connections in the pool
+  flyway:
+    enabled: true
+    schemas: data_pipeline
+    cleanDisabled: true
   security:
     oauth2:
       resourceserver:
@@ -58,4 +62,3 @@ resilience4j.ratelimiter:
       timeoutDuration: 0
       registerHealthIndicator: true
       eventConsumerBufferSize: 100
-
