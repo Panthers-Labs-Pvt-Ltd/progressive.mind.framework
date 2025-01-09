@@ -10,8 +10,7 @@ CREATE TABLE IF NOT EXISTS data_pipelines (
     UPDATED_BY              VARCHAR(255),
     ACTIVE_FLAG             VARCHAR(1) default 'Y' :: CHARACTER VARYING,
     CONSTRAINT pk_pipeline PRIMARY KEY (pipeline_name),
-    CONSTRAINT check_pipelines_active_flag CHECK (active_flag IN ('Y', 'N')),
-    CONSTRAINT fk_owner_org FOREIGN KEY (org_hier_name) REFERENCES organization_hierarchy (ORG_HIER_NAME) ON DELETE CASCADE ON UPDATE CASCADE
+    CONSTRAINT check_pipelines_active_flag CHECK (active_flag IN ('Y', 'N'))
 );
 
 COMMENT ON COLUMN data_pipelines.pipeline_name IS 'Name of the pipeline';
