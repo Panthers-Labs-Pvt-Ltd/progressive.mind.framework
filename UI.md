@@ -1,4 +1,4 @@
-# User Interactions
+# User Interactions - Please DO NOT UPDATE HERE. Maintained in UI git
 
 Chimera provides a user-friendly interface that allows users to interact with the platform seamlessly. The UI is designed to be intuitive, responsive, and easy to navigate, enabling users to perform various tasks efficiently. Here are some key features of the Chimera UI:
 

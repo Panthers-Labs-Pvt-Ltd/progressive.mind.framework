@@ -1,5 +1,8 @@
 package com.progressive.minds.chimera.core.temporal;
 
+// This must be done before running any workflow. This client actually is responsible for starting the workflow.
+// It is almost of like master in Spark, for reference.
+
 import io.temporal.client.WorkflowClient;
 import io.temporal.client.WorkflowOptions;
 import io.temporal.serviceclient.WorkflowServiceStubs;

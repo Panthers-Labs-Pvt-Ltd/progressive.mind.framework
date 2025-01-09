@@ -46,8 +46,6 @@
        <module>foundational</module>
        <module>core</module>
        <module>capabilities</module>
-       <module>datahub-web-react</module>
-       <module>mage_ai_frontend</module>
     </modules>
 
     <dependencyManagement>
