@@ -31,13 +31,16 @@ package com.progressive.minds.chimera.common.dto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import lombok.Builder;
 import lombok.Data;
 
 @JsonInclude(Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Data
+@Builder
 public class GenericResponse {
     private String echoToken;
     private AuditData auditData;
-
+    private String message;
+    private String statusCode;
 }

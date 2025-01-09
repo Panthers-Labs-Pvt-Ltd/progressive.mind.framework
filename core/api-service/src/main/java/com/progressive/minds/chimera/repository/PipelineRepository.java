@@ -11,15 +11,27 @@ import java.util.List;
 @Mapper
 public interface PipelineRepository {
 
-    @Select("SELECT * FROM pipelines WHERE id = #{id}")
+    @Select("SELECT EXISTS(SELECT 1 FROM data_pipelines WHERE id = #{id})")
+    boolean isDataPipeLineExists(int id);
+
+    @Select("SELECT * FROM data_pipelines WHERE id = #{id}")
     DataPipeline getPipelineById(int id);
 
-    @Select("SELECT * FROM pipelines")
+    @Select("SELECT * FROM data_pipelines")
     List<DataPipeline> getAllPipelines();
 
-    @Insert("INSERT INTO pipelines(name, created_date, last_modified_date, frequency, schedule) VALUES(#{name}, #{createdDate}, #{lastModifiedDate}, #{frequency}, #{schedule})")
+    @Insert("INSERT INTO data_pipelines (ID, PIPELINE_NAME, PIPELINE_DESCRIPTION, PROCESS_MODE, TAGS, ORG_HIER_NAME, CREATED_TIMESTAMP, CREATED_BY, UPDATED_TIMESTAMP, UPDATED_BY, ACTIVE_FLAG) " +
+            "VALUES (#{id}, #{pipelineName}, #{pipelineDescription}, #{processMode}, #{tags}, #{orgHierName}, #{createdTimestamp}, #{createdBy}, #{updatedTimestamp}, #{updatedBy}, #{activeFlag})")
     void insertPipeline(DataPipeline pipeline);
 
-    @Update("UPDATE pipelines SET name = #{name}, created_date = #{createdDate}, last_modified_date = #{lastModifiedDate}, frequency = #{frequency}, schedule = #{schedule} WHERE id = #{id}")
+    @Update("UPDATE data_pipelines SET " +
+            "PIPELINE_DESCRIPTION = #{pipelineDescription}, " +
+            "PROCESS_MODE = #{processMode}, " +
+            "TAGS = #{tags}, " +
+            "ORG_HIER_NAME = #{orgHierName}, " +
+            "UPDATED_TIMESTAMP = #{updatedTimestamp}, " +
+            "UPDATED_BY = #{updatedBy}, " +
+            "ACTIVE_FLAG = #{activeFlag} " +
+            "WHERE PIPELINE_NAME = #{pipelineName}")
     void updatePipeline(int id, DataPipeline pipeline);
 }

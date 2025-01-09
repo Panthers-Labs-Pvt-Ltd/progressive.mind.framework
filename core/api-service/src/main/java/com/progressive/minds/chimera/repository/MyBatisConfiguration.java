@@ -47,9 +47,6 @@ public class MyBatisConfiguration {
         }
     }
 
-
-
-
     @Bean
     public DataSourceTransactionManager transactionManager() {
         return new DataSourceTransactionManager(dataSource);

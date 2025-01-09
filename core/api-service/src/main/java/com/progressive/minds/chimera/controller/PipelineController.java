@@ -1,5 +1,6 @@
 package com.progressive.minds.chimera.controller;
 
+import com.progressive.minds.chimera.common.dto.GenericResponse;
 import com.progressive.minds.chimera.entity.DataPipeline;
 import com.progressive.minds.chimera.service.PipelineService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,21 +20,22 @@ public class PipelineController {
     public PipelineController(PipelineService pipelineService) {
         this.pipelineService = pipelineService;
     }
+
     // GET request - Retrieve an existing pipeline by ID
     @GetMapping("/{id}")
     public ResponseEntity<DataPipeline> getPipelineById(@PathVariable int id) {
-        return pipelineService.getAllPipelines().stream()
-                .filter(pipeline -> pipeline.getId() == id)
-                .findFirst()
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body(null));
+        return ResponseEntity.ok(pipelineService.getDataPipeLineById(id));
     }
 
     // POST request - Add a new pipeline
     @PostMapping
-    public ResponseEntity<String> createPipeline(@RequestBody DataPipeline pipeline) {
+    public ResponseEntity<GenericResponse> createPipeline(@RequestBody DataPipeline pipeline) {
         pipelineService.insertPipeline(pipeline);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Pipeline created successfully with ID: " + pipeline.getId());
+        GenericResponse genericResponse = GenericResponse.builder()
+                .message("Pipeline created successfully with ID: " + pipeline.getId())
+                .statusCode(HttpStatus.CREATED.name())
+                .build();
+        return ResponseEntity.status(HttpStatus.CREATED).body(genericResponse);
     }
 
     // GET request - Retrieve all pipelines
@@ -44,9 +46,21 @@ public class PipelineController {
 
     // PUT request - Update an existing pipeline by ID
     @PutMapping("/{id}")
-    public ResponseEntity<String> updatePipeline(@PathVariable("id") int id, @RequestBody DataPipeline updatedPipeline) {
-        pipelineService.updatePipeline(id, updatedPipeline);
-        return ResponseEntity.status(HttpStatus.OK).body("Pipeline updated");
+    public ResponseEntity<GenericResponse> updatePipeline(@PathVariable("id") int id, @RequestBody DataPipeline updatedPipeline) {
+        if (pipelineService.isDataPipeLineExists(id)) {
+            pipelineService.updatePipeline(id, updatedPipeline);
+            GenericResponse genericResponse = GenericResponse.builder()
+                    .message("Pipeline updated successfully with ID: " + id)
+                    .statusCode(HttpStatus.NO_CONTENT.name())
+                    .build();
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(genericResponse);
+        } else {
+            GenericResponse genericResponse = GenericResponse.builder()
+                    .message("Pipeline don't exist with the given Id: " + id)
+                    .statusCode(HttpStatus.NOT_FOUND.name())
+                    .build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(genericResponse);
+        }
     }
 
 }
