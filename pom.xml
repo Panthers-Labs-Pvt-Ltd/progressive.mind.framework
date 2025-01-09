@@ -168,8 +168,8 @@
         <commons-text.version>1.10.0</commons-text.version>
         <commons-csv.version>1.9.0</commons-csv.version>
 
-        <!--Spring Boot and Spring Cloud versions -->
-        <spring-boot.version>3.4.1</spring-boot.version>
+        <!-- Spring Cloud versions -->
+
         <spring-cloud.version>2024.0.0</spring-cloud.version>
 
         <!--Test Dependency versions -->
@@ -320,11 +320,7 @@
             <artifactId>comet-spark-spark3.5_2.12</artifactId>
             <version>0.4.0</version>
         </dependency>
-        <dependency>
-            <groupId>org.apache.httpcomponents.client5</groupId>
-            <artifactId>httpclient5</artifactId>
-            <version>5.2</version>
-        </dependency>
+
         <!--
 
                 &lt;!&ndash; https://mvnrepository.com/artifact/com.ebiznext/comet-spark3 &ndash;&gt;
@@ -334,8 +330,6 @@
                     <version>0.2.6</version>
                 </dependency>
         -->
-
-
         <!-- https://mvnrepository.com/artifact/io.findify/s3mock -->
         <dependency>
             <groupId>io.findify</groupId>

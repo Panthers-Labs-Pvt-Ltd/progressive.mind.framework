@@ -52,6 +52,12 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-jdbc</artifactId>
       <version>${spring-boot.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.apache.tomcat</groupId>
+          <artifactId>tomcat-jdbc</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <!-- Spring Boot Starter Security -->
@@ -98,6 +104,13 @@
       <version>2.10.1</version>
     </dependency>
 
+    <!-- Flyway dependency -->
+    <!-- https://mvnrepository.com/artifact/org.flywaydb/flyway-core -->
+    <dependency>
+      <groupId>org.flywaydb</groupId>
+      <artifactId>flyway-core</artifactId>
+      <version>11.0.0</version>
+    </dependency>
 
   </dependencies>
   <build>

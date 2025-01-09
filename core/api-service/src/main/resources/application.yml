@@ -13,6 +13,9 @@ spring:
       maxLifetime: 1200000 # 20 minutes
       maximumPoolSize: 10 # Maximum connections in the pool
       minimumIdle: 1 # Minimum idle connections in the pool
+    flyway:
+      locations: classpath:db_scripts/migration
+      baseline-on-migrate : false
   security:
     oauth2:
       resourceserver:
