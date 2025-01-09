@@ -1,0 +1,32 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/chimera # PostgreSQL for default environment
+    driverClassName: org.postgresql.Driver
+    username: postgres
+    password: postgres
+    hikari:
+      poolName: PostgresqlHikariCP
+      maxLifetime: 1200000 # 20 minutes
+      maximumPoolSize: 10 # Maximum connections in the pool
+      minimumIdle: 1 # Minimum idle connections in the pool
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8080/realms/chimera-api-service-realm
+          jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/certs
+
+jwt:
+  auth:
+    converter:
+      resource-id: chimera_api # Resource ID for JWT authentication
+      principle-attribute: preferred_username # Attribute to be used as principal
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*" # Include all management endpoints
+  endpoint:
+    health:
+      show-details: always # Show detailed health information
