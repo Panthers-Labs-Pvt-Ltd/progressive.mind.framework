@@ -20,8 +20,6 @@
 
   <dependencies>
     <!-- Spring Boot Starter (includes core functionality for a Spring Boot application) -->
-
-    <!-- Spring Boot Starter Web (RESTful web applications, MVC) -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>

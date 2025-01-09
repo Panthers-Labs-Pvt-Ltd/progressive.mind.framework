@@ -1,4 +1,5 @@
 CREATE TABLE IF NOT EXISTS data_pipelines (
+    ID                      VARCHAR(500),
     PIPELINE_NAME           VARCHAR(500),
     PIPELINE_DESCRIPTION    TEXT,
     PROCESS_MODE            VARCHAR(255) NOT NULL CHECK (process_mode IN ('Batch', 'Stream')),
@@ -12,7 +13,7 @@ CREATE TABLE IF NOT EXISTS data_pipelines (
     CONSTRAINT pk_pipeline PRIMARY KEY (pipeline_name),
     CONSTRAINT check_pipelines_active_flag CHECK (active_flag IN ('Y', 'N'))
 );
-
+COMMENT ON COLUMN data_pipelines.pipeline_name IS 'ID of the pipeline';
 COMMENT ON COLUMN data_pipelines.pipeline_name IS 'Name of the pipeline';
 COMMENT ON COLUMN data_pipelines.pipeline_description IS 'A brief description of the pipeline';
 COMMENT ON COLUMN data_pipelines.process_mode IS 'Mode - Batch or Streaming. Valid Values: Batch, Stream';

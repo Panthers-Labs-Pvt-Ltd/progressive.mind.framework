@@ -41,13 +41,10 @@ import lombok.ToString;
 @NoArgsConstructor
 @Data
 public class AuditData {
-
     private String processTime;
     private String timestamp;
     private String requestHost;
     private String serverId;
     private String environment;
     private String release;
-
-
 }

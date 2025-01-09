@@ -14,6 +14,14 @@ public class PipelineService {
     @Autowired
     private PipelineRepository pipelineRepository;
 
+    public boolean isDataPipeLineExists(int id) {
+        return pipelineRepository.isDataPipeLineExists(id);
+    }
+
+    public DataPipeline getDataPipeLineById(int id) {
+        return pipelineRepository.getPipelineById(id);
+    }
+
     public List<DataPipeline> getAllPipelines() {
         return pipelineRepository.getAllPipelines();
     }
