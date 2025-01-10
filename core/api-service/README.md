@@ -15,9 +15,16 @@ This endpoint allows you to create a new pipeline by providing the necessary det
 #### Request Payload
 ```json
 {
-  "name": "Weekly Pipeline",
-  "frequency": "Weekly",
-  "schedule": "10:00 AM every Monday"
+  "id": 1010,
+  "pipelineName": "Sample Pipeline",
+  "pipelineDescription": "This is a sample data pipeline",
+  "processMode": "Batch",
+  "runFrequency": "Daily",
+  "createdTimestamp": "2025-01-09T12:00:00",
+  "createdBy": "admin",
+  "updatedTimestamp": "2025-01-09T12:30:00",
+  "updatedBy": "admin",
+  "activeFlag": "Y"
 }
 
 Response
@@ -40,14 +47,19 @@ Response
 Status Code: 200 (OK)
 Response Body:
 
-{
-  "id": 1,
-  "name": "Weekly Pipeline",
-  "createdDate": "2024-12-29T10:00:00",
-  "lastModifiedDate": "2024-12-29T10:00:00",
-  "frequency": "Weekly",
-  "schedule": "10:00 AM every Monday"
-}
+  {
+        "id": 201,
+        "pipelineName": "New Test Pipeline",
+        "pipelineDescription": "This is a sample test data pipeline",
+        "processMode": "Batch",
+        "tags": null,
+        "orgHierName": null,
+        "createdTimestamp": "2025-01-09T12:00:00.000+00:00",
+        "createdBy": "admin",
+        "updatedTimestamp": "2025-01-09T12:30:00.000+00:00",
+        "updatedBy": "admin",
+        "activeFlag": "Y"
+    }
 
 Status Code: 404 (Not Found) if the pipeline does not exist.
 
@@ -66,14 +78,19 @@ Status Code: 200 (OK)
 Response Body:
 
 [
-  {
-    "id": 1,
-    "name": "Weekly Pipeline",
-    "createdDate": "2024-12-29T10:00:00",
-    "lastModifiedDate": "2024-12-29T10:00:00",
-    "frequency": "Weekly",
-    "schedule": "10:00 AM every Monday"
-  }
+   {
+        "id": 201,
+        "pipelineName": "New Test Pipeline",
+        "pipelineDescription": "This is a sample test data pipeline",
+        "processMode": "Batch",
+        "tags": null,
+        "orgHierName": null,
+        "createdTimestamp": "2025-01-09T12:00:00.000+00:00",
+        "createdBy": "admin",
+        "updatedTimestamp": "2025-01-09T12:30:00.000+00:00",
+        "updatedBy": "admin",
+        "activeFlag": "Y"
+    }
 ]
 
 4. PUT /api/v1/pipelines/{id}
@@ -96,32 +113,29 @@ Response Body:
   "message": "Pipeline updated successfully."
 }
 
-5. POST /api/v1/pipelines/add
-Description
-This is an additional POST endpoint to create and add a pipeline to the system.
-
-Request Payload
-
-{
-  "name": "Daily Pipeline",
-  "frequency": "Daily",
-  "schedule": "10:00 AM"
-}
-
-Response
-Status Code: 201 (Created)
-Response Body:
-
-{
-  "message": "Pipeline added with ID: 2"
-}
-
 Error Handling
 The API returns the following standard error response for issues:
 
 400 Bad Request: If the input is invalid.
 404 Not Found: If the requested pipeline ID does not exist.
 500 Internal Server Error: If an unexpected error occurs.
+
+### Now End points are secured using Key-Clock
+
+//TO =-DO
+<-----------------IN PROGRESS----------------------->
+http://localhost:3000/realms/chimera-api-service-realm/protocol/openid-connect/token
+
+Get the access token
+
+Add as Bearer Token in every API call. 
+
+
+FLYWAY is integrated
+
+
+
+
 
 
 
