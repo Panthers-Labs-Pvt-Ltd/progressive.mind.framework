@@ -12,7 +12,7 @@ public class TemporalService {
   private final WorkerFactory workerFactory;
   private final WorkflowClient workflowClient;
 
-
+  // with Default namespace
   public TemporalService() {
     this.serviceStubs = WorkflowServiceStubs.newLocalServiceStubs();
 
@@ -76,6 +76,3 @@ public class TemporalService {
     serviceStubs.shutdown();
   }
 }
-
-
-

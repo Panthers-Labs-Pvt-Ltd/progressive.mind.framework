@@ -1,7 +1,6 @@
 # Chimera Data and AI Platform
 
 <!-- TOC -->
-
 * [Chimera Data and AI Platform](#chimera-data-and-ai-platform)
   * [Introduction](#introduction)
     * [Overview of Chimera](#overview-of-chimera)
@@ -13,7 +12,11 @@
     * [Data Management at Scale](#data-management-at-scale)
     * [Building a Reliable and Easy-to-Use Data Platform](#building-a-reliable-and-easy-to-use-data-platform)
   * [User Journey](#user-journey)
-    * [Onboarding](#onboarding)
+    * [Client Onboarding](#client-onboarding)
+    * [Team Onboarding](#team-onboarding)
+    * [Data Source (or External) Onboarding](#data-source-or-external-onboarding)
+    * [API Service](#api-service)
+    * [Orchestration Service](#orchestration-service)
     * [Data Ingestion](#data-ingestion)
     * [Data Processing](#data-processing)
     * [Data Storage](#data-storage)
@@ -35,7 +38,6 @@
     * [Platform Management](#platform-management)
     * [Observability Management](#observability-management)
   * [Conclusion](#conclusion)
-
 <!-- TOC -->
 
 ## Introduction
@@ -92,13 +94,43 @@ Chimera is designed for organizations of all sizes, across various industries, t
 - **Comprehensive Documentation**: Offer detailed documentation and tutorials to help users get started quickly.
 - **Support and Community**: Foster a supportive community and provide access to expert assistance when needed.
 
+### AI enabled Data Platform Intelligence
+
+- **Data Discovery and Cataloging**: Automatically discover and catalog data assets to improve data visibility and accessibility.
+- **Data Quality and Governance**: Implement AI-driven data quality checks and governance policies to ensure data accuracy and compliance.
+- **Predictive Analytics**: Leverage AI models to predict trends, patterns, and anomalies in data for proactive decision-making.
+- **Recommendation Engines**: Use AI-powered recommendation engines to suggest relevant data assets, insights, and actions to users.
+- **Natural Language Processing**: Enable natural language queries and interactions with data using AI-driven NLP capabilities.
+- **Automated Data Insights**: Generate automated insights and reports from data using AI algorithms to drive actionable intelligence.
+- **Data Security and Privacy**: Implement AI-driven security measures to detect and prevent data breaches, fraud, and privacy violations.
+- **Data Lifecycle Management**: Use AI to automate data lifecycle management tasks, such as data retention, archiving, and deletion.
+- **Data Integration and Transformation**: Apply AI techniques to automate data integration and transformation processes for improved efficiency and accuracy.
+- **Real-time Data Processing**: Utilize AI models for real-time data processing and analysis to enable instant insights and decision-making.
+- **Scalable AI Infrastructure**: Build scalable AI infrastructure to support the deployment and execution of AI models at scale.
+- **AI Model Monitoring and Management**: Monitor and manage AI models using AI-driven tools to ensure optimal performance and compliance.
+- **AI Explainability and Interpretability**: Provide explanations and insights into AI model decisions to enhance transparency and trust.
+
 ## User Journey
 
-### Onboarding
+### Client Onboarding
 
-1. **Account Creation**: Users sign up and create an account on the Chimera platform.
-2. **Initial Setup**: Users configure their workspace, including setting up data sources and defining access controls.
-3. **Guided Tour**: A guided tour introduces users to the platform's features and capabilities.
+**Account Creation**: Client sign up Non-Disclosure Agreement.
+
+Before the client interacts with Chimera, **Panthers Labs backend team** need to deploy Chimera services on Client Infrastructure. Here are the steps to be completed for readiness -
+
+1. **Choosing Client Infrastructure** - Cloud or On-Premise
+2. **Default Setup**: The backend team sets up default configurations for the client's organization - System Accounts, Default Groups and Accesses, Certificates, and other components for Kubernetes, AIML (Ray), Observability (Prometheus and Grafana), Orchestration(Temporal), API, and Metadata Manager Cluster with default project/namespace/domain. **Should this be on a single docker-compose or shell script?**
+3. **Connecting to Key Services**: The backend team connects to the client's key services, such as incident and configuration management platform like ServiceNow, communication channels like Email Servers, Slack and Teams, GenAI services like OpenAI, User Authentication Services like LDAP, etc. Let's discuss any other services that need to be connected to Chimera.
+4. **Hierarchical Organization**: The backend team sets up the client's organization structure. This includes setting up the client's account, defining line of business/strategic business units, and hierarchy of domains and subdomains including the organizational heads.
+5. **Ontology and Taxonomy**: The backend team defines the ontology and taxonomy for the client's business conceptual data model.
+6. **Final Step**: Chimera UI DNS set up and SSL certificate installation.
+
+### Team Onboarding
+
+1. **Initial Setup**: Users configure their workspace, including setting up data sources and defining access controls.
+2. **Guided Tour**: A guided tour introduces users to the platform's features and capabilities.
+
+Please see more [here](UI.md#user-flow)
 
 ### Data Source (or External) Onboarding
 
@@ -123,7 +155,6 @@ Once onboarded, the data can be ingested.
 Before we get into any other service description, it is important to realize that all the Chimera services would API as base to interact with each other. Chimera API service is the core service that provides the RESTful API endpoints for all the Chimera services. The API service is responsible for handling user requests, authentication, authorization, and routing requests to the appropriate service. It also provides documentation for the API endpoints and allows users to interact with the platform programmatically.
 
 You can find more details in the [API_Service.md](API_Service.md) document.
-
 
 ### Orchestration Service
 

@@ -299,4 +299,277 @@ Retries are used to handle failures in workflows in Temporal. They provide a way
 8. How do you manage retry scaling in Temporal?
 9. How do you manage retry optimization in Temporal?
 10. How do you manage retry security in Temporal?
-11. 
+11. How do you manage retry resource management in Temporal?
+12. How do you manage retry monitoring in Temporal?
+13. How do you manage retry logging in Temporal?
+14. How do you manage retry tracing in Temporal?
+15. How do you manage retry alerting in Temporal?
+16. How do you manage retry metrics in Temporal?
+17. How do you manage retry visualization in Temporal?
+18. How do you manage retry testing in Temporal?
+19. How do you manage retry deployment in Temporal?
+20. How do you manage retry collaboration in Temporal?
+21. How do you manage retry dependencies in Temporal?
+22. How do you manage retry versioning in Temporal?
+23. How do you manage retry collaboration in Temporal?
+24. How do you manage retry deduplication in Temporal?
+25. How do you manage retry routing in Temporal?
+26. How do you manage retry visibility in Temporal?
+
+## Setting up Timeouts
+
+Timeouts are used to limit the execution time of tasks and activities in Temporal. They provide a way to prevent tasks from running indefinitely and ensure that workflows make progress. Timeouts can be configured with settings such as start to close, schedule to start, and schedule to close. Timeouts are created within workflows and can be applied to individual tasks or activities. Timeouts are a powerful feature of Temporal that allows you to build responsive and efficient workflows.
+
+Here are some code examples to illustrate the use of timeouts in Temporal:
+
+```java
+// Define a timeout for a task
+@ActivityMethod(scheduleToCloseTimeout = "PT1H")
+String performTask();
+
+// Define a timeout for an activity
+@WorkflowMethod
+String performActivity() {
+    Workflow.sleep(Duration.ofHours(1));
+    return "result";
+}
+
+// Define a timeout for a workflow
+@WorkflowMethod(executionStartToCloseTimeout = "PT1H")
+String performWorkflow();
+
+// Define a timeout for a child workflow
+@WorkflowMethod
+String performChildWorkflow() {
+    ChildWorkflowOptions options = ChildWorkflowOptions.newBuilder()
+        .setExecutionStartToCloseTimeout(Duration.ofHours(1))
+        .build();
+    return Workflow.newChildWorkflowStub(ChildWorkflow.class, options).perform();
+}
+
+// Define a timeout for a signal
+@WorkflowMethod
+String performSignal() {
+    Workflow.await(Duration.ofHours(1));
+    return "result";
+}
+
+// Define a timeout for a query
+@WorkflowMethod
+String performQuery() {
+    Workflow.await(Duration.ofHours(1));
+    return "result";
+}
+
+// Define a timeout for a retry
+@ActivityMethod(scheduleToCloseTimeout = "PT1H")
+String performRetry();
+```
+
+### Key question per best practices for managing timeouts in Temporal:
+
+1. What are some best practices for defining timeouts in Temporal?
+2. How do you manage timeout configuration in Temporal?
+3. How do you manage timeout delays in Temporal?
+4. How do you manage timeout backoff in Temporal?
+5. How do you manage timeout max attempts in Temporal?
+6. How do you manage timeout dependencies in Temporal?
+7. How do you manage timeout versioning in Temporal?
+8. How do you manage timeout scaling in Temporal?
+9. How do you manage timeout optimization in Temporal?
+10. How do you manage timeout security in Temporal?
+11. How do you manage timeout resource management in Temporal?
+12. How do you manage timeout monitoring in Temporal?
+13. How do you manage timeout logging in Temporal?
+14. How do you manage timeout tracing in Temporal?
+15. How do you manage timeout alerting in Temporal?
+16. How do you manage timeout metrics in Temporal?
+17. How do you manage timeout visualization in Temporal?
+18. How do you manage timeout testing in Temporal?
+19. How do you manage timeout deployment in Temporal?
+20. How do you manage timeout collaboration in Temporal?
+21. How do you manage timeout dependencies in Temporal?
+
+## Setting up Retention Policies
+
+Retention policies are used to manage the lifecycle of workflows and data in Temporal. They provide a way to control how long workflows and data are retained in the system. Retention policies can be configured with settings such as retention period, archival, and deletion. Retention policies are created within namespaces and can be applied to workflows, task queues, and data. Retention policies are a powerful feature of Temporal that allows you to optimize storage usage and comply with data retention requirements.
+
+### Key question per best practices for managing retention policies in Temporal:
+
+1. What are some best practices for defining retention policies in Temporal?
+2. How do you manage retention policy configuration in Temporal?
+3. How do you manage retention period in Temporal?
+4. How do you manage archival in Temporal?
+5. How do you manage deletion in Temporal?
+6. How do you manage retention dependencies in Temporal?
+7. How do you manage retention versioning in Temporal?
+8. How do you manage retention scaling in Temporal?
+9. How do you manage retention optimization in Temporal?
+10. How do you manage retention security in Temporal?
+11. How do you manage retention resource management in Temporal?
+12. How do you manage retention monitoring in Temporal?
+13. How do you manage retention logging in Temporal?
+14. How do you manage retention tracing in Temporal?
+15. How do you manage retention alerting in Temporal?
+16. How do you manage retention metrics in Temporal?
+17. How do you manage retention visualization in Temporal?
+18. How do you manage retention testing in Temporal?
+19. How do you manage retention deployment in Temporal?
+20. How do you manage retention collaboration in Temporal?
+
+## Setting up Archival Policies
+
+Archival policies are used to store historical data in Temporal. They provide a way to archive completed workflows and data for long-term retention. Archival policies can be configured with settings such as archival period, storage location, and retrieval options. Archival policies are created within namespaces and can be applied to workflows, task queues, and data. Archival policies are a powerful feature of Temporal that allows you to preserve historical data and comply with data retention requirements.
+
+### Key question per best practices for managing archival policies in Temporal:
+
+1. What are some best practices for defining archival policies in Temporal?
+2. How do you manage archival policy configuration in Temporal?
+3. How do you manage archival period in Temporal?
+4. How do you manage storage location in Temporal?
+5. How do you manage retrieval options in Temporal?
+6. How do you manage archival dependencies in Temporal?
+7. How do you manage archival versioning in Temporal?
+8. How do you manage archival scaling in Temporal?
+9. How do you manage archival optimization in Temporal?
+10. How do you manage archival security in Temporal?
+11. How do you manage archival resource management in Temporal?
+12. How do you manage archival monitoring in Temporal?
+13. How do you manage archival logging in Temporal?
+14. How do you manage archival tracing in Temporal?
+15. How do you manage archival alerting in Temporal?
+16. How do you manage archival metrics in Temporal?
+17. How do you manage archival visualization in Temporal?
+18. How do you manage archival testing in Temporal?
+19. How do you manage archival deployment in Temporal?
+20. How do you manage archival collaboration in Temporal?
+21. How do you manage archival dependencies in Temporal?
+22. How do you manage archival versioning in Temporal?
+23. How do you manage archival collaboration in Temporal?
+24. How do you manage archival deduplication in Temporal?
+25. How do you manage archival routing in Temporal?
+26. How do you manage archival visibility in Temporal?
+27. How do you manage archival replication in Temporal?
+
+## Setting up Replication
+
+Replication is used to ensure data consistency and availability in Temporal. It provides a way to replicate data across multiple nodes and regions to prevent data loss and improve performance. Replication can be configured with settings such as replication factor, consistency level, and failover options. Replication is created within namespaces and can be applied to workflows, task queues, and data. Replication is a powerful feature of Temporal that allows you to build fault-tolerant and scalable systems. Replication can be configured with settings such as replication factor, consistency level, and failover options. Replication is created within namespaces and can be applied to workflows, task queues, and data. Replication is a powerful feature of Temporal that allows you to build fault-tolerant and scalable systems. 
+
+### Key question per best practices for managing replication in Temporal:
+
+1. What are some best practices for defining replication in Temporal?
+2. How do you manage replication configuration in Temporal?
+3. How do you manage replication factor in Temporal?
+4. How do you manage consistency level in Temporal?
+5. How do you manage failover options in Temporal?
+6. How do you manage replication dependencies in Temporal?
+7. How do you manage replication versioning in Temporal?
+8. How do you manage replication scaling in Temporal?
+9. How do you manage replication optimization in Temporal?
+
+## Setting up Governance
+
+Governance is used to enforce policies and standards in Temporal. It provides a way to ensure compliance with regulatory requirements and organizational guidelines. Governance can be configured with settings such as access controls, auditing, and monitoring. Governance is created within namespaces and can be applied to workflows, task queues, and data. Governance is a powerful feature of Temporal that allows you to build secure and compliant systems.
+
+## Setting up Monitoring
+
+Monitoring is used to track the performance and health of workflows in Temporal. It provides a way to monitor the progress of workflows, diagnose issues, and optimize performance. Monitoring can be configured with settings such as metrics, logging, and alerting. Monitoring is created within namespaces and can be applied to workflows, task queues, and data. Monitoring is a powerful feature of Temporal that allows you to build reliable and efficient systems. Monitoring can be configured with settings such as metrics, logging, and alerting. Monitoring is created within namespaces and can be applied to workflows, task queues, and data. Monitoring is a powerful feature of Temporal that allows you to build reliable and efficient systems. 
+
+## Setting up Security
+
+Security is used to protect workflows and data in Temporal. It provides a way to secure access, prevent unauthorized actions, and ensure data privacy. Security can be configured with settings such as encryption, access controls, and monitoring. Security is created within namespaces and can be applied to workflows, task queues, and data. Security is a powerful feature of Temporal that allows you to build secure and compliant systems. Security can be configured with settings such as encryption, access controls, and monitoring. Security is created within namespaces and can be applied to workflows, task queues, and data. Security is a powerful feature of Temporal that allows you to build secure and compliant systems.
+
+### Steps to set up security in Temporal:
+
+1. Define security requirements: Identify the security requirements for your workflows, task queues, and data. This includes access controls, encryption, monitoring, and auditing.
+2. Configure security settings: Configure security settings such as encryption keys, access control lists, and monitoring policies.
+3. Apply security policies: Apply security policies to workflows, task queues, and data to enforce security requirements.
+4. Monitor security: Monitor security events, access logs, and audit trails to ensure compliance with security policies.
+5. Update security policies: Update security policies as needed to address new threats, vulnerabilities, or compliance requirements.
+6. Train users: Train users on security best practices, access controls, and data protection to prevent security incidents.
+7. Test security: Test security controls, access controls, and encryption to ensure they are working as intended.
+8. Review security: Review security policies, access controls, and encryption regularly to identify and address security gaps.
+9. Respond to security incidents: Respond to security incidents, breaches, or vulnerabilities promptly to minimize the impact on workflows and data.
+
+## Setting up Resource Management
+
+Resource management is used to optimize the performance and efficiency of workflows in Temporal. It provides a way to allocate resources such as CPU, memory, and storage to workflows based on their requirements. Resource management can be configured with settings such as resource quotas, limits, and monitoring. Resource management is created within namespaces and can be applied to workflows, task queues, and data. Resource management is a powerful feature of Temporal that allows you to build scalable and cost-effective systems. Resource management can be configured with settings such as resource quotas, limits, and monitoring. Resource management is created within namespaces and can be applied to workflows, task queues, and data. Resource management is a powerful feature of Temporal that allows you to build scalable and cost-effective systems.
+
+### Steps to set up resource management in Temporal:
+
+1. Define resource requirements: Identify the resource requirements for your workflows, task queues, and data. This includes CPU, memory, storage, and network bandwidth.
+2. Configure resource settings: Configure resource settings such as quotas, limits, and monitoring policies.
+3. Apply resource policies: Apply resource policies to workflows, task queues, and data to optimize resource usage.
+4. Monitor resource usage: Monitor resource usage, performance metrics, and bottlenecks to identify opportunities for optimization.
+5. Optimize resource allocation: Optimize resource allocation, scaling, and scheduling to improve performance and efficiency.
+6. Test resource management: Test resource management policies, limits, and monitoring to ensure they are working as intended.
+7. Review resource usage: Review resource usage, performance metrics, and bottlenecks regularly to identify and address resource constraints.
+
+## Setting up Visualization
+
+Visualization is used to visualize the structure and progress of workflows in Temporal. It provides a way to understand the dependencies, tasks, and states of workflows. Visualization can be configured with settings such as workflow diagrams, task timelines, and progress charts. Visualization is created within namespaces and can be applied to workflows, task queues, and data. Visualization is a powerful feature of Temporal that allows you to build intuitive and informative systems. Visualization can be configured with settings such as workflow diagrams, task timelines, and progress charts. Visualization is created within namespaces and can be applied to workflows, task queues, and data. Visualization is a powerful feature of Temporal that allows you to build intuitive and informative systems.
+
+### Steps to set up visualization in Temporal:
+
+1. Define visualization requirements: Identify the visualization requirements for your workflows, task queues, and data. This includes workflow diagrams, task timelines, and progress charts.
+2. Configure visualization settings: Configure visualization settings such as workflow diagrams, task timelines, and progress charts.
+3. Apply visualization policies: Apply visualization policies to workflows, task queues, and data to visualize their structure and progress.
+4. Monitor visualization: Monitor visualization tools, dashboards, and reports to track the progress of workflows and identify issues.
+5. Update visualization policies: Update visualization policies as needed to improve the clarity, accuracy, and usefulness of visualizations.
+6. Train users: Train users on how to interpret workflow diagrams, task timelines, and progress charts to understand the progress of workflows.
+7. Test visualization: Test visualization tools, dashboards, and reports to ensure they are working as intended.
+
+## Setting up Auditing
+
+Auditing is used to log and audit workflow executions in Temporal. It provides a way to track changes, diagnose issues, and ensure compliance with governance policies. Auditing can be configured with settings such as audit logs, access logs, and monitoring. Auditing is created within namespaces and can be applied to workflows, task queues, and data. Auditing is a powerful feature of Temporal that allows you to build transparent and accountable systems. Auditing can be configured with settings such as audit logs, access logs, and monitoring. Auditing is created within namespaces and can be applied to workflows, task queues, and data. Auditing is a powerful feature of Temporal that allows you to build transparent and accountable systems.
+
+### Steps to set up auditing in Temporal:
+
+1. Define auditing requirements: Identify the auditing requirements for your workflows, task queues, and data. This includes audit logs, access logs, and monitoring.
+2. Configure auditing settings: Configure auditing settings such as audit logs, access logs, and monitoring policies.
+3. Apply auditing policies: Apply auditing policies to workflows, task queues, and data to log and audit workflow executions.
+4. Monitor auditing: Monitor audit logs, access logs, and monitoring tools to track changes, diagnose issues, and ensure compliance.
+5. Update auditing policies: Update auditing policies as needed to address new threats, vulnerabilities, or compliance requirements.
+6. Train users: Train users on how to interpret audit logs, access logs, and monitoring reports to track changes and diagnose issues.
+7. Test auditing: Test auditing controls, access logs, and monitoring to ensure they are working as intended.
+8. Review auditing: Review audit logs, access logs, and monitoring reports regularly to identify and address security gaps.
+
+## Setting up Optimization
+
+Optimization is used to improve the performance and efficiency of workflows in Temporal. It provides a way to optimize resource usage, reduce latency, and minimize costs. Optimization can be configured with settings such as caching, batching, and parallelism. Optimization is created within namespaces and can be applied to workflows, task queues, and data. Optimization is a powerful feature of Temporal that allows you to build scalable and cost-effective systems. Optimization can be configured with settings such as caching, batching, and parallelism. Optimization is created within namespaces and can be applied to workflows, task queues, and data. Optimization is a powerful feature of Temporal that allows you to build scalable and cost-effective systems.
+
+### How to optimize in Temporal:
+
+1. Define optimization requirements: Identify the optimization requirements for your workflows, task queues, and data. This includes resource usage, latency, and costs.
+2. Configure optimization settings: Configure optimization settings such as caching, batching, and parallelism.
+3. Apply optimization policies: Apply optimization policies to workflows, task queues, and data to improve performance and efficiency.
+4. Monitor optimization: Monitor optimization tools, performance metrics, and bottlenecks to identify opportunities for optimization.
+5. Optimize resource allocation: Optimize resource allocation, scaling, and scheduling to improve performance and efficiency.
+6. Test optimization: Test optimization policies, caching, batching, and parallelism to ensure they are working as intended.
+7. Review optimization: Review optimization policies, performance metrics, and bottlenecks regularly to identify and address optimization opportunities.
+
+## Setting up Collaboration
+
+## Setting up Customization
+
+## Setting up Testing
+
+## Setting up Deployment
+
+## Setting up Versioning
+
+## Setting up Dependencies
+
+## Setting up State Management
+
+## Setting up Data Management
+
+## Setting up Concurrency
+
+## Setting up Task Scheduling
+
+## Setting up Task Execution
+
+## Setting up Task Completion
+
+## Setting up Task Failure
