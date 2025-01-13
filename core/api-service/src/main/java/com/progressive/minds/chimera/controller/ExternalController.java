@@ -7,14 +7,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class ExternalController {
 
-    private final ExternalService externalService;
+  private final ExternalService externalService;
 
-    public ExternalController(ExternalService externalService) {
-        this.externalService = externalService;
-    }
+  public ExternalController(ExternalService externalService) {
+    this.externalService = externalService;
+  }
 
-    @GetMapping("/fetch-data")
-    public String fetchData() {
-        return externalService.callExternalApi();
-    }
+  @GetMapping("/fetch-data")
+  public String fetchData() {
+    return externalService.callExternalApi();
+  }
 }

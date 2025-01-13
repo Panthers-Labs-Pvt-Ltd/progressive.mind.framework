@@ -5,4 +5,5 @@ package com.progressive.minds.chimera.entity;
  */
 @SuppressWarnings("squid:S1214")
 public interface DbEntity {
+
 }

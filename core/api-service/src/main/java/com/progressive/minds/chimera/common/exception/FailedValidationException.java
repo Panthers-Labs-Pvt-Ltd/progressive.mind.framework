@@ -11,23 +11,23 @@ import org.springframework.http.HttpStatus;
 @Getter
 public class FailedValidationException extends RuntimeException {
 
-    private final GenericResponse error;
-    private final HttpStatus status;
+  private final GenericResponse error;
+  private final HttpStatus status;
 
-    /**
-     * Constructor.
-     *
-     * @param exceptionMessage
-     * @param status
-     * @param error
-     */
-    public FailedValidationException(
-            final ExceptionMessage exceptionMessage,
-            final HttpStatus status,
-            final GenericResponse error) {
-        super(exceptionMessage.getDescription());
-        this.status = status;
-        this.error = error;
-    }
+  /**
+   * Constructor.
+   *
+   * @param exceptionMessage
+   * @param status
+   * @param error
+   */
+  public FailedValidationException(
+      final ExceptionMessage exceptionMessage,
+      final HttpStatus status,
+      final GenericResponse error) {
+    super(exceptionMessage.getDescription());
+    this.status = status;
+    this.error = error;
+  }
 
 }
