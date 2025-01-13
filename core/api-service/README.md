@@ -1,18 +1,22 @@
 # Pipeline API
 
 ## Base URL
+
 All the API endpoints described below are available at the base URL:
 
 http://localhost:8080/api/v1/pipelines
 
-
 ## Endpoints
 
 ### 1. POST /api/v1/pipelines
+
 #### Description
-This endpoint allows you to create a new pipeline by providing the necessary details in the request body.
+
+This endpoint allows you to create a new pipeline by providing the necessary details in the request
+body.
 
 #### Request Payload
+
 ```json
 {
   "id": 1010,

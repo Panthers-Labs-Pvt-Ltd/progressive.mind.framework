@@ -10,10 +10,10 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum ExceptionMessage {
-    ILLEGAL_ARGUMENT("Illegal Argument"),
-    REMOTE_SERVICE_ERROR("Remote service error"),
-    REMOTE_SERVICE_TIMEOUT_ERROR("Remote service timeout error"),
-    UNEXPECTED_ERROR("Unexpected error");
+  ILLEGAL_ARGUMENT("Illegal Argument"),
+  REMOTE_SERVICE_ERROR("Remote service error"),
+  REMOTE_SERVICE_TIMEOUT_ERROR("Remote service timeout error"),
+  UNEXPECTED_ERROR("Unexpected error");
 
-    String description;
+  String description;
 }

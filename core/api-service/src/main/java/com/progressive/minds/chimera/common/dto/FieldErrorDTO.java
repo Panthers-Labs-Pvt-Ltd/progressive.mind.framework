@@ -1,10 +1,9 @@
 package com.progressive.minds.chimera.common.dto;
 
+import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-
-import java.io.Serializable;
 
 /**
  * Description of an error caused by field validation
@@ -14,23 +13,23 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class FieldErrorDTO implements Serializable {
 
-    /**
-     * The Constant serialVersionUID.
-     */
-    private static final long serialVersionUID = -5767906253263497432L;
+  /**
+   * The Constant serialVersionUID.
+   */
+  private static final long serialVersionUID = -5767906253263497432L;
 
-    /**
-     * The field error code
-     */
-    private String code;
+  /**
+   * The field error code
+   */
+  private String code;
 
-    /**
-     * The name of the field with the error
-     */
-    private String field;
+  /**
+   * The name of the field with the error
+   */
+  private String field;
 
-    /**
-     * The field error message
-     */
-    private String message;
+  /**
+   * The field error message
+   */
+  private String message;
 }
