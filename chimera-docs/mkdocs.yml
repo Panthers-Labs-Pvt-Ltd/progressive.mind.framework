@@ -1,0 +1,96 @@
+site_name: Chimera Product Documentation
+repo_url: http://localhost:1234/chimera-docs
+repo_name: chimera-docs
+site_description: Documentation for Chimera, a new kind of software.
+site_author: Abhinav Kumar
+site_url: http://localhost:1234/chimera-docs
+site_favicon: https://abhinavkumar.com/favicon.ico
+site_logo: https://abhinavkumar.com/logo.png
+site_keywords: Chimera, software, documentation, product, help, support
+theme:
+  name: material
+  language: en
+  plugins:
+    - search
+    - blog
+  features:
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.path
+    - navigation.index
+    - navigation.instant
+    - navigation.instant.progress
+    - navigation.footer
+    - navigation.top
+    - toc.integrate
+    - search.suggest
+    - search.highlight
+    - search.share
+  palette:
+    # Palette toggle for automatic mode
+    - media: "(prefers-color-scheme)"
+      toggle:
+        icon: material/brightness-auto
+        name: Switch to light mode
+    # Palette toggle for light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    # Palette toggle for dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Switch to automatic mode
+copyright: Copyright &copy; 2024 - 2025 Abhinav Kumar
+extra:
+  social:
+    - icon: fontawesome/brands/gitlab
+      link: https://gitlab.com/abhinavkumar
+      name: Chimera on GitLab
+nav:
+  - Home:
+      - Introduction: home/index.md
+      - Key Concepts: home/Key_Concepts.md
+      - Architecture: home/Architecture.md
+      - Getting Started: home/Getting_Started.md
+  - API Service: API_Service.md
+  - Orchestration Service: Orchestration_Service.md
+  - Data Source Management: Data_Source_Management.md
+  - Data Value Chain:
+      - Data Ingestion: Data_Ingestion.md
+      - Data Processing: Data_Processing.md
+      - Data Storage: Data_Storage.md
+  - Data Governance:
+      - Data Governance: Data_Governance.md
+      - Observability: Observability.md
+      - Data Access and Analysis: Data_Access_and_Analysis.md
+      - Data Sharing and Distribution: Data_Sharing_and_Distribution.md
+      - Observability Management: Observability_Management.md
+  - Data Science and Machine Learning: Data_Science_and_Machine_Learning.md
+#  - Data Visualization: Data_Visualization.md
+#  - UI: UI.md
+#  - Use Cases and Case Studies:
+#      - Industry-specific Use Cases: Use_Cases.md
+#      - Success Stories and Testimonials: Case_Studies.md
+#  - Appendices:
+#      - Glossary of Terms: Glossary.md
+#      - FAQs: FAQs.md
+#      - Contact and Support Information: Contact_Support.md
+#  - Data Ops and AIOps:
+#      - Data Ops: chimera-docs/Data_Ops.md
+#      - AIOps: chimera-docs/AIOps.md
+#      - Integration of Data Ops and AIOps: chimera-docs/Integration_Data_Ops_AIOps.md
+#  - Continuous Improvement: Continuous_Improvement.md
+#  - Platform Management: Platform_Management.md
+markdown_extensions:
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+extra_css:
+  - css/custom.css
