@@ -19,42 +19,43 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    @Value("${security.userName}")
-    private String userName;
-    @Value("${security.password}")
-    private String password;
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/**").authenticated() // Paths for Basic Auth
-                )
-                // Disable CSRF for simplicity; enable it in production
-                .csrf(AbstractHttpConfigurer::disable)
+  @Value("${security.userName}")
+  private String userName;
+  @Value("${security.password}")
+  private String password;
 
-            // Configure authorization rules
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/v1/pipelines").hasRole("USER")
-                .requestMatchers("/admin/**").hasRole("ADMIN")
-                .anyRequest().authenticated()
-            )
+  @Bean
+  public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    http
+        .authorizeHttpRequests(auth -> auth
+            .requestMatchers("/api/**").authenticated() // Paths for Basic Auth
+        )
+        // Disable CSRF for simplicity; enable it in production
+        .csrf(AbstractHttpConfigurer::disable)
 
-            // Configure OAuth2 Resource Server to use JWT
-            .oauth2ResourceServer(oauth2 -> oauth2
-                .jwt(Customizer.withDefaults())
-            );
+        // Configure authorization rules
+        .authorizeHttpRequests(auth -> auth
+            .requestMatchers("/api/v1/pipelines").hasRole("USER")
+            .requestMatchers("/admin/**").hasRole("ADMIN")
+            .anyRequest().authenticated()
+        )
 
-        return http.build();
-    }
+        // Configure OAuth2 Resource Server to use JWT
+        .oauth2ResourceServer(oauth2 -> oauth2
+            .jwt(Customizer.withDefaults())
+        );
 
-    @Bean
-    public UserDetailsService userDetailsService() {
-        UserDetails admin = User.builder()
-                .username(userName)
-                .password(password)
-                .roles("ADMIN")
-                .build();
+    return http.build();
+  }
 
-        return new InMemoryUserDetailsManager(admin);
-    }
+  @Bean
+  public UserDetailsService userDetailsService() {
+    UserDetails admin = User.builder()
+        .username(userName)
+        .password(password)
+        .roles("ADMIN")
+        .build();
+
+    return new InMemoryUserDetailsManager(admin);
+  }
 }
