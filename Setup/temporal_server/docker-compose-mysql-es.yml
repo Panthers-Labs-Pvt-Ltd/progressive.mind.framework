@@ -13,33 +13,31 @@ services:
     image: elasticsearch:${ELASTICSEARCH_VERSION}
     networks:
       - temporal-network
-    expose:
-      - 9200
+    ports:
+      - 9200:9200
     volumes:
       - /var/lib/elasticsearch/data
-  postgresql:
-    container_name: temporal-postgresql
+  mysql:
+    container_name: temporal-mysql
     environment:
-      POSTGRES_PASSWORD: temporal
-      POSTGRES_USER: temporal
-    image: postgres:${POSTGRESQL_VERSION}
+      - MYSQL_ROOT_PASSWORD=root
+    image: mysql:${MYSQL_VERSION}
     networks:
       - temporal-network
-    expose:
-      - 5432
+    ports:
+      - 3306:3306
     volumes:
-      - /var/lib/postgresql/data
+      - /var/lib/mysql
   temporal:
     container_name: temporal
     depends_on:
-      - postgresql
+      - mysql
       - elasticsearch
     environment:
-      - DB=postgres12
-      - DB_PORT=5432
-      - POSTGRES_USER=temporal
-      - POSTGRES_PWD=temporal
-      - POSTGRES_SEEDS=postgresql
+      - DB=mysql8
+      - MYSQL_USER=root
+      - MYSQL_PWD=root
+      - MYSQL_SEEDS=mysql
       - DYNAMIC_CONFIG_FILE_PATH=config/dynamicconfig/development-sql.yaml
       - ENABLE_ES=true
       - ES_SEEDS=elasticsearch

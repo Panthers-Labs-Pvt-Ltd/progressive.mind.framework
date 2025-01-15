@@ -1,5 +1,14 @@
 version: "3.5"
 services:
+  cassandra:
+    container_name: temporal-cassandra
+    image: cassandra:${CASSANDRA_VERSION}
+    networks:
+      - temporal-network
+    ports:
+      - 9042:9042
+    volumes:
+      - /var/lib/cassandra
   elasticsearch:
     container_name: temporal-elasticsearch
     environment:
@@ -13,34 +22,18 @@ services:
     image: elasticsearch:${ELASTICSEARCH_VERSION}
     networks:
       - temporal-network
-    expose:
-      - 9200
+    ports:
+      - 9200:9200
     volumes:
       - /var/lib/elasticsearch/data
-  postgresql:
-    container_name: temporal-postgresql
-    environment:
-      POSTGRES_PASSWORD: temporal
-      POSTGRES_USER: temporal
-    image: postgres:${POSTGRESQL_VERSION}
-    networks:
-      - temporal-network
-    expose:
-      - 5432
-    volumes:
-      - /var/lib/postgresql/data
   temporal:
     container_name: temporal
     depends_on:
-      - postgresql
+      - cassandra
       - elasticsearch
     environment:
-      - DB=postgres12
-      - DB_PORT=5432
-      - POSTGRES_USER=temporal
-      - POSTGRES_PWD=temporal
-      - POSTGRES_SEEDS=postgresql
-      - DYNAMIC_CONFIG_FILE_PATH=config/dynamicconfig/development-sql.yaml
+      - CASSANDRA_SEEDS=cassandra
+      - DYNAMIC_CONFIG_FILE_PATH=config/dynamicconfig/development-cass.yaml
       - ENABLE_ES=true
       - ES_SEEDS=elasticsearch
       - ES_VERSION=v7
