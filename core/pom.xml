@@ -24,6 +24,6 @@
         <module>decision-engine</module>
         <module>apacheComet</module>
         <module>api-service</module>
-        <module>data-contract</module>
+        <module>datahub-utils</module>
     </modules>
 </project>
