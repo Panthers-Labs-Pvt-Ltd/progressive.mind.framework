@@ -1,0 +1,5 @@
+transport:
+  type: gcs
+  bucketName: my-gcs-bucket
+  fileNamePrefix: /file/name/prefix/
+  credentialsFile: path/to/credentials.json
