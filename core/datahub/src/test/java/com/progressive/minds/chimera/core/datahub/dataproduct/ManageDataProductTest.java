@@ -1,4 +1,4 @@
-package com.progressive.minds.chimera.core.datahubutils.dataproduct;
+package com.progressive.minds.chimera.core.datahub.dataproduct;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.jupiter.api.Test;
