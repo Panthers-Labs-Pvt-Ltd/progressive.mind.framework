@@ -1,8 +1,8 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: observability
-  namespace: monitoring
+  name: prometheus
+  namespace: observability
   labels:
     app: prometheus
 spec:
