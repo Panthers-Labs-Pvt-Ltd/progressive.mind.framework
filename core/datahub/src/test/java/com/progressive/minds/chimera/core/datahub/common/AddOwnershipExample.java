@@ -23,6 +23,7 @@ public class AddOwnershipExample {
         Map<String, String> ownersInfo = new HashMap<>();
         ownersInfo.put("manish.kumar.gupta@outlook.com", "Data Creator");
         ownersInfo.put("onlineanuja@gmail.com", "Data owner");
+        ownersInfo.put("Abhinav Kumar", "Data owner");
 
         OwnerArray ownerArray = new OwnerArray();
 
