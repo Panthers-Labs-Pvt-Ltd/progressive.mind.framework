@@ -1,0 +1,24 @@
+datasources:
+    my_datasource:
+        class_name: Datastore
+        module_name: great_expectations.datasource
+        data_asset_type:
+            class_name: Dataset
+            module_name: great_expectations.dataset
+        batch_kwargs_generators:
+            default:
+                class_name: QueryBatchKwargsGenerator
+                module_name: great_expectations.datasource.batch_kwargs_generator
+                query:
+                    index: 1
+                    query: "SELECT * FROM my_table"
+        credentials:
+            drivername: postgresql
+            username: my_username
+            password: my_password
+            host: my_host
+            port: my_port
+            database: my_database
+        introspection:
+            whole_table:
+                data_asset_name_suffix: "__whole_table"

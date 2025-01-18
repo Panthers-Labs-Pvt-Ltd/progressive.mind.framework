@@ -41,3 +41,6 @@ for DIR in "${DIRECTORIES[@]}"; do
 done
 
 echo "Deployment complete. Resources are being created in the '$NAMESPACE' namespace."
+
+kubectl get service -n "observability" -l app=$DIR -o jsonpath='{.items[0].metadata.name}'
+kubectl get service $SERVICE_NAME -n "observability" -o jsonpath='{.spec.clusterIP}' 2>/dev/null || echo "No ClusterIP assigned"
