@@ -20,6 +20,6 @@ public class ManageGlobalTags {
         GlobalTags globalTags = new GlobalTags().setTags(tagAssociationArray);
         MetadataChangeProposal proposal = createProposal(String.valueOf(entityUrn), entityType,
                 "globalTags", changeType,globalTags);
-        return emitProposal(proposal, "ownership");
+        return emitProposal(proposal, "globalTags");
     }
 }
