@@ -14,7 +14,7 @@ import com.linkedin.common.urn.CorpuserUrn;
 
 import java.time.Instant;
 
-import static com.progressive.minds.chimera.core.datahubutils.common.genericUtils.emitProposal;
+import static com.progressive.minds.chimera.core.datahub.common.genericUtils.emitProposal;
 
 
 public class CreateDomain {

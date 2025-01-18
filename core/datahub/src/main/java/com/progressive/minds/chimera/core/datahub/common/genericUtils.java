@@ -5,6 +5,9 @@ import com.linkedin.data.template.RecordTemplate;
 import com.linkedin.events.metadata.ChangeType;
 import com.linkedin.mxe.GenericAspect;
 import com.linkedin.mxe.MetadataChangeProposal;
+import com.progressive.minds.chimera.core.datahub.domain.ManageDomain;
+import com.progressive.minds.chimera.foundational.logging.ChimeraLogger;
+import com.progressive.minds.chimera.foundational.logging.ChimeraLoggerFactory;
 import datahub.client.Emitter;
 import datahub.client.MetadataWriteResponse;
 import datahub.client.rest.RestEmitter;
@@ -18,6 +21,7 @@ import java.util.concurrent.Future;
 public class genericUtils {
 static String DATAHUB_URL = "http://localhost:8080";
 static String DATAHUB_AUTH_TOKEN = "";
+    private static final ChimeraLogger DatahubLogger = ChimeraLoggerFactory.getLogger(ManageDomain.class);
 
     // Method to create MetadataChangeProposal for DataProduct
     public static MetadataChangeProposal createProposal(String entityUrn, String entityType,
@@ -25,6 +29,7 @@ static String DATAHUB_AUTH_TOKEN = "";
                                                                    RecordTemplate aspect)
     {
         try {
+            System.out.println("Aspect :"+ aspect);
            GenericAspect genericAspect = serializeAspect(aspect);
 
             // Create MetadataChangeProposal
@@ -43,13 +48,17 @@ static String DATAHUB_AUTH_TOKEN = "";
     }
 
     public static GenericAspect serializeAspect(RecordTemplate aspect) throws Exception {
+        DatahubLogger.logInfo("serializeAspect  " + aspect);
+
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonString = objectMapper.writeValueAsString(aspect.data());
+        System.out.println(jsonString);
         ByteString byteString = ByteString.copyAvroString(jsonString, true);  // Serialize to ByteString
 
         GenericAspect genericAspect = new GenericAspect();
         genericAspect.setValue(byteString);  // Set the serialized aspect
-        genericAspect.setContentType("application/json");  // Content type
+         genericAspect.setContentType("application/json");  // Content type
+        DatahubLogger.logInfo("serializeAspect  " + aspect);
         return genericAspect;
     }
     public static String replaceSpecialCharsAndLowercase(String input) {
@@ -71,7 +80,8 @@ static String DATAHUB_AUTH_TOKEN = "";
                 .server(DATAHUB_URL) // Replace with your DataHub server URL
                 .token(DATAHUB_AUTH_TOKEN)        // Replace with your token if required
         );
-
+        Future<MetadataWriteResponse> response1 = emitter.emit(mcpw,null);
+        System.out.println(response1.toString());
         Future<MetadataWriteResponse> response = emitter.emit(mcpw, new Callback() {
             @Override
             public void onCompletion(MetadataWriteResponse response) {
@@ -100,19 +110,24 @@ static String DATAHUB_AUTH_TOKEN = "";
                 .server(DATAHUB_URL) // Replace with your DataHub server URL
                 .token(DATAHUB_AUTH_TOKEN)        // Replace with your token if required
         );
+        DatahubLogger.logInfo("Emit MetadataChangeProposal For  " + Type + " With Value " + proposal);
 
         Future<MetadataWriteResponse> response = emitter.emit(proposal, null);
         String returnCode = response.get().getResponseContent();
+        DatahubLogger.logInfo("Emit MetadataChangeProposal returnCode  " + returnCode);
         String returnValue;
         if (returnCode.contains("success"))
         {
             returnValue=  proposal.getEntityUrn().toString();
-        System.out.println(Type + " created successfully!");
+            DatahubLogger.logInfo("Emit MetadataChangeProposal created  " + returnCode);
+            System.out.println(Type + " created successfully!");
         }
         else
         {
             System.out.println(returnCode);
             returnValue = returnCode;
+            DatahubLogger.logInfo("Emit MetadataChangeProposal Failed  " + returnCode);
+
         }
         return returnValue;
     }

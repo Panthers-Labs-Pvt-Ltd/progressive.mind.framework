@@ -43,9 +43,9 @@
         <dependency>
             <groupId>io.acryl</groupId>
             <artifactId>datahub-client-java8</artifactId>
-            <version>0.15.0-1rc14</version>
+            <!--<version>0.15.0-1rc14</version>-->
+            <version>0.15.0</version>
         </dependency>
-
         <dependency>
             <groupId>com.progressive.minds.chimera</groupId>
             <artifactId>common.tags</artifactId>
@@ -71,6 +71,12 @@
             <groupId>com.progressive.minds.chimera</groupId>
             <artifactId>foundational.exception</artifactId>
             <version>${chimera.project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.openlineage</groupId>
+            <artifactId>openlineage-flink</artifactId>
+            <version>1.25.0</version>
+            <scope>test</scope>
         </dependency>
         <!--    <dependency>
                        <groupId>com.linkedin.pegasus</groupId>

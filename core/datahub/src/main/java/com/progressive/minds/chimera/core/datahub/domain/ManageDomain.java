@@ -12,7 +12,6 @@ import com.linkedin.domain.DomainProperties;
 import com.linkedin.events.metadata.ChangeType;
 import com.linkedin.mxe.GenericAspect;
 import com.linkedin.mxe.MetadataChangeProposal;
-import com.progressive.minds.chimera.core.datahubutils.DataHubUtils;
 import com.progressive.minds.chimera.foundational.logging.ChimeraLogger;
 import com.progressive.minds.chimera.foundational.logging.ChimeraLoggerFactory;
 
@@ -24,12 +23,11 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import static com.linkedin.events.metadata.ChangeType.UPSERT;
+import static com.progressive.minds.chimera.core.datahub.DataHubUtils.SYSTEM_USER;
 import static com.progressive.minds.chimera.core.datahub.common.genericUtils.emitProposal;
 import static com.progressive.minds.chimera.core.datahub.common.genericUtils.replaceSpecialCharsAndLowercase;
-import static com.progressive.minds.chimera.core.datahubutils.common.genericUtils.emitProposal;
-import static com.progressive.minds.chimera.core.datahubutils.common.genericUtils.replaceSpecialCharsAndLowercase;
 
-public class ManageDomain implements DataHubUtils {
+public class ManageDomain  {
     private static final ChimeraLogger DatahubLogger = ChimeraLoggerFactory.getLogger(ManageDomain.class);
 
     String LoggerTag = "[DataHub- Manage Domain] -";

@@ -18,7 +18,7 @@ void createDataProductTest() throws JsonProcessingException {
     map.put("Prop3", "Value3");
 
     ManageDataProduct MDP = new ManageDataProduct();
-    String retval = MDP.createDataProduct("d0481baa-2896-4456-851d-2d437421c8c4","Manish Data Product 9",
+    String retval = MDP.createDataProduct("d0481baa-2896-4456-851d-2d437421c8c4","Manish Data Product 11",
             "sdfddfffffffffffffffffff", map);
     System.out.println("Product Created With URN " + retval);
 }
