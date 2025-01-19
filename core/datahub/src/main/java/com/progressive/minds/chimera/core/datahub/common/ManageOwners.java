@@ -39,10 +39,10 @@ public class ManageOwners {
         OwnerArray ownerArray = new OwnerArray();
         DatahubLogger.logInfo("Adding Owners.......");
         // Iterate over the domainOwners map and create Owner objects
-        ownersInfo.forEach((ownerName, ownershipType) -> {
+  /*         ownersInfo.forEach((ownerName, ownershipType) -> {
             DatahubLogger.logInfo("Adding Owners......." + ownerName + " and " + ownershipType);
             Owner owner;
-            try {
+         try {
                 owner = new Owner()
                         .setOwner(new CorpuserUrn(ownerName))
                         .setSource(new OwnershipSource().setType(MANUAL))
@@ -52,8 +52,21 @@ public class ManageOwners {
                 throw new RuntimeException(e);
             }
             ownerArray.add(owner);
-        });
+        });*/
 
+            ownersInfo.forEach((ownerName, ownershipType) -> {
+                Owner owner;
+                try {
+                    owner = new Owner()
+                            .setOwner(new CorpuserUrn(ownerName))
+                            .setSource(new OwnershipSource().setType(MANUAL))
+                            .setTypeUrn(Urn.createFromString("urn:li:ownershipType:__system__business_owner")).setType(OwnershipType.CUSTOM)
+                    ;
+                } catch (URISyntaxException e) {
+                    throw new RuntimeException(e);
+                }
+                ownerArray.add(owner);
+            });
         AuditStamp createdStamp = new AuditStamp()
                 .setActor(new CorpuserUrn(SYSTEM_USER))
                 .setTime(Instant.now().toEpochMilli());

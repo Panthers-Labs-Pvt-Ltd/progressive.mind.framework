@@ -72,11 +72,11 @@ public class DataProducts {
                     .setDescription(dataProductDescription);
             DatahubLogger.logInfo(LoggerTag + "Setting Data Product Properties...");
 
-            if (!externalURL.isEmpty()) {
+            if (externalURL != null && !externalURL.isEmpty()) {
                 DatahubLogger.logInfo(LoggerTag + "Setting External URL With Data Product...");
                 dataProductProperties.setExternalUrl(new Url(externalURL), REMOVE_IF_NULL);
             }
-            if (!customProperties.isEmpty()) {
+            if (customProperties != null && !customProperties.isEmpty()) {
                 DatahubLogger.logInfo(LoggerTag + "Setting User Defined Custom Properties With Data Product...");
                 StringMap MapCustomProperties = new StringMap();
                 MapCustomProperties.putAll(customProperties);
@@ -88,7 +88,7 @@ public class DataProducts {
                     .setActor(new CorpuserUrn("data_creator"))
                     .setTime(Instant.now().toEpochMilli());    // Current timestamp in milliseconds
 
-            if (!DataAssets.isEmpty()) {
+            if (DataAssets != null && !DataAssets.isEmpty()) {
                 DatahubLogger.logInfo(LoggerTag + "Mapping Assets With Data Product...");
                 DataProductAssociationArray dataProductAssociationArray = new DataProductAssociationArray();
                 for (Map.Entry<String, Pair<String, String>> entry : DataAssets.entrySet()) {
@@ -123,17 +123,18 @@ public class DataProducts {
             DatahubLogger.logInfo(LoggerTag + "Preparing for MetadataChangeProposal : " + proposal);
 
             retVal = emitProposal(proposal, "dataProduct");
+
             if (retVal.equalsIgnoreCase(dataProductUrn.toString())) {
                 DatahubLogger.logInfo(LoggerTag + String.format("Data Product %s Created on Datahub With URN %s",
                         dataProductName, retVal));
 
-                if (!Owners.isEmpty()) {
+                if (Owners != null && !Owners.isEmpty()) {
                     DatahubLogger.logInfo(LoggerTag + "Mapping Owners Information's with Data Product");
                     ManageOwners.addOwners(dataProductUrn, "dataProduct", "ownership", "UPSERT",
                             Owners);
                 }
 
-                if (!domainName.isEmpty()) {
+                if (domainName != null && !domainName.isEmpty()) {
                     DatahubLogger.logInfo(LoggerTag + "Mapping Data Product With Domain " + domainName);
                     String domainUrnString = "urn:li:domain:" + domainName;
 
@@ -141,13 +142,13 @@ public class DataProducts {
                     DomainUrn.add(Urn.createFromString(domainUrnString));
                     Domains domains = new Domains().setDomains(DomainUrn);
 
-                    MetadataChangeProposal domainProposal = createProposal(dataProductUrn.toString(),
+                    MetadataChangeProposal domainProposal = createProposal(retVal,
                             "dataProduct", "domains", "UPSERT", domains);
                     String retval = emitProposal(domainProposal, "domains");
                     DatahubLogger.logInfo(LoggerTag + "Mapping Data Product With Domain Completed With " + retval);
                 }
 
-                if (ArrayUtils.isNotEmpty(globalTags)) {
+                if (globalTags != null &&  ArrayUtils.isNotEmpty(globalTags)) {
                     DatahubLogger.logInfo(LoggerTag + "Mapping Global Tags With Data Product");
                     String retval = ManageGlobalTags.addTags(Urn.createFromString(dataProductUrn.toString()),
                             "dataProduct", "UPSERT", globalTags);
@@ -156,7 +157,7 @@ public class DataProducts {
                     DatahubLogger.logInfo("GlobalTags array is null or empty.");
                 }
 
-                if (ArrayUtils.isNotEmpty(glossaryTerms)) {
+                if (glossaryTerms != null &&  ArrayUtils.isNotEmpty(glossaryTerms)) {
                     GlossaryTermAssociationArray glossaryTermAssociationArray = new GlossaryTermAssociationArray();
 
                     DatahubLogger.logInfo(LoggerTag + "Mapping Glossary Terms Tags Data Product");
