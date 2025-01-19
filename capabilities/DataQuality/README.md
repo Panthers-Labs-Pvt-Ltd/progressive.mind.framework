@@ -24,68 +24,31 @@ Please see [Data Consistency](Data_Consistency.md) for more information.
 
 ### Timeliness
 
-Timeliness measures how up-to-date data is and how quickly it is available for analysis. Timely data is available when needed and is not outdated.
+Please see [Data Timeliness](Data_Timeliness.md) for more information.
 
 ### Conformity
 
-Conformity measures how well data conforms to the rules, standards, and constraints of its data model or schema. Conforming data is accurate, complete, and consistent with its data model.
+Please see [Data Conformity](Data_Conformity.md) for more information.
 
 ### Integrity
 
-Integrity measures how well data is protected from unauthorized access, modification, or corruption. Secure data is protected from security threats, breaches, and attacks.
+Please see [Data Integrity](Data_Integrity.md) for more information.
 
 ### Validity
 
-Validity measures how well data conforms to the rules, standards, and constraints of its data model or schema. Valid data is accurate, complete, and consistent with its data model.
+Please see [Data Validity](Data_Validity.md) for more information.
 
 ### Relevance
 
-Relevance measures how well data meets the needs of its users and stakeholders. Relevant data is useful, meaningful, and valuable for decision-making and analysis.
+Please see [Data Relevance](Data_Relevance.md) for more information.
 
 ### Usability
 
-Usability measures how easy it is to access, understand, and use data. Usable data is accessible, user-friendly, and well-documented.
+Please see [Data Usability](Data_Usability.md) for more information.
 
 ### Trustworthiness
 
-Trustworthiness measures how reliable, credible, and trustworthy data is. Trustworthy data is accurate, complete, consistent, and secure.
-
-## Data Quality Metrics
-
-
-
-## Measuring Consistency
-
-Consistency can be measured by comparing data across different sources, systems, or time periods. Consistency can be measured using metrics such as discrepancy rate, conflict rate, and consistency score.
-
-## Measuring Timeliness
-
-Timeliness can be measured by assessing how quickly data is available for analysis or how up-to-date data is. Timeliness can be measured using metrics such as latency, freshness, and timeliness score.
-
-## Measuring Conformity
-
-Conformity can be measured by comparing data to the rules, standards, and constraints of its data model or schema. Conformity can be measured using metrics such as compliance rate, conformity rate, and conformity score.
-
-## Measuring Integrity
-
-Integrity can be measured by assessing how well data is protected from unauthorized access, modification, or corruption. Integrity can be measured using metrics such as security score, integrity score, and trust score.
-
-## Measuring Validity
-
-Validity can be measured by comparing data to the rules, standards, and constraints of its data model or schema. Validity can be measured using metrics such as validation rate, validity rate, and validity score.
-
-## Measuring Relevance
-
-Relevance can be measured by assessing how well data meets the needs of its users and stakeholders. Relevance can be measured using metrics such as relevance score, usefulness score, and value score.
-
-## Measuring Usability
-
-Usability can be measured by assessing how easy it is to access, understand, and use data. Usability can be measured using metrics such as accessibility score, user-friendliness score, and documentation score.
-
-## Measuring Trustworthiness
-
-Trustworthiness can be measured by assessing how reliable, credible, and trustworthy data is. Trustworthiness can be measured using metrics such as trust score, credibility score, and reliability score.
-
+Please see [Data Trustworthiness](Data_Trustworthiness.md) for more information.
 
 ## Data Quality Tools
 
@@ -217,15 +180,15 @@ Data quality tools include:
 
 ```mermaid
 graph TD;
-    Z[Batched Incremental] --> A[Data Quality Assessment]; 
-    A[Data Quality Assessment] --> B[Data Quality Profiling]; 
-    B --> C[Data Quality Validation]; 
+    Z[Batched Incremental] --> A[Data Quality Assessment];
+    A[Data Quality Assessment] --> B[Data Quality Profiling];
+    B --> C[Data Quality Validation];
     C --pass--> E[Data Quality Trend Analysis]; 
     C --fail--> D[Data Observability UI - Data Quality Register]; 
-    D --> F[Triage]; 
-    F --> G[Investigate]; 
-    G --> H[Resolve]; 
-    H --> I[Prevent]; 
+    D --> F[Triage];
+    F --> G[Investigate];
+    G --> H[Resolve];
+    H --> I[Prevent];
     H --> E;
   subgraph failed
       D

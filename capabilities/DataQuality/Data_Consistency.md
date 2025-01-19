@@ -1,6 +1,6 @@
 # Data Consistency
 
-Consistency measures how well data is consistent across different sources, systems, and time periods. Consistent data is free from contradictions, discrepancies, and conflicts.
+Consistency measures how well data is consistent across different sources, systems, and time periods. Consistent data is free from contradictions, discrepancies, and conflicts. Consistency can be measured using metrics such as discrepancy rate, conflict rate, and consistency score.
 
 ## Use cases
 
