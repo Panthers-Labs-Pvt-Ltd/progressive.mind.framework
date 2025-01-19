@@ -24,11 +24,11 @@ void createDataProductTest()   {
 
     @Test
     void createDataProductTestWithAll()   {
-        String  dataProductName = "Chimera Data Product 4";
+        String  dataProductName = "Chimera Test DP 5";
         String  dataProductDescription = "My First Data Product Creation Test With All Optional Information's";
         String  domainName = "Testing";
         String externalURL = "http://datahub.com";
-        String[]globalTags = {"Confidential", "Verified","PII"};
+        String[]globalTags = {"No Confidential", "Unverified","Test"};
         String[]glossaryTerms = {"Balance", "Current Balance","Total Amount in Account"};
 
         Map<String, Pair<String, String>> DataAssets = new HashMap<>();
@@ -38,6 +38,7 @@ void createDataProductTest()   {
 
         Map<String, String> Owners = new HashMap<>();
         Owners.put("manish.kumar.gupta@outlook.com", "Data Creator");
+        Owners.put("Prashant Kumar", "Data owner");
         Owners.put("Abhinav Kumar", "Data owner");
 
         Map<String, String> customProperties = new HashMap<>();
@@ -45,11 +46,11 @@ void createDataProductTest()   {
         customProperties.put("Property2", "Value2");
 
         DataProducts dataProducts = new DataProducts();
-        /*String retVal = dataProducts.createDataProduct(dataProductName, dataProductDescription, null, null,
-                null,null,null,null,null );*/
-
-       String retVal = dataProducts.createDataProduct(dataProductName, dataProductDescription, externalURL, domainName,
+        String retVal = dataProducts.createDataProduct(dataProductName, dataProductDescription, externalURL, domainName,
                 globalTags,glossaryTerms,DataAssets,Owners,customProperties );
+
+     /*  String retVal = dataProducts.createDataProduct(dataProductName, dataProductDescription, externalURL, domainName,
+                globalTags,glossaryTerms,DataAssets,Owners,customProperties );*/
        System.out.println("Data Product Created With URN " + retVal);
     }
 }

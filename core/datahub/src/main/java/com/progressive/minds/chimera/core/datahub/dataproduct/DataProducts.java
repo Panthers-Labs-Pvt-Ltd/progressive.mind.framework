@@ -57,12 +57,12 @@ public class DataProducts {
                                     @Null Map<String, String> Owners,
                                     @Null Map<String, String> customProperties) {
         String retVal;
+        System.setProperty("CHIMERA_EXE_ENV", "datahub");
         try {
             DatahubLogger.logInfo(LoggerTag + "Creating Data Product " + dataProductName);
 
             Urn dataProductUrn = Urn.createFromString("urn:li:dataProduct:" + replaceSpecialCharsAndLowercase(dataProductName));
 
-            // Create the DataProductKey
             DataProductKey dataProductKey = new DataProductKey().
                     setId(replaceSpecialCharsAndLowercase(dataProductName));
             DatahubLogger.logInfo(LoggerTag + "Adding Data Product With Key " + dataProductKey);
@@ -76,6 +76,7 @@ public class DataProducts {
                 DatahubLogger.logInfo(LoggerTag + "Setting External URL With Data Product...");
                 dataProductProperties.setExternalUrl(new Url(externalURL), REMOVE_IF_NULL);
             }
+
             if (customProperties != null && !customProperties.isEmpty()) {
                 DatahubLogger.logInfo(LoggerTag + "Setting User Defined Custom Properties With Data Product...");
                 StringMap MapCustomProperties = new StringMap();

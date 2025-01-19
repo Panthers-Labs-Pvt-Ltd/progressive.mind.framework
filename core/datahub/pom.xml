@@ -85,9 +85,10 @@
         </dependency>
         <dependency>
             <groupId>com.progressive.minds.chimera</groupId>
-            <artifactId>core.dataSource</artifactId>
+            <artifactId>core.databaseOps</artifactId>
             <version>${chimera.project.version}</version>
         </dependency>
+
         <dependency>
             <groupId>com.progressive.minds.chimera</groupId>
             <artifactId>foundational.exception</artifactId>
@@ -100,10 +101,27 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.30</version> <!-- Replace with the appropriate version -->
+        </dependency>
+
+        <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>3.17.0</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.acryl</groupId>
+            <artifactId>datahub-client-java8</artifactId>
+            <version>0.15.0-1rc14</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+            <version>6.2.1</version>
+            <scope>compile</scope>
         </dependency>
         <!--    <dependency>
                        <groupId>com.linkedin.pegasus</groupId>
