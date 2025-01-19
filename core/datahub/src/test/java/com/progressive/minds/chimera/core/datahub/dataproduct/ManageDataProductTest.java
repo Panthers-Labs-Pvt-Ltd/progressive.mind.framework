@@ -7,21 +7,6 @@ import java.util.Map;
 
 
 class ManageDataProductTest {
-@Test
-void createDataProductTest()   {
-    Map<String, String> map = new HashMap<>();
-
-    // Add key-value pairs to the map
-    map.put("Prop1", "Value1");
-    map.put("Prop2", "Value2");
-    map.put("Prop3", "Value3");
-
-    ManageDataProduct MDP = new ManageDataProduct();
-    String retval = MDP.createDataProduct("d0481baa-2896-4456-851d-2d437421c8c4","Manish Data Product 12",
-            "sdfddfffffffffffffffffff", map);
-    System.out.println("Product Created With URN " + retval);
-}
-
     @Test
     void createDataProductTestWithAll()   {
         String  dataProductName = "Chimera Test DP 5";
@@ -45,7 +30,7 @@ void createDataProductTest()   {
         customProperties.put("Property1", "Value1");
         customProperties.put("Property2", "Value2");
 
-        DataProducts dataProducts = new DataProducts();
+        ManageDataProduct dataProducts = new ManageDataProduct();
         String retVal = dataProducts.createDataProduct(dataProductName, dataProductDescription, externalURL, domainName,
                 globalTags,glossaryTerms,DataAssets,Owners,customProperties );
 

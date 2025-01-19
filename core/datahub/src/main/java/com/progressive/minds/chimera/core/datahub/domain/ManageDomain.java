@@ -15,20 +15,32 @@ import com.linkedin.mxe.MetadataChangeProposal;
 import com.progressive.minds.chimera.foundational.logging.ChimeraLogger;
 import com.progressive.minds.chimera.foundational.logging.ChimeraLoggerFactory;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import static com.linkedin.events.metadata.ChangeType.UPSERT;
 import static com.progressive.minds.chimera.core.datahub.DataHubUtils.SYSTEM_USER;
-import static com.progressive.minds.chimera.core.datahub.common.genericUtils.emitProposal;
-import static com.progressive.minds.chimera.core.datahub.common.genericUtils.replaceSpecialCharsAndLowercase;
+import static com.progressive.minds.chimera.core.datahub.common.genericUtils.*;
 
 public class ManageDomain  {
     private static final ChimeraLogger DatahubLogger = ChimeraLoggerFactory.getLogger(ManageDomain.class);
+
+    public record DomainRecords(
+            @NotNull String name,
+            @NotNull String documentation,
+            @Null String parentDomain,
+            @Null Map<String, String> domainOwners,
+            @Null String[] assets,
+            @Null Map<String, String> customProperties,
+            @Null List<DomainRecords> domainHierarchy) {
+    }
 
     String LoggerTag = "[DataHub- Manage Domain] -";
 
@@ -73,6 +85,60 @@ public class ManageDomain  {
 
         } catch (URISyntaxException | JsonProcessingException | ExecutionException | InterruptedException e) {
             throw new RuntimeException("Failed to create domain: " + domainName, e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+
+    public String createDomains(DomainRecords domainRecords) {
+        try {
+
+            AuditStamp createdStamp = new AuditStamp()
+                    .setActor(new CorpuserUrn(SYSTEM_USER))
+                    .setTime(Instant.now().toEpochMilli());
+
+            Urn domainUrn = Urn.createFromString("urn:li:domain:" +
+                    replaceSpecialCharsAndLowercase(domainRecords.name));
+
+            DomainProperties domainProperties = new DomainProperties()
+                    .setName(domainRecords.name)
+                    .setCreated(createdStamp)
+                    .setDescription(domainRecords.documentation);
+
+             if (domainRecords.customProperties != null && !domainRecords.customProperties.isEmpty())
+             {
+                 StringMap MapCustomProperties = new StringMap();
+                 MapCustomProperties.putAll(domainRecords.customProperties);
+                 domainProperties.setCustomProperties(MapCustomProperties);
+             }
+
+            if (domainRecords.parentDomain != null && !domainRecords.parentDomain.isEmpty())
+            {
+                Urn parentDomainUrn = Urn.createFromString("urn:li:domain:" +
+                        replaceSpecialCharsAndLowercase(domainRecords.name));
+                        domainProperties.setParentDomain(parentDomainUrn);
+            }
+
+
+                MetadataChangeProposal proposal = createProposal(String.valueOf(domainUrn), "domain",
+                    "domainProperties", "UPSERT", domainProperties);
+
+            DatahubLogger.logInfo(LoggerTag + "Preparing for MetadataChangeProposal : " + proposal);
+
+            String retVal = emitProposal(proposal, "domain");
+
+            if (domainRecords.domainHierarchy != null && !domainRecords.domainHierarchy.isEmpty())
+            {
+                for (DomainRecords subdomain : domainRecords.domainHierarchy) {
+                    createDomains(subdomain);
+                }
+            }
+
+                return retVal;
+            } catch (URISyntaxException | JsonProcessingException | ExecutionException | InterruptedException e) {
+            throw new RuntimeException("Failed to create domain: ", e);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

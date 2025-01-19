@@ -1,117 +1,193 @@
 package com.progressive.minds.chimera.core.datahub.dataproduct;
 
-import com.progressive.minds.chimera.core.datahub.common.*;
-import com.linkedin.common.AuditStamp;
-import com.linkedin.common.DatasetUrn;
+import com.linkedin.common.*;
 import com.linkedin.common.url.Url;
 import com.linkedin.common.urn.CorpuserUrn;
+import com.linkedin.common.urn.GlossaryTermUrn;
 import com.linkedin.common.urn.Urn;
-import com.linkedin.data.DataMap;
 import com.linkedin.data.template.StringMap;
 import com.linkedin.dataproduct.DataProductAssociation;
 import com.linkedin.dataproduct.DataProductAssociationArray;
-import com.linkedin.mxe.GenericAspect;
-import com.linkedin.mxe.MetadataChangeProposal;
-import com.progressive.minds.chimera.core.datahub.SharedLogger;
 import com.linkedin.dataproduct.DataProductKey;
 import com.linkedin.dataproduct.DataProductProperties;
+import com.linkedin.domain.Domains;
+import com.linkedin.mxe.MetadataChangeProposal;
+import com.progressive.minds.chimera.core.datahub.SharedLogger;
+import com.progressive.minds.chimera.core.datahub.common.ManageGlobalTags;
+import com.progressive.minds.chimera.core.datahub.common.ManageOwners;
+import com.progressive.minds.chimera.foundational.logging.ChimeraLogger;
+import com.progressive.minds.chimera.foundational.logging.ChimeraLoggerFactory;
+import datahub.shaded.org.apache.commons.lang3.ArrayUtils;
+import datahub.shaded.org.apache.commons.lang3.StringUtils;
+import datahub.shaded.org.apache.commons.lang3.tuple.Pair;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
+
+import javax.validation.constraints.Null;
 import java.time.Instant;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
-import com.linkedin.common.Ownership;
 
 import static com.linkedin.data.template.SetMode.REMOVE_IF_NULL;
 import static com.progressive.minds.chimera.core.datahub.common.genericUtils.*;
-import com.linkedin.common.GlobalTags;
-import com.progressive.minds.chimera.foundational.logging.ChimeraLogger;
-import com.progressive.minds.chimera.foundational.logging.ChimeraLoggerFactory;
-;
 
-public class ManageDataProduct implements SharedLogger {
+public class ManageDataProduct {
+
     ChimeraLogger DatahubLogger = ChimeraLoggerFactory.getLogger(SharedLogger.class);
-    String LoggerTag = "[DataHub- Manage DataProduct] -";
+    String LoggerTag = "[DataHub- Create DataProduct] -";
 
-    // Create a Data Product and associate it with a domain
-    public String createDataProduct(String domainName, String dataProductName,
-                                    String dataProductDescription, Map<String, String> customProperties) {
+
+    /**
+     * @param dataProductName        Name of The Data Product which needs to be created
+     * @param dataProductDescription Description of Data Product can be Long String or MD5 Document Content
+     * @param externalURL            External URL which needs to be mapped
+     * @param domainName             Valid domain with which this newly data product needs to be mapped
+     * @param globalTags             Global tags array, which needs to be added with Data product
+     * @param glossaryTerms          Glossary Terms array, which needs to be added with Data product
+     * @param DataAssets             Data Assets <Name, Type and Platform> information in Map<String, Pair<String,String>>
+     * @param Owners                 Owners Information in Map<ownerName, ownershipType>
+     * @param customProperties       User Defined Properties in Map<PropertyName, PropertyValue>
+     * @return                       URN of Data Product e.g. urn:li:dataProduct:DataProductName
+     */
+    public String createDataProduct(String dataProductName,
+                                    String dataProductDescription,
+                                    @Null String externalURL,
+                                    @Null String domainName,
+                                    @Null String[] globalTags,
+                                    @Null String[] glossaryTerms,
+                                    @Null Map<String, Pair<String, String>> DataAssets,
+                                    @Null Map<String, String> Owners,
+                                    @Null Map<String, String> customProperties) {
+        String retVal;
+        System.setProperty("CHIMERA_EXE_ENV", "datahub");
         try {
-            DatahubLogger.logInfo("Creating Data Product " + dataProductName);
+            DatahubLogger.logInfo(LoggerTag + "Creating Data Product " + dataProductName);
 
-            // Create Data Product URN
             Urn dataProductUrn = Urn.createFromString("urn:li:dataProduct:" + replaceSpecialCharsAndLowercase(dataProductName));
 
-            // Create the DataProductKey
-            DataProductKey dataProductKey = new DataProductKey();
-            dataProductKey.setId(replaceSpecialCharsAndLowercase(dataProductName));
+            DataProductKey dataProductKey = new DataProductKey().
+                    setId(replaceSpecialCharsAndLowercase(dataProductName));
+            DatahubLogger.logInfo(LoggerTag + "Adding Data Product With Key " + dataProductKey);
 
-            StringMap MapCustomProperties = new StringMap();
-            MapCustomProperties.putAll(customProperties);
+            DataProductProperties dataProductProperties = new DataProductProperties()
+                    .setName(dataProductName)
+                    .setDescription(dataProductDescription);
+            DatahubLogger.logInfo(LoggerTag + "Setting Data Product Properties...");
 
+            if (externalURL != null && !externalURL.isEmpty()) {
+                DatahubLogger.logInfo(LoggerTag + "Setting External URL With Data Product...");
+                dataProductProperties.setExternalUrl(new Url(externalURL), REMOVE_IF_NULL);
+            }
+
+            if (customProperties != null && !customProperties.isEmpty()) {
+                DatahubLogger.logInfo(LoggerTag + "Setting User Defined Custom Properties With Data Product...");
+                StringMap MapCustomProperties = new StringMap();
+                MapCustomProperties.putAll(customProperties);
+                dataProductProperties.setCustomProperties(MapCustomProperties);
+            }
+
+            DatahubLogger.logInfo(LoggerTag + "Setting Audit Information's With Data Product...");
             AuditStamp createdStamp = new AuditStamp()
                     .setActor(new CorpuserUrn("data_creator"))
                     .setTime(Instant.now().toEpochMilli());    // Current timestamp in milliseconds
 
-            Map<String, String> owner = new HashMap<>();
-            owner.put("John Doe", "Data Creator");
-            owner.put("Manu", "Data owner");
+            if (DataAssets != null && !DataAssets.isEmpty()) {
+                DatahubLogger.logInfo(LoggerTag + "Mapping Assets With Data Product...");
+                DataProductAssociationArray dataProductAssociationArray = new DataProductAssociationArray();
+                for (Map.Entry<String, Pair<String, String>> entry : DataAssets.entrySet()) {
+                    String name = entry.getKey();
+                    Pair<String, String> typePlatformPair = entry.getValue();
+                    String type = typePlatformPair.getLeft();     // Extract type
+                    String platform = typePlatformPair.getRight(); // Extract platform
 
-            ManageOwners.addOwners(dataProductUrn, "dataProduct", "ownership","UPSERT",
-                    owner);
+                    // Construct URN string
+                    String urnString = String.format("urn:li:%s:(%s,%s)", type, platform, name);
 
+                    // Create URN object
+                    Urn urn = Urn.createFromString(urnString);
 
-            Urn DSURN = Urn.createFromString("urn:li:chart:(looker,baz1)");
-            //setSourceUrn(DSURN).
-            DataProductAssociation dpa = new DataProductAssociation().setCreated(createdStamp)
-                    .setLastModified(createdStamp).setDestinationUrn(DSURN);
+                    // Create DataProductAssociation
+                    DataProductAssociation dataProductAssociation = new DataProductAssociation()
+                            .setCreated(createdStamp)
+                            .setLastModified(createdStamp)
+                            .setDestinationUrn(urn);
 
-            DataProductAssociationArray aa = new DataProductAssociationArray();
-            aa.add(dpa);
-
-            // Create the DataProductProperties
-            DataProductProperties dataProductProperties = new DataProductProperties()
-                    .setName(dataProductName)
-                    .setAssets(aa)
-                    .setDescription(dataProductDescription)
-                    .setExternalUrl(new Url("http.yahoo.com"), REMOVE_IF_NULL)
-                    .setCustomProperties(MapCustomProperties);
-
-            System.out.println("DataProductProperties: " + dataProductProperties);
-            System.out.println("MapCustomProperties DataMap: " + MapCustomProperties);
+                    // Add to the DataProductAssociationArray
+                    dataProductAssociationArray.add(dataProductAssociation);
+                    DatahubLogger.logInfo(LoggerTag + String.format("Assets Type %s, Platform Name %s and Assets Name %s mapped" +
+                            " With Data Product.", type, platform, name));
+                }
+                dataProductProperties.setAssets(dataProductAssociationArray);
+            }
 
             MetadataChangeProposal proposal = createProposal(String.valueOf(dataProductUrn), "dataProduct",
                     "dataProductProperties", "UPSERT", dataProductProperties);
 
-            System.out.println("proposal DataMap: " + dataProductProperties);
-            String dataproductUrn =  emitProposal(proposal, "dataProduct");
-            // String assetsUrn = addAssetsToDataProduct(Urn.createFromString(dataproductUrn));
-            return dataproductUrn;
+            DatahubLogger.logInfo(LoggerTag + "Preparing for MetadataChangeProposal : " + proposal);
+
+            retVal = emitProposal(proposal, "dataProduct");
+
+            if (retVal.equalsIgnoreCase(dataProductUrn.toString())) {
+                DatahubLogger.logInfo(LoggerTag + String.format("Data Product %s Created on Datahub With URN %s",
+                        dataProductName, retVal));
+
+                if (Owners != null && !Owners.isEmpty()) {
+                    DatahubLogger.logInfo(LoggerTag + "Mapping Owners Information's with Data Product");
+                    ManageOwners.addOwners(dataProductUrn, "dataProduct", "ownership", "UPSERT",
+                            Owners);
+                }
+
+                if (domainName != null && !domainName.isEmpty()) {
+                    DatahubLogger.logInfo(LoggerTag + "Mapping Data Product With Domain " + domainName);
+                    String domainUrnString = "urn:li:domain:" + domainName;
+
+                    UrnArray DomainUrn = new UrnArray();
+                    DomainUrn.add(Urn.createFromString(domainUrnString));
+                    Domains domains = new Domains().setDomains(DomainUrn);
+
+                    MetadataChangeProposal domainProposal = createProposal(retVal,
+                            "dataProduct", "domains", "UPSERT", domains);
+                    String retval = emitProposal(domainProposal, "domains");
+                    DatahubLogger.logInfo(LoggerTag + "Mapping Data Product With Domain Completed With " + retval);
+                }
+
+                if (globalTags != null &&  ArrayUtils.isNotEmpty(globalTags)) {
+                    DatahubLogger.logInfo(LoggerTag + "Mapping Global Tags With Data Product");
+                    String retval = ManageGlobalTags.addTags(Urn.createFromString(dataProductUrn.toString()),
+                            "dataProduct", "UPSERT", globalTags);
+                    DatahubLogger.logInfo(LoggerTag + "Mapping Global Tags With Data Product Completed With " + retval);
+                } else {
+                    DatahubLogger.logInfo("GlobalTags array is null or empty.");
+                }
+
+                if (glossaryTerms != null &&  ArrayUtils.isNotEmpty(glossaryTerms)) {
+                    GlossaryTermAssociationArray glossaryTermAssociationArray = new GlossaryTermAssociationArray();
+
+                    DatahubLogger.logInfo(LoggerTag + "Mapping Glossary Terms Tags Data Product");
+
+                    for (String glossaryTerm : glossaryTerms) {
+                        if (StringUtils.isNotBlank(glossaryTerm)) {
+                            DatahubLogger.logInfo(LoggerTag + String.format("Mapping Glossary Term %s With Data Product", glossaryTerm));
+                            GlossaryTermUrn glossaryTermUrn = GlossaryTermUrn.createFromString("urn:li:glossaryTerm:"+ glossaryTerm);
+                            GlossaryTermAssociation termAssociation = new GlossaryTermAssociation()
+                                    .setUrn(glossaryTermUrn);
+                            glossaryTermAssociationArray.add(termAssociation);
+                        }
+                    }
+                    GlossaryTerms glossaryTerm = new GlossaryTerms()
+                            .setTerms(glossaryTermAssociationArray).setAuditStamp(createdStamp);
+                    MetadataChangeProposal glossaryProposal = createProposal(dataProductUrn.toString(),
+                            "dataProduct", "glossaryTerms", "UPSERT", glossaryTerm);
+                    String retval = emitProposal(glossaryProposal, "glossaryTerms");
+                    DatahubLogger.logInfo(LoggerTag + "Mapping Glossary Terms Tags Data Product Completed " + retval);
+                } else {
+                    System.out.println("Glossary Terms array is null or empty.");
+                }
+            } else {
+                DatahubLogger.logError(" Data Product Creation Failed With Return :" + retVal);
+            }
         } catch (Exception e) {
-            e.printStackTrace();
+            DatahubLogger.logError(" Data Product Creation Failed ");
             throw new RuntimeException("Failed to create data product", e);
         }
+        return retVal;
     }
-/*
-    public String addAssetsToDataProduct(Urn dataProductUrn) throws URISyntaxException, IOException, ExecutionException, InterruptedException {
-
-        Urn DSURN = Urn.createFromString("urn:li:dataset:(urn:li:dataPlatform:postgres,obdef.public.edl_batch_log,PROD)");
-
-        DataProductAssociation dpa = new DataProductAssociation().setSourceUrn(DSURN).setDestinationUrn(dataProductUrn);
-
-        DataProductAssociationArray aa = new DataProductAssociationArray();
-        aa.add(dpa);
-
-        DataProductProperties dataProductProperties = new DataProductProperties()
-                .setAssets(aa);
-
-        MetadataChangeProposal proposal = createProposal(String.valueOf(dataProductUrn), "dataProduct",
-                "dataProductProperties", "UPSERT", dataProductProperties);
-
-        System.out.println("proposal DataMap: " + dataProductProperties);
-        return emitProposal(proposal, "dataProduct");
-    }*/
 }
