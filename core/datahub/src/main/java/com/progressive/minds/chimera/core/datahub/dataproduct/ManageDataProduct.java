@@ -34,7 +34,6 @@ import com.progressive.minds.chimera.foundational.logging.ChimeraLoggerFactory;
 
 public class ManageDataProduct implements SharedLogger {
     ChimeraLogger DatahubLogger = ChimeraLoggerFactory.getLogger(SharedLogger.class);
-
     String LoggerTag = "[DataHub- Manage DataProduct] -";
 
     // Create a Data Product and associate it with a domain
@@ -56,7 +55,7 @@ public class ManageDataProduct implements SharedLogger {
             AuditStamp createdStamp = new AuditStamp()
                     .setActor(new CorpuserUrn("data_creator"))
                     .setTime(Instant.now().toEpochMilli());    // Current timestamp in milliseconds
-//*****************Adding Owners
+
             Map<String, String> owner = new HashMap<>();
             owner.put("John Doe", "Data Creator");
             owner.put("Manu", "Data owner");

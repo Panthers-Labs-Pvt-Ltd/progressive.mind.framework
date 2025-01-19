@@ -40,12 +40,33 @@
             <artifactId>protobuf-java</artifactId>
             <version>4.29.3</version>
         </dependency>
+<!--
+        <dependency>
+            <groupId>io.acryl</groupId>
+            <artifactId>datahub-client-java8</artifactId>
+            &lt;!&ndash;<version>0.15.0-1rc14</version>&ndash;&gt;
+            <version>0.15.0</version>
+        </dependency>
+        &lt;!&ndash; https://mvnrepository.com/artifact/io.acryl/datahub-client &ndash;&gt;
+        <dependency>
+            <groupId>io.acryl</groupId>
+            <artifactId>datahub-client</artifactId>
+            <version>0.15.0</version>
+        </dependency>
+-->
         <dependency>
             <groupId>io.acryl</groupId>
             <artifactId>datahub-client-java8</artifactId>
             <!--<version>0.15.0-1rc14</version>-->
-            <version>0.15.0</version>
+            <version>0.15.0-2rc7</version>
         </dependency>
+<!--        <dependency>
+            <groupId>io.acryl</groupId>
+            <artifactId>datahub-client</artifactId>
+            <version>0.15.0-2rc7</version>
+        </dependency>-->
+        <!-- https://mvnrepository.com/artifact/com.linkedin.pegasus/restli-client -->
+
         <dependency>
             <groupId>com.progressive.minds.chimera</groupId>
             <artifactId>common.tags</artifactId>
@@ -76,6 +97,12 @@
             <groupId>io.openlineage</groupId>
             <artifactId>openlineage-flink</artifactId>
             <version>1.25.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.17.0</version>
             <scope>test</scope>
         </dependency>
         <!--    <dependency>

@@ -1,15 +1,14 @@
 package com.progressive.minds.chimera.core.datahub.dataproduct;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+import datahub.shaded.org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.Test;
-
 import java.util.HashMap;
 import java.util.Map;
 
 
 class ManageDataProductTest {
 @Test
-void createDataProductTest() throws JsonProcessingException {
+void createDataProductTest()   {
     Map<String, String> map = new HashMap<>();
 
     // Add key-value pairs to the map
@@ -22,4 +21,32 @@ void createDataProductTest() throws JsonProcessingException {
             "sdfddfffffffffffffffffff", map);
     System.out.println("Product Created With URN " + retval);
 }
+
+    @Test
+    void createDataProductTestWithAll()   {
+        String  dataProductName = "Chimera Data Product";
+        String  dataProductDescription = "My First Data Product Creation Test With All Optional Information's";
+        String  domainName = "My First Data Product Domain Test";
+        String externalURL = "http://datahub.com";
+        String[]globalTags = {"Confidential", "Verified","PII"};
+        String[]glossaryTerms = {"Balance", "Current Balance","Total Amount in Account"};
+
+        Map<String, Pair<String, String>> DataAssets = new HashMap<>();
+        DataAssets.put("baz1", Pair.of("chart", "looker"));
+        DataAssets.put("baz2", Pair.of("dataset", "hive"));
+        DataAssets.put("baz3", Pair.of("dashboard", "powerbi"));
+
+        Map<String, String> Owners = new HashMap<>();
+        Owners.put("manish.kumar.gupta@outlook.com", "Data Creator");
+        Owners.put("Abhinav Kumar", "Data owner");
+
+        Map<String, String> customProperties = new HashMap<>();
+        Owners.put("Property1", "Value1");
+        Owners.put("Property2", "Value2");
+
+        DataProducts dataProducts = new DataProducts();
+       String retVal = dataProducts.createDataProduct(dataProductName, dataProductDescription, externalURL, domainName,
+                globalTags,glossaryTerms,DataAssets,Owners,customProperties );
+       System.out.println("Data Product Created With URN " + retVal);
+    }
 }

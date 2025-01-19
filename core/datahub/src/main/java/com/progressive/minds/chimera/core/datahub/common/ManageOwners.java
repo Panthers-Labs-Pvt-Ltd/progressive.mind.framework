@@ -51,7 +51,6 @@ public class ManageOwners {
                 DatahubLogger.logInfo("Adding Owners Failed For......." + ownerName + " and " + ownershipType + e);
                 throw new RuntimeException(e);
             }
-            //.setType(OwnershipType.valueOf(ownershipType)); // Using OwnershipType Enum
             ownerArray.add(owner);
         });
 
@@ -62,18 +61,6 @@ public class ManageOwners {
 
         Ownership ownership = new Ownership()
                 .setOwners(ownerArray).setLastModified(createdStamp);
-
-       /* DataMap dataMap = ownership.data(); // Convert to DataMap
-
-        // Serialize DataMap to JSON string
-        ObjectMapper objectMapper = new ObjectMapper();
-        String jsonString = objectMapper.writeValueAsString(dataMap);
-
-        // Convert JSON string to ByteString
-        ByteString byteString = ByteString.unsafeWrap(jsonString.getBytes(StandardCharsets.UTF_8));
-        GenericAspect genericAspect = new GenericAspect();
-        genericAspect.setValue(byteString); // Use ByteString
-        //genericAspect.setContentType("application/json");*/
 
         MetadataChangeProposal proposal = createProposal(String.valueOf(entityUrn), entityType,
                 aspectName, changeType,ownership);
