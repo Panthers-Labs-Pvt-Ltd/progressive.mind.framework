@@ -52,8 +52,9 @@ extra:
       link: https://gitlab.com/abhinavkumar
       name: Chimera on GitLab
 nav:
-  - Home:
-      - Introduction: home/index.md
+  - Home: index.md
+  - Chimera:
+      - Introduction: home/Introduction.md
       - Key Concepts: home/Key_Concepts.md
       - Architecture: home/Architecture.md
       - Getting Started: home/Getting_Started.md
@@ -93,4 +94,4 @@ markdown_extensions:
           class: mermaid
           format: !!python/name:pymdownx.superfences.fence_code_format
 extra_css:
-  - css/custom.css
+  - assets/css/main.css

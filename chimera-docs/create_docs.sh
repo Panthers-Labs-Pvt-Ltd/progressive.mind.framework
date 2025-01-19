@@ -8,9 +8,9 @@
 # set -o pipefail: Ensures that the script exits if any command in a pipeline fails.
 set -xeuo pipefail
 
-# Copy all the markdown files from the respective projects to the Framework project
-cp ~/projects/UI/chimera-docs/docs/*.md ~/projects/Framework/chimera-docs/docs/UI/
-cp ~/projects/AIMLOps/chimera-docs/docs/*.md ~/projects/Framework/chimera-docs/docs/AIMLOps/
-cp ~/projects/Infra/chimera-docs/docs/*.md ~/projects/Framework/chimera-docs/docs/Infra/
+# Sync all the markdown files from the respective projects to the Framework project
+rsync -a --delete --exclude 'index.md' ~/projects/UI/chimera-docs/docs/ ~/projects/Framework/chimera-docs/docs/UI/
+rsync -a --delete --exclude 'index.md' ~/projects/AIMLOps/chimera-docs/docs/ ~/projects/Framework/chimera-docs/docs/AIMLOps/
+rsync -a --delete --exclude 'index.md' ~/projects/Infra/chimera-docs/docs/ ~/projects/Framework/chimera-docs/docs/Infra/
 
 mkdocs serve
