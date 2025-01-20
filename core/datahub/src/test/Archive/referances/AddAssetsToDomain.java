@@ -1,4 +1,4 @@
-package Archive;
+package com.progressive.minds.chimera.core.datahub.referances;
 
 import com.linkedin.common.urn.Urn;
 import com.linkedin.data.ByteString;
@@ -8,7 +8,8 @@ import com.linkedin.mxe.MetadataChangeProposal;
 import com.linkedin.domain.DomainProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import static com.progressive.minds.chimera.core.datahubutils.emitter.RestEmitterUtil.emitProposal;
+import static com.progressive.minds.chimera.core.datahub.common.genericUtils.emitProposal;
+
 
 public class AddAssetsToDomain {
     public static void main(String[] args) {
@@ -16,10 +17,7 @@ public class AddAssetsToDomain {
             // Initialize the domain URN
 
             Urn domainUrn = Urn.createFromString("urn:li:domain:manishwebworld");
-
-            // Initialize asset URNs
-            // Urn datasetUrn = Urn.createFromString("urn:li:dataset:(urn:li:dataPlatform:postgres,obdef.public.edl_batch_log,PROD)");
-            Urn chartUrn = Urn.createFromString("urn:li:chart:(looker,my_chart_man)");
+            Urn chartUrn = Urn.createFromString("urn:li:dataset:(urn:li:dataPlatform:hive,fct_users_created,PROD)");
 
             // Create and send MetadataChangeProposal for each asset
             //addAssetToDomain(datasetUrn, domainUrn);

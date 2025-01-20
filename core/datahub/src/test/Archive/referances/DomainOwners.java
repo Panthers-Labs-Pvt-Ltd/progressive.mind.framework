@@ -1,4 +1,4 @@
-package Archive;
+package com.progressive.minds.chimera.core.datahub.referances;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.linkedin.common.Owner;

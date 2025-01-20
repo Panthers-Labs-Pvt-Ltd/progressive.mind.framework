@@ -1,4 +1,4 @@
-package com.progressive.minds.chimera.core.datahub.domain;
+package com.progressive.minds.chimera.core.datahub.referances;
 
 import com.linkedin.common.*;
 import com.linkedin.common.urn.Urn;

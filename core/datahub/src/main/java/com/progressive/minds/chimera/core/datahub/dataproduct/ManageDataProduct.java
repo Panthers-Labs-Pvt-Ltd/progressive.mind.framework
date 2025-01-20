@@ -12,7 +12,7 @@ import com.linkedin.dataproduct.DataProductKey;
 import com.linkedin.dataproduct.DataProductProperties;
 import com.linkedin.domain.Domains;
 import com.linkedin.mxe.MetadataChangeProposal;
-import com.progressive.minds.chimera.core.datahub.SharedLogger;
+import com.progressive.minds.chimera.core.datahub.referances.SharedLogger;
 import com.progressive.minds.chimera.core.datahub.common.ManageGlobalTags;
 import com.progressive.minds.chimera.core.datahub.common.ManageOwners;
 import com.progressive.minds.chimera.foundational.logging.ChimeraLogger;

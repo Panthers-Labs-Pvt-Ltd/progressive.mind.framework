@@ -9,12 +9,12 @@ import java.util.Map;
 class ManageDataProductTest {
     @Test
     void createDataProductTestWithAll()   {
-        String  dataProductName = "Chimera Test DP 5";
+        String  dataProductName = "my dummy dataprodcct";
         String  dataProductDescription = "My First Data Product Creation Test With All Optional Information's";
         String  domainName = "Testing";
         String externalURL = "http://datahub.com";
-        String[]globalTags = {"No Confidential", "Unverified","Test"};
-        String[]glossaryTerms = {"Balance", "Current Balance","Total Amount in Account"};
+        String[] globalTags = {"No Confidential", "Unverified","Test"};
+        String[] glossaryTerms = {"Balance", "Current Balance","Total Amount in Account"};
 
         Map<String, Pair<String, String>> DataAssets = new HashMap<>();
         DataAssets.put("baz1", Pair.of("chart", "looker"));
@@ -32,7 +32,7 @@ class ManageDataProductTest {
 
         ManageDataProduct dataProducts = new ManageDataProduct();
         String retVal = dataProducts.createDataProduct(dataProductName, dataProductDescription, externalURL, domainName,
-                globalTags,glossaryTerms,DataAssets,Owners,customProperties );
+                globalTags,glossaryTerms,null,Owners,customProperties );
 
      /*  String retVal = dataProducts.createDataProduct(dataProductName, dataProductDescription, externalURL, domainName,
                 globalTags,glossaryTerms,DataAssets,Owners,customProperties );*/

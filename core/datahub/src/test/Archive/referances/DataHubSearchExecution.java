@@ -1,4 +1,4 @@
-package com.progressive.minds.chimera.core.datahub;
+package com.progressive.minds.chimera.core.datahub.referances;
 
 
 import com.progressive.minds.chimera.core.databaseOps.model.datahub.MetadataAspectV2;

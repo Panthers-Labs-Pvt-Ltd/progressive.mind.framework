@@ -21,13 +21,13 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 
-import static com.linkedin.events.metadata.ChangeType.UPSERT;
-import static com.progressive.minds.chimera.core.datahub.DataHubUtils.SYSTEM_USER;
+import static com.progressive.minds.chimera.core.datahub.referances.DataHubUtils.SYSTEM_USER;
 import static com.progressive.minds.chimera.core.datahub.common.genericUtils.*;
+
+import java.util.Map;
 
 public class ManageDomain  {
     private static final ChimeraLogger DatahubLogger = ChimeraLoggerFactory.getLogger(ManageDomain.class);
@@ -90,8 +90,6 @@ public class ManageDomain  {
         }
     }
 
-
-
     public String createDomains(DomainRecords domainRecords) {
         try {
 
@@ -117,7 +115,7 @@ public class ManageDomain  {
             if (domainRecords.parentDomain != null && !domainRecords.parentDomain.isEmpty())
             {
                 Urn parentDomainUrn = Urn.createFromString("urn:li:domain:" +
-                        replaceSpecialCharsAndLowercase(domainRecords.name));
+                        replaceSpecialCharsAndLowercase(domainRecords.parentDomain));
                         domainProperties.setParentDomain(parentDomainUrn);
             }
 
@@ -144,55 +142,6 @@ public class ManageDomain  {
         }
     }
 
-    // Method to create a parent domain
-    public String createParentDomain(String domainName, String domainDocumentation, String parentDomainName,
-                                     Map<String, String> customProperties) {
-        try {
-            Urn domainUrn = Urn.createFromString("urn:li:domain:" +
-                    replaceSpecialCharsAndLowercase(domainName));
-            Urn parentDomainUrn = Urn.createFromString("urn:li:domain:" +
-                    replaceSpecialCharsAndLowercase(parentDomainName));
-
-            AuditStamp createdStamp = new AuditStamp()
-                    .setActor(new CorpuserUrn(SYSTEM_USER))
-                    .setTime(Instant.now().toEpochMilli());
-
-            StringMap MapCustomProperties = new StringMap();
-            MapCustomProperties.putAll(customProperties);
-
-            DomainProperties domainProperties = new DomainProperties()
-                    .setName(domainName)
-                    .setCreated(createdStamp)
-                    .setCustomProperties(MapCustomProperties)
-                    .setParentDomain(parentDomainUrn)
-                    .setDescription(domainDocumentation);
-
-            // Convert the aspect DataMap to JSON and then to ByteString
-            DataMap dataMap = domainProperties.data();
-            ObjectMapper objectMapper = new ObjectMapper();
-            String jsonString = objectMapper.writeValueAsString(dataMap);
-            ByteString byteString = ByteString.copyAvroString(jsonString, true);
-
-            // Create GenericAspect
-            GenericAspect genericAspect = new GenericAspect();
-            genericAspect.setValue(byteString);
-            genericAspect.setContentType("application/json");
-
-            MetadataChangeProposal proposal = new MetadataChangeProposal();
-            proposal.setEntityUrn(domainUrn);
-            proposal.setEntityType("domain");
-            proposal.setAspectName("domainProperties");
-            proposal.setAspect(genericAspect);
-            proposal.setChangeType(ChangeType.UPSERT);
-
-            return emitProposal(proposal, "domain");
-
-        } catch (URISyntaxException | JsonProcessingException | ExecutionException | InterruptedException e) {
-            throw new RuntimeException("Failed to create domain with parent: " + domainName, e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     // Method to add domain owners
     public String addDomainOwners(String domainName, Map<String, String> domainOwners)
@@ -213,30 +162,13 @@ public class ManageDomain  {
         Ownership ownership = new Ownership()
                 .setOwners(ownerArray);
 
-        DataMap dataMap = ownership.data(); // Convert to DataMap
-
-        // Serialize DataMap to JSON string
-        ObjectMapper objectMapper = new ObjectMapper();
-        String jsonString = objectMapper.writeValueAsString(dataMap);
-
-        // Convert JSON string to ByteString
-        ByteString byteString = ByteString.unsafeWrap(jsonString.getBytes(StandardCharsets.UTF_8));
-
-        GenericAspect genericAspect = new GenericAspect();
-        genericAspect.setValue(byteString); // Use ByteString
-        genericAspect.setContentType("application/json");
-
-        // Create MetadataChangeProposal
-        MetadataChangeProposal proposal = new MetadataChangeProposal();
-        proposal.setEntityUrn(domainUrn); // Set the domain URN
-        proposal.setEntityType("domain");
-        proposal.setAspectName("ownership");
-        proposal.setAspect(genericAspect);
-        proposal.setChangeType(UPSERT);
-
-        return emitProposal(proposal, "ownership");
+        MetadataChangeProposal proposal = createProposal(String.valueOf(domainUrn), "domain",
+                "ownership", "UPSERT", ownership);
+        String retVal = emitProposal(proposal, "domainOwnership");
+        return retVal;
     }
 
+    // TODO
     public String addEntitiesToDomain(Urn assetUrn, Urn domainUrn) throws Exception {
 
         // Serialize DomainProperties to JSON
@@ -261,5 +193,83 @@ public class ManageDomain  {
         // Emit the proposal using the RestEmitter (assume initialized globally)
         return emitProposal(proposal, "domain");
 
+    }
+
+    // TODO
+    public void addEntitiesToDomain(String domainName, Map<String, String> assetsMap) throws Exception {
+        DatahubLogger.logInfo(LoggerTag + "Preparing For Assets Mapping With Domain : " + domainName);
+
+
+        Map<String, String> ValidAssetsType = new HashMap<>();
+        ValidAssetsType.put("corpuser", "corpuser");
+        ValidAssetsType.put("dataplatform", "dataPlatform");
+        ValidAssetsType.put("datatype", "dataType");
+        ValidAssetsType.put("ownershiptype", "ownershipType");
+        ValidAssetsType.put("telemetry", "telemetry");
+        ValidAssetsType.put("entitytype", "entityType");
+        ValidAssetsType.put("dataproduct", "dataProduct");
+        ValidAssetsType.put("tag", "tag");
+        ValidAssetsType.put("glossarynode", "glossaryNode");
+        ValidAssetsType.put("container", "container");
+        ValidAssetsType.put("dataset", "dataset");
+        ValidAssetsType.put("datajob", "dataJob");
+        ValidAssetsType.put("corpgroup", "corpGroup");
+        ValidAssetsType.put("structuredproperty", "structuredProperty");
+        ValidAssetsType.put("glossaryterm", "glossaryTerm");
+        ValidAssetsType.put("post", "post");
+        ValidAssetsType.put("query", "query");
+        ValidAssetsType.put("assertion", "assertion");
+        ValidAssetsType.put("chart", "chart");
+        ValidAssetsType.put("dashboard", "dashboard");
+        ValidAssetsType.put("dataflow", "dataFlow");
+        ValidAssetsType.put("mlfeature", "mlFeature");
+        ValidAssetsType.put("mlfeaturetable", "mlFeatureTable");
+        ValidAssetsType.put("mlmodel", "mlModel");
+        ValidAssetsType.put("mlprimarykey", "mlPrimaryKey");
+        ValidAssetsType.put("datacontract", "dataContract");
+        ValidAssetsType.put("form", "form");
+        ValidAssetsType.put("incident", "incident");
+
+        assetsMap.forEach((assetName, assetType) -> {
+
+            try {
+                DatahubLogger.logInfo(LoggerTag + "Checking Asset Type Valid or not : " + assetType);
+                if (ValidAssetsType.containsKey(assetName.toLowerCase(Locale.ROOT))) {
+
+                    String assetTypeName = ValidAssetsType.get(assetName.toLowerCase(Locale.ROOT));
+
+                    DatahubLogger.logInfo(String.format(LoggerTag + "Asset Type %s is Valid " , assetName));
+
+                    Urn domainUrn = Urn.createFromString("urn:li:domain:" +
+                            replaceSpecialCharsAndLowercase(domainName));
+
+                    Urn assetsUrn = Urn.createFromString("urn:li:" + assetTypeName + ":" +
+                            replaceSpecialCharsAndLowercase(assetName));
+
+                    ObjectMapper objectMapper = new ObjectMapper();
+                    String jsonString = objectMapper.writeValueAsString(assetsUrn.toString());
+                    ByteString byteString = ByteString.unsafeWrap(jsonString.getBytes(StandardCharsets.UTF_8));
+                    GenericAspect genericAspect = new GenericAspect();
+                    genericAspect.setValue(byteString);
+                    genericAspect.setContentType("application/json");
+                    MetadataChangeProposal proposal = new MetadataChangeProposal();
+                    proposal.setEntityUrn(domainUrn);
+                    proposal.setAspectName("domain");
+                    proposal.setAspect(genericAspect);
+                    proposal.setChangeType(ChangeType.UPSERT);
+                    DatahubLogger.logInfo(LoggerTag + "Submit Change Proposal Asset Type : "+ assetsUrn + "Proposal " + proposal);
+
+                    emitProposal(proposal, "domain");
+                }
+                else
+                {
+                    DatahubLogger.logError(LoggerTag + "Invalid Asset Type : " + assetType);
+
+                }
+
+            } catch (URISyntaxException | ExecutionException | InterruptedException | IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 }

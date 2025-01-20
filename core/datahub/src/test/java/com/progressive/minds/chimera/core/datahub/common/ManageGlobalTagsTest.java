@@ -4,15 +4,13 @@ import com.linkedin.common.*;
 import com.linkedin.common.urn.CorpuserUrn;
 import com.linkedin.common.urn.GlossaryTermUrn;
 import com.linkedin.common.urn.Urn;
-import com.linkedin.dataproduct.DataProductProperties;
 import com.linkedin.domain.Domains;
 import com.linkedin.mxe.MetadataChangeProposal;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
-import java.util.Collections;
 
-import static com.progressive.minds.chimera.core.datahub.DataHubUtils.SYSTEM_USER;
+import static com.progressive.minds.chimera.core.datahub.referances.DataHubUtils.SYSTEM_USER;
 import static com.progressive.minds.chimera.core.datahub.common.genericUtils.createProposal;
 import static com.progressive.minds.chimera.core.datahub.common.genericUtils.emitProposal;
 
@@ -21,10 +19,8 @@ class ManageGlobalTagsTest {
     void TagTest() throws Exception {
 
         String[] tagNames = {"Verified","Unauth"};
-
        String retval= ManageGlobalTags.addTags(Urn.createFromString("urn:li:dataProduct:manishdataproduct11"),
                 "dataProduct", "UPSERT", tagNames);
-
         System.out.println(retval.toString());
     }
 

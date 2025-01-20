@@ -76,12 +76,12 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-            <dependency>
+<!--            <dependency>
                 <groupId>io.acryl</groupId>
                 <artifactId>datahub-client-java8</artifactId>
-                <!--<version>0.15.0-1rc14</version>-->
+                &lt;!&ndash;<version>0.15.0-1rc14</version>&ndash;&gt;
                 <version>0.15.0</version>
-            </dependency>
+            </dependency>-->
         </dependencies>
     </dependencyManagement>
 

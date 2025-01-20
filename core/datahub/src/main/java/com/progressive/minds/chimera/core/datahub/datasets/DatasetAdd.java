@@ -104,6 +104,7 @@ public class DatasetAdd {
         DatasetProperties ds = new DatasetProperties()
                 .setDescription("DatasetProperties description")
                 .setCustomProperties(sm)
+
                 // .setExternalUrl(new Url("www.yahoo.com"))
                 .setName("DatasetPropertiesName")
                 .setQualifiedName("Set DatasetProperties Qualified Name")

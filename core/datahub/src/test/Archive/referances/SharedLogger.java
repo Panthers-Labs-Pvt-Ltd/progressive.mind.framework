@@ -1,4 +1,4 @@
-package com.progressive.minds.chimera.core.datahub;
+package com.progressive.minds.chimera.core.datahub.referances;
 
 import com.progressive.minds.chimera.foundational.logging.ChimeraLogger;
 import com.progressive.minds.chimera.foundational.logging.ChimeraLoggerFactory;
