@@ -64,6 +64,8 @@ graph TD
 - Temporal server should be up, task queues available, and workers available.
 - DataHub instance for metadata synchronization.
 - REST API for `databaseOps` is available for database operations.
+- Workspace
+- Roles / Authorization
 
 ## Execution
 
