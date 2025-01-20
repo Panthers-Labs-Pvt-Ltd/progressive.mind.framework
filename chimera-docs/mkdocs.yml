@@ -83,7 +83,8 @@ nav:
           - Data Uniqueness: Data_Management/DataQuality/Data_Uniqueness.md
           - Data Usability: Data_Management/DataQuality/Data_Usability.md
           - Data Validity: Data_Management/DataQuality/Data_Validity.md
-  - AI-ML Services: Data_Science_and_Machine_Learning.md
+  - AI-ML Services: AIMLOps/index.md
+  - Environment Management: Infra/index.md
   - Visualization: Data_Visualization.md
   - UI: UI.md
   - Blogs:
@@ -100,7 +101,6 @@ nav:
 #      - AIOps: chimera-docs/AIOps.md
 #      - Integration of Data Ops and AIOps: chimera-docs/Integration_Data_Ops_AIOps.md
 #  - Continuous Improvement: Continuous_Improvement.md
-#  - Platform Management: Platform_Management.md
 markdown_extensions:
   - pymdownx.superfences:
       custom_fences:
