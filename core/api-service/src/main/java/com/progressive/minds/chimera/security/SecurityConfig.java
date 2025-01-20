@@ -27,9 +27,9 @@ public class SecurityConfig {
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http
-        .authorizeHttpRequests(auth -> auth
-            .requestMatchers("/api/**").authenticated() // Paths for Basic Auth
-        )
+        // .authorizeHttpRequests(auth -> auth
+        //     .requestMatchers("/api/**").authenticated() // Paths for Basic Auth
+        // )
         // Disable CSRF for simplicity; enable it in production
         .csrf(AbstractHttpConfigurer::disable)
 
@@ -44,6 +44,12 @@ public class SecurityConfig {
         .oauth2ResourceServer(oauth2 -> oauth2
             .jwt(Customizer.withDefaults())
         );
+
+    // http
+    // .csrf(AbstractHttpConfigurer::disable)
+    // .authorizeRequests()
+    // .anyRequest()
+    // .permitAll();
 
     return http.build();
   }

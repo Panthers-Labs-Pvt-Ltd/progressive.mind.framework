@@ -68,7 +68,7 @@ public class PipelineController {
   public ResponseEntity<GenericResponse> updatePipeline(@RequestBody DataPipeline updatedPipeline) {
     String pipelineName = updatedPipeline.getPipelineName();
 
-    if (pipelineService.getDataPipeLineByName(pipelineName) != null) {
+    if (pipelineService.getDataPipeLineByName(pipelineName) == null) {
       // Pipeline does not exist
       GenericResponse genericResponse = GenericResponse.builder()
           .message("Pipeline doesn't exist with the given name: " + pipelineName)
