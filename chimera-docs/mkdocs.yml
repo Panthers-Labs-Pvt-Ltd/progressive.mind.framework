@@ -71,6 +71,19 @@ nav:
       - Data Access and Analysis: Data_Access_and_Analysis.md
       - Data Sharing and Distribution: Data_Sharing_and_Distribution.md
       - Observability Management: Observability_Management.md
+      - Data Quality:
+          - Data Quality: Data_Management/DataQuality/README.md
+          - Data Accuracy: Data_Management/DataQuality/Data_Accuracy.md
+          - Data Completeness: Data_Management/DataQuality/Data_Completeness.md
+          - Data Conformity: Data_Management/DataQuality/Data_Conformity.md
+          - Data Consistency: Data_Management/DataQuality/Data_Consistency.md
+          - Data Integrity: Data_Management/DataQuality/Data_Integrity.md
+          - Data Relevance: Data_Management/DataQuality/Data_Relevance.md
+          - Data Timeliness: Data_Management/DataQuality/Data_Timeliness.md
+          - Data Trustworthiness: Data_Management/DataQuality/Data_Trustworthiness.md
+          - Data Uniqueness: Data_Management/DataQuality/Data_Uniqueness.md
+          - Data Usability: Data_Management/DataQuality/Data_Usability.md
+          - Data Validity: Data_Management/DataQuality/Data_Validity.md
   - Data Science and Machine Learning: Data_Science_and_Machine_Learning.md
 #  - Data Visualization: Data_Visualization.md
 #  - UI: UI.md
