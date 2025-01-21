@@ -1,0 +1,24 @@
+{
+  "id": "Data_Science_and_Machine_Learning",
+  "title": "Data Science and Machine Learning",
+  "description": "- Overview of AI & ML Services",
+  "source": "@site/docs/Data_Science_and_Machine_Learning.md",
+  "sourceDirName": ".",
+  "slug": "/Data_Science_and_Machine_Learning",
+  "permalink": "/docs/Data_Science_and_Machine_Learning",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/docs/Data_Science_and_Machine_Learning.md",
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Data Processing",
+    "permalink": "/docs/Data_Processing"
+  },
+  "next": {
+    "title": "Data Sharing and Distribution",
+    "permalink": "/docs/Data_Sharing_and_Distribution"
+  }
+}

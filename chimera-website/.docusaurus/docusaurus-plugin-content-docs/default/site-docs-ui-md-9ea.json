@@ -1,0 +1,24 @@
+{
+  "id": "UI",
+  "title": "User Interactions - Please DO NOT UPDATE HERE. Maintained in UI git",
+  "description": "Chimera provides a user-friendly interface that allows users to interact with the platform seamlessly. The UI is designed to be intuitive, responsive, and easy to navigate, enabling users to perform various tasks efficiently. Here are some key features of the Chimera UI:",
+  "source": "@site/docs/UI.md",
+  "sourceDirName": ".",
+  "slug": "/UI",
+  "permalink": "/docs/UI",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/docs/UI.md",
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "test",
+    "permalink": "/docs/UI/test"
+  },
+  "next": {
+    "title": "Welcome to Blogs",
+    "permalink": "/docs/blog/"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "id": "index_",
+  "title": "index_",
+  "description": "Panthers Labs",
+  "source": "@site/docs/index_.md",
+  "sourceDirName": ".",
+  "slug": "/index_",
+  "permalink": "/docs/index_",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/docs/index_.md",
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Key Concepts",
+    "permalink": "/docs/home/Key_Concepts"
+  }
+}

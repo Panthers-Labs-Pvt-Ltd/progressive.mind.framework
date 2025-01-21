@@ -1,0 +1,20 @@
+{
+  "id": "API_Service",
+  "title": "API Services",
+  "description": "API services are a critical component of a self-serve data platform, enabling users to access and interact with data programmatically. These services provide a standardized interface for querying, transforming, and analyzing data, making it easier for developers and data scientists to build applications and workflows that leverage the platform's capabilities.",
+  "source": "@site/docs/API_Service.md",
+  "sourceDirName": ".",
+  "slug": "/API_Service",
+  "permalink": "/docs/API_Service",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/docs/API_Service.md",
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "tutorialSidebar",
+  "next": {
+    "title": "Data Access and Analysis",
+    "permalink": "/docs/Data_Access_and_Analysis"
+  }
+}

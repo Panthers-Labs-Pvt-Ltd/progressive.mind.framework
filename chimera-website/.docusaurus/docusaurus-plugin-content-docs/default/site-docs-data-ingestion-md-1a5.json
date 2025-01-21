@@ -1,0 +1,24 @@
+{
+  "id": "Data_Ingestion",
+  "title": "Data Ingestion",
+  "description": "* Data Ingestion",
+  "source": "@site/docs/Data_Ingestion.md",
+  "sourceDirName": ".",
+  "slug": "/Data_Ingestion",
+  "permalink": "/docs/Data_Ingestion",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/docs/Data_Ingestion.md",
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Data Governance",
+    "permalink": "/docs/Data_Governance"
+  },
+  "next": {
+    "title": "Data Processing",
+    "permalink": "/docs/Data_Processing"
+  }
+}

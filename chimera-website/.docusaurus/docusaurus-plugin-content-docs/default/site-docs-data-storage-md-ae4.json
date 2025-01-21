@@ -1,0 +1,24 @@
+{
+  "id": "Data_Storage",
+  "title": "Data Storage",
+  "description": "- Overview of Chimera Storage",
+  "source": "@site/docs/Data_Storage.md",
+  "sourceDirName": ".",
+  "slug": "/Data_Storage",
+  "permalink": "/docs/Data_Storage",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/docs/Data_Storage.md",
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Data Source Management",
+    "permalink": "/docs/Data_Source_Management"
+  },
+  "next": {
+    "title": "Data Visualization",
+    "permalink": "/docs/Data_Visualization"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "id": "Orchestration_Service",
+  "title": "Orchestration Service",
+  "description": "The Orchestration Service is a service that is responsible for managing the lifecycle of a set of services. It is responsible for starting, stopping, scaling, and monitoring the services. The Orchestration Service is typically used in a cloud environment to manage the deployment of services across multiple nodes.",
+  "source": "@site/docs/Orchestration_Service.md",
+  "sourceDirName": ".",
+  "slug": "/Orchestration_Service",
+  "permalink": "/docs/Orchestration_Service",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/docs/Orchestration_Service.md",
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Observability",
+    "permalink": "/docs/Observability"
+  },
+  "next": {
+    "title": "test",
+    "permalink": "/docs/UI/test"
+  }
+}

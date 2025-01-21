@@ -1,0 +1,24 @@
+{
+  "id": "Data_Sharing_and_Distribution",
+  "title": "Data Sharing and Distribution",
+  "description": "* Data Sharing and Distribution",
+  "source": "@site/docs/Data_Sharing_and_Distribution.md",
+  "sourceDirName": ".",
+  "slug": "/Data_Sharing_and_Distribution",
+  "permalink": "/docs/Data_Sharing_and_Distribution",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/docs/Data_Sharing_and_Distribution.md",
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Data Science and Machine Learning",
+    "permalink": "/docs/Data_Science_and_Machine_Learning"
+  },
+  "next": {
+    "title": "Data Source Management",
+    "permalink": "/docs/Data_Source_Management"
+  }
+}
