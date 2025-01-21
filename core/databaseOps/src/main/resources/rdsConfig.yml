@@ -52,3 +52,8 @@ application:
       RDSSecretName: "AZURE SECRET NAME"
       GCPProjectId: ""
       AZUREKeyVaultURL: "https://<your-key-vault-name>.vault.azure.net/"
+    datahub:
+      url: "jdbc:mysql://localhost:3306/datahub"
+      username : "datahub"
+      password : "datahub"
+      DriverClassName : "com.mysql.cj.jdbc.Driver"
