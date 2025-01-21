@@ -2,18 +2,15 @@ package com.progressive.minds.chimera.core.datahub.datasets;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.linkedin.common.*;
-import com.linkedin.common.url.Url;
 import com.linkedin.common.urn.*;
 import com.linkedin.common.urn.CorpuserUrn;
 import com.linkedin.common.urn.DataPlatformUrn;
 import com.linkedin.common.urn.DatasetUrn;
 import com.linkedin.common.urn.GlossaryTermUrn;
 import com.linkedin.common.urn.TagUrn;
-import com.linkedin.data.DataMap;
 import com.linkedin.data.template.StringArray;
 import com.linkedin.schema.*;
 import com.progressive.minds.chimera.foundational.logging.ChimeraLogger;
@@ -34,13 +31,23 @@ import java.util.Locale;
 import java.util.Map;
 
 public class ManageDatasets {
-    ChimeraLogger DatahubLogger = ChimeraLoggerFactory.getLogger(ManageDatasets.class);
-    String LoggerTag = "[DataHub- Create Dataset] -";
+    static ChimeraLogger DatahubLogger = ChimeraLoggerFactory.getLogger(ManageDatasets.class);
+    static String LoggerTag = "[DataHub- Create Dataset] -";
 
+    /**
+     * @param FieldName
+     * @param FieldDescription
+     * @param dataType
+     * @param IsPartitioningKey
+     * @param globalTags
+     * @param glossaryTerms
+     * @param IsPartOfKey
+     * @param isNullable
+     */
     public record DatasetsSchema(
-            String FieldName,
-            String FieldDescription,
-            String dataType,
+            @NotNull String FieldName,
+            @NotNull String FieldDescription,
+            @NotNull String dataType,
             @Null boolean IsPartitioningKey,
             @Null Map<String, String> globalTags,
             @Null Map<String, String> glossaryTerms,
@@ -49,10 +56,35 @@ public class ManageDatasets {
 
         // constructor with default values
         public DatasetsSchema(String FieldName, String FieldDescription, String dataType) {
-            this(FieldName, FieldDescription, dataType, false, null, null, false, true); // Default values
+            this(FieldName, FieldDescription, dataType, false, null, null,
+                    false, true); // Default values
         }
-    };
+    }
 
+    public record ForeignKeyDatasetsRecords(
+            @NotNull String fkDatasetPlatformName,
+            @NotNull String fkDatasetName,
+            @NotNull String fkDatasetOrigin,
+            @NotNull String ForeignKeyName,
+            @NotNull String[] ForeignKeyColumn
+            ){}
+
+    /**
+     * @param datasetPlatformName
+     * @param datasetName
+     * @param datasetDescription
+     * @param datasetOrigin
+     * @param datasetSchemaFilePath
+     * @param datasetSchemaType
+     * @param datasetExternalUrl
+     * @param datasetQualifiedName
+     * @param PrimaryKeys
+     * @param ForeignKeys
+     * @param datasetTags
+     * @param datasetUri
+     * @param CustomProperties
+     * @param datasetCreatedBy
+     */
   public record DatasetsRecords(
           @NotNull String datasetPlatformName,
           @NotNull String datasetName,
@@ -63,14 +95,19 @@ public class ManageDatasets {
             @Null String datasetExternalUrl,
             @Null String datasetQualifiedName,
             @Null String[]  PrimaryKeys,
-            @Null Map<String, String>  ForeignKeys,
+            @Null List<ForeignKeyDatasetsRecords> ForeignKeys,
             @Null String[]  datasetTags,
             @Null String datasetUri,
             @Null Map<String, String> CustomProperties,
             @Null String datasetCreatedBy
-            ){};
+            ){}
 
-    public String createDataset(DatasetsRecords datasetsInfo) throws Exception {
+    /**
+     * @param datasetsInfo
+     * @return
+     * @throws Exception
+     */
+    public static String createDataset(DatasetsRecords datasetsInfo) throws Exception {
 
 
         DatasetUrn datasetUrn = UrnUtils.toDatasetUrn(datasetsInfo.datasetPlatformName, datasetsInfo.datasetName,
@@ -82,7 +119,9 @@ public class ManageDatasets {
                 .setActor(new CorpuserUrn(userUrn.getUsernameEntity()))
                 .setTime(Instant.now().toEpochMilli());
 
-        AuditStamp lastModified = new AuditStamp().setTime(Instant.now().toEpochMilli()).setActor(userUrn);
+        AuditStamp lastModified = new AuditStamp()
+                .setTime(Instant.now().toEpochMilli())
+                .setActor(new CorpuserUrn(userUrn.getUsernameEntity()));
 
         SchemaFieldArray schemaFieldArray = new SchemaFieldArray();
 
@@ -101,21 +140,26 @@ public class ManageDatasets {
                     .setType(mapNativeTypeToSchemaType(schema.dataType))
                     .setNativeDataType(schema.dataType)
                     .setDescription(schema.FieldDescription)
-                    .setLastModified(lastModified))
-            ;
+                    .setLastModified(lastModified));
         }
 
 
         StringArray primaryKeys = new StringArray();
         primaryKeys.addAll(List.of(datasetsInfo.PrimaryKeys));
 
-        DataMap foreignKeyMap = new DataMap();
-        foreignKeyMap.putAll(datasetsInfo.ForeignKeys);
+        UrnArray ForeignFieldsUrnArray = new UrnArray();
+        ForeignKeyConstraintArray foreignKeyConstraintArray = new ForeignKeyConstraintArray();
+        datasetsInfo.ForeignKeys.forEach(record -> {
+            ForeignFieldsUrnArray.add(UrnUtils.toDatasetUrn(record.fkDatasetPlatformName, record.fkDatasetName,
+                    record.fkDatasetOrigin));
 
-/*        ForeignKeyConstraint foreignKeyConstraint = new ForeignKeyConstraint().setForeignDataset().setForeignFields().setName();
-
-        ForeignKeyConstraintArray foreignKeyConstraintArray = new ForeignKeyConstraintArray()
-                .add(foreignKeyMap);*/
+            ForeignKeyConstraint foreignKeyConstraint = new ForeignKeyConstraint()
+                    .setForeignDataset(UrnUtils.toDatasetUrn(record.fkDatasetPlatformName, record.fkDatasetName,
+                            record.fkDatasetOrigin))
+                    .setForeignFields(ForeignFieldsUrnArray)
+                    .setName(record.ForeignKeyName);
+            foreignKeyConstraintArray.add(foreignKeyConstraint);
+        });
 
         SchemaMetadata schemaMetadata =
                 new SchemaMetadata()
@@ -131,7 +175,7 @@ public class ManageDatasets {
                         .setLastModified(lastModified)
                         .setDataset(datasetUrn)
                         .setPrimaryKeys(primaryKeys)
-        //                .setForeignKeys(foreignKeys)
+                        .setForeignKeys(foreignKeyConstraintArray)
                         ;
 
         MetadataChangeProposalWrapper mcpw =
@@ -142,7 +186,7 @@ public class ManageDatasets {
                         .aspect(schemaMetadata)
                         .build();
 
-        return "";
+        return mcpw.toString();
     }
 
     /**
@@ -152,7 +196,7 @@ public class ManageDatasets {
      * @return              GlossaryTerms
      * @throws URISyntaxException
      */
-    private GlossaryTerms getGlossaryTerms(Map<String, String> glossaryTerms, String userName) throws URISyntaxException {
+    private static GlossaryTerms getGlossaryTerms(Map<String, String> glossaryTerms, String userName) throws URISyntaxException {
         AuditStamp createdStamp = new AuditStamp()
                 .setActor(new CorpuserUrn(userName))
                 .setTime(Instant.now().toEpochMilli());
@@ -170,9 +214,8 @@ public class ManageDatasets {
                 glossaryTermAssociationArray.add(termAssociation);
             }
         }
-        GlossaryTerms glossaryTerm = new GlossaryTerms()
+        return new GlossaryTerms()
                 .setTerms(glossaryTermAssociationArray).setAuditStamp(createdStamp);
-        return glossaryTerm;
     }
 
     /**
@@ -180,7 +223,7 @@ public class ManageDatasets {
      * @param globalTags Map of Global tags needs to be associated with Columns Map<ColumnName, TagName>
      * @return GlobalTags
      */
-    private GlobalTags getGlobalTags(Map<String, String> globalTags) {
+    private static GlobalTags getGlobalTags(Map<String, String> globalTags) {
         TagAssociationArray tagAssociationArray = new TagAssociationArray();
         for (Map.Entry<String, String> entry : globalTags.entrySet()) {
             String columnName = entry.getKey();
@@ -195,7 +238,7 @@ public class ManageDatasets {
         return new GlobalTags().setTags(tagAssociationArray);
     }
 
-    private List<DatasetsSchema> SchemaMetadata(String schemaType, File schemaFile) throws Exception {
+    private static List<DatasetsSchema> SchemaMetadata(String schemaType, File schemaFile) throws Exception {
 
         return switch (schemaType.toLowerCase()) {
             case "json" -> readJsonSchema(schemaFile);
@@ -219,12 +262,14 @@ public class ManageDatasets {
                 boolean isPartitioningKey = field.path("isPartitioningKey").asBoolean(false);
                 boolean isPartOfKey = field.path("isPartOfKey").asBoolean(false);
                 boolean isNullable = field.path("nullable").asBoolean(true);
-                datasetsSchemas.add(new DatasetsSchema(fieldName, fieldDescription, dataType, isPartitioningKey,null, null, isPartOfKey, isNullable));
+                datasetsSchemas.add(new DatasetsSchema(fieldName, fieldDescription, dataType, isPartitioningKey,
+                        null, null, isPartOfKey, isNullable));
             }
         }
         return datasetsSchemas;
     }
 
+    // protobuf TODO
     private static List<DatasetsSchema> readAvroSchema(File schemaFile) throws Exception {
         return readJsonSchema(schemaFile);
     }
@@ -242,7 +287,8 @@ public class ManageDatasets {
             boolean isPartitioningKey = (boolean) field.getOrDefault("isPartitioningKey", false);
             boolean isPartOfKey = (boolean) field.getOrDefault("isPartOfKey", false);
             boolean isNullable = (boolean) field.getOrDefault("nullable", true);
-            datasetsSchemas.add(new DatasetsSchema(fieldName, fieldDescription, dataType, isPartitioningKey,null, null, isPartOfKey, isNullable));
+            datasetsSchemas.add(new DatasetsSchema(fieldName, fieldDescription, dataType, isPartitioningKey,
+                    null, null, isPartOfKey, isNullable));
         }
         return datasetsSchemas;
     }
@@ -263,7 +309,8 @@ public class ManageDatasets {
             boolean isPartitioningKey = fieldNode.path("partitioningKey").asBoolean(false);
             boolean isPartOfKey = fieldNode.path("keyElement").asBoolean(false);
 
-            datasetsSchemas.add(new DatasetsSchema(fieldName, description, dataType, isPartitioningKey, null, null,isPartOfKey, isNullable));
+            datasetsSchemas.add(new DatasetsSchema(fieldName, description, dataType, isPartitioningKey,
+                    null, null,isPartOfKey, isNullable));
         }
         return datasetsSchemas;
     }
@@ -283,7 +330,7 @@ public class ManageDatasets {
             return new SchemaFieldDataType().setType(SchemaFieldDataType.Type.create(new NumberType()));
         } else if (value instanceof java.util.Date || value instanceof java.time.LocalDate) {
             return new SchemaFieldDataType().setType(SchemaFieldDataType.Type.create(new DateType()));
-        } else if (value instanceof java.sql.Time || value instanceof java.time.LocalTime) {
+        } else if (value instanceof java.time.LocalTime) {
             return new SchemaFieldDataType().setType(SchemaFieldDataType.Type.create(new TimeType()));
         } else if (value.getClass().isEnum()) {
             return new SchemaFieldDataType().setType(SchemaFieldDataType.Type.create(new EnumType()));
@@ -295,7 +342,6 @@ public class ManageDatasets {
             return new SchemaFieldDataType().setType(SchemaFieldDataType.Type.create(new RecordType()));
         }
         else {
-            // Default to StringType
             return new SchemaFieldDataType().setType(SchemaFieldDataType.Type.create(new StringType()));
         }
     }

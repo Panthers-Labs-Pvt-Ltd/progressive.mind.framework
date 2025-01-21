@@ -11,7 +11,9 @@
     {
       "name": "FieldName2",
       "type": "Integer",
-      "nullable": false
+      "nullable": false,
+      "isPartitioningKey": true,
+      "isPartOfKey": false
     }
   ]
 }
