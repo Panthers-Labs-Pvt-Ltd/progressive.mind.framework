@@ -1,23 +1,29 @@
 package com.progressive.minds.chimera.core.datahub.datasets;
 
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.linkedin.common.*;
+import com.linkedin.common.url.Url;
 import com.linkedin.common.urn.*;
 import com.linkedin.common.urn.CorpuserUrn;
 import com.linkedin.common.urn.DataPlatformUrn;
 import com.linkedin.common.urn.DatasetUrn;
 import com.linkedin.common.urn.GlossaryTermUrn;
 import com.linkedin.common.urn.TagUrn;
+import com.linkedin.data.DataMap;
+import com.linkedin.data.template.StringArray;
 import com.linkedin.schema.*;
 import com.progressive.minds.chimera.foundational.logging.ChimeraLogger;
 import com.progressive.minds.chimera.foundational.logging.ChimeraLoggerFactory;
+import datahub.event.MetadataChangeProposalWrapper;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.File;
 import java.math.BigDecimal;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -47,49 +53,41 @@ public class ManageDatasets {
         }
     };
 
-/*    public record DatasetsRecords(
-            @NotNull String name,
-            @NotNull String documentation,
-            @Null String origin,
-            @Null String platformName,
-            @Null String platformName,
-            @Null String platformName,
-            @Null String platformName,
-            @Null String platformName,
-            @Null String platformName,
-            @Null String platformName,
-            @Null String platformName,
-            @Null String platformName,
+  public record DatasetsRecords(
+          @NotNull String datasetPlatformName,
+          @NotNull String datasetName,
+            @NotNull String datasetDescription,
+            @Null String datasetOrigin,
+            @Null String datasetSchemaFilePath,
+            @Null String datasetSchemaType,
+            @Null String datasetExternalUrl,
+            @Null String datasetQualifiedName,
+            @Null String[]  PrimaryKeys,
+            @Null Map<String, String>  ForeignKeys,
+            @Null String[]  datasetTags,
+            @Null String datasetUri,
+            @Null Map<String, String> CustomProperties,
+            @Null String datasetCreatedBy
+            ){};
 
-            )*/
-
-    public String createDataset(String platformName, String datasetName, String datasetOrigin, String createdBy) throws Exception {
+    public String createDataset(DatasetsRecords datasetsInfo) throws Exception {
 
 
-        DatasetUrn datasetUrn = UrnUtils.toDatasetUrn(platformName, datasetName, datasetOrigin);
-        CorpuserUrn userUrn = new CorpuserUrn(createdBy);
+        DatasetUrn datasetUrn = UrnUtils.toDatasetUrn(datasetsInfo.datasetPlatformName, datasetsInfo.datasetName,
+                datasetsInfo.datasetOrigin);
+
+        CorpuserUrn userUrn = new CorpuserUrn(datasetsInfo.datasetCreatedBy);
 
         AuditStamp createdStamp = new AuditStamp()
                 .setActor(new CorpuserUrn(userUrn.getUsernameEntity()))
                 .setTime(Instant.now().toEpochMilli());
 
         AuditStamp lastModified = new AuditStamp().setTime(Instant.now().toEpochMilli()).setActor(userUrn);
-        String rawSchema = "";
-
-        SchemaMetadata schemaMetadata =
-                new SchemaMetadata()
-                        .setSchemaName(platformName + "_raw_schema")
-                        .setPlatform(new DataPlatformUrn(platformName))
-                        .setVersion(0L)
-                        .setHash("")
-                        .setPlatformSchema(
-                                SchemaMetadata.PlatformSchema.create(
-                                        new OtherSchema().setRawSchema(rawSchema)))
-                        .setLastModified(lastModified);
 
         SchemaFieldArray schemaFieldArray = new SchemaFieldArray();
 
-        List<DatasetsSchema> SchemaLists = SchemaMetadata(null,null);
+        List<DatasetsSchema> SchemaLists = SchemaMetadata(datasetsInfo.datasetSchemaType,
+                Paths.get(datasetsInfo.datasetSchemaFilePath).toFile());
 
         for (DatasetsSchema schema : SchemaLists) {
             schemaFieldArray.add(new SchemaField()
@@ -103,8 +101,46 @@ public class ManageDatasets {
                     .setType(mapNativeTypeToSchemaType(schema.dataType))
                     .setNativeDataType(schema.dataType)
                     .setDescription(schema.FieldDescription)
-                    .setLastModified(lastModified));
+                    .setLastModified(lastModified))
+            ;
         }
+
+
+        StringArray primaryKeys = new StringArray();
+        primaryKeys.addAll(List.of(datasetsInfo.PrimaryKeys));
+
+        DataMap foreignKeyMap = new DataMap();
+        foreignKeyMap.putAll(datasetsInfo.ForeignKeys);
+
+/*        ForeignKeyConstraint foreignKeyConstraint = new ForeignKeyConstraint().setForeignDataset().setForeignFields().setName();
+
+        ForeignKeyConstraintArray foreignKeyConstraintArray = new ForeignKeyConstraintArray()
+                .add(foreignKeyMap);*/
+
+        SchemaMetadata schemaMetadata =
+                new SchemaMetadata()
+                        .setSchemaName(datasetsInfo.datasetName)
+                        .setPlatform(new DataPlatformUrn(datasetsInfo.datasetPlatformName))
+                        .setVersion(0L)
+                        .setHash("")
+                        .setFields(schemaFieldArray)
+                        .setPlatformSchema(
+                                SchemaMetadata.PlatformSchema.create(
+                                        new OtherSchema().setRawSchema("rawSchema")))
+                        .setCreated(createdStamp)
+                        .setLastModified(lastModified)
+                        .setDataset(datasetUrn)
+                        .setPrimaryKeys(primaryKeys)
+        //                .setForeignKeys(foreignKeys)
+                        ;
+
+        MetadataChangeProposalWrapper mcpw =
+                MetadataChangeProposalWrapper.builder()
+                        .entityType("dataset")
+                        .entityUrn(datasetUrn)
+                        .upsert()
+                        .aspect(schemaMetadata)
+                        .build();
 
         return "";
     }

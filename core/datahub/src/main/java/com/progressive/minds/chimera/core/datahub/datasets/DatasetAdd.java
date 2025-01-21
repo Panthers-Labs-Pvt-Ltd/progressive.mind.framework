@@ -16,6 +16,8 @@ import datahub.client.MetadataWriteResponse;
 import datahub.client.rest.RestEmitter;
 import datahub.event.MetadataChangeProposalWrapper;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import com.linkedin.data.schema.RecordDataSchema.RecordType;
@@ -26,7 +28,7 @@ public class DatasetAdd {
     public DatasetAdd() {}
 
     public static void main(String[] args)
-            throws IOException, ExecutionException, InterruptedException {
+            throws IOException, ExecutionException, InterruptedException, URISyntaxException {
         DatasetUrn datasetUrn = UrnUtils.toDatasetUrn("Snowflake", "sampledatasets", "PROD");
         CorpuserUrn userUrn = new CorpuserUrn("ingestion");
         AuditStamp lastModified = new AuditStamp().setTime(1640692800000L).setActor(userUrn);
@@ -111,7 +113,7 @@ public class DatasetAdd {
                 .setName("Sample Datasets")
                 .setQualifiedName("Set DatasetProperties Qualified Name")
                 .setTags(sa)
-               // .schema().setFields()
+                .setUri(new URI(""))
                 ;
 
 System.out.println("===="+ ds);
