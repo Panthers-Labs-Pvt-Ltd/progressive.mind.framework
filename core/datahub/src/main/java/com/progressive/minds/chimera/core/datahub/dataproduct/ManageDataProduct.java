@@ -12,7 +12,6 @@ import com.linkedin.dataproduct.DataProductKey;
 import com.linkedin.dataproduct.DataProductProperties;
 import com.linkedin.domain.Domains;
 import com.linkedin.mxe.MetadataChangeProposal;
-import com.progressive.minds.chimera.core.datahub.referances.SharedLogger;
 import com.progressive.minds.chimera.core.datahub.common.ManageGlobalTags;
 import com.progressive.minds.chimera.core.datahub.common.ManageOwners;
 import com.progressive.minds.chimera.foundational.logging.ChimeraLogger;
@@ -31,7 +30,7 @@ import static com.progressive.minds.chimera.core.datahub.common.genericUtils.*;
 
 public class ManageDataProduct {
 
-    ChimeraLogger DatahubLogger = ChimeraLoggerFactory.getLogger(SharedLogger.class);
+    ChimeraLogger DatahubLogger = ChimeraLoggerFactory.getLogger(ManageDataProduct.class);
     String LoggerTag = "[DataHub- Create DataProduct] -";
 
 

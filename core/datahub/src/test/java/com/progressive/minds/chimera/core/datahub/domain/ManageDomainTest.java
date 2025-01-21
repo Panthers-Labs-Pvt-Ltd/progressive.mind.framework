@@ -41,7 +41,8 @@ String domainName = "Panthers Labs - Chimera";
         ManageDomain.DomainRecords subDomain1 = new ManageDomain.DomainRecords("Data & Analytics Domain", "SubDomain Doc", "Natwest Domain", null, null, null, childdomains);
         ManageDomain.DomainRecords subDomain2 = new ManageDomain.DomainRecords("Wealth Domain", "SubDomain Doc", "Natwest Domain", null, null, null, null);
 
-        ManageDomain.DomainRecords mainDomain = new ManageDomain.DomainRecords("Natwest Domain", "Natwest Doc", null, null, null, null, subdomains);
+        ManageDomain.DomainRecords mainDomain = new ManageDomain.DomainRecords("Natwest Domain", "Natwest Doc",
+                null, null, null, null, subdomains);
 
         subdomains.add(subDomain1);
         subdomains.add(subDomain2);

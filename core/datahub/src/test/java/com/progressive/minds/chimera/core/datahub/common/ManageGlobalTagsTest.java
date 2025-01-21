@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
 
-import static com.progressive.minds.chimera.core.datahub.referances.DataHubUtils.SYSTEM_USER;
+import static com.progressive.minds.chimera.core.datahub.Constants.SYSTEM_USER;
 import static com.progressive.minds.chimera.core.datahub.common.genericUtils.createProposal;
 import static com.progressive.minds.chimera.core.datahub.common.genericUtils.emitProposal;
 

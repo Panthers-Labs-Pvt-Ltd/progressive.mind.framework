@@ -1,6 +1,7 @@
 package com.progressive.minds.chimera.core.datahub.datasets;
 
 import com.linkedin.common.AuditStamp;
+import com.linkedin.common.url.Url;
 import com.linkedin.common.urn.CorpuserUrn;
 import com.linkedin.common.urn.DataPlatformUrn;
 import com.linkedin.common.urn.DatasetUrn;
@@ -26,9 +27,10 @@ public class DatasetAdd {
 
     public static void main(String[] args)
             throws IOException, ExecutionException, InterruptedException {
-        DatasetUrn datasetUrn = UrnUtils.toDatasetUrn("Snowflake", "Custom4Snowflake", "PROD");
+        DatasetUrn datasetUrn = UrnUtils.toDatasetUrn("Snowflake", "sampledatasets", "PROD");
         CorpuserUrn userUrn = new CorpuserUrn("ingestion");
         AuditStamp lastModified = new AuditStamp().setTime(1640692800000L).setActor(userUrn);
+        String rawSchema = "{ \"type\": \"record\", \"name\": \"Example\", \"fields\": [{\"name\": \"field1\", \"type\": \"string\"}]}";
 
         SchemaMetadata schemaMetadata =
                 new SchemaMetadata()
@@ -39,7 +41,7 @@ public class DatasetAdd {
                         .setHash("")
                         .setPlatformSchema(
                                 SchemaMetadata.PlatformSchema.create(
-                                        new OtherSchema().setRawSchema("__insert raw schema here__")))
+                                        new OtherSchema().setRawSchema(rawSchema)))
                         .setLastModified(lastModified)
                         .setDataset(datasetUrn);
 
@@ -53,6 +55,7 @@ public class DatasetAdd {
         sm.put("key1","val1");
         sm.put("key2","val2");
         sm.put("key3","val3");
+
         StringArray sa = new StringArray();
         sa.add("tag1");
         sa.add("tag3");
@@ -97,21 +100,21 @@ public class DatasetAdd {
 
 
         RecordDataSchema rs = new RecordDataSchema(nm, RecordType.RECORD);
-        rs.setDoc("Schema DOC");
+       rs.setDoc("Schema DOC");
         //rs.setFields("");
 
 
         DatasetProperties ds = new DatasetProperties()
                 .setDescription("DatasetProperties description")
                 .setCustomProperties(sm)
-
-                // .setExternalUrl(new Url("www.yahoo.com"))
-                .setName("DatasetPropertiesName")
+                .setExternalUrl(new Url("www.yahoo.com"))
+                .setName("Sample Datasets")
                 .setQualifiedName("Set DatasetProperties Qualified Name")
                 .setTags(sa)
+               // .schema().setFields()
                 ;
 
-
+System.out.println("===="+ ds);
         MetadataChangeProposalWrapper mcpw =
                 MetadataChangeProposalWrapper.builder()
                         .entityType("dataset")
@@ -119,8 +122,9 @@ public class DatasetAdd {
                         .upsert()
                         .aspect(ds)
                         .build();
+         String DATAHUB_AUTH_TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJhY3RvclR5cGUiOiJVU0VSIiwiYWN0b3JJZCI6ImRhdGFodWIiLCJ0eXBlIjoiUEVSU09OQUwiLCJ2ZXJzaW9uIjoiMiIsImp0aSI6IjY5ZDRlY2QyLTM2NDItNDk3YS05OTIwLThiZjQyM2I3Yjg3OSIsInN1YiI6ImRhdGFodWIiLCJleHAiOjE3Mzk4OTE4NzgsImlzcyI6ImRhdGFodWItbWV0YWRhdGEtc2VydmljZSJ9.lWCSLgZ096DdlI6lsqTgicd-uKYi4RNf1pOHaCCM-WI";
 
-        String token = "";
+        String token = DATAHUB_AUTH_TOKEN;
         RestEmitter emitter = RestEmitter.create(b -> b.server("http://localhost:8080").token(token));
         Future<MetadataWriteResponse> response = emitter.emit(mcpw, null);
         System.out.println(response.get().getResponseContent());
