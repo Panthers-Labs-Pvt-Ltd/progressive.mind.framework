@@ -1,9 +1,11 @@
 package com.progressive.minds.chimera.controller;
 
 import com.progressive.minds.chimera.common.dto.GenericResponse;
+import com.progressive.minds.chimera.dto.ChildDTO;
 import com.progressive.minds.chimera.dto.DataPipeline;
 import com.progressive.minds.chimera.foundational.logging.ChimeraLogger;
 import com.progressive.minds.chimera.foundational.logging.ChimeraLoggerFactory;
+import com.progressive.minds.chimera.service.ParentChildInheritanceService;
 import com.progressive.minds.chimera.service.PipelineService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,9 +28,12 @@ public class PipelineController {
 
   private PipelineService pipelineService;
 
+  private ParentChildInheritanceService parentChildInheritanceService;
+
   @Autowired
-  public PipelineController(PipelineService pipelineService) {
+  public PipelineController(PipelineService pipelineService, ParentChildInheritanceService parentChildInheritanceService) {
     this.pipelineService = pipelineService;
+    this.parentChildInheritanceService = parentChildInheritanceService;
   }
 
   // GET request - Retrieve an existing pipeline by ID
@@ -113,12 +118,23 @@ public class PipelineController {
     }
   }
 
-  // Delete request -delete pipeline
+  // count total number of pipeline
   @GetMapping("/count")
   public ResponseEntity<GenericResponse> countNumberOfDataPipeline() {
     long totalNumberOfPipeline = pipelineService.getTotalNumberOfPipeline();
     GenericResponse genericResponse = GenericResponse.builder()
         .message("Number of Data pipelines " + totalNumberOfPipeline)
+        .statusCode(HttpStatus.OK.name())
+        .build();
+    return ResponseEntity.status(HttpStatus.OK).body(genericResponse);
+  }
+
+  //Test the parent child
+  @PostMapping("/create/parent-child")
+  public ResponseEntity<GenericResponse> createParentChild(@RequestBody ChildDTO childDTO) {
+    int numberOfRecordsCreated = parentChildInheritanceService.insertChildRecord(childDTO);
+    GenericResponse genericResponse = GenericResponse.builder()
+        .message("Number of Parent child " + numberOfRecordsCreated)
         .statusCode(HttpStatus.OK.name())
         .build();
     return ResponseEntity.status(HttpStatus.OK).body(genericResponse);
