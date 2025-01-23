@@ -3,7 +3,7 @@
   "name": "custom_dataset",
   "displayName": "custom_dataset",
   "description": "custom_dataset",
-  "origin": "custom",
+  "FabricType": "DEV",
   "datasetPlatformName": "oracle",
   "qualifiedName": "oracle",
   "uri": "",
@@ -36,9 +36,9 @@
       "fieldCanonicalName": "resource_name",
       "maxLength": 24,
       "isPartitionKey": false,
-      "isPrimaryKey": false,
+      "isPrimaryKey": true,
       "isSampleTime": false,
-      "isNullable": true,
+      "isNullable": false,
       "foreignKey": [
         {
           "datasetName": "tagsname1",
@@ -51,32 +51,32 @@
       ],
       "tags": [
         {
-          "name": "tagsname1",
-          "value": "tagsvalue1"
+          "name": "col tagsname1",
+          "value": "col tagsvalue1"
         }
       ],
       "glossaryTerm": [
         {
-          "glossaryTermName": "tagsname1",
-          "Documentations": "tagsvalue1"
+          "glossaryTermName": "glossaryTermName1",
+          "Documentations": "glossaryTermNameDocumentations1"
         },
         {
-          "glossaryTermName": "tagsname1",
-          "Documentations": "tagsvalue1"
+          "glossaryTermName": "glossaryTermName2",
+          "Documentations": "Documentations2"
         }
       ]
     },
     {
-      "name": "resource_name",
+      "name": "column2",
       "type": "string",
-      "displayName": "resource_name",
-      "description": "resource_name",
-      "fieldCanonicalName": "resource_name",
+      "displayName": "column2 dis",
+      "description": "column2 description",
+      "fieldCanonicalName": "column2e",
       "maxLength": 24,
-      "isPartitionKey": false,
+      "isPartitionKey": true,
       "isPrimaryKey": false,
       "isSampleTime": false,
-      "isNullable": true,
+      "isNullable": false,
       "foreignKey": [
         {
           "datasetName": "tagsname1",
