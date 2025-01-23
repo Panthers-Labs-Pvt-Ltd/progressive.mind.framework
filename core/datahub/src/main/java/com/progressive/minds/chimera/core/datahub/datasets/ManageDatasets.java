@@ -12,6 +12,7 @@ import com.linkedin.common.urn.DatasetUrn;
 import com.linkedin.common.urn.GlossaryTermUrn;
 import com.linkedin.common.urn.TagUrn;
 import com.linkedin.data.template.StringArray;
+import com.linkedin.mxe.MetadataChangeProposal;
 import com.linkedin.schema.*;
 import com.progressive.minds.chimera.foundational.logging.ChimeraLogger;
 import com.progressive.minds.chimera.foundational.logging.ChimeraLoggerFactory;
@@ -21,14 +22,13 @@ import org.yaml.snakeyaml.Yaml;
 import java.io.File;
 import java.math.BigDecimal;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import java.io.FileInputStream;
 import java.net.URISyntaxException;
 import java.time.Instant;
-import java.util.Locale;
-import java.util.Map;
+
+import static com.progressive.minds.chimera.core.datahub.common.genericUtils.createProposal;
+import static com.progressive.minds.chimera.core.datahub.common.genericUtils.emitProposal;
 
 public class ManageDatasets {
     static ChimeraLogger DatahubLogger = ChimeraLoggerFactory.getLogger(ManageDatasets.class);
@@ -99,7 +99,8 @@ public class ManageDatasets {
             @Null String[]  datasetTags,
             @Null String datasetUri,
             @Null Map<String, String> CustomProperties,
-            @Null String datasetCreatedBy
+            @Null String datasetRawSchema,
+            @NotNull String datasetCreatedBy
             ){}
 
     /**
@@ -128,26 +129,49 @@ public class ManageDatasets {
         List<DatasetsSchema> SchemaLists = SchemaMetadata(datasetsInfo.datasetSchemaType,
                 Paths.get(datasetsInfo.datasetSchemaFilePath).toFile());
 
+        EditableSchemaFieldInfoArray editableSchemaFieldInfoArray = new EditableSchemaFieldInfoArray();
+        EditableSchemaMetadata editableSchemaMetadata = new EditableSchemaMetadata()
+                .setEditableSchemaFieldInfo(editableSchemaFieldInfoArray);
+
         for (DatasetsSchema schema : SchemaLists) {
-            schemaFieldArray.add(new SchemaField()
-                    .setFieldPath(schema.FieldName)
-                    .setLabel(schema.FieldName)
-                    .setGlobalTags(getGlobalTags(schema.globalTags))
-                    .setGlossaryTerms(getGlossaryTerms(schema.glossaryTerms,userUrn.getUsernameEntity()))
-                    .setIsPartitioningKey(schema.IsPartitioningKey)
-                    .setIsPartOfKey(schema.IsPartOfKey)
-                    .setNullable(schema.isNullable)
-                    .setType(mapNativeTypeToSchemaType(schema.dataType))
-                    .setNativeDataType(schema.dataType)
-                    .setDescription(schema.FieldDescription)
-                    .setLastModified(lastModified));
+            SchemaField schemaField = new SchemaField();
+
+            schemaField.setFieldPath(schema.FieldName);
+            schemaField.setLabel(schema.FieldName);
+            schemaField.setIsPartitioningKey(schema.IsPartitioningKey);
+            schemaField.setIsPartOfKey(schema.IsPartOfKey);
+            schemaField.setNullable(schema.isNullable);
+            schemaField.setType(mapNativeTypeToSchemaType(schema.dataType));
+            schemaField.setNativeDataType(schema.dataType);
+            schemaField.setDescription(schema.FieldDescription);
+            schemaField.setLastModified(lastModified);
+
+            EditableSchemaFieldInfo editableSchemaFieldInfo = new EditableSchemaFieldInfo();
+            editableSchemaFieldInfo.setFieldPath(schema.FieldName);
+
+            if (schema.globalTags != null && ! schema.globalTags.isEmpty())
+            {
+                //schemaField.setGlobalTags(getGlobalTags(schema.globalTags));
+                editableSchemaFieldInfo.setGlobalTags(getGlobalTags(schema.globalTags));
+            }
+            if (schema.glossaryTerms != null && ! schema.glossaryTerms.isEmpty())
+            {
+                //schemaField.setGlossaryTerms(getGlossaryTerms(schema.glossaryTerms,userUrn.getUsernameEntity()));
+                editableSchemaFieldInfo.setGlossaryTerms(getGlossaryTerms(schema.glossaryTerms,userUrn.getUsernameEntity(),""));
+            }
+            schemaFieldArray.add(schemaField);
+            editableSchemaFieldInfoArray.add(editableSchemaFieldInfo);
         }
 
-
         StringArray primaryKeys = new StringArray();
-        primaryKeys.addAll(List.of(datasetsInfo.PrimaryKeys));
+        if(datasetsInfo.PrimaryKeys != null){
+            primaryKeys.addAll(List.of(datasetsInfo.PrimaryKeys ));
+        }
 
-        UrnArray ForeignFieldsUrnArray = new UrnArray();
+        if (datasetsInfo.ForeignKeys != null)
+        {
+            UrnArray ForeignFieldsUrnArray = new UrnArray();
+
         ForeignKeyConstraintArray foreignKeyConstraintArray = new ForeignKeyConstraintArray();
         datasetsInfo.ForeignKeys.forEach(record -> {
             ForeignFieldsUrnArray.add(UrnUtils.toDatasetUrn(record.fkDatasetPlatformName, record.fkDatasetName,
@@ -160,6 +184,7 @@ public class ManageDatasets {
                     .setName(record.ForeignKeyName);
             foreignKeyConstraintArray.add(foreignKeyConstraint);
         });
+        }
 
         SchemaMetadata schemaMetadata =
                 new SchemaMetadata()
@@ -170,15 +195,25 @@ public class ManageDatasets {
                         .setFields(schemaFieldArray)
                         .setPlatformSchema(
                                 SchemaMetadata.PlatformSchema.create(
-                                        new OtherSchema().setRawSchema("rawSchema")))
+                                        new OtherSchema().setRawSchema(datasetsInfo.datasetRawSchema)))
                         .setCreated(createdStamp)
                         .setLastModified(lastModified)
                         .setDataset(datasetUrn)
                         .setPrimaryKeys(primaryKeys)
-                        .setForeignKeys(foreignKeyConstraintArray)
+                       // .setForeignKeys(foreignKeyConstraintArray)
                         ;
 
-        MetadataChangeProposalWrapper mcpw =
+        MetadataChangeProposal proposal = createProposal(String.valueOf(datasetUrn), "dataset",
+                "schemaMetadata", "UPSERT", schemaMetadata);
+        DatahubLogger.logInfo(LoggerTag + "Preparing for MetadataChangeProposal : " + proposal);
+        String retVal = emitProposal(proposal, "dataProduct");
+
+        MetadataChangeProposal proposal1 = createProposal(String.valueOf(datasetUrn), "dataset",
+                "editableSchemaMetadata", "UPSERT", editableSchemaMetadata);
+
+        String retVal2 = emitProposal(proposal1, "dataProduct");
+
+  /*      MetadataChangeProposal proposal =
                 MetadataChangeProposalWrapper.builder()
                         .entityType("dataset")
                         .entityUrn(datasetUrn)
@@ -186,7 +221,10 @@ public class ManageDatasets {
                         .aspect(schemaMetadata)
                         .build();
 
-        return mcpw.toString();
+        retVal = emitProposal(proposal, "dataProduct");
+
+*/
+        return retVal.toString();
     }
 
     /**
@@ -196,7 +234,7 @@ public class ManageDatasets {
      * @return              GlossaryTerms
      * @throws URISyntaxException
      */
-    private static GlossaryTerms getGlossaryTerms(Map<String, String> glossaryTerms, String userName) throws URISyntaxException {
+    private static GlossaryTerms getGlossaryTerms(Map<String, String> glossaryTerms, String userName, String Doc) throws URISyntaxException {
         AuditStamp createdStamp = new AuditStamp()
                 .setActor(new CorpuserUrn(userName))
                 .setTime(Instant.now().toEpochMilli());
@@ -210,20 +248,28 @@ public class ManageDatasets {
                 DatahubLogger.logInfo(LoggerTag + String.format("Mapping Glossary Term %s With Datasets", glossaryTermName));
                 GlossaryTermUrn glossaryTermUrn = GlossaryTermUrn.createFromString("urn:li:glossaryTerm:" + value);
                 GlossaryTermAssociation termAssociation = new GlossaryTermAssociation()
-                        .setUrn(glossaryTermUrn);
+                        .setUrn(glossaryTermUrn).setActor(new CorpuserUrn(userName));
+                        //.setAttribution(new MetadataAttribution(""));
                 glossaryTermAssociationArray.add(termAssociation);
             }
         }
-        return new GlossaryTerms()
-                .setTerms(glossaryTermAssociationArray).setAuditStamp(createdStamp);
+        GlossaryTerms glossaryTerm = new GlossaryTerms();
+        glossaryTerm.setTerms(glossaryTermAssociationArray).setAuditStamp(createdStamp)
+                .schema()
+                .setDoc(Doc);
+        return  glossaryTerm;
     }
 
     /**
      *
-     * @param globalTags Map of Global tags needs to be associated with Columns Map<ColumnName, TagName>
+     * @param datasetTags Map of Global tags needs to be associated with Columns Map<ColumnName, TagName>
      * @return GlobalTags
      */
-    private static GlobalTags getGlobalTags(Map<String, String> globalTags) {
+    private static GlobalTags getGlobalTags(Map<String, String> datasetTags) {
+        Map<String, String> globalTags = new HashMap<>();
+        globalTags.put("tag1", "Value1");
+        globalTags.put("tag2", "Value2");
+
         TagAssociationArray tagAssociationArray = new TagAssociationArray();
         for (Map.Entry<String, String> entry : globalTags.entrySet()) {
             String columnName = entry.getKey();

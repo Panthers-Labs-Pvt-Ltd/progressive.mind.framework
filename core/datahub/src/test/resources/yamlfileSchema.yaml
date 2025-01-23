@@ -1,0 +1,96 @@
+id: custom_dataset_id
+name: custom_dataset
+displayName: custom_dataset
+description: custom_dataset
+origin: custom
+platformName: oracle
+qualifiedName: mydb.custom_dataset
+uri: ''
+tags:
+  - name: tagsname1
+    value: tagsvalue1
+    isInternal: false
+  - name: tagsname2
+    value: tagsvalue2
+    isInternal: false
+properties:
+  - name: propertiesname1
+    value: value1
+  - name: propertiesname2
+    value: value2
+fields:
+  - name: resource_name
+    id: resource_name
+    type: string
+    displayName: resource_name
+    description: resource_name
+    fieldCanonicalName: resource_name
+    maxLength: 24
+    isKey: false
+    isPrimaryKey: false
+    isSampleTime: false
+    isNullable: true
+    tags:
+      - name: tagsname1
+        value: tagsvalue1
+        isInternal: false
+  - name: ehod
+    id: ehod_id
+    type: string
+    displayName: ehod
+    description: ehod
+    fieldCanonicalName: ehod
+    maxLength: 24
+    isKey: false
+    isPrimaryKey: false
+    isSampleTime: false
+    isNullable: true
+    tags:
+      - name: tagsname1
+        value: tagsvalue1
+        isInternal: false
+  - name: owner
+    id: id_owner
+    type: string
+    displayName: owner
+    description: owner
+    fieldCanonicalName: owner
+    maxLength: 24
+    isKey: false
+    isPrimaryKey: false
+    isSampleTime: false
+    isNullable: true
+    tags:
+      - name: tagsname1
+        value: tagsvalue1
+        isInternal: false
+  - name: me
+    id: id_me
+    type: string
+    displayName: me
+    description: me
+    fieldCanonicalName: me
+    maxLength: 24
+    isKey: false
+    isPrimaryKey: false
+    isSampleTime: false
+    isNullable: true
+    tags:
+      - name: tagsname1
+        value: tagsvalue1
+        isInternal: false
+  - name: owner2
+    id: id_owner2
+    type: string
+    displayName: owner2
+    description: owner2
+    fieldCanonicalName: owner2
+    maxLength: 24
+    isKey: false
+    isPrimaryKey: false
+    isSampleTime: false
+    isNullable: true
+    tags:
+      - name: tagsname1
+        value: tagsvalue1
+        isInternal: false

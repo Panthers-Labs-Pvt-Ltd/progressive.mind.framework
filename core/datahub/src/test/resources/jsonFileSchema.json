@@ -1,0 +1,108 @@
+{
+  "id": "custom_dataset_id",
+  "name": "custom_dataset",
+  "displayName": "custom_dataset",
+  "description": "custom_dataset",
+  "origin": "custom",
+  "datasetPlatformName": "oracle",
+  "qualifiedName": "oracle",
+  "uri": "",
+  "tags": [
+    {
+      "name": "tagsname1",
+      "value": "tagsvalue1"
+    },
+    {
+      "name": "tagsname2",
+      "value": "tagsvalue2"
+    }
+  ],
+  "properties": [
+    {
+      "name": "propertiesname1",
+      "value": "value1"
+    },
+    {
+      "name": "propertiesname2",
+      "value": "value2"
+    }
+  ],
+  "fields": [
+    {
+      "name": "resource_name",
+      "type": "string",
+      "displayName": "resource_name",
+      "description": "resource_name",
+      "fieldCanonicalName": "resource_name",
+      "maxLength": 24,
+      "isPartitionKey": false,
+      "isPrimaryKey": false,
+      "isSampleTime": false,
+      "isNullable": true,
+      "foreignKey": [
+        {
+          "datasetName": "tagsname1",
+          "datasetPlatform": "tagsvalue1",
+          "origin": "tagsvalue1",
+          "ForeignKeyName": "tagsvalue1",
+          "ForeignKeyColumn": "tagsvalue1",
+          "LogicalKey": false
+        }
+      ],
+      "tags": [
+        {
+          "name": "tagsname1",
+          "value": "tagsvalue1"
+        }
+      ],
+      "glossaryTerm": [
+        {
+          "glossaryTermName": "tagsname1",
+          "Documentations": "tagsvalue1"
+        },
+        {
+          "glossaryTermName": "tagsname1",
+          "Documentations": "tagsvalue1"
+        }
+      ]
+    },
+    {
+      "name": "resource_name",
+      "type": "string",
+      "displayName": "resource_name",
+      "description": "resource_name",
+      "fieldCanonicalName": "resource_name",
+      "maxLength": 24,
+      "isPartitionKey": false,
+      "isPrimaryKey": false,
+      "isSampleTime": false,
+      "isNullable": true,
+      "foreignKey": [
+        {
+          "datasetName": "tagsname1",
+          "datasetPlatform": "tagsvalue1",
+          "origin": "tagsvalue1",
+          "ForeignKeyName": "tagsvalue1",
+          "ForeignKeyColumn": "tagsvalue1",
+          "LogicalKey": false
+        }
+      ],
+      "tags": [
+        {
+          "name": "tagsname1",
+          "value": "tagsvalue1"
+        }
+      ],
+      "glossaryTerm": [
+        {
+          "glossaryTermName": "tagsname1",
+          "Documentations": "tagsvalue1"
+        },
+        {
+          "glossaryTermName": "tagsname1",
+          "Documentations": "tagsvalue1"
+        }
+      ]
+    }
+  ]
+}
