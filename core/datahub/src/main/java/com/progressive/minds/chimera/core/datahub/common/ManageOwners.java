@@ -2,7 +2,7 @@ package com.progressive.minds.chimera.core.datahub.common;
 
 import com.linkedin.common.*;
 import com.linkedin.mxe.MetadataChangeProposal;
-import com.progressive.minds.chimera.core.datahub.referances.SharedLogger;
+//import com.progressive.minds.chimera.core.datahub.references.SharedLogger;
 import com.progressive.minds.chimera.foundational.logging.ChimeraLogger;
 import com.progressive.minds.chimera.foundational.logging.ChimeraLoggerFactory;
 import com.linkedin.common.urn.CorpuserUrn;
@@ -18,14 +18,14 @@ import com.linkedin.common.Owner;
 import com.linkedin.common.OwnershipSource;
 
 import static com.linkedin.common.OwnershipSourceType.MANUAL;
-import static com.progressive.minds.chimera.core.datahub.referances.DataHubUtils.SYSTEM_USER;
+//import static com.progressive.minds.chimera.core.datahub.referances.DataHubUtils.SYSTEM_USER;
 import static com.progressive.minds.chimera.core.datahub.common.genericUtils.createProposal;
 import static com.progressive.minds.chimera.core.datahub.common.genericUtils.emitProposal;
 
 public class ManageOwners {
     public static String addOwners(Urn entityUrn, String entityType, String aspectName, String changeType,
                                    Map<String, String> ownersInfo) throws IOException, ExecutionException, InterruptedException {
-        ChimeraLogger DatahubLogger = ChimeraLoggerFactory.getLogger(SharedLogger.class);
+        ChimeraLogger DatahubLogger = ChimeraLoggerFactory.getLogger(ManageOwners.class);
 
         OwnerArray ownerArray = new OwnerArray();
         DatahubLogger.logInfo("Adding Owners.......");
@@ -44,7 +44,7 @@ public class ManageOwners {
                 ownerArray.add(owner);
             });
         AuditStamp createdStamp = new AuditStamp()
-                .setActor(new CorpuserUrn(SYSTEM_USER))
+                .setActor(new CorpuserUrn("System"))
                 .setTime(Instant.now().toEpochMilli());
 
 
@@ -55,7 +55,7 @@ public class ManageOwners {
                 aspectName, changeType,ownership);
 
         String retVal= emitProposal(proposal, "ownership");
-        System.out.println("OWNE" + retVal);
+        System.out.println("OWNER" + retVal);
         return  retVal;
     }
 }

@@ -24,7 +24,7 @@ import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 
-import static com.progressive.minds.chimera.core.datahub.referances.DataHubUtils.SYSTEM_USER;
+//import static com.progressive.minds.chimera.core.datahub.referances.DataHubUtils.SYSTEM_USER;
 import static com.progressive.minds.chimera.core.datahub.common.genericUtils.*;
 
 import java.util.Map;
@@ -51,7 +51,7 @@ public class ManageDomain  {
                     replaceSpecialCharsAndLowercase(domainName));
 
             AuditStamp createdStamp = new AuditStamp()
-                    .setActor(new CorpuserUrn(SYSTEM_USER))
+                    .setActor(new CorpuserUrn("System"))
                     .setTime(Instant.now().toEpochMilli());
 
             StringMap MapCustomProperties = new StringMap();
@@ -94,7 +94,7 @@ public class ManageDomain  {
         try {
 
             AuditStamp createdStamp = new AuditStamp()
-                    .setActor(new CorpuserUrn(SYSTEM_USER))
+                    .setActor(new CorpuserUrn("System"))
                     .setTime(Instant.now().toEpochMilli());
 
             Urn domainUrn = Urn.createFromString("urn:li:domain:" +
