@@ -86,14 +86,13 @@
         <apache.httpcomponents.httpclient.version>4.5.14</apache.httpcomponents.httpclient.version>
         <ini4j.version>0.5.4</ini4j.version>
         <jsoup.version>1.15.3</jsoup.version>
-        <amazonaws.sdk.version>1.12.376</amazonaws.sdk.version>
 
         <!--Hibernate dependencies-->
-        <sqlite.jdbc.version>3.25.2</sqlite.jdbc.version>
-        <sqlite.dialect.version>0.1.2</sqlite.dialect.version>
-        <hibernate.version>5.2.16.Final</hibernate.version>
-        <jackson.dataformat.csv.version>2.3.0</jackson.dataformat.csv.version>
-        <apache.commons.pool.version>2.11.1</apache.commons.pool.version>
+<!--        <sqlite.jdbc.version>3.25.2</sqlite.jdbc.version>-->
+<!--        <sqlite.dialect.version>0.1.2</sqlite.dialect.version>-->
+<!--        <hibernate.version>5.2.16.Final</hibernate.version>-->
+<!--        <jackson.dataformat.csv.version>2.3.0</jackson.dataformat.csv.version>-->
+<!--        <apache.commons.pool.version>2.11.1</apache.commons.pool.version>-->
 
         <!-- Compilation Option -->
         <maven.compiler.source>17</maven.compiler.source>
@@ -120,12 +119,14 @@
         <scala.version>${scala.major.version}.${scala.minor.version}</scala.version>
 
         <!-- Spark and its dependencies -->
-        <spark.version>3.5.3</spark.version>
+        <spark.version>3.5.4</spark.version>
+        <spark.scala.version>2.12</spark.scala.version>
         <spark.kafka.sql.version>0-10</spark.kafka.sql.version>
         <hadoop.version>3.3.3</hadoop.version>
 
         <!-- Logging, Monitoring and DQ -->
         <log4j.api.version>2.20.0</log4j.api.version>
+        <slf4j-api.version>2.0.9</slf4j-api.version>
         <amazon.deequ.version>2.0.1-spark-3.2</amazon.deequ.version>
         <spark.measure.version>0.22</spark.measure.version>
         <spline.agent.version>1.0.4</spline.agent.version>
@@ -136,12 +137,15 @@
         <delta.version>2.2.0</delta.version>
 
         <!-- Temporary Database capability -->
-        <apache.derby.version>10.12.1.1</apache.derby.version>
-        <apache.sqlite.version>3.40.0.0</apache.sqlite.version>
+<!--        <apache.derby.version>10.12.1.1</apache.derby.version>-->
+<!--        <apache.sqlite.version>3.40.0.0</apache.sqlite.version>-->
 
         <!-- testing -->
         <junit.version>5.9.1</junit.version>
-        <scalatest.version>3.2.14</scalatest.version>
+        <scalatest.version>3.2.17</scalatest.version>
+        <junit.jupiter.version>5.10.0</junit.jupiter.version>
+        <mockito.inline.version>5.2.0</mockito.inline.version>
+        <mockito-junit-jupiter.version>5.2.0</mockito-junit-jupiter.version>
 
         <!-- Build configurations -->
         <maven.scala.plugin.version>4.7.2</maven.scala.plugin.version>
@@ -149,12 +153,11 @@
         <maven.compiler.plugin.version>3.11.0</maven.compiler.plugin.version>
         <checkstyle-maven-plugin.version>3.0.0</checkstyle-maven-plugin.version>
         <scalatest.maven.plugin.version>2.1.0</scalatest.maven.plugin.version>
-        <scalatest.version>3.2.17</scalatest.version>
 
         <!-- Key dependencies -->
         <kafka.clients.version>3.1.0</kafka.clients.version>
         <aws.java.sdk2.version>2.26.16</aws.java.sdk2.version>
-        <hive.metastore.version>1.18.24</hive.metastore.version>
+<!--        <hive.metastore.version>1.18.24</hive.metastore.version>-->
 
         <!-- Helper and utility dependencies -->
         <google.guava.version>31.1-jre</google.guava.version>
@@ -165,16 +168,10 @@
         <code.gson.version>2.9.0</code.gson.version>
         <commons-text.version>1.10.0</commons-text.version>
         <commons-csv.version>1.9.0</commons-csv.version>
+        <antlr4.version>4.9.3</antlr4.version>
 
         <!-- Spring Cloud versions -->
-
         <spring-cloud.version>2024.0.0</spring-cloud.version>
-
-        <!--Test Dependency versions -->
-        <junit.jupiter.version>5.10.0</junit.jupiter.version>
-        <mockito.inline.version>5.2.0</mockito.inline.version>
-        <mockito-junit-jupiter.version>5.2.0</mockito-junit-jupiter.version>
-
     </properties>
     <!--<repositories><repository><id>gitlab-maven</id><url>https://gitlab.com/manishkumargupta/TestScala.git</url></repository></repositories><distributionManagement><repository><id>gitlab-maven</id><url>https://gitlab.com/manishkumargupta/TestScala.git</url></repository><snapshotRepository><id>gitlab-maven</id><url>https://gitlab.com/manishkumargupta/TestScala.git</url></snapshotRepository></distributionManagement>-->
 
@@ -208,24 +205,23 @@
             <version>${scala.major.version}.${scala.minor.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>com.google.cloud</groupId>
-            <artifactId>google-cloud-secretmanager</artifactId>
-            <version>2.24.0</version> <!-- Use the latest version -->
-        </dependency>
-        <!-- Azure Key Vault SDK -->
-        <dependency>
-            <groupId>com.azure</groupId>
-            <artifactId>azure-security-keyvault-secrets</artifactId>
-            <version>4.7.0</version>
-        </dependency>
+        <!-- key management -->
+<!--        <dependency>-->
+<!--            <groupId>com.google.cloud</groupId>-->
+<!--            <artifactId>google-cloud-secretmanager</artifactId>-->
+<!--            <version>2.24.0</version> &lt;!&ndash; Use the latest version &ndash;&gt;-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>com.azure</groupId>-->
+<!--            <artifactId>azure-security-keyvault-secrets</artifactId>-->
+<!--            <version>4.7.0</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>com.azure</groupId>-->
+<!--            <artifactId>azure-identity</artifactId>-->
+<!--            <version>1.8.0</version>-->
+<!--        </dependency>-->
 
-        <!-- Azure Identity SDK for Authentication -->
-        <dependency>
-            <groupId>com.azure</groupId>
-            <artifactId>azure-identity</artifactId>
-            <version>1.8.0</version>
-        </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
@@ -254,20 +250,34 @@
             <artifactId>secretsmanager</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.apache.spark</groupId>
-            <artifactId>spark-sql-kafka-0-10_2.12</artifactId>
-            <version>${spark.version}</version>
+            <groupId>org.antlr</groupId>
+            <artifactId>antlr4</artifactId>
+            <version>${antlr4.version}</version>
         </dependency>
         <dependency>
+            <groupId>org.antlr</groupId>
+            <artifactId>antlr4-runtime</artifactId>
+            <version>${antlr4.version}</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/ch.cern.sparkmeasure/spark-measure -->
+        <dependency>
+            <groupId>ch.cern.sparkmeasure</groupId>
+            <artifactId>spark-measure_${spark.scala.version}</artifactId>
+            <version>0.24</version>
+        </dependency>
+
+        <!-- Spark -->
+        <dependency>
             <groupId>org.apache.spark</groupId>
-            <artifactId>spark-streaming_2.12</artifactId>
+            <artifactId>spark-streaming_${spark.scala.version}</artifactId>
             <version>${spark.version}</version>
         </dependency>
         <!-- Spark Core -->
         <dependency>
             <groupId>org.apache.spark</groupId>
-            <artifactId>spark-core_2.12</artifactId>
-            <version>${spark.version}</version> <!-- Replace with your Spark version -->
+            <artifactId>spark-core_${spark.scala.version}</artifactId>
+            <version>${spark.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.slf4j</groupId>
@@ -276,38 +286,35 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>org.antlr</groupId>
-            <artifactId>antlr4</artifactId>
-            <version>4.9.3</version>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-sql_${spark.scala.version}</artifactId>
+            <version>${spark.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.antlr</groupId>
-            <artifactId>antlr4-runtime</artifactId>
-            <version>4.9.3</version>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/ch.cern.sparkmeasure/spark-measure -->
-        <dependency>
-            <groupId>ch.cern.sparkmeasure</groupId>
-            <artifactId>spark-measure_2.12</artifactId>
-            <version>0.24</version>
-        </dependency>
-
-        <!-- Spark SQL -->
         <dependency>
             <groupId>org.apache.spark</groupId>
-            <artifactId>spark-sql_2.12</artifactId>
-            <version>${spark.version}</version> <!-- Replace with your Spark version -->
+            <artifactId>spark-avro_${spark.scala.version}</artifactId>
+            <version>${spark.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-token-provider-kafka-0-10_${spark.scala.version}</artifactId>
+            <version>${spark.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-sql-kafka-0-10_${spark.scala.version}</artifactId>
+            <version>${spark.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>2.0.9</version> <!-- Example latest -->
+            <version>${slf4j-api.version}</version> <!-- Example latest -->
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId> <!-- Or your chosen binding -->
-            <version>2.0.9</version>
+            <version>${slf4j-api.version}</version>
         </dependency>
         <!-- Apache Comet libraries -->
         <!-- https://mvnrepository.com/artifact/com.ebiznext/comet-spark3 -->
@@ -315,7 +322,7 @@
         <!-- https://mvnrepository.com/artifact/org.apache.datafusion/comet-spark-integration-spark3.5 -->
         <dependency>
             <groupId>org.apache.datafusion</groupId>
-            <artifactId>comet-spark-spark3.5_2.12</artifactId>
+            <artifactId>comet-spark-spark3.5_${spark.scala.version}</artifactId>
             <version>0.4.0</version>
         </dependency>
 
@@ -329,11 +336,11 @@
                 </dependency>
         -->
         <!-- https://mvnrepository.com/artifact/io.findify/s3mock -->
-        <dependency>
-            <groupId>io.findify</groupId>
-            <artifactId>s3mock_2.12</artifactId>
-            <version>0.2.6</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>io.findify</groupId>-->
+<!--            <artifactId>s3mock_2.12</artifactId>-->
+<!--            <version>0.2.6</version>-->
+<!--        </dependency>-->
 
         <!-- https://mvnrepository.com/artifact/org.yaml/snakeyaml -->
         <dependency>
@@ -341,58 +348,45 @@
             <artifactId>snakeyaml</artifactId>
             <version>2.3</version>
         </dependency>
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <version>2.2.222</version>
-            <scope>test</scope>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.h2database</groupId>-->
+<!--            <artifactId>h2</artifactId>-->
+<!--            <version>2.2.222</version>-->
+<!--            <scope>test</scope>-->
+<!--        </dependency>-->
 
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-core</artifactId>
-            <version>${log4j.api.version}</version> <!-- Use the latest version -->
-        </dependency>
-        <!-- Log4j API -->
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-api</artifactId>
-            <version>${log4j.api.version}</version> <!-- Use the latest version -->
-        </dependency>
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-layout-template-json</artifactId>
-            <version>${log4j.api.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.spark</groupId>
-            <artifactId>spark-avro_2.12</artifactId>
-            <version>3.3.0</version>
-        </dependency>
-
+<!--        <dependency>-->
+<!--            <groupId>org.apache.logging.log4j</groupId>-->
+<!--            <artifactId>log4j-core</artifactId>-->
+<!--            <version>${log4j.api.version}</version> &lt;!&ndash; Use the latest version &ndash;&gt;-->
+<!--        </dependency>-->
+<!--        &lt;!&ndash; Log4j API &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>org.apache.logging.log4j</groupId>-->
+<!--            <artifactId>log4j-api</artifactId>-->
+<!--            <version>${log4j.api.version}</version> &lt;!&ndash; Use the latest version &ndash;&gt;-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.apache.logging.log4j</groupId>-->
+<!--            <artifactId>log4j-layout-template-json</artifactId>-->
+<!--            <version>${log4j.api.version}</version>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <version>42.7.4</version>
         </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.apache.flink</groupId>-->
+<!--            <artifactId>flink-metrics-prometheus</artifactId>-->
+<!--            <version>1.17.1</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.apache.commons</groupId>-->
+<!--            <artifactId>commons-pool2</artifactId>-->
+<!--            <version>2.11.1</version>-->
+<!--        </dependency>-->
 
-        <dependency>
-            <groupId>org.apache.flink</groupId>
-            <artifactId>flink-metrics-prometheus</artifactId>
-            <version>1.17.1</version>
-        </dependency>
-
-
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-pool2</artifactId>
-            <version>2.11.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.spark</groupId>
-            <artifactId>spark-token-provider-kafka-0-10_2.12</artifactId>
-            <version>3.3.0</version>
-        </dependency>
 
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
@@ -447,13 +441,12 @@
             <scope>provided</scope>
         </dependency>
 
-        <dependency>
-            <groupId>org.mapstruct</groupId>
-            <artifactId>mapstruct</artifactId>
-            <version>${org.mapstruct.version}</version>
-            <scope>provided</scope>
-        </dependency>
-
+<!--        <dependency>-->
+<!--            <groupId>org.mapstruct</groupId>-->
+<!--            <artifactId>mapstruct</artifactId>-->
+<!--            <version>${org.mapstruct.version}</version>-->
+<!--            <scope>provided</scope>-->
+<!--        </dependency>-->
     </dependencies>
     <build>
         <plugins>
