@@ -1,96 +1,74 @@
-id: custom_dataset_id
-name: custom_dataset
-displayName: custom_dataset
-description: custom_dataset
-origin: custom
-platformName: oracle
-qualifiedName: mydb.custom_dataset
-uri: ''
+dataProductName: Finance
+name: dept
+displayName: chimeradb.dept
+description: Employee Department Tables
+FabricType: DEV
+datasetPlatformName: oracle
+qualifiedName: chimeradb.dept
+uri: 'http://pantherlabs.io/dept.sql'
+domain: natwestdomain
 tags:
-  - name: tagsname1
-    value: tagsvalue1
-    isInternal: false
-  - name: tagsname2
-    value: tagsvalue2
-    isInternal: false
+  - name: department
+    value: this table contains department related mapping
+  - name: employee dept
+    value: this table contains employee department mapping
 properties:
-  - name: propertiesname1
-    value: value1
-  - name: propertiesname2
-    value: value2
+  - name: PII
+    value: 'Yes, Internal department'
+  - name: Confidential
+    value: 'Yes'
+owners:
+  - name: Manish Kumar
+    type: BUSINESS_OWNER
+  - name: Prashant Kumar
+    type: Data Creator
+glossaryTerm:
+  - glossaryTermName: dataset glossary
+    Documentations: glossary TermName Department Documentations
+  - glossaryTermName: dataset 1 glossary
+    Documentations: glossary TermName Department Documentations
 fields:
-  - name: resource_name
-    id: resource_name
+  - name: deptno
+    type: Integer
+    displayName: DepartmentNumber
+    description: DepartmentNumber Column indicated valid department number
+    fieldCanonicalName: dept.deptno
+    maxLength: 2
+    isPartitionKey: false
+    isPrimaryKey: true
+    isNullable: false
+    foreignKey: null
+    tags:
+      - name: deptno
+        value: Attribute will keep unique deptno
+    glossaryTerm:
+      - glossaryTermName: Department
+        Documentations: glossary TermName Department Documentations
+      - glossaryTermName: DeptNo
+        Documentations: glossary TermName Department Documentations
+  - name: dname
     type: string
-    displayName: resource_name
-    description: resource_name
-    fieldCanonicalName: resource_name
-    maxLength: 24
-    isKey: false
+    displayName: DepartmentName
+    description: Department Name Description
+    fieldCanonicalName: dept.dname
+    maxLength: 14
+    isPartitionKey: false
     isPrimaryKey: false
     isSampleTime: false
-    isNullable: true
-    tags:
-      - name: tagsname1
-        value: tagsvalue1
-        isInternal: false
-  - name: ehod
-    id: ehod_id
+    isNullable: false
+    foreignKey: null
+    tags: null
+    glossaryTerm: null
+  - name: loc
     type: string
-    displayName: ehod
-    description: ehod
-    fieldCanonicalName: ehod
-    maxLength: 24
-    isKey: false
+    displayName: Location
+    description: Location Name Description
+    fieldCanonicalName: dept.loc
+    maxLength: 14
+    isPartitionKey: false
     isPrimaryKey: false
     isSampleTime: false
-    isNullable: true
-    tags:
-      - name: tagsname1
-        value: tagsvalue1
-        isInternal: false
-  - name: owner
-    id: id_owner
-    type: string
-    displayName: owner
-    description: owner
-    fieldCanonicalName: owner
-    maxLength: 24
-    isKey: false
-    isPrimaryKey: false
-    isSampleTime: false
-    isNullable: true
-    tags:
-      - name: tagsname1
-        value: tagsvalue1
-        isInternal: false
-  - name: me
-    id: id_me
-    type: string
-    displayName: me
-    description: me
-    fieldCanonicalName: me
-    maxLength: 24
-    isKey: false
-    isPrimaryKey: false
-    isSampleTime: false
-    isNullable: true
-    tags:
-      - name: tagsname1
-        value: tagsvalue1
-        isInternal: false
-  - name: owner2
-    id: id_owner2
-    type: string
-    displayName: owner2
-    description: owner2
-    fieldCanonicalName: owner2
-    maxLength: 24
-    isKey: false
-    isPrimaryKey: false
-    isSampleTime: false
-    isNullable: true
-    tags:
-      - name: tagsname1
-        value: tagsvalue1
-        isInternal: false
+    isNullable: false
+    foreignKey: null
+    tags: null
+    glossaryTerm: null

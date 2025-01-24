@@ -22,8 +22,11 @@ import datahub.shaded.org.apache.commons.lang3.tuple.Pair;
 
 
 import javax.validation.constraints.Null;
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.time.Instant;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 import static com.linkedin.data.template.SetMode.REMOVE_IF_NULL;
 import static com.progressive.minds.chimera.core.datahub.common.genericUtils.*;
@@ -188,5 +191,28 @@ public class ManageDataProduct {
             throw new RuntimeException("Failed to create data product", e);
         }
         return retVal;
+    }
+
+    public void addAssetToDataProduct(String dataProductName, String assetsName) throws URISyntaxException, IOException, ExecutionException, InterruptedException {
+        AuditStamp createdStamp = new AuditStamp()
+                .setActor(new CorpuserUrn("data_creator"))
+                .setTime(Instant.now().toEpochMilli());    // Current timestamp in milliseconds
+        DataProductAssociationArray dataProductAssociationArray = new DataProductAssociationArray();
+        DataProductAssociation dataProductAssociation = new DataProductAssociation()
+                .setCreated(createdStamp)
+                .setLastModified(createdStamp)
+                .setDestinationUrn(Urn.createFromString(assetsName));
+        Urn dataProductUrn = Urn.createFromString("urn:li:dataProduct:" + replaceSpecialCharsAndLowercase(dataProductName));
+        // Add to the DataProductAssociationArray
+        dataProductAssociationArray.add(dataProductAssociation);
+        DataProductProperties dataProductProperties = new DataProductProperties()
+                .setName(dataProductName)
+                .setAssets(dataProductAssociationArray);
+
+        MetadataChangeProposal proposal = createProposal(String.valueOf(dataProductUrn), "dataProduct",
+                "dataProductProperties", "UPSERT", dataProductProperties);
+        String retval = emitProposal(proposal, "dataProductProperties");
+
+
     }
 }

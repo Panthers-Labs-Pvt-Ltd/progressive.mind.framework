@@ -21,7 +21,7 @@ import java.util.concurrent.Future;
 public class genericUtils {
 static String DATAHUB_URL = "http://localhost:8080";
 static String DATAHUB_AUTH_TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJhY3RvclR5cGUiOiJVU0VSIiwiYWN0b3JJZCI6ImRhdGFodWIiLCJ0eXBlIjoiUEVSU09OQUwiLCJ2ZXJzaW9uIjoiMiIsImp0aSI6IjY5ZDRlY2QyLTM2NDItNDk3YS05OTIwLThiZjQyM2I3Yjg3OSIsInN1YiI6ImRhdGFodWIiLCJleHAiOjE3Mzk4OTE4NzgsImlzcyI6ImRhdGFodWItbWV0YWRhdGEtc2VydmljZSJ9.lWCSLgZ096DdlI6lsqTgicd-uKYi4RNf1pOHaCCM-WI";
-    private static final ChimeraLogger DatahubLogger = ChimeraLoggerFactory.getLogger(ManageDomain.class);
+    private static final ChimeraLogger DatahubLogger = ChimeraLoggerFactory.getLogger(genericUtils.class);
 
     // Method to create MetadataChangeProposal for DataProduct
     public static MetadataChangeProposal createProposal(String entityUrn, String entityType,
@@ -34,10 +34,10 @@ static String DATAHUB_AUTH_TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJhY3RvclR5cGUiOiJVU0V
 
             // Create MetadataChangeProposal
             MetadataChangeProposal proposal = new MetadataChangeProposal()
-                    .setEntityUrn(Urn.createFromString(entityUrn)) // Set// the Data Product URN
-                    .setEntityType(entityType) // Set the entity type to "dataProduct"
-                    .setAspectName(aspectName) // Aspect name
-                    .setAspect(genericAspect) // Set the GenericAspect
+                    .setEntityUrn(Urn.createFromString(entityUrn))
+                    .setEntityType(entityType)
+                    .setAspectName(aspectName)
+                    .setAspect(genericAspect)
                     .setChangeType(ChangeType.valueOf(changeType)); // Change type: UPSERT
 
             return proposal;
@@ -105,11 +105,16 @@ static String DATAHUB_AUTH_TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJhY3RvclR5cGUiOiJVU0V
         return status[0];
     }
 
-    public static String emitProposal(MetadataChangeProposal proposal, String Type) throws IOException, ExecutionException, InterruptedException {
+    public static String emitProposal(MetadataChangeProposal proposal, String Type) throws IOException,
+            ExecutionException, InterruptedException {
         Emitter emitter = RestEmitter.create(b -> b
                 .server(DATAHUB_URL) // Replace with your DataHub server URL
                 .token(DATAHUB_AUTH_TOKEN)        // Replace with your token if required
         );
+
+        boolean conn = emitter.testConnection();
+        if (conn)
+        {
         DatahubLogger.logInfo("Emit MetadataChangeProposal For  " + Type + " With Value " + proposal);
 
         Future<MetadataWriteResponse> response = emitter.emit(proposal, null);
@@ -130,6 +135,8 @@ static String DATAHUB_AUTH_TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJhY3RvclR5cGUiOiJVU0V
 
         }
         return returnValue;
+        }
+        DatahubLogger.logError("Unable to connect with Datahub..");
+        return "";
     }
-
 }

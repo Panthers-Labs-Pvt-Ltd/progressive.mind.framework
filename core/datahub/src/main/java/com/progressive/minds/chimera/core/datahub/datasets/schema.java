@@ -1,25 +1,26 @@
 package com.progressive.minds.chimera.core.datahub.datasets;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.linkedin.common.*;
 import com.linkedin.common.urn.CorpuserUrn;
 import com.linkedin.common.urn.GlossaryTermUrn;
 import com.linkedin.common.urn.TagUrn;
 import com.linkedin.schema.*;
+import com.progressive.minds.chimera.core.datahub.common.ManageTags;
 import com.progressive.minds.chimera.foundational.logging.ChimeraLogger;
 import com.progressive.minds.chimera.foundational.logging.ChimeraLoggerFactory;
 
+import java.util.List;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.net.URISyntaxException;
 import java.time.Instant;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 
 public class schema {
+
     // Tag class
     public static class Tag {
         public String name;
@@ -31,6 +32,18 @@ public class schema {
     public static class Property {
         public String name;
         public String value;
+    }
+
+    // Property class
+    public static class Owners {
+        public String name;
+        public String type;
+           public String getName() {
+            return name;
+        }
+        public String getType() {
+            return type;
+        }
     }
 
     // ForeignKey class
@@ -68,7 +81,7 @@ public class schema {
 
 
     public static class Dataset {
-        public String id;
+        public String dataProductName;
         public String name;
         public String displayName;
         public String description;
@@ -76,23 +89,48 @@ public class schema {
         public String datasetPlatformName;
         public String qualifiedName;
         public String uri;
+        public String domain;
         public List<Tag> tags;
         public List<Property> properties;
+        public List<Owners> owners;
+        public List<GlossaryTerm> glossaryTerm;
         public List<Field> fields;
     }
 
 
- public static Dataset getDatasetInformation(String json) {
-        // Create ObjectMapper instance
+ public static Dataset getDatasetInformation(String InputFormat) {
  ChimeraLogger DatahubLogger = ChimeraLoggerFactory.getLogger(ManageDatasets.class);
-     ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            // Deserialize the JSON string into a Dataset object and return it
-            return objectMapper.readValue(json, Dataset.class);
-        } catch (IOException e) {
-            DatahubLogger.logError("Error While Processing Json Schema");
-            return null; // return null if there's an error deserializing
-        }
+     InputFormat = InputFormat.trim();
+ String SchemaFormat;
+
+    if (InputFormat.startsWith("{") || InputFormat.startsWith("["))  SchemaFormat="JSON";
+     else if (InputFormat.contains(":") && !InputFormat.contains("{"))  SchemaFormat = "YAML";
+     else throw new RuntimeException("Invalid Format of Dataset Definition");
+     Dataset dataset;
+     switch (SchemaFormat.toUpperCase()) {
+         case "JSON":
+             ObjectMapper objectMapper = new ObjectMapper();
+             try {
+                 dataset = objectMapper.readValue(InputFormat, Dataset.class);
+             } catch (IOException e) {
+                 DatahubLogger.logError("Error While Processing Json Schema " + e.getMessage());
+                 return null;
+             }
+             break;
+         case "YML":
+         case "YAML":
+             ObjectMapper yamlMapper = new ObjectMapper(new YAMLFactory());
+             try {
+                 dataset =  yamlMapper.readValue(InputFormat, Dataset.class);
+             } catch (JsonProcessingException e) {
+                 throw new RuntimeException(e);
+             }
+             break;
+         default:
+             System.out.println("Unsupported format: " + SchemaFormat);
+             throw new IllegalArgumentException("Invalid format provided: " + SchemaFormat);
+     }
+     return  dataset;
     }
 
     public static SchemaFieldDataType NativeTypeToSchemaType(Object value) {
@@ -104,7 +142,7 @@ public class schema {
             return new SchemaFieldDataType().setType(SchemaFieldDataType.Type.create(new BytesType()));
         } else if (value instanceof String) {
             return new SchemaFieldDataType().setType(SchemaFieldDataType.Type.create(new StringType()));
-        } else if (value instanceof Integer || value instanceof Long ||
+        } else if (value instanceof Integer || value instanceof Long ||value instanceof Number||
                 value instanceof Float || value instanceof Double ||
                 value instanceof BigDecimal) {
             return new SchemaFieldDataType().setType(SchemaFieldDataType.Type.create(new NumberType()));
@@ -125,51 +163,8 @@ public class schema {
             return new SchemaFieldDataType().setType(SchemaFieldDataType.Type.create(new StringType()));
         }
     }
-/*
-    public static GlobalTags setGlobalTags(List<Tag> datasetTags) {
 
-        TagAssociationArray tagAssociationArray = new TagAssociationArray();
-        for (Map.Entry<String, String> entry : datasetTags.entrySet()) {
-            String columnName = entry.getKey();
-            String value = entry.getValue();
-            String globalTagsName = globalTags.get(columnName.toLowerCase(Locale.ROOT));
-            if (globalTagsName != null & !globalTagsName.isEmpty()) {
-                TagUrn tagUrn = new TagUrn(value);
-                TagAssociation tagAssociation = new TagAssociation().setTag(tagUrn);
-                tagAssociationArray.add(tagAssociation);
-            }
-        }
-        return new GlobalTags().setTags(tagAssociationArray);
-    }
-
-
-    static GlossaryTerms setGlossaryTerms(List<schema.GlossaryTerm> glossaryTerms, String userName, String Doc) throws URISyntaxException {
-        AuditStamp createdStamp = new AuditStamp()
-                .setActor(new com.linkedin.common.urn.CorpuserUrn(userName))
-                .setTime(Instant.now().toEpochMilli());
-
-        GlossaryTermAssociationArray glossaryTermAssociationArray = new GlossaryTermAssociationArray();
-        for (Map.Entry<String, String> entry : glossaryTerms.forEach().entrySet()) {
-            String columnName = entry.getKey();
-            String value = entry.getValue();
-            String glossaryTermName = glossaryTerms.get(columnName.toLowerCase(Locale.ROOT));
-            if (glossaryTermName != null & !glossaryTermName.isEmpty()) {
-                com.linkedin.common.urn.GlossaryTermUrn glossaryTermUrn = com.linkedin.common.urn.GlossaryTermUrn.createFromString("urn:li:glossaryTerm:" + value);
-                GlossaryTermAssociation termAssociation = new GlossaryTermAssociation()
-                        .setUrn(glossaryTermUrn).setActor(new CorpuserUrn(userName));
-                //.setAttribution(new MetadataAttribution(""));
-                glossaryTermAssociationArray.add(termAssociation);
-            }
-        }
-        GlossaryTerms glossaryTerm = new GlossaryTerms();
-        glossaryTerm.setTerms(glossaryTermAssociationArray).setAuditStamp(createdStamp)
-                .schema()
-                .setDoc(Doc);
-        return  glossaryTerm;
-    }*/
-
-
-    public static GlobalTags setGlobalTags(List<Tag> datasetTags) {
+    public static GlobalTags setGlobalTags(List<Tag> datasetTags) throws IOException, ExecutionException, InterruptedException {
         TagAssociationArray tagAssociationArray = new TagAssociationArray();
 
         // Iterate over the datasetTags list
@@ -180,11 +175,12 @@ public class schema {
                 TagUrn tagUrn = new TagUrn(tagName);
                 TagAssociation tagAssociation = new TagAssociation().setTag(tagUrn).setContext(value);
                 tagAssociationArray.add(tagAssociation);
+                ManageTags.createTags(tagName,value);
             }
-        return new GlobalTags().setTags(tagAssociationArray);
+         return new GlobalTags().setTags(tagAssociationArray);
     }
 
-    public static GlossaryTerms setGlossaryTerms(List<schema.GlossaryTerm> glossaryTerms, String userName) throws URISyntaxException {
+    public static GlossaryTerms setGlossaryTerms(List<schema.GlossaryTerm> glossaryTerms, String userName)  {
         // Create the audit stamp
         AuditStamp createdStamp = new AuditStamp()
                 .setActor(new CorpuserUrn(userName))

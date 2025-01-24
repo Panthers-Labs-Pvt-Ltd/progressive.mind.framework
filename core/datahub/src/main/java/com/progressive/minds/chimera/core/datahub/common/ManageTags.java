@@ -20,7 +20,7 @@ public class ManageTags {
         TagProperties tagProperties =
                 new TagProperties()
                         .setName(tagName)
-                        .setDescription(tagDescription);
+                        .setDescription(tagDescription).setColorHex("#77fb71");
 
         MetadataChangeProposal proposal = createProposal(entityUrn, "tag",
                 "tagProperties", "UPSERT", tagProperties);

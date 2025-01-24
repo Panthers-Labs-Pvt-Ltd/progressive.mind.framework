@@ -171,7 +171,6 @@ public class ManageDatasets {
         if (datasetsInfo.ForeignKeys != null)
         {
             UrnArray ForeignFieldsUrnArray = new UrnArray();
-
         ForeignKeyConstraintArray foreignKeyConstraintArray = new ForeignKeyConstraintArray();
         datasetsInfo.ForeignKeys.forEach(record -> {
             ForeignFieldsUrnArray.add(UrnUtils.toDatasetUrn(record.fkDatasetPlatformName, record.fkDatasetName,
