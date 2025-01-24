@@ -9,6 +9,7 @@ import com.linkedin.data.ByteString;
 import com.linkedin.data.DataMap;
 import com.linkedin.data.template.StringMap;
 import com.linkedin.domain.DomainProperties;
+import com.linkedin.domain.Domains;
 import com.linkedin.events.metadata.ChangeType;
 import com.linkedin.mxe.GenericAspect;
 import com.linkedin.mxe.MetadataChangeProposal;
@@ -24,7 +25,7 @@ import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 
-//import static com.progressive.minds.chimera.core.datahub.referances.DataHubUtils.SYSTEM_USER;
+import static com.progressive.minds.chimera.core.datahub.Constants.SYSTEM_USER;
 import static com.progressive.minds.chimera.core.datahub.common.genericUtils.*;
 
 import java.util.Map;
@@ -44,6 +45,22 @@ public class ManageDomain  {
 
     String LoggerTag = "[DataHub- Manage Domain] -";
 
+    public void addDomain(String domainName, String assetsUrn, String entityType) throws Exception {
+        if (domainName != null && !domainName.isEmpty()) {
+            DatahubLogger.logInfo(LoggerTag + "Mapping Data Product With Domain " + domainName);
+            String domainUrnString = "urn:li:domain:" + domainName;
+
+            UrnArray DomainUrn = new UrnArray();
+            DomainUrn.add(Urn.createFromString(domainUrnString));
+            Domains domains = new Domains().setDomains(DomainUrn);
+
+            MetadataChangeProposal domainProposal = createProposal(assetsUrn,
+                    entityType, "domains", "UPSERT", domains);
+            String retval = emitProposal(domainProposal, "domains");
+            DatahubLogger.logInfo(LoggerTag + "Mapping "+ entityType+" With Domain Completed With " + retval);
+        }
+    }
+
     // Method to create a domain
     public String createDomain(String domainName, String domainDocumentation, Map<String, String> customProperties) {
         try {
@@ -51,7 +68,7 @@ public class ManageDomain  {
                     replaceSpecialCharsAndLowercase(domainName));
 
             AuditStamp createdStamp = new AuditStamp()
-                    .setActor(new CorpuserUrn("System"))
+                    .setActor(new CorpuserUrn(SYSTEM_USER))
                     .setTime(Instant.now().toEpochMilli());
 
             StringMap MapCustomProperties = new StringMap();
@@ -94,7 +111,7 @@ public class ManageDomain  {
         try {
 
             AuditStamp createdStamp = new AuditStamp()
-                    .setActor(new CorpuserUrn("System"))
+                    .setActor(new CorpuserUrn(SYSTEM_USER))
                     .setTime(Instant.now().toEpochMilli());
 
             Urn domainUrn = Urn.createFromString("urn:li:domain:" +
@@ -272,4 +289,7 @@ public class ManageDomain  {
             }
         });
     }
+
+
+
 }

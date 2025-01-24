@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
 
-//import static com.progressive.minds.chimera.core.datahub.referances.DataHubUtils.SYSTEM_USER;
+import static com.progressive.minds.chimera.core.datahub.Constants.SYSTEM_USER;
 import static com.progressive.minds.chimera.core.datahub.common.genericUtils.createProposal;
 import static com.progressive.minds.chimera.core.datahub.common.genericUtils.emitProposal;
 
@@ -57,7 +57,7 @@ class ManageGlobalTagsTest {
         GTAA.add(termAssociation);
 
         AuditStamp createdStamp = new AuditStamp()
-                .setActor(new CorpuserUrn("System"))
+                .setActor(new CorpuserUrn(SYSTEM_USER))
                 .setTime(Instant.now().toEpochMilli());
 
         GlossaryTerms glossaryTerms = new GlossaryTerms()

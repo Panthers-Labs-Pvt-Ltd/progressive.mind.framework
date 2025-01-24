@@ -25,6 +25,6 @@
         <module>apacheComet</module>
         <module>api-service</module>
         <module>datahub</module>
-        <!-- <module>datahub-utils</module> -->
+        <module>executionEngine</module>
     </modules>
 </project>
