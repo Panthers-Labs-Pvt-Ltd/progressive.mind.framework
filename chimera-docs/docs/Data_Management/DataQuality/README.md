@@ -56,25 +56,18 @@ Data quality tools are software applications that help organizations monitor, me
 
 Data quality tools include:
 
-- Data profiling tools
-- Data cleansing tools
-- Data validation tools
-- Data enrichment tools
-- Data monitoring tools
-- Data quality dashboards
-- Data quality reports
-- Data quality metrics
-- Data quality rules
-- Data quality checks
-- Data quality alerts
+- Data monitoring tools to detect change in data to trigger data quality workflow
+- Data quality workflows to retrieve data, profile data, validate data, and save data quality results
+- UI or some mechanism to set up Data quality rules and alerts
 - Data quality notifications
-- Data quality workflows
-- Data quality APIs
-- Data quality integrations
+- Data quality APIs - Do we need this explicitly or should it be done via Observability UI and Datahub?
+- Data quality integration with Datahub and Data Observability UI
+- Data quality metrics and reports dashboards (maybe in Data Observability UI)
+- Data cleansing tools - Optional
 
 ## Data Quality Best Practices
 
-Data quality best practices are guidelines, principles, and recommendations for improving the quality of data. Data quality best practices help organizations establish data quality standards, policies, and procedures. Data quality best practices help organizations ensure that data is accurate, complete, consistent, timely, relevant, valid, secure, usable, and trustworthy.
+Data quality best practices are guidelines, principles, and recommendations for improving the quality of data. Data quality best practices help organizations establish data quality standards, policies, and procedures. Data quality best practices help organizations ensure that data is accurate, complete, conformed, consistent, relevant, timely, valid, secure, usable, and trustworthy.
 
 Data quality best practices include:
 

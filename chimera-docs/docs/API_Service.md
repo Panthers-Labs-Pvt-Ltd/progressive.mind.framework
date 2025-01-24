@@ -52,6 +52,10 @@ When designing API services for a self-serve data platform, it's essential to co
 - Use containerization and orchestration tools such as Docker and Kubernetes to deploy and manage API services in a scalable and resilient manner.
 - Implement continuous integration and deployment pipelines to automate API testing, deployment, and monitoring processes.
 
+### Open and Extensible Architecture
+
+- [Data Contract Specification - OpenAPI](https://swagger.io/specification/)
+
 ### Implementing API Gateway
 
 I would to use Kong API Gateway to manage API traffic, enforce security policies, and monitor API usage effectively.

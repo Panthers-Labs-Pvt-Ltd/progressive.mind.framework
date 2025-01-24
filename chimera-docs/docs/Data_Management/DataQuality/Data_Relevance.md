@@ -4,7 +4,7 @@ Relevance measures how well data meets the needs of its users and stakeholders. 
 
 Relevance can be measured by assessing how well data meets the needs of its users and stakeholders. Relevance can be measured using metrics such as relevance, or usefulness or, value score.
 
-I really do not understand how to do this yet.
+I really do not understand how to do this yet. A story https://progressivemindsaiml.atlassian.net/browse/AIML-25 has been created to define and implement this.
 
 ## Implementation Guidance
 

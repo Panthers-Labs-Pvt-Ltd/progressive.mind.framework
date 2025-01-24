@@ -58,7 +58,7 @@ Please see details in the [Data_Access_and_Analysis.md](../Data_Access_and_Analy
 
 ### Data Governance
 
-Please see details in the [Data Governance](../Data_Governance.md) document.
+Please see details in the [Data Governance](../Data_Management/Data_Governance.md) document.
 
 ### Data Sharing and Distribution
 
@@ -74,7 +74,7 @@ Please see details in the [Data_Visualization.md](../Data_Visualization.md) docu
 
 ### UI
 
-Please see details in the [UI.md](UI.md) document.
+Please see details in the [UI.md](../UI.md) document.
 
 ### Observability
 
