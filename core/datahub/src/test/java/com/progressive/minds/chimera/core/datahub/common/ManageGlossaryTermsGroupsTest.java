@@ -115,7 +115,8 @@ class ManageGlossaryTermsGroupsTest {
     @Test
     void creareGlossaryTermKey() throws URISyntaxException, IOException, ExecutionException, InterruptedException {
         Urn glossaryTermKeyUrn = Urn.createFromString("urn:li:glossaryTerm:ManishWebWorld" );
-        GlossaryTermKey gtk = new GlossaryTermKey();
+        GlossaryTermKey gtk = new GlossaryTermKey().setName("GlossaryTermKeyName");
+
 
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonString = objectMapper.writeValueAsString(gtk);
