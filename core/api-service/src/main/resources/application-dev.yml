@@ -1,6 +1,9 @@
 server:
   port: 8080
 spring:
+  config:
+    activate:
+      on-profile: dev
   application:
     name: chimera_api_service
   datasource:
@@ -17,13 +20,6 @@ spring:
     enabled: true
     schemas: data_pipeline
     cleanDisabled: true
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          client-id: chimera_api
-          issuer-uri: http://localhost:3000/realms/chimera-api-service-realm
-          jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/certs
 
 mybatis:
   type-aliases-package: com.progressive.minds.chimera.entity
@@ -33,18 +29,16 @@ mybatis:
     default-fetch-size: 100
     default-statement-timeout: 30
 
-jwt:
-  auth:
-    converter:
-      resource-id: chimera_api # Resource ID for JWT authentication
-      principle-attribute: chimera # Attribute to be used as principal
-
 management:
   context-path: /manage # Management endpoint context
   endpoints:
     web:
       exposure:
         include: health,info,metrics # Expose specific management endpoints
+
+security:
+  userName: chimera # Username for private endpoint access
+  password: password # Password for private endpoint access
 
 resilience4j.circuitbreaker:
   instances:
@@ -66,3 +60,4 @@ resilience4j.ratelimiter:
       timeoutDuration: 0
       registerHealthIndicator: true
       eventConsumerBufferSize: 100
+

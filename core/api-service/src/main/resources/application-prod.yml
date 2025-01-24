@@ -1,32 +1,72 @@
+server:
+  port: 8080
 spring:
+  config:
+    activate:
+      on-profile: prod
+  application:
+    name: chimera_api_service
   datasource:
-    url: jdbc:postgresql://localhost:5432/chimera # PostgreSQL for default environment
+    url: jdbc:postgresql://127.0.0.1:5432/postgres?currentSchema=data_pipeline # PostgreSQL for default environment
     driverClassName: org.postgresql.Driver
     username: postgres
-    password: postgres
+    password: password
     hikari:
       poolName: PostgresqlHikariCP
       maxLifetime: 1200000 # 20 minutes
       maximumPoolSize: 10 # Maximum connections in the pool
       minimumIdle: 1 # Minimum idle connections in the pool
+  flyway:
+    enabled: true
+    schemas: data_pipeline
+    cleanDisabled: true
   security:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://localhost:8080/realms/chimera-api-service-realm
+          client-id: chimera_api
+          issuer-uri: http://localhost:3000/realms/chimera-api-service-realm
           jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/certs
+
+mybatis:
+  type-aliases-package: com.progressive.minds.chimera.entity
+  type-handlers-package: com.progressive.minds.chimera.configuration.handler
+  configuration:
+    map-underscore-to-camel-case: true
+    default-fetch-size: 100
+    default-statement-timeout: 30
 
 jwt:
   auth:
     converter:
       resource-id: chimera_api # Resource ID for JWT authentication
-      principle-attribute: preferred_username # Attribute to be used as principal
+      principle-attribute: chimera # Attribute to be used as principal
 
 management:
+  context-path: /manage # Management endpoint context
   endpoints:
     web:
       exposure:
-        include: "*" # Include all management endpoints
-  endpoint:
-    health:
-      show-details: always # Show detailed health information
+        include: health,info,metrics # Expose specific management endpoints
+
+resilience4j.circuitbreaker:
+  instances:
+    externalService:
+      registerHealthIndicator: true
+      slidingWindowSize: 10
+      permittedNumberOfCallsInHalfOpenState: 3
+      slidingWindowType: TIME_BASED
+      minimumNumberOfCalls: 20
+      waitDurationInOpenState: 50s
+      failureRateThreshold: 50
+      eventConsumerBufferSize: 10
+
+resilience4j.ratelimiter:
+  instances:
+    externalService:
+      limitForPeriod: 10
+      limitRefreshPeriod: 1s
+      timeoutDuration: 0
+      registerHealthIndicator: true
+      eventConsumerBufferSize: 100
+
