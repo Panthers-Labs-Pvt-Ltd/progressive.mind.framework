@@ -65,7 +65,7 @@ public class PipelineService {
             .map(DataPipelineDynamicSqlEntity.tags).toProperty("tags")
             .map(DataPipelineDynamicSqlEntity.orgHierName).toProperty("orgHierName")
             .map(DataPipelineDynamicSqlEntity.activeFlag).toProperty("activeFlag")
-            .map(DataPipelineDynamicSqlEntity.createdTimestamp).toConstant("'" + new Timestamp(System.currentTimeMillis()).toString() + "'")
+            .map(DataPipelineDynamicSqlEntity.createdTimestamp).toConstant("'" + new Timestamp(System.currentTimeMillis()) + "'")
             .map(DataPipelineDynamicSqlEntity.createdBy).toProperty("createdBy")
             .build()
             .render(RenderingStrategies.MYBATIS3);
