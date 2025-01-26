@@ -54,7 +54,7 @@ Please see details in the [Data_Storage.md](../Data_Storage.md) document.
 
 ### Data Access and Analysis
 
-Please see details in the [Data_Access_and_Analysis.md](../Data_Access_and_Analysis.md) document.
+Please see details in the [Data_Access_and_Analysis.md](../Data_Management/Data_Access_and_Analysis.md) document.
 
 ### Data Governance
 
@@ -62,11 +62,11 @@ Please see details in the [Data Governance](../Data_Management/Data_Governance.m
 
 ### Data Sharing and Distribution
 
-Please see details in the [Data_Sharing_and_Distribution.md](../Data_Sharing_and_Distribution.md) document.
+Please see details in the [Data_Sharing_and_Distribution.md](../Data_Management/Data_Sharing_and_Distribution.md) document.
 
 ### Data Science and Machine Learning
 
-Please see details in the [Data_Science_and_Machine_Learning.md](../Data_Science_and_Machine_Learning.md) document.
+Please see details in the [Data_Science_and_Machine_Learning.md](../AIMLOps/index.md) document.
 
 ### Data Visualization
 

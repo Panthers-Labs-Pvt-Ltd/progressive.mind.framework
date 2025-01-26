@@ -1,18 +1,8 @@
 # Data Contract Template
 
 ## Executive summary
-This document describes the keys and values expected in a YAML data contract. It is divided in multiple sections: [demographics](#Demographics), [dataset & schema](#Dataset-&-schema), [data quality](#Data-quality), [pricing](#Pricing), [stakeholders](#Stakeholders), [roles](#Roles), [service-level agreement](#Service-level-agreement), and [other properties](#Other-properties). Each section starts with at least an example followed by definition of each field/key.
 
-## Table of content
-* [Demographics](#Demographics)
-* [Dataset & schema](#Dataset-&-schema)
-* [Data quality](#Data-quality)
-* [Pricing](#Pricing)
-* [Stakeholders](#Stakeholders)
-* [Roles](#Roles)
-* [Service-level agreement](#Service-level-agreement)
-* [Other properties](#Other-properties)
-
+This document describes the keys and values expected in a YAML data contract. It is divided in multiple sections: [demographics](#demographics), [dataset & schema](#dataset-and-schema), [data quality](#data-quality), [pricing](#pricing), [stakeholders](#stakeholders), [roles](#roles), [service-level agreement](#service-level-agreement), and [other properties](#other-properties). Each section starts with at least an example followed by definition of each field/key.
 ## Notes
 * This contract is containing example values, we reviewed very carefully the consistency of those values, but we cannot guarantee that there are no errors. If you spot one, please raise an [issue](https://github.com/paypal/data-contract-template/issues).
 * Some fields have `null` value: even if it is equivalent to not having the field in the contract, we wanted to have the field for illustration purpose.
@@ -21,7 +11,7 @@ This document describes the keys and values expected in a YAML data contract. It
 ## Demographics
 This section contains general information about the contract.
 
-### Example
+### Example of Demographics
 
 ```YAML
 # What's this data  identification?
@@ -99,10 +89,10 @@ datasetName|BigQuery dataset name|Yes|GCP BigQuery dataset name.|
 |datasetDomain|Domain dataset|No|Name of the logical domain dataset the contract describes. This field is only required for output data contracts. Examples: `imdb_ds_aggregate`, `receiver_profile_out`,  `transaction_profile_out`.|
 database|Database|Yes|The database where the dataset resides.|
 
-## Dataset & schema
+## Dataset and Schema
 This section describes the dataset and the schema of the data contract. It is the support for data quality, which is detailed in the next section.
 
-### Example
+### Example representing a dataset and schema
 
 ```YAML
 dataset:
@@ -168,7 +158,7 @@ dataset:
         encryptedColumnName: rcvr_cntry_code_encrypted
 ```
 
-### Definitions
+### Definitions used in the dataset and schema
 
 |Key|UX label|Required|Description|
 | --- | --- | --- | --- | 
@@ -306,7 +296,7 @@ dataset:
 ## Pricing
 This section covers pricing when you bill your customer for using this data product. Pricing is experimental in v2.1.1 of the data contract.
 
-### Example
+### Example representing pricing
 
 ```YAML
 price:
@@ -315,7 +305,7 @@ price:
   priceUnit: megabyte
 ```
 
-### Definitions
+### Definitions used in the pricing section
 
 |Key|UX label|Required|Description|
 | --- | --- | --- | --- | 
@@ -327,7 +317,8 @@ price.priceUnit||No|The unit of measure for calculating cost. Examples megabyte,
 ## Stakeholders
 This section lists stakeholders and the history of their relation with this data contract.
 
-### Example
+### Example of stakeholders
+
 ```YAML
 stakeholders:
   - username: ceastwood
@@ -348,7 +339,8 @@ stakeholders:
     replacedByUsername: null
 ```
 
-### Definitions
+### Definitions used in the stakeholders section
+
 The UX label is the label used in the UI and other user experiences. It is not limited to BlueRacket.
 
 |Key|UX label|Required|Description|
@@ -361,9 +353,10 @@ stakeholders.dateOut||No|The date when the user ceased to be a stakeholder|
 stakeholders.replacedByUsername||No|The username of the user who replaced the stakeholder|
 
 ## Roles
+
 This section lists the roles that a consumer may need to access the dataset depending on the type of access they require.
 
-### Example
+### Example of roles
 
 ```YAML
 roles:
@@ -385,7 +378,7 @@ roles:
     secondLevelApprovers: 'mickey'
 ```
 
-### Definitions
+### Definitions used in the roles section
 
 |Key|UX label|Required|Description|
 | --- | --- | --- | --- |
@@ -397,13 +390,14 @@ roles.secondLevelApprovers||No|the name(s) of the second level approver(s) of th
 
 
 ## Service-level agreement
+
 This section describes the service-level agreements (SLA). SLA have been extended in version v2.1.0.
 
 * Use the `Table.Column` to indicate the number to do the checks on, as in `SELECT txn_ref_dt FROM tab1`.
 * Separate multiple table.columns by a comma, as in `table1.col1`, `table2.col1`, `table1.col2`.
 * If there is only one table in the contract, the table name is not required.
 
-### Example
+### Example representing SLA
 
 ```YAML
 slaDefaultColumn: tab1.txn_ref_dt # Optional, default value is partitionColumn.
@@ -437,7 +431,7 @@ slaProperties:
     driver: analytics
 ```
 
-### Definitions
+### Definitions used in the SLA section
 
 |Key|UX label|Required|Description|
 | --- | --- | --- | --- |
@@ -453,7 +447,7 @@ slaProperties:
 ## Other properties
 This section covers other properties you may find in a data contract.
 
-### Example
+### Example of other properties
 
 ```YAML
 customProperties:
@@ -469,7 +463,7 @@ contractCreatedTs: 2022-11-15 02:59:43
 ```
 
 
-### Definitions
+### Definitions used in the other properties section
 
 |Key|UX label|Required|Description|
 | --- | --- | --- | --- |
