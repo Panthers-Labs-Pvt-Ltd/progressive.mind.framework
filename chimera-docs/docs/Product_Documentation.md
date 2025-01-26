@@ -11,6 +11,7 @@
     * [Data Mesh](#data-mesh)
     * [Data Management at Scale](#data-management-at-scale)
     * [Building a Reliable and Easy-to-Use Data Platform](#building-a-reliable-and-easy-to-use-data-platform)
+    * [AI enabled Data Platform Intelligence](#ai-enabled-data-platform-intelligence)
   * [User Journey](#user-journey)
     * [Client Onboarding](#client-onboarding)
     * [Team Onboarding](#team-onboarding)
@@ -130,7 +131,7 @@ Before the client interacts with Chimera, **Panthers Labs backend team** need to
 1. **Initial Setup**: Users configure their workspace, including setting up data sources and defining access controls.
 2. **Guided Tour**: A guided tour introduces users to the platform's features and capabilities.
 
-Please see more [here](chimera-docs/docs/UI.md#user-flow)
+Please see more [here](UI.md#user-flow)
 
 ### Data Source (or External) Onboarding
 
@@ -140,7 +141,7 @@ When onboarding a new data source, users typically go through the following step
 
 1. **Data Source Discovery and Configuration**: Users identify and connect data sources to the platform. This information can be stored in a metadata repository for easy access.
 2. **Data Source Validation**: System should verify data source connectivity and data quality before ingestion. System assumes that data quality has been validated by data source owners. It is also assumed that these sources are golden sources and Chimera lineage stops at these sources.
-3. **Data Source Ingestion**: Users can initiate or set schedule/event to data ingestion processes to bring data into the platform (Raw Layer). Please see details in the [Data_Ingestion.md](chimera-docs/Data_Ingestion.md) document.
+3. **Data Source Ingestion**: Users can initiate or set schedule/event to data ingestion processes to bring data into the platform (Raw Layer). Please see details in the [Data_Ingestion.md](Data_Ingestion.md) document.
 4. **Data Source Monitoring**: Users monitor data source health and performance to ensure continuous data flow.
 5. **Data Source Management**: Users manage data sources, including updating configurations and troubleshooting issues.
 6. **Data Source Governance**: System would automatically derive schema and other information. For missing information, users need to provide information in Catalog.
@@ -154,53 +155,53 @@ Once onboarded, the data can be ingested.
 
 Before we get into any other service description, it is important to realize that all the Chimera services would API as base to interact with each other. Chimera API service is the core service that provides the RESTful API endpoints for all the Chimera services. The API service is responsible for handling user requests, authentication, authorization, and routing requests to the appropriate service. It also provides documentation for the API endpoints and allows users to interact with the platform programmatically.
 
-You can find more details in the [API_Service.md](chimera-docs/API_Service.md) document.
+You can find more details in the [API_Service.md](API_Service.md) document.
 
 ### Orchestration Service
 
 Before going to on Data Ingestion, Processing, Storage, and other services, we need to understand the Orchestration Services. Some of the popular orchestration frameworks are [Airflow](https://airflow.apache.org/), [Prefect](https://www.prefect.io/), and [Dagstar](https://dagster.io/). Customers can choose to use any of these orchestrators - all the other Chimera services would work just fine with minor configuration updates. We however, use [Temporal](https://temporal.io/) as default. The reason we chose Temporal is because of its architecture to manage failures, network outages, flaky endpoints, long-running processes and more, ensuring that Chimera workflows or pipeline never fail.
 
-Please see details in the [Orchestration_Service.md](chimera-docs/Orchestration_Service.md) document.
+Please see details in the [Orchestration_Service.md](Orchestration_Service.md) document.
 
 ### Data Ingestion
 
-Please see details in the [Data_Ingestion.md](chimera-docs/Data_Ingestion.md) document.
+Please see details in the [Data_Ingestion.md](Data_Ingestion.md) document.
 
 ### Data Processing
 
-Please see details in the [Data_Processing.md](chimera-docs/Data_Processing.md) document.
+Please see details in the [Data_Processing.md](Data_Processing.md) document.
 
 ### Data Storage
 
-Please see details in the [Data_Storage.md](chimera-docs/Data_Storage.md) document.
+Please see details in the [Data_Storage.md](Data_Storage.md) document.
 
 ### Data Access and Analysis
 
-Please see details in the [Data_Access_and_Analysis.md](chimera-docs/Data_Access_and_Analysis.md) document.
+Please see details in the [Data_Access_and_Analysis.md](Data_Management/Data_Access_and_Analysis.md) document.
 
 ### Data Governance
 
-Please see details in the [Data Governance](chimera-docs/Data_Governance.md) document.
+Please see details in the [Data Governance](Data_Management/Data_Governance.md) document.
 
 ### Data Sharing and Distribution
 
-Please see details in the [Data_Sharing_and_Distribution.md](chimera-docs/Data_Sharing_and_Distribution.md) document.
+Please see details in the [Data_Sharing_and_Distribution.md](Data_Management/Data_Sharing_and_Distribution.md) document.
 
 ### Data Science and Machine Learning
 
-Please see details in the [Data_Science_and_Machine_Learning.md](chimera-docs/Data_Science_and_Machine_Learning.md) document.
+Please see details in the [Data_Science_and_Machine_Learning.md](AIMLOps/index.md) document.
 
 ### Data Visualization
 
-Please see details in the [Data_Visualization.md](chimera-docs/Data_Visualization.md) document.
+Please see details in the [Data_Visualization.md](Data_Visualization.md) document.
 
 ### UI
 
-Please see details in the [UI.md](chimera-docs/docs/UI.md) document.
+Please see details in the [UI.md](UI.md) document.
 
 ### Observability
 
-Please see details in the [Observability.md](chimera-docs/Observability.md) document.
+Please see details in the [Observability.md](Observability.md) document.
 
 - Overview of Observability
 - Log Processing and Monitoring

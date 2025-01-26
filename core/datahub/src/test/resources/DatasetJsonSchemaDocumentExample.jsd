@@ -1,0 +1,19 @@
+{
+  "type": "object",
+  "properties": {
+    "FieldName1": {
+      "type": "string",
+      "description": "Description for FieldName1"
+    },
+    "FieldName2": {
+      "type": "integer",
+      "description": "Description for FieldName2",
+      "nullable": false
+    },
+    "FieldName3": {
+      "type": "boolean",
+      "description": "Description for FieldName3",
+      "nullable": true
+    }
+  }
+}

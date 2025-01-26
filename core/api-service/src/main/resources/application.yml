@@ -46,10 +46,6 @@ management:
       exposure:
         include: health,info,metrics # Expose specific management endpoints
 
-security:
-  userName: chimera # Username for private endpoint access
-  password: password # Password for private endpoint access
-
 resilience4j.circuitbreaker:
   instances:
     externalService:

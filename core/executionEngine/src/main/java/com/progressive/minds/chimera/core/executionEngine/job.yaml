@@ -1,0 +1,56 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: ${POD_NAME}-job
+spec:
+  template:
+    spec:
+      containers:
+        - name: spark
+          image: ${DOCKER_ROOT}/${JOB_GROUP}/${JOB_NAME}:latest
+          imagePullPolicy: Always
+          command: [
+            "/bin/sh",
+            "-c",
+            "/opt/spark/bin/spark-submit \
+            --master k8s://${K8MASTER}:443 \
+            --deploy-mode cluster \
+            --name ${POD_NAME}-pod \
+            --conf spark.kubernetes.driver.master=${K8MASTER}:443 \
+            --conf spark.kubernetes.container.image=${DOCKER_ROOT}/${JOB_GROUP}/${JOB_NAME}:latest \
+            --conf spark.kubernetes.authenticate.driver.serviceAccountName=spark \
+            --class org.uscb.rft.job.urds.accnt_cli_sum_mtd_c.accnt_cli_sum_mtd_c \
+            --conf spark.kubernetes.driver.volumes.persistentVolumeClaim.efs-pvc-mount-d.options.claimName=efs-pvc \
+            --conf spark.kubernetes.driver.volumes.persistentVolumeClaim.efs-pvc-mount-d.mount.path=/opt/efs/spark \
+            --conf spark.kubernetes.driver.volumes.persistentVolumeClaim.efs-pvc-mount-d.mount.subPath=spark \
+            --conf spark.kubernetes.driver.volumes.persistentVolumeClaim.efs-pvc-mount-d.mount.readOnly=false \
+            --conf spark.kubernetes.driver.volumes.persistentVolumeClaim.efs-pvc-mount-d.options.storageClass=manual \
+            --conf spark.kubernetes.container.image.pullPolicy=Always \
+            --conf spark.kubernetes.namespace=default \
+            --driver-memory 40G --executor-memory 35G \
+            --conf spark.sql.tungsten.enabled=false \
+            --conf spark.shuffle.service.enabled=true \
+            --conf spark.executor.memoryOverhead=4095 \
+            --conf spark.kryoserializer.buffer.max=1024M \
+            --conf spark.dynamicAllocation.enabled=true \
+            --conf spark.sql.shuffle.partitions=300 \
+            --conf spark.dynamicAllocation.initialExecutors=10 \
+            --conf spark.driver.memoryOverhead=1G \
+            --conf spark.dynamicAllocation.maxExecutors=20 \
+            --conf spark.local.dir=/opt/efs/spark/uscb-rft/tmp \
+            local:///opt/spark/examples/accnt_cli_sum_mtd_c.jar ${BATCH_DATE} 0 NoDebug ${SPARK_VAR}"
+          ]
+          resources:
+            requests:
+              memory: "0.5Gi"
+              cpu: "500m"
+          volumeMounts:
+            - name: efs-pvc-mount
+              mountPath: "/opt/efs"
+      volumes:
+        - name: efs-pvc-mount
+          persistentVolumeClaim:
+            claimName: efs-pvc
+      serviceAccountName: spark
+      restartPolicy: Never
+  backoffLimit: 2

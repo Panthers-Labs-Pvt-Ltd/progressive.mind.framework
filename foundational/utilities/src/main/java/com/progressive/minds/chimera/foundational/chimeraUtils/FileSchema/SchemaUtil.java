@@ -18,6 +18,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 
+@Deprecated(since = "21-Jan-2025", forRemoval = true)
 public class SchemaUtil {
 
     private static HashMap<String, String> delimiterMap = new HashMap<>();
