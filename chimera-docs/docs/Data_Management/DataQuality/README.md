@@ -2,6 +2,49 @@
 
 Data quality is the process of ensuring that data is accurate, complete, and reliable. Data quality is important because it affects the accuracy of data analysis, decision-making, and business operations. Poor data quality can lead to incorrect conclusions, poor decisions, and wasted resources. Data quality is a critical component of data management and data governance.
 
+This module provides two distinct approaches to data quality:
+
+1. Data Quality in a pipeline: This approach focuses on data quality checks in a data pipeline. This approach is required to ensure that Chimera supports quicker execution of pipeline. It is also based on assumption that most of the time, data is of good quality and only few checks are required to ensure that data is of good quality, and if it is not, it would be caught in full-fledged data quality assessment.
+2. Data Quality Assessment: This approach focuses on full-fledged data quality assessment. This approach is required to ensure that all the data quality issues are tracked and monitored.
+
+
+## Workflow
+
+```mermaid
+graph TD;
+    A[Data Pipeline] --> B[Data Profiling];
+    B --> C[Coarse DQ Check];
+    C --fail--> D[UI - Data Quality Register];
+    C --pass--> E[Trend Analysis];
+    F[Batched Incremental] --> K[Fine-Grained DQ Checks];
+    K --pass--> E;
+    K --fail--> D; 
+    D --> G[Triage];
+    G --> H[Investigate];
+    H --> I[Resolve];
+    I --> J[Prevent];
+    I --> E;
+  subgraph pipeline
+      A
+      B
+      C
+  end
+  subgraph batched
+      F
+      K
+  end
+  subgraph Data Issue Management 
+      D
+      G
+      H
+      I
+      J
+  end
+  subgraph Historical
+      E
+  end
+```
+
 ## Data Quality Dimensions
 
 Data quality can be measured using several dimensions, including:
@@ -168,32 +211,6 @@ Data quality tools include:
 - Data profiling tools
 - Data cleansing tools
 - Data validation tools
-
-## Workflow
-
-```mermaid
-graph TD;
-    Z[Batched Incremental] --> A[Data Quality Assessment];
-    A[Data Quality Assessment] --> B[Data Quality Profiling];
-    B --> C[Data Quality Validation];
-    C --pass--> E[Data Quality Trend Analysis]; 
-    C --fail--> D[Data Observability UI - Data Quality Register]; 
-    D --> F[Triage];
-    F --> G[Investigate];
-    G --> H[Resolve];
-    H --> I[Prevent];
-    H --> E;
-  subgraph failed
-      D
-      F
-      G
-      H
-      I
-  end
-  subgraph passed
-      E
-  end
-```
 
 ## Sources
 
