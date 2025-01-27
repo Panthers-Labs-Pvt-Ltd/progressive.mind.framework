@@ -25,7 +25,7 @@ class ManageGlobalTagsTest {
     }
 
     @Test
-    void addDomainToAsstes() throws Exception {
+    void addDomainToAssets() throws Exception {
         String dataProductUrnString = "urn:li:dataProduct:manishdataproduct11";
         String domainUrnString = "urn:li:domain:manishwebworld";
 

@@ -15,7 +15,7 @@ class DatasetManagerTest {
     void createDataset() throws Exception {
         String fileContent = new String(Objects.requireNonNull(ResourceReader.class.getClassLoader()
                 .getResourceAsStream("yamlfileSchema.yaml")).readAllBytes(), StandardCharsets.UTF_8);
-        DatasetManager.createDataset(fileContent, "manish", "json");
+        DatasetManager.createDataset(fileContent, "manish");
         //System.out.println(ManageDatasets.createDataset(datasetsInfo));
 
     }

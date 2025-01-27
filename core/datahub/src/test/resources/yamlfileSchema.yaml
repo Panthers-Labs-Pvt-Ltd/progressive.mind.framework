@@ -1,5 +1,5 @@
 dataProductName: Finance
-name: dept
+name: mysampledatasets
 displayName: chimeradb.dept
 description: Employee Department Tables
 FabricType: DEV

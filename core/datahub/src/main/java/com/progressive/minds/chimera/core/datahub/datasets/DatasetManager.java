@@ -13,6 +13,10 @@ import com.linkedin.dataset.DatasetProperties;
 import com.linkedin.dataset.EditableDatasetProperties;
 import com.linkedin.mxe.MetadataChangeProposal;
 import com.linkedin.schema.*;
+import com.progressive.minds.chimera.core.datahub.modal.Dataset;
+import com.progressive.minds.chimera.core.datahub.modal.Field;
+import com.progressive.minds.chimera.core.datahub.modal.ForeignKey;
+import com.progressive.minds.chimera.core.datahub.modal.Owners;
 import com.progressive.minds.chimera.foundational.logging.ChimeraLogger;
 import com.progressive.minds.chimera.foundational.logging.ChimeraLoggerFactory;
 import com.progressive.minds.chimera.core.datahub.domain.ManageDomain;
@@ -33,9 +37,9 @@ public class DatasetManager {
     static String LoggerTag = "[DataHub- Create Dataset] -";
 
 
-    public static void createDataset(String DatasetDefinition, String createdBy, String SchemaType) throws Exception {
+    public static void createDataset(String DatasetDefinition, String createdBy) throws Exception {
 
-        schema.Dataset datasetsInfo = schema.getDatasetInformation(DatasetDefinition);
+        Dataset datasetsInfo = schema.getDatasetInformation(DatasetDefinition);
         if (datasetsInfo != null) {
             String fabricType = String.valueOf(FabricType.valueOf(datasetsInfo.FabricType));
             DatasetUrn datasetUrn = UrnUtils.toDatasetUrn(datasetsInfo.datasetPlatformName, datasetsInfo.name, fabricType);
@@ -55,13 +59,13 @@ public class DatasetManager {
             EditableSchemaMetadata editableSchemaMetadata = new EditableSchemaMetadata()
                     .setEditableSchemaFieldInfo(editableSchemaFieldInfoArray);
 
-            List<schema.Field> SchemaLists = datasetsInfo.fields;
+            List<Field> SchemaLists = datasetsInfo.fields;
             ObjectMapper objectMapper = new ObjectMapper();
 
             StringArray primaryKeys = new StringArray();
             ForeignKeyConstraintArray foreignKeyConstraintArray = new ForeignKeyConstraintArray();
 
-            for (schema.Field schema : SchemaLists) {
+            for (Field schema : SchemaLists) {
                 SchemaField schemaField = new SchemaField();
 
                 schemaField.setFieldPath(schema.fieldCanonicalName);
@@ -95,7 +99,7 @@ public class DatasetManager {
                 SourceFieldsUrnArray.add(datasetUrn);
 
                 if (schema.foreignKey != null && !schema.foreignKey.isEmpty()) {
-                    for (schema.ForeignKey fk : schema.foreignKey) {
+                    for (ForeignKey fk : schema.foreignKey) {
                         ForeignFieldsUrnArray.add(UrnUtils.toDatasetUrn(fk.datasetPlatform, fk.datasetName,
                                 fk.origin));
 

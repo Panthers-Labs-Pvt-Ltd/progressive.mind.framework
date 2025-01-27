@@ -8,6 +8,9 @@ import com.linkedin.common.urn.GlossaryTermUrn;
 import com.linkedin.common.urn.TagUrn;
 import com.linkedin.schema.*;
 import com.progressive.minds.chimera.core.datahub.common.ManageTags;
+import com.progressive.minds.chimera.core.datahub.modal.Dataset;
+import com.progressive.minds.chimera.core.datahub.modal.GlossaryTerm;
+import com.progressive.minds.chimera.core.datahub.modal.Tag;
 import com.progressive.minds.chimera.foundational.logging.ChimeraLogger;
 import com.progressive.minds.chimera.foundational.logging.ChimeraLoggerFactory;
 
@@ -20,7 +23,7 @@ import java.util.concurrent.ExecutionException;
 
 
 public class schema {
-
+/*
     // Tag class
     public static class Tag {
         public String name;
@@ -95,7 +98,7 @@ public class schema {
         public List<Owners> owners;
         public List<GlossaryTerm> glossaryTerm;
         public List<Field> fields;
-    }
+    }*/
 
 
  public static Dataset getDatasetInformation(String InputFormat) {
@@ -180,7 +183,7 @@ public class schema {
          return new GlobalTags().setTags(tagAssociationArray);
     }
 
-    public static GlossaryTerms setGlossaryTerms(List<schema.GlossaryTerm> glossaryTerms, String userName)  {
+    public static GlossaryTerms setGlossaryTerms(List<GlossaryTerm> glossaryTerms, String userName)  {
         // Create the audit stamp
         AuditStamp createdStamp = new AuditStamp()
                 .setActor(new CorpuserUrn(userName))
@@ -190,7 +193,7 @@ public class schema {
         GlossaryTermAssociationArray glossaryTermAssociationArray = new GlossaryTermAssociationArray();
 
         // Iterate through the glossary terms list
-        for (schema.GlossaryTerm glossaryTerm : glossaryTerms) {
+        for (GlossaryTerm glossaryTerm : glossaryTerms) {
             String glossaryTermName = glossaryTerm.glossaryTermName;
             String documentations = glossaryTerm.Documentations;
 
