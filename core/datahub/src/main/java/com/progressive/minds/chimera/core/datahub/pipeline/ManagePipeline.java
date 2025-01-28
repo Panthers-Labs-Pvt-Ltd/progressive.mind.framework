@@ -27,6 +27,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 import static com.progressive.minds.chimera.core.datahub.common.ManageOwners.addOwners;
@@ -122,13 +124,13 @@ public class ManagePipeline {
                 String statusEmit = emitProposal(statusProposal, ENTITY_TYPE);
 
                 //*******************
-                createPipelineStages(dataPipeline, String.valueOf(dataFlowUrn));
+                createPipelineStages(dataPipeline, String.valueOf(dataFlowUrn), flowName);
 
             }
         }
     }
 
-    public static void createPipelineStages(Pipeline dataPipeline,String pipelineUrn ) throws URISyntaxException, IOException, ExecutionException, InterruptedException {
+    public static void createPipelineStages(Pipeline dataPipeline,String pipelineUrn, String PipelineName ) throws URISyntaxException, IOException, ExecutionException, InterruptedException {
         DataFlowUrn pipelineUr = DataFlowUrn.createFromString(pipelineUrn);
         List<jobStages> stages = dataPipeline.stages;
         for (jobStages stageInfo : stages) {
@@ -143,10 +145,11 @@ public class ManagePipeline {
             StringMap MapCustomProperties = new StringMap();
             MapCustomProperties.putAll(customProperties);
 
+            String stageName = PipelineName + "( " + stageInfo.stageName + " )";
             dataJobInfo
                     .setDescription(stageInfo.stageDescription)
                     .setEnv(FabricType.DEV)
-                    .setName(stageInfo.stageName)
+                    .setName(stageName)
                     .setFlowUrn(pipelineUr)
                     .setExternalUrl(new Url(stageInfo.stageUrl))
                     .setType(JobType)
@@ -176,7 +179,7 @@ public class ManagePipeline {
                         String datasetURN = String.format("urn:li:dataset:(urn:li:dataPlatform:%s,%s,%s)",
                                 DatasetPlatform, DatasetName, Fabric);
                         System.out.println("Progressing For " + datasetURN);
-                        if (searchAssets.get(datasetURN, "dataset") != true) {
+                        if (searchAssets.get(datasetURN, "datasetKey") != true) {
                             inDatasetJson = objectMapper.writeValueAsString(in);
                             DatasetManager.createDataset(inDatasetJson, "system");
                         }
@@ -190,7 +193,7 @@ public class ManagePipeline {
             if (outputDataset != null && !outputDataset.isEmpty())
             {
                 //outputDataset.forEach(out ->
-                for (Dataset out : inputDataset){
+                for (Dataset out : outputDataset){
                     try {
                         String DatasetPlatform=genericUtils.getOrElse(out.datasetPlatformName,dataPipeline.processingEngine);
                         String DatasetName=genericUtils.getOrElse(out.name,"Invalid");
@@ -198,8 +201,14 @@ public class ManagePipeline {
 
                         String datasetURN= String.format("urn:li:dataset:(urn:li:dataPlatform:%s,%s,%s)",
                                 DatasetPlatform,DatasetName, Fabric);
+                        if (searchAssets.get(datasetURN, "datasetKey") != true) {
+                            inDatasetJson = objectMapper.writeValueAsString(out);
+                            DatasetManager.createDataset(inDatasetJson, "system");
+                        }
                         outputDatasetUrnArray.add(DatasetUrn.createFromString(datasetURN));
                     } catch (URISyntaxException e) {
+                        throw new RuntimeException(e);
+                    } catch (Exception e) {
                         throw new RuntimeException(e);
                     }
 

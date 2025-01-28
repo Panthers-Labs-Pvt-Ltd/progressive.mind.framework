@@ -12,7 +12,7 @@ public class JsonToYaml {
     public static void main(String[] args) throws IOException {
         // Sample JSON string
         String jsonString = new String(Objects.requireNonNull(ResourceReader.class.getClassLoader()
-                .getResourceAsStream("pipeline.json")).readAllBytes(), StandardCharsets.UTF_8);
+                .getResourceAsStream("ManagePipeline.json")).readAllBytes(), StandardCharsets.UTF_8);
 
         // Create Jackson ObjectMapper for JSON and YAML
         ObjectMapper jsonMapper = new ObjectMapper();

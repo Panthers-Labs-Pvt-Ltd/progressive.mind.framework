@@ -30,7 +30,7 @@ class ManageUsersAndGroupsTest {
     @Test
     void createUsersMandatoryValues() throws URISyntaxException, IOException, ExecutionException, InterruptedException {
         List<Users> userInfo = new ArrayList<>();
-        Users user = new Users( "Vivek","Kumar",  "vivekt1801@gmail.com");
+        Users user = new Users( "ABC","Kumar",  "ABC@gmail.com");
 
         userInfo.add(user);
         ManageUsersAndGroups.createUsers(userInfo);

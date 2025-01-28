@@ -12,7 +12,7 @@ public class searchAssets {
         System.setProperty("CHIMERA_EXE_ENV", "datahub");
         Map<String, Object> filters = new HashMap<>();
         filters.put("urn", Urn);
-        filters.put("urn", aspect);
+        filters.put("aspect", aspect);
         List<MetadataAspectV2> returnVal = MetadataAspectV2Repository.getConfig(filters);
         System.out.println(returnVal.size());
         if (returnVal.size() >0)
