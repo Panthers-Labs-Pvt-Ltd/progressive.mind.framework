@@ -4,9 +4,8 @@ Data quality is the process of ensuring that data is accurate, complete, and rel
 
 This module provides two distinct approaches to data quality:
 
-1. Data Quality in a pipeline: This approach focuses on data quality checks in a data pipeline. This approach is required to ensure that Chimera supports quicker execution of pipeline. It is also based on assumption that most of the time, data is of good quality and only few checks are required to ensure that data is of good quality, and if it is not, it would be caught in full-fledged data quality assessment.
-2. Data Quality Assessment: This approach focuses on full-fledged data quality assessment. This approach is required to ensure that all the data quality issues are tracked and monitored.
-
+1. Coarse Data Quality (in a pipeline): This approach focuses on data quality checks in a data pipeline. This approach is required to ensure that Chimera supports quicker execution of pipeline. It is also based on assumption that most of the time, data is of good quality and only few checks are required to ensure that data is of good quality, and if it is not, it would be caught in full-fledged data quality assessment. **Please note if coarse data is failing, it must be fail and stop the pipeline.**
+2. Detailed Data Quality (in batch): This approach focuses on full-fledged data quality assessment. This approach is required to ensure that all the data quality issues are tracked and monitored. **Please note if Detailed DQ is failing, it must be logged into Data Issue Register if it breaches various thresholds.**
 
 ## Workflow
 
@@ -14,16 +13,19 @@ This module provides two distinct approaches to data quality:
 graph TD;
     A[Data Pipeline] --> B[Data Profiling];
     B --> C[Coarse DQ Check];
-    C --fail--> D[UI - Data Quality Register];
-    C --pass--> E[Trend Analysis];
-    F[Batched Incremental] --> K[Fine-Grained DQ Checks];
-    K --pass--> E;
-    K --fail--> D; 
+    C --fail--> N[Issue Management];
+    C --pass--> E[Queue in Batched Incremental DQ];
+    E --> F;
+    F[Batched Incremental] --> K[Detailed DQ Checks];
+    K --pass--> L[Trend Analysis];
+    K --fail--> M[DQ Log Decision];
+    M --Threshold Breached-->D[UI - Data Quality Register];
+    M --Threshold Not Breached-->L;
     D --> G[Triage];
     G --> H[Investigate];
     H --> I[Resolve];
     I --> J[Prevent];
-    I --> E;
+    I --> L;
   subgraph pipeline
       A
       B
@@ -42,6 +44,9 @@ graph TD;
   end
   subgraph Historical
       E
+  end
+  subgraph Incident 
+      N
   end
 ```
 
