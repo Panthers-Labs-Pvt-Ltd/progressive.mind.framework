@@ -17,7 +17,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @EnableWebSecurity
 @Profile("dev")
-public class ChimeraSpringSecurityDev {
+public class SpringSecurityConfigDev {
 
   @Value("${security.userName}")
   private String userName;

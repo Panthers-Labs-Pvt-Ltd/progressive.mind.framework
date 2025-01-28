@@ -1,6 +1,7 @@
 server:
   port: 8080
 spring:
+  cloud:
   application:
     name: chimera_api_service
   datasource:
@@ -40,11 +41,16 @@ jwt:
       principle-attribute: chimera # Attribute to be used as principal
 
 management:
-  context-path: /manage # Management endpoint context
+  health:
+    consul:
+      enabled: false
+  server:
+    servlet:
+      context-path: /actuator  # Custom path for Actuator endpoints
   endpoints:
     web:
       exposure:
-        include: health,info,metrics # Expose specific management endpoints
+        include: health, info  # Expose health and info endpoints
 
 resilience4j.circuitbreaker:
   instances:
