@@ -26,7 +26,6 @@ public class StreamExtractMetadataConfig extends ExtractMetadataConfig {
   private Integer kafkaPollTimeout;
 
   private String tranctnlCnsumrFlg;
-
   private String watrmrkDuration;
 
   private String stgFormt;
@@ -34,6 +33,4 @@ public class StreamExtractMetadataConfig extends ExtractMetadataConfig {
   private String stgPath;
 
   private String stgPartitions;
-
-  private String dataSourceConnectionName;
 }

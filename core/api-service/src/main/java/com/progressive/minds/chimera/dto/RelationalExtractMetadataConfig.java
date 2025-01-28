@@ -21,6 +21,6 @@ public class RelationalExtractMetadataConfig extends ExtractMetadataConfig {
 
   private String schemaName;
 
-  private Long sqlText;
+  private String sqlText;
 
 }

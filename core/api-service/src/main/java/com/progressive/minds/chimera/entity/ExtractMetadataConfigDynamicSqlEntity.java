@@ -5,7 +5,7 @@ import java.sql.Timestamp;
 import org.mybatis.dynamic.sql.SqlColumn;
 import org.mybatis.dynamic.sql.SqlTable;
 
-public final class ExtractMetadataConfigDynamicSqlEntity {
+public class ExtractMetadataConfigDynamicSqlEntity {
 
     public static ExtractMetadataConfigEntity extractMetadataConfig = new ExtractMetadataConfigEntity();
 
@@ -26,7 +26,7 @@ public final class ExtractMetadataConfigDynamicSqlEntity {
     public static final SqlColumn<String> updatedBy = extractMetadataConfig.updatedBy;
     public static final SqlColumn<String> activeFlag = extractMetadataConfig.activeFlag;
 
-    public static final class ExtractMetadataConfigEntity extends SqlTable {
+    public static class ExtractMetadataConfigEntity extends SqlTable {
 
         public final SqlColumn<String> pipelineName = column("PIPELINE_NAME", JDBCType.VARCHAR);
         public final SqlColumn<Integer> sequenceNumber = column("SEQUENCE_NUMBER", JDBCType.INTEGER);
