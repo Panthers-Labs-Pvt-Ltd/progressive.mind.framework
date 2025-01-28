@@ -101,7 +101,8 @@ public class PipelineController {
       @Parameter(description = "Updated pipeline object", required = true) @RequestBody DataPipeline updatedPipeline) {
     String pipelineName = updatedPipeline.getPipelineName();
 
-    if (pipelineService.getDataPipeLineByName(pipelineName) != null) {
+    if (pipelineService.getDataPipeLineByName(pipelineName) == null) {
+      // Pipeline does not exist
       GenericResponse genericResponse = GenericResponse.builder()
           .message("Pipeline doesn't exist with the given name: " + pipelineName)
           .statusCode(HttpStatus.NOT_FOUND.name())
