@@ -24,9 +24,9 @@ owners:
     type: Data Creator
 glossaryTerm:
   - glossaryTermName: dataset glossary
-    Documentations: glossary TermName Department Documentations
+    documentations: glossary TermName Department documentations
   - glossaryTermName: dataset 1 glossary
-    Documentations: glossary TermName Department Documentations
+    documentations: glossary TermName Department documentations
 fields:
   - name: deptno
     type: Integer
@@ -43,9 +43,9 @@ fields:
         value: Attribute will keep unique deptno
     glossaryTerm:
       - glossaryTermName: Department
-        Documentations: glossary TermName Department Documentations
+        documentations: glossary TermName Department documentations
       - glossaryTermName: DeptNo
-        Documentations: glossary TermName Department Documentations
+        documentations: glossary TermName Department documentations
   - name: dname
     type: string
     displayName: DepartmentName

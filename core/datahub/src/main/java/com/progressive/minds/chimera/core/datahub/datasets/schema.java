@@ -195,7 +195,7 @@ public class schema {
         // Iterate through the glossary terms list
         for (GlossaryTerm glossaryTerm : glossaryTerms) {
             String glossaryTermName = glossaryTerm.glossaryTermName;
-            String documentations = glossaryTerm.Documentations;
+            String documentations = glossaryTerm.documentations;
 
             if (glossaryTermName != null && !glossaryTermName.isEmpty()) {
 

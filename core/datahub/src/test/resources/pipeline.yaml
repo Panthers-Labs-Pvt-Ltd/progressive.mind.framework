@@ -1,6 +1,6 @@
 dataProductName: Finance
-pipelineName: Chimera
-pipelineDescription: Employee Department Tables
+pipelineName: Chimera Sample Data Pipeline
+pipelineDescription: Chimera Sample Data Pipeline to show what we can configure at the time of pipeline creation
 FabricType: DEV
 processingEngine: spark
 domainName: natwestdomain
@@ -23,11 +23,11 @@ owners:
     type: Data Creator
 glossaryTerm:
   - glossaryTermName: dataset glossary
-    Documentations: glossary TermName Department Documentations
+    documentations: glossary TermName Department documentations
   - glossaryTermName: dataset 1 glossary
-    Documentations: glossary TermName Department Documentations
+    documentations: glossary TermName Department documentations
 stages:
-  - stageName: PreInitialization
+  - stageName: PreInitialization Stage
     stageType: Pre-Init
     stageDescription: This is initialization stage which is responsible to prepare system to run the pipeline
     stageUrl: 'http://pantherlabs.io/dept.sql'
@@ -39,7 +39,7 @@ stages:
         value: 'Yes'
     inputDataset:
       - name : PreInit_dataset_1
-        description : my input dataset description
+        description : my input dataset description created at PreInitialization Stage
         dataProductName: Finance
         displayName: chimeradb.PreInit_dataset_1
         FabricType: DEV
@@ -64,9 +64,9 @@ stages:
             type: Data Creator
         glossaryTerm:
           - glossaryTermName: dataset glossary
-            Documentations: glossary TermName Department Documentations
+            documentations: glossary TermName Department documentations
           - glossaryTermName: dataset 1 glossary
-            Documentations: glossary TermName Department Documentations
+            documentations: glossary TermName Department documentations
         fields:
           - name: deptno
             type: Integer
@@ -83,9 +83,9 @@ stages:
                 value: Attribute will keep unique deptno
             glossaryTerm:
               - glossaryTermName: Department
-                Documentations: glossary TermName Department Documentations
+                documentations: glossary TermName Department documentations
               - glossaryTermName: DeptNo
-                Documentations: glossary TermName Department Documentations
+                documentations: glossary TermName Department documentations
           - name: dname
             type: string
             displayName: DepartmentName
@@ -113,7 +113,7 @@ stages:
             tags: null
             glossaryTerm: null
       - name : PreInit_dataset_2
-        description: my second dataset description
+        description: my second dataset description PreInitialization Stage
         dataProductName: Finance
         displayName: chimeradb.PreInit_dataset_2
         FabricType: DEV
@@ -138,9 +138,9 @@ stages:
             type: Data Creator
         glossaryTerm:
           - glossaryTermName: dataset glossary
-            Documentations: glossary TermName Department Documentations
+            documentations: glossary TermName Department documentations
           - glossaryTermName: dataset 1 glossary
-            Documentations: glossary TermName Department Documentations
+            documentations: glossary TermName Department documentations
         fields:
           - name: deptno
             type: Integer
@@ -157,9 +157,9 @@ stages:
                 value: Attribute will keep unique deptno
             glossaryTerm:
               - glossaryTermName: Department
-                Documentations: glossary TermName Department Documentations
+                documentations: glossary TermName Department documentations
               - glossaryTermName: DeptNo
-                Documentations: glossary TermName Department Documentations
+                documentations: glossary TermName Department documentations
           - name: dname
             type: string
             displayName: DepartmentName
@@ -186,7 +186,7 @@ stages:
             foreignKey: null
             tags: null
             glossaryTerm: null
-  - stageName: Extract Stage
+  - stageName: Extract Initialization Stage
     stageType: Extract
     stageDescription: This is Extract stage which is responsible to read data from Source during Pipeline run
     stageUrl: 'http://pantherlabs.io/dept.sql'
@@ -197,7 +197,7 @@ stages:
       - name: Confidential
         value: 'Yes'
     inputDataset:
-      - name : Extract_dataset_1
+      - name : Extract Dataset 1
         dataProductName: Finance
         displayName: chimeradb.Extract_dataset_1
         FabricType: DEV
@@ -223,9 +223,9 @@ stages:
             type: Data Creator
         glossaryTerm:
           - glossaryTermName: dataset glossary
-            Documentations: glossary TermName Department Documentations
+            documentations: glossary TermName Department documentations
           - glossaryTermName: dataset 1 glossary
-            Documentations: glossary TermName Department Documentations
+            documentations: glossary TermName Department documentations
         fields:
           - name: deptno
             type: Integer
@@ -242,9 +242,9 @@ stages:
                 value: Attribute will keep unique deptno
             glossaryTerm:
               - glossaryTermName: Department
-                Documentations: glossary TermName Department Documentations
+                documentations: glossary TermName Department documentations
               - glossaryTermName: DeptNo
-                Documentations: glossary TermName Department Documentations
+                documentations: glossary TermName Department documentations
           - name: dname
             type: string
             displayName: DepartmentName
@@ -271,7 +271,7 @@ stages:
             foreignKey: null
             tags: null
             glossaryTerm: null
-      - name : Extract_dataset_2
+      - name : Extract dataset 2
         description: my 1 second dataset description
         dataProductName: Finance
         displayName: chimeradb.dept
@@ -297,9 +297,9 @@ stages:
             type: Data Creator
         glossaryTerm:
           - glossaryTermName: dataset glossary
-            Documentations: glossary TermName Department Documentations
+            documentations: glossary TermName Department documentations
           - glossaryTermName: dataset 1 glossary
-            Documentations: glossary TermName Department Documentations
+            documentations: glossary TermName Department documentations
         fields:
           - name: deptno
             type: Integer
@@ -316,9 +316,9 @@ stages:
                 value: Attribute will keep unique deptno
             glossaryTerm:
               - glossaryTermName: Department
-                Documentations: glossary TermName Department Documentations
+                documentations: glossary TermName Department documentations
               - glossaryTermName: DeptNo
-                Documentations: glossary TermName Department Documentations
+                documentations: glossary TermName Department documentations
           - name: dname
             type: string
             displayName: DepartmentName
@@ -345,7 +345,7 @@ stages:
             foreignKey: null
             tags: null
             glossaryTerm: null
-  - stageName: Transform Stage
+  - stageName: Transform Initialization Stage
     stageType: Transform
     stageDescription: This is Transformation stage which is responsible to apply Transformation on Source Data
     stageUrl: 'http://pantherlabs.io/dept.sql'
@@ -356,17 +356,15 @@ stages:
       - name: Confidential
         value: 'Yes'
     inputDataset:
-      - name : myinputDataset
-        description : my input dataset description
+      - name : Transform_dataset_1
         dataProductName: Finance
-        displayName: chimeradb.dept
+        displayName: chimeradb.Transform_dataset_1
         FabricType: DEV
-        datasetPlatformName: oracle
-        qualifiedName: chimeradb.dept
+        datasetPlatformName: s3
+        qualifiedName: chimeradb.Transform_dataset_1
         uri: 'http://pantherlabs.io/dept.sql'
         domain: natwestdomain
-      - name : mysecondinput
-        description: my second dataset description
+        description : my 1 Transform dataset description
         tags:
           - name: department
             value: this table contains department related mapping
@@ -384,9 +382,9 @@ stages:
             type: Data Creator
         glossaryTerm:
           - glossaryTermName: dataset glossary
-            Documentations: glossary TermName Department Documentations
+            documentations: glossary TermName Department documentations
           - glossaryTermName: dataset 1 glossary
-            Documentations: glossary TermName Department Documentations
+            documentations: glossary TermName Department documentations
         fields:
           - name: deptno
             type: Integer
@@ -403,9 +401,9 @@ stages:
                 value: Attribute will keep unique deptno
             glossaryTerm:
               - glossaryTermName: Department
-                Documentations: glossary TermName Department Documentations
+                documentations: glossary TermName Department documentations
               - glossaryTermName: DeptNo
-                Documentations: glossary TermName Department Documentations
+                documentations: glossary TermName Department documentations
           - name: dname
             type: string
             displayName: DepartmentName
@@ -432,14 +430,13 @@ stages:
             foreignKey: null
             tags: null
             glossaryTerm: null
-    outputDataset:
-      - name : myoutputdataset
-        description: my First myoutputdataset dataset description
+      - name : Transform_dataset_2
+        description: my 2 Transform second dataset description
         dataProductName: Finance
-        displayName: chimeradb.dept
+        displayName: chimeradb.Transform_2
         FabricType: DEV
         datasetPlatformName: oracle
-        qualifiedName: chimeradb.dept
+        qualifiedName: chimeradb.Transform_2
         uri: 'http://pantherlabs.io/dept.sql'
         domain: natwestdomain
         tags:
@@ -459,9 +456,9 @@ stages:
             type: Data Creator
         glossaryTerm:
           - glossaryTermName: dataset glossary
-            Documentations: glossary TermName Department Documentations
+            documentations: glossary TermName Department documentations
           - glossaryTermName: dataset 1 glossary
-            Documentations: glossary TermName Department Documentations
+            documentations: glossary TermName Department documentations
         fields:
           - name: deptno
             type: Integer
@@ -478,243 +475,9 @@ stages:
                 value: Attribute will keep unique deptno
             glossaryTerm:
               - glossaryTermName: Department
-                Documentations: glossary TermName Department Documentations
+                documentations: glossary TermName Department documentations
               - glossaryTermName: DeptNo
-                Documentations: glossary TermName Department Documentations
-          - name: dname
-            type: string
-            displayName: DepartmentName
-            description: Department Name Description
-            fieldCanonicalName: dept.dname
-            maxLength: 14
-            isPartitionKey: false
-            isPrimaryKey: false
-            isSampleTime: false
-            isNullable: false
-            foreignKey: null
-            tags: null
-            glossaryTerm: null
-          - name: loc
-            type: string
-            displayName: Location
-            description: Location Name Description
-            fieldCanonicalName: dept.loc
-            maxLength: 14
-            isPartitionKey: false
-            isPrimaryKey: false
-            isSampleTime: false
-            isNullable: false
-            foreignKey: null
-            tags: null
-            glossaryTerm: null
-  - stageName: Persist Stage
-    stageType: Persist
-    stageDescription: This is Persist stage which is responsible to save/write Data
-    stageUrl: 'http://pantherlabs.io/dept.sql'
-    stageStatus : IN_PROGRESS
-    properties:
-      - name: PII
-        value: 'Yes, Internal department'
-      - name: Confidential
-        value: 'Yes'
-    inputDataset:
-      - name : myinputDataset
-        description : my input dataset description
-        dataProductName: Finance
-        displayName: chimeradb.dept
-        FabricType: DEV
-        datasetPlatformName: oracle
-        qualifiedName: chimeradb.dept
-        uri: 'http://pantherlabs.io/dept.sql'
-        domain: natwestdomain
-        tags:
-          - name: department
-            value: this table contains department related mapping
-          - name: employee dept
-            value: this table contains employee department mapping
-        properties:
-          - name: PII
-            value: 'Yes, Internal department'
-          - name: Confidential
-            value: 'Yes'
-        owners:
-          - name: Manish Kumar
-            type: BUSINESS_OWNER
-          - name: Prashant Kumar
-            type: Data Creator
-        glossaryTerm:
-          - glossaryTermName: dataset glossary
-            Documentations: glossary TermName Department Documentations
-          - glossaryTermName: dataset 1 glossary
-            Documentations: glossary TermName Department Documentations
-        fields:
-          - name: deptno
-            type: Integer
-            displayName: DepartmentNumber
-            description: DepartmentNumber Column indicated valid department number
-            fieldCanonicalName: dept.deptno
-            maxLength: 2
-            isPartitionKey: false
-            isPrimaryKey: true
-            isNullable: false
-            foreignKey: null
-            tags:
-              - name: deptno
-                value: Attribute will keep unique deptno
-            glossaryTerm:
-              - glossaryTermName: Department
-                Documentations: glossary TermName Department Documentations
-              - glossaryTermName: DeptNo
-                Documentations: glossary TermName Department Documentations
-          - name: dname
-            type: string
-            displayName: DepartmentName
-            description: Department Name Description
-            fieldCanonicalName: dept.dname
-            maxLength: 14
-            isPartitionKey: false
-            isPrimaryKey: false
-            isSampleTime: false
-            isNullable: false
-            foreignKey: null
-            tags: null
-            glossaryTerm: null
-          - name: loc
-            type: string
-            displayName: Location
-            description: Location Name Description
-            fieldCanonicalName: dept.loc
-            maxLength: 14
-            isPartitionKey: false
-            isPrimaryKey: false
-            isSampleTime: false
-            isNullable: false
-            foreignKey: null
-            tags: null
-            glossaryTerm: null
-      - name : mysecondinput
-        description: my second dataset description
-        dataProductName: Finance
-        displayName: chimeradb.dept
-        FabricType: DEV
-        datasetPlatformName: oracle
-        qualifiedName: chimeradb.dept
-        uri: 'http://pantherlabs.io/dept.sql'
-        domain: natwestdomain
-        tags:
-          - name: department
-            value: this table contains department related mapping
-          - name: employee dept
-            value: this table contains employee department mapping
-        properties:
-          - name: PII
-            value: 'Yes, Internal department'
-          - name: Confidential
-            value: 'Yes'
-        owners:
-          - name: Manish Kumar
-            type: BUSINESS_OWNER
-          - name: Prashant Kumar
-            type: Data Creator
-        glossaryTerm:
-          - glossaryTermName: dataset glossary
-            Documentations: glossary TermName Department Documentations
-          - glossaryTermName: dataset 1 glossary
-            Documentations: glossary TermName Department Documentations
-        fields:
-          - name: deptno
-            type: Integer
-            displayName: DepartmentNumber
-            description: DepartmentNumber Column indicated valid department number
-            fieldCanonicalName: dept.deptno
-            maxLength: 2
-            isPartitionKey: false
-            isPrimaryKey: true
-            isNullable: false
-            foreignKey: null
-            tags:
-              - name: deptno
-                value: Attribute will keep unique deptno
-            glossaryTerm:
-              - glossaryTermName: Department
-                Documentations: glossary TermName Department Documentations
-              - glossaryTermName: DeptNo
-                Documentations: glossary TermName Department Documentations
-          - name: dname
-            type: string
-            displayName: DepartmentName
-            description: Department Name Description
-            fieldCanonicalName: dept.dname
-            maxLength: 14
-            isPartitionKey: false
-            isPrimaryKey: false
-            isSampleTime: false
-            isNullable: false
-            foreignKey: null
-            tags: null
-            glossaryTerm: null
-          - name: loc
-            type: string
-            displayName: Location
-            description: Location Name Description
-            fieldCanonicalName: dept.loc
-            maxLength: 14
-            isPartitionKey: false
-            isPrimaryKey: false
-            isSampleTime: false
-            isNullable: false
-            foreignKey: null
-            tags: null
-            glossaryTerm: null
-    outputDataset:
-      - name : myoutputdataset
-        description: my First myoutputdataset dataset description
-        dataProductName: Finance
-        displayName: chimeradb.dept
-        FabricType: DEV
-        datasetPlatformName: oracle
-        qualifiedName: chimeradb.dept
-        uri: 'http://pantherlabs.io/dept.sql'
-        domain: natwestdomain
-        tags:
-          - name: department
-            value: this table contains department related mapping
-          - name: employee dept
-            value: this table contains employee department mapping
-        properties:
-          - name: PII
-            value: 'Yes, Internal department'
-          - name: Confidential
-            value: 'Yes'
-        owners:
-          - name: Manish Kumar
-            type: BUSINESS_OWNER
-          - name: Prashant Kumar
-            type: Data Creator
-        glossaryTerm:
-          - glossaryTermName: dataset glossary
-            Documentations: glossary TermName Department Documentations
-          - glossaryTermName: dataset 1 glossary
-            Documentations: glossary TermName Department Documentations
-        fields:
-          - name: deptno
-            type: Integer
-            displayName: DepartmentNumber
-            description: DepartmentNumber Column indicated valid department number
-            fieldCanonicalName: dept.deptno
-            maxLength: 2
-            isPartitionKey: false
-            isPrimaryKey: true
-            isNullable: false
-            foreignKey: null
-            tags:
-              - name: deptno
-                value: Attribute will keep unique deptno
-            glossaryTerm:
-              - glossaryTermName: Department
-                Documentations: glossary TermName Department Documentations
-              - glossaryTermName: DeptNo
-                Documentations: glossary TermName Department Documentations
+                documentations: glossary TermName Department documentations
           - name: dname
             type: string
             displayName: DepartmentName

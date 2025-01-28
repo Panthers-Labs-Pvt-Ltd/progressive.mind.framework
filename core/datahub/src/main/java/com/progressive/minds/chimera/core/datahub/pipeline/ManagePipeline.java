@@ -175,6 +175,7 @@ public class ManagePipeline {
 
                         String datasetURN = String.format("urn:li:dataset:(urn:li:dataPlatform:%s,%s,%s)",
                                 DatasetPlatform, DatasetName, Fabric);
+                        System.out.println("Progressing For " + datasetURN);
                         if (searchAssets.get(datasetURN, "dataset") != true) {
                             inDatasetJson = objectMapper.writeValueAsString(in);
                             DatasetManager.createDataset(inDatasetJson, "system");

@@ -1,24 +1,13 @@
-package com.progressive.minds.chimera.core.datahub.common;
-
 // import com.linkedin.common.GlossaryNodeUrn;
-import com.linkedin.common.Status;
-import com.linkedin.common.url.Url;
 import com.linkedin.common.urn.Urn;
 import com.linkedin.data.ByteString;
-import com.linkedin.data.template.StringMap;
 import com.linkedin.glossary.GlossaryTermInfo;
-import com.linkedin.metadata.key.GlossaryTermKey.Fields;
 import com.linkedin.mxe.GenericAspect;
 import com.linkedin.mxe.MetadataChangeProposal;
 
 import static com.progressive.minds.chimera.core.datahub.common.genericUtils.*;
 import static com.progressive.minds.chimera.core.datahub.common.genericUtils.replaceSpecialCharsAndLowercase;
 
-import com.linkedin.glossary.GlossaryNodeInfo;
-
-import com.linkedin.glossary.GlossaryRelatedTerms;
-
-import com.linkedin.common.urn.GlossaryNodeUrn;
 import com.progressive.minds.chimera.core.datahub.domain.ManageDomain;
 import com.progressive.minds.chimera.foundational.logging.ChimeraLogger;
 import com.progressive.minds.chimera.foundational.logging.ChimeraLoggerFactory;
@@ -26,7 +15,6 @@ import datahub.shaded.jackson.databind.ObjectMapper;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
-import java.net.URL;
 import java.util.List;
 import java.util.Map;
 
@@ -235,35 +223,6 @@ public class ManageGlossaryTermsGroups {
         grt.setValues();
         */
 
-    }
-
-    public String createGlossaryNode(GlossaryNodeRecord glossaryNodeRecord, String name,String definition,
-                                     @Null String parentNode, @Null Map<String, String> customProperties )
-            throws Exception {
-
-        StringMap MapCustomProperties = new StringMap();
-
-
-        GlossaryNodeInfo gni = new GlossaryNodeInfo();
-        gni.setId(replaceSpecialCharsAndLowercase(name));
-        gni.setName(name);
-        gni.setDefinition(definition);
-
-        if (customProperties.size() > 0) {
-            MapCustomProperties.putAll(customProperties);
-            gni.setCustomProperties(MapCustomProperties);
-        }
-        if (parentNode  != null) {
-          /*
-            GlossaryNodeUrn currentNodeUrn = new GlossaryNodeUrn();
-            GlossaryNodeUrn parentNodeUrn = new GlossaryNodeUrn();
-            GlossaryNodeInfo gni = new GlossaryNodeInfo();
-            gni.setParentNode(parentNodeUrn);  // Make sure the parent node is set here
-            */
-            GlossaryNodeUrn nodeUrn = new GlossaryNodeUrn(parentNode);
-            gni.setParentNode(nodeUrn);
-        }
-        return "";
     }
 
 }

@@ -1,5 +1,3 @@
-package com.progressive.minds.chimera.core.datahub.common;
-
 import com.linkedin.common.url.Url;
 import com.linkedin.common.urn.Urn;
 import com.linkedin.data.ByteString;
@@ -20,7 +18,7 @@ import static com.linkedin.events.metadata.ChangeType.CREATE;
 
 
 public class ManageGlossaryKey {
-    void creareGlossaryTermKey() throws URISyntaxException, IOException, ExecutionException, InterruptedException {
+    void createGlossaryTermKey() throws URISyntaxException, IOException, ExecutionException, InterruptedException {
         Urn glossaryTermKeyUrn = Urn.createFromString("urn:li:glossaryTerm:ManishWebWorld" );
         GlossaryTermKey gtk = new GlossaryTermKey();
 
