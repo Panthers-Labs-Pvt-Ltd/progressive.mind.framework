@@ -4,10 +4,9 @@ import com.linkedin.common.urn.GlossaryNodeUrn;
 import com.linkedin.data.template.StringMap;
 import com.linkedin.glossary.GlossaryNodeInfo;
 import com.linkedin.mxe.MetadataChangeProposal;
-import com.progressive.minds.chimera.core.datahub.common.ManageOwners;
+import com.progressive.minds.chimera.core.datahub.ownership.ManageOwners;
 import com.progressive.minds.chimera.core.datahub.modal.GlossaryNodeGroup;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -17,12 +16,9 @@ import static com.progressive.minds.chimera.core.datahub.common.genericUtils.*;
 
 public class ManageGlossaryNodes {
 
-    public String createGlossaryNode(List<GlossaryNodeGroup> inGlossaryNodes) throws IOException, ExecutionException, InterruptedException, URISyntaxException {
+    public String createGlossaryNode(List<GlossaryNodeGroup> inGlossaryNodes) throws IOException, ExecutionException, InterruptedException {
         // Loop through each GlossaryNodeGroup in the input list
         for (GlossaryNodeGroup nodeGroup : inGlossaryNodes) {
-            // Print the name of each node group
-            System.out.println("GlossaryNodeGroup Name: " + nodeGroup.name);
-
             // Create a new map for custom properties, or use an empty one
             StringMap MapCustomProperties = new StringMap();
 

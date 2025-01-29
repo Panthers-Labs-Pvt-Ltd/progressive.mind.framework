@@ -28,25 +28,25 @@ public class ManageUsersAndGroups {
     public static boolean createUsers(List<Users> userInfo) throws URISyntaxException, IOException, ExecutionException, InterruptedException {
         for (Users info : userInfo) {
 
-            Objects.requireNonNull(info.Email, "User Email must not be null!");
-            Objects.requireNonNull(info.FirstName, "FirstName must not be null!");
-            Objects.requireNonNull(info.LastName, "LastName must not be null!");
+            Objects.requireNonNull(info.getEmail(), "User Email must not be null!");
+            Objects.requireNonNull(info.getFirstName(), "FirstName must not be null!");
+            Objects.requireNonNull(info.getLastName(), "LastName must not be null!");
 
             CorpUserInfo result = new CorpUserInfo();
-            CorpuserUrn userUrn = CorpuserUrn.createFromString("urn:li:corpuser:"+info.Email);
-            result.setActive(genericUtils.getOrElse(info.Active, true));
-            result.setCountryCode(genericUtils.getOrElse(info.CountryCode, "-"));
-            result.setDepartmentId(genericUtils.getOrElse(info.DepartmentId, 0L));
-            result.setDepartmentName(genericUtils.getOrElse(info.DepartmentName, "-"));
-            result.setEmail(genericUtils.getOrElse(info.Email, ""));
-            result.setDisplayName(genericUtils.getOrElse(info.DisplayName, info.LastName + ", " + info.FirstName));
-            result.setFirstName(genericUtils.getOrElse(info.FirstName, "-"));
-            result.setLastName(genericUtils.getOrElse(info.LastName, "-"));
-            result.setFullName(info.LastName + info.FirstName);
-            result.setTitle(genericUtils.getOrElse(info.Title, "-"));
+            CorpuserUrn userUrn = CorpuserUrn.createFromString("urn:li:corpuser:"+info.getEmail());
+            result.setActive(genericUtils.getOrElse(info.getActive(), true));
+            result.setCountryCode(genericUtils.getOrElse(info.getCountryCode(), "-"));
+            result.setDepartmentId(genericUtils.getOrElse(info.getDepartmentId(), 0L));
+            result.setDepartmentName(genericUtils.getOrElse(info.getDepartmentName(), "-"));
+            result.setEmail(genericUtils.getOrElse(info.getEmail(), ""));
+            result.setDisplayName(genericUtils.getOrElse(info.getDisplayName(), info.getLastName() + ", " + info.getFirstName()));
+            result.setFirstName(genericUtils.getOrElse(info.getFirstName(), "-"));
+            result.setLastName(genericUtils.getOrElse(info.getLastName(), "-"));
+            result.setFullName(info.getLastName() + info.getFirstName());
+            result.setTitle(genericUtils.getOrElse(info.getTitle(), "Read Only User"));
 
             MetadataChangeProposal UserInfoProposal = createProposal(String.valueOf(userUrn), CORP_USER_ENTITY_NAME,
-                    CORP_USER_INFO_ASPECT_NAME, "UPSERT",result);
+                    CORP_USER_INFO_ASPECT_NAME, ACTION_TYPE,result);
              emitProposal(UserInfoProposal, CORP_USER_ENTITY_NAME);
 
             AuditStamp createdStamp = new AuditStamp()
@@ -54,9 +54,9 @@ public class ManageUsersAndGroups {
                     .setTime(Instant.now().toEpochMilli());
 
             UrnArray platform = new UrnArray();
-            if (info.Platform != null)
+            if (info.getPlatform() != null)
             {
-            info.Platform.forEach(platformNm ->
+            info.getPlatform().forEach(platformNm ->
             {
                 try {
                     platform.add(Urn.createFromString("urn:li:dataPlatform:"+platformNm));
@@ -67,25 +67,26 @@ public class ManageUsersAndGroups {
             }
             else
             {
-                platform.add(Urn.createFromString("urn:li:dataPlatform:default"));
+                platform.add(Urn.createFromString(UNKNOWN_DATA_PLATFORM));
             }
 
             StringArray skills = new StringArray();
-            if (info.Skills != null) skills.addAll(info.Skills); else skills.add("default");
+            if (info.getSkills() != null) skills.addAll(info.getSkills()); else skills.add("default");
 
             StringArray teams = new StringArray();
-            if (info.Teams != null) teams.addAll(info.Teams); else teams.add("default");
+            if (info.getTeams() != null) teams.addAll(info.getTeams()); else teams.add("default");
 
             CorpUserEditableInfo corpUserEditableInfo = new CorpUserEditableInfo();
-            corpUserEditableInfo.setAboutMe(genericUtils.getOrElse(info.AboutMe, "-"))
-                    .setPhone(genericUtils.getOrElse(info.Phone, "-"))
-                    .setPictureLink(new Url(genericUtils.getOrElse(info.PictureLink, PROFILE)))
+            corpUserEditableInfo.setAboutMe(genericUtils.getOrElse(info.getAboutMe(), "-"))
+                    .setPhone(genericUtils.getOrElse(info.getPhone(), "-"))
+                    .setPictureLink(new Url(genericUtils.getOrElse(info.getPictureLink(), PROFILE)))
                     .setPlatforms(platform)
                     .setSkills(skills)
-                    .setSlack(genericUtils.getOrElse(info.Slack, "-"))
+                    .setSlack(genericUtils.getOrElse(info.getSlack(), "-"))
                     .setTeams(teams);
+
             MetadataChangeProposal UserEditableInfoProposal = createProposal(String.valueOf(userUrn), CORP_USER_ENTITY_NAME,
-                    CORP_USER_EDITABLE_INFO_ASPECT_NAME, "UPSERT",corpUserEditableInfo);
+                    CORP_USER_EDITABLE_INFO_ASPECT_NAME, ACTION_TYPE,corpUserEditableInfo);
             emitProposal(UserEditableInfoProposal, CORP_USER_ENTITY_NAME);
 
             CorpUserStatus corpUserStatus = new CorpUserStatus();
@@ -93,7 +94,7 @@ public class ManageUsersAndGroups {
             corpUserStatus.setLastModified(createdStamp);
 
             MetadataChangeProposal StatusProposal = createProposal(String.valueOf(userUrn), CORP_USER_ENTITY_NAME,
-                    CORP_USER_STATUS_ASPECT_NAME, "UPSERT",corpUserStatus);
+                    CORP_USER_STATUS_ASPECT_NAME, ACTION_TYPE,corpUserStatus);
             emitProposal(StatusProposal, CORP_USER_ENTITY_NAME);
 
 
@@ -103,7 +104,7 @@ public class ManageUsersAndGroups {
             roleMembership.setRoles(roleMembershipArray);
 
             MetadataChangeProposal roleProposal = createProposal(String.valueOf(userUrn), CORP_USER_ENTITY_NAME,
-                    ROLE_MEMBERSHIP_ASPECT_NAME, "UPSERT",roleMembership);
+                    ROLE_MEMBERSHIP_ASPECT_NAME, ACTION_TYPE,roleMembership);
             emitProposal(roleProposal, CORP_USER_ENTITY_NAME);
             SecretService _SecretService = new SecretService(DEFAULT_USER_PASSWORD);
             CorpUserCredentials corpUserCredentials = new CorpUserCredentials();
@@ -114,7 +115,7 @@ public class ManageUsersAndGroups {
             corpUserCredentials.setHashedPassword(hashedPassword);
 
             MetadataChangeProposal CorpUserCredentialsProposal = createProposal(String.valueOf(userUrn), CORP_USER_ENTITY_NAME,
-                    CORP_USER_CREDENTIALS_ASPECT_NAME, "UPSERT",corpUserCredentials);
+                    CORP_USER_CREDENTIALS_ASPECT_NAME, ACTION_TYPE,corpUserCredentials);
             emitProposal(CorpUserCredentialsProposal, CORP_USER_ENTITY_NAME);
 
    /*       InviteToken inviteToken = new InviteToken();
@@ -123,7 +124,7 @@ public class ManageUsersAndGroups {
 
 
             MetadataChangeProposal InviteProposal = createProposal(String.valueOf(userUrn), INVITE_TOKEN_ENTITY_NAME,
-                    INVITE_TOKEN_ASPECT_NAME, "UPSERT",inviteToken);
+                    INVITE_TOKEN_ASPECT_NAME, ACTION_TYPE,inviteToken);
             emitProposal(InviteProposal, CORP_USER_ENTITY_NAME);*/
 /*
             UrnArray NativeGroupMembershipArray =new UrnArray();

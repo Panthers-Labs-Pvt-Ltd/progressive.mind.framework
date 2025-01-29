@@ -1,32 +1,19 @@
 package com.progressive.minds.chimera.core.datahub.modal;
 
+import lombok.Getter;
+import lombok.Setter;
 import java.util.List;
 import java.util.Map;
-import javax.validation.constraints.Null;
 
+@Getter
+@Setter
 public class GlossaryTerm {
-
-    public String glossaryTermName;
-    public String documentations;
-    public String parentTermName;
-    public String sourceRef;
-    public String sourceURL;
-    public GlossaryNodeGroup  glossaryNodeRecord;
-    public List<GlossaryRelatedTerm> glossaryRelatedTermsRecord;
-    public Map<String, String> customProperties;
 
     public GlossaryTerm(){}
 
-    public GlossaryTerm(String glossaryTermName, String documentations){
-        this.glossaryTermName = glossaryTermName;
-        this.documentations = documentations;
-    }
-
-    // Constructor
-    public GlossaryTerm(String glossaryTermName, String documentations, @Null String parentTermName,
-                               @Null String sourceRef, @Null String sourceURL, @Null GlossaryNodeGroup glossaryNodeRecord,
-                               @Null List<GlossaryRelatedTerm> glossaryRelatedTermsRecord,
-                               @Null Map<String, String> customProperties) {
+    public GlossaryTerm(String glossaryTermName, String documentations, String parentTermName, String sourceRef,
+                        String sourceURL, GlossaryNodeGroup glossaryNodeRecord, List<GlossaryRelatedTerm>
+                                glossaryRelatedTermsRecord, Map<String, String> customProperties) {
         this.glossaryTermName = glossaryTermName;
         this.documentations = documentations;
         this.parentTermName = parentTermName;
@@ -36,5 +23,14 @@ public class GlossaryTerm {
         this.glossaryRelatedTermsRecord = glossaryRelatedTermsRecord;
         this.customProperties = customProperties;
     }
+
+    private String glossaryTermName;
+    private String documentations;
+    private String parentTermName;
+    private String sourceRef;
+    private String sourceURL;
+    private GlossaryNodeGroup glossaryNodeRecord;
+    private List<GlossaryRelatedTerm> glossaryRelatedTermsRecord;
+    private Map<String, String> customProperties;
 
 }

@@ -1,16 +1,12 @@
-package com.progressive.minds.chimera.core.datahub.common;
+package com.progressive.minds.chimera.core.datahub.tag;
 
-import com.linkedin.common.*;
-import com.linkedin.common.urn.Urn;
 import com.linkedin.mxe.MetadataChangeProposal;
-import com.linkedin.common.urn.TagUrn;
 import com.linkedin.tag.TagProperties;
-import datahub.event.MetadataChangeProposalWrapper;
 
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
-import static com.linkedin.events.metadata.ChangeType.UPSERT;
+import static com.progressive.minds.chimera.core.datahub.Constants.*;
 import static com.progressive.minds.chimera.core.datahub.common.genericUtils.*;
 
 public class ManageTags {
@@ -22,9 +18,9 @@ public class ManageTags {
                         .setName(tagName)
                         .setDescription(tagDescription).setColorHex("#77fb71");
 
-        MetadataChangeProposal proposal = createProposal(entityUrn, "tag",
-                "tagProperties", "UPSERT", tagProperties);
-        return emitProposal(proposal, "tag");
+        MetadataChangeProposal proposal = createProposal(entityUrn, TAG_ENTITY_NAME,
+                TAG_PROPERTIES_ASPECT_NAME, ACTION_TYPE, tagProperties);
+        return emitProposal(proposal, TAG_ENTITY_NAME);
 
     }
 }

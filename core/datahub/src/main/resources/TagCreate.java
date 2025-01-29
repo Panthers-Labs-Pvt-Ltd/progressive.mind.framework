@@ -1,5 +1,3 @@
-package com.progressive.minds.chimera.core.datahub.datasets;
-
 import com.linkedin.tag.TagProperties;
 import datahub.client.MetadataWriteResponse;
 import datahub.client.rest.RestEmitter;

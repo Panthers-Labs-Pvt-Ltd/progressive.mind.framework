@@ -2,7 +2,7 @@
   "dataProductName": "Finance",
   "pipelineName": "Chimera",
   "pipelineDescription": "Employee Department Tables",
-  "FabricType": "DEV",
+  "fabricType": "DEV",
   "processingEngine": "spark",
   "domainName": "natwestdomain",
   "inActiveFlag": false,

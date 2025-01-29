@@ -17,11 +17,11 @@ class ManageGlossaryTermsTest {
         glossaryNodeRecord.definition = "My Definitions";
 
 
-        Term1.glossaryTermName = "SampleTermName";
-        Term1.documentations = "This is for SampleTermName";
-        Term1.sourceRef = "Manual";
-        Term1.sourceURL = "http://manishwebworld.com";
-        Term1.glossaryNodeRecord = glossaryNodeRecord;
+        Term1.setGlossaryTermName("SampleTermName");
+        Term1.setDocumentations("This is for SampleTermName");
+        Term1.setSourceRef("Manual");
+        Term1.setSourceURL("http://manishwebworld.com");
+        Term1.setGlossaryNodeRecord(glossaryNodeRecord);
 
 
         ManageGlossaryTerms manageGlossaryTerms = new ManageGlossaryTerms();

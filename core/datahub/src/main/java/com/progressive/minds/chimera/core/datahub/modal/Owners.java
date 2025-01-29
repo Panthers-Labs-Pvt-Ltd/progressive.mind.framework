@@ -1,9 +1,13 @@
 package com.progressive.minds.chimera.core.datahub.modal;
 
+import lombok.Getter;
+import lombok.Setter;
 import javax.validation.constraints.NotNull;
 import java.util.Locale;
 import java.util.Set;
 
+@Getter
+@Setter
 public class Owners {
 
     // Valid owners set as a constant
@@ -13,26 +17,33 @@ public class Owners {
             "DELEGATE", "CONSUMER", "STAKEHOLDER", "$UNKNOWN"
     );
 
+    // Get the name of the owner
+    @Getter
     @NotNull
-    public String name;
+    private String name;
 
-    @NotNull
-    public String type;
+    public Owners(){}
 
-    public String getName() {
-        return name;
+    public Owners(String name, String type) {
+        this.name = name;
+        this.type = type;
     }
 
+    @NotNull
+    private String type;
+
+    // Get the type of the owner, with validation logic
     public String getType() {
         // Check if type is null or empty before proceeding
         if (type == null || type.trim().isEmpty()) {
             return "urn:li:ownershipType:__system__none";
         }
 
-        String result = VALID_OWNERS.contains(type.toUpperCase(Locale.ROOT)) ?
+        return VALID_OWNERS.contains(type.toUpperCase(Locale.ROOT)) ?
                 "urn:li:ownershipType:__system__" + type.toLowerCase(Locale.ROOT) :
                 "urn:li:ownershipType:__system__none";
 
-        return result;
     }
 }
+
+

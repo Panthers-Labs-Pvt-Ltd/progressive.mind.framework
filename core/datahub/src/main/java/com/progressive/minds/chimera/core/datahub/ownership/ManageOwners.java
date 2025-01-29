@@ -1,4 +1,4 @@
-package com.progressive.minds.chimera.core.datahub.common;
+package com.progressive.minds.chimera.core.datahub.ownership;
 
 import com.linkedin.common.*;
 import com.linkedin.mxe.MetadataChangeProposal;
@@ -19,6 +19,7 @@ import com.linkedin.common.Owner;
 import com.linkedin.common.OwnershipSource;
 
 import static com.linkedin.common.OwnershipSourceType.MANUAL;
+import static com.progressive.minds.chimera.core.datahub.Constants.*;
 import static com.progressive.minds.chimera.core.datahub.common.genericUtils.createProposal;
 import static com.progressive.minds.chimera.core.datahub.common.genericUtils.emitProposal;
 
@@ -35,7 +36,7 @@ public class ManageOwners {
                     owner = new Owner()
                             .setOwner(new CorpuserUrn(ownerName))
                             .setSource(new OwnershipSource().setType(MANUAL))
-                            .setTypeUrn(Urn.createFromString("urn:li:ownershipType:__system__business_owner"))
+                            .setTypeUrn(Urn.createFromString(String.valueOf(DEFAULT_OWNERSHIP_TYPE_URN)))
                             .setType(OwnershipType.CUSTOM)
                     ;
                 } catch (URISyntaxException e) {
@@ -44,7 +45,7 @@ public class ManageOwners {
                 ownerArray.add(owner);
             });
         AuditStamp createdStamp = new AuditStamp()
-                .setActor(new CorpuserUrn("manish.kumar.gupta@outlook.com"))
+                .setActor(new CorpuserUrn(DATAHUB_ACTOR))
                 .setTime(Instant.now().toEpochMilli());
 
 
@@ -54,9 +55,7 @@ public class ManageOwners {
         MetadataChangeProposal proposal = createProposal(String.valueOf(entityUrn), entityType,
                 aspectName, changeType,ownership);
 
-        String retVal= emitProposal(proposal, "ownership");
-        System.out.println("OWNE" + retVal);
-        return  retVal;
+        return emitProposal(proposal, entityType);
     }
 
     public static String addOwners(Urn entityUrn, String entityType, String aspectName, String changeType,
@@ -69,7 +68,7 @@ public class ManageOwners {
             Owner owner;
             try {
                 owner = new Owner()
-                        .setOwner(new CorpuserUrn(ownerRec.name))
+                        .setOwner(new CorpuserUrn(ownerRec.getName()))
                         .setSource(new OwnershipSource().setType(MANUAL))
                         .setTypeUrn(Urn.createFromString(ownerRec.getType()))
                         .setType(OwnershipType.CUSTOM)
@@ -80,7 +79,7 @@ public class ManageOwners {
             ownerArray.add(owner);
         });
         AuditStamp createdStamp = new AuditStamp()
-                .setActor(new CorpuserUrn("manish.kumar.gupta@outlook.com"))
+                .setActor(new CorpuserUrn(DATAHUB_ACTOR))
                 .setTime(Instant.now().toEpochMilli());
 
 
@@ -90,9 +89,8 @@ public class ManageOwners {
         MetadataChangeProposal proposal = createProposal(String.valueOf(entityUrn), entityType,
                 aspectName, changeType,ownership);
 
-        String retVal= emitProposal(proposal, "ownership");
-        System.out.println("OWNE" + retVal);
-        return  retVal;
+        return emitProposal(proposal, entityType);
+
     }
 
 }

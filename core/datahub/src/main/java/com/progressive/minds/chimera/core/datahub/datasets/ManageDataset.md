@@ -36,7 +36,7 @@ DatasetManager.createDataset(datasetDefinition, createdBy);
   "name": "dept",
   "displayName": "chimeradb.dept",
   "description": "Employee Department Tables",
-  "FabricType": "DEV",
+  "fabricType": "DEV",
   "datasetPlatformName": "oracle",
   "qualifiedName": "chimeradb.dept",
   "uri": "http://pantherlabs.io/dept.sql",
@@ -151,7 +151,7 @@ dataProductName: Finance
 name: dept
 displayName: chimeradb.dept
 description: Employee Department Tables
-FabricType: DEV
+fabricType: DEV
 datasetPlatformName: oracle
 qualifiedName: chimeradb.dept
 uri: http://pantherlabs.io/dept.sql

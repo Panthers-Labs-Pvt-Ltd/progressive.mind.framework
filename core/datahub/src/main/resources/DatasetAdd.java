@@ -1,5 +1,3 @@
-package com.progressive.minds.chimera.core.datahub.datasets;
-
 import com.linkedin.common.AuditStamp;
 import com.linkedin.common.url.Url;
 import com.linkedin.common.urn.CorpuserUrn;

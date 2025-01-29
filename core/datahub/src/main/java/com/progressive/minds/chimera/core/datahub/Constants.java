@@ -8,6 +8,7 @@ import java.util.List;
     /** Static class containing commonly-used constants across DataHub services. */
     public class Constants {
         public static final String SYSTEM_USER = "Chimera";
+        public static final String ACTION_TYPE = "UPSERT";
         public static final String INTERNAL_DELEGATED_FOR_ACTOR_HEADER_NAME = "X-DataHub-Delegated-For";
         public static final String INTERNAL_DELEGATED_FOR_ACTOR_TYPE = "X-DataHub-Delegated-For-";
 

@@ -2,7 +2,7 @@ dataProductName: Finance
 name: mysampledatasets
 displayName: chimeradb.dept
 description: Employee Department Tables
-FabricType: DEV
+fabricType: DEV
 datasetPlatformName: oracle
 qualifiedName: chimeradb.dept
 uri: 'http://pantherlabs.io/dept.sql'

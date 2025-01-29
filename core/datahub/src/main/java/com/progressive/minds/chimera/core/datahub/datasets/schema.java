@@ -7,7 +7,7 @@ import com.linkedin.common.urn.CorpuserUrn;
 import com.linkedin.common.urn.GlossaryTermUrn;
 import com.linkedin.common.urn.TagUrn;
 import com.linkedin.schema.*;
-import com.progressive.minds.chimera.core.datahub.common.ManageTags;
+import com.progressive.minds.chimera.core.datahub.tag.ManageTags;
 import com.progressive.minds.chimera.core.datahub.modal.Dataset;
 import com.progressive.minds.chimera.core.datahub.modal.GlossaryTerm;
 import com.progressive.minds.chimera.core.datahub.modal.Tag;
@@ -23,83 +23,6 @@ import java.util.concurrent.ExecutionException;
 
 
 public class schema {
-/*
-    // Tag class
-    public static class Tag {
-        public String name;
-        public String value;
-        public boolean isInternal;
-    }
-
-    // Property class
-    public static class Property {
-        public String name;
-        public String value;
-    }
-
-    // Property class
-    public static class Owners {
-        public String name;
-        public String type;
-           public String getName() {
-            return name;
-        }
-        public String getType() {
-            return type;
-        }
-    }
-
-    // ForeignKey class
-    public static class ForeignKey {
-        public String datasetName;
-        public String datasetPlatform;
-        public String origin;
-        public String ForeignKeyName;
-        public String ForeignKeyColumn;
-        public boolean LogicalKey;
-    }
-
-    // GlossaryTerm class
-    public static class GlossaryTerm {
-        public String glossaryTermName;
-        public String Documentations;
-    }
-
-    // Field class
-    public static class Field {
-        public String name;
-        public String type;
-        public String displayName;
-        public String description;
-        public String fieldCanonicalName;
-        public int maxLength;
-        public boolean isPartitionKey;
-        public boolean isPrimaryKey;
-        public boolean isSampleTime;
-        public boolean isNullable;
-        public List<ForeignKey> foreignKey;
-        public List<Tag> tags;
-        public List<GlossaryTerm> glossaryTerm;
-    }
-
-
-    public static class Dataset {
-        public String dataProductName;
-        public String name;
-        public String displayName;
-        public String description;
-        public String FabricType;
-        public String datasetPlatformName;
-        public String qualifiedName;
-        public String uri;
-        public String domain;
-        public List<Tag> tags;
-        public List<Property> properties;
-        public List<Owners> owners;
-        public List<GlossaryTerm> glossaryTerm;
-        public List<Field> fields;
-    }*/
-
 
  public static Dataset getDatasetInformation(String InputFormat) {
  ChimeraLogger DatahubLogger = ChimeraLoggerFactory.getLogger(ManageDatasets.class);
@@ -172,8 +95,8 @@ public class schema {
 
         // Iterate over the datasetTags list
         for (Tag datasetTag : datasetTags) {
-            String tagName = datasetTag.name;
-            String value = datasetTag.value;
+            String tagName = datasetTag.getName();
+            String value = datasetTag.getValue();
 
                 TagUrn tagUrn = new TagUrn(tagName);
                 TagAssociation tagAssociation = new TagAssociation().setTag(tagUrn).setContext(value);
@@ -194,8 +117,8 @@ public class schema {
 
         // Iterate through the glossary terms list
         for (GlossaryTerm glossaryTerm : glossaryTerms) {
-            String glossaryTermName = glossaryTerm.glossaryTermName;
-            String documentations = glossaryTerm.documentations;
+            String glossaryTermName = glossaryTerm.getGlossaryTermName();
+            String documentations = glossaryTerm.getDocumentations();
 
             if (glossaryTermName != null && !glossaryTermName.isEmpty()) {
 

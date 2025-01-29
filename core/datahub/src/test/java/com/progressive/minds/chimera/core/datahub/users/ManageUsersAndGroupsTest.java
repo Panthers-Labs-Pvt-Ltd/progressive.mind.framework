@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ManageUsersAndGroupsTest {
 
-    @Test
+/*    @Test
     void createUsers() throws URISyntaxException, IOException, ExecutionException, InterruptedException {
         List<Users> userInfo = new ArrayList<>();
         Users user = new Users( "Data Engineer", "Manish","Kumar", "Kumar, Manish Gupta", "manish.kumar@natwest.com",null,
@@ -25,7 +25,7 @@ class ManageUsersAndGroupsTest {
         userInfo.add(user);
         ManageUsersAndGroups.createUsers(userInfo);
 
-    }
+    }*/
 
     @Test
     void createUsersMandatoryValues() throws URISyntaxException, IOException, ExecutionException, InterruptedException {

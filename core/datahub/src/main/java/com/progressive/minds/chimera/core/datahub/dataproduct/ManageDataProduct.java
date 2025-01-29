@@ -12,8 +12,8 @@ import com.linkedin.dataproduct.DataProductKey;
 import com.linkedin.dataproduct.DataProductProperties;
 import com.linkedin.domain.Domains;
 import com.linkedin.mxe.MetadataChangeProposal;
-import com.progressive.minds.chimera.core.datahub.common.ManageGlobalTags;
-import com.progressive.minds.chimera.core.datahub.common.ManageOwners;
+import com.progressive.minds.chimera.core.datahub.tag.ManageGlobalTags;
+import com.progressive.minds.chimera.core.datahub.ownership.ManageOwners;
 import com.progressive.minds.chimera.foundational.logging.ChimeraLogger;
 import com.progressive.minds.chimera.foundational.logging.ChimeraLoggerFactory;
 import datahub.shaded.org.apache.commons.lang3.ArrayUtils;
@@ -212,6 +212,7 @@ public class ManageDataProduct {
         MetadataChangeProposal proposal = createProposal(String.valueOf(dataProductUrn), "dataProduct",
                 "dataProductProperties", "UPSERT", dataProductProperties);
         String retval = emitProposal(proposal, "dataProductProperties");
+        DatahubLogger.logInfo(LoggerTag + "Setting Data Product Properties " + retval);
 
 
     }

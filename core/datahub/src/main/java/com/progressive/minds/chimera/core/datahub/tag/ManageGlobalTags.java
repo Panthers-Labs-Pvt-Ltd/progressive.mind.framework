@@ -1,4 +1,4 @@
-package com.progressive.minds.chimera.core.datahub.common;
+package com.progressive.minds.chimera.core.datahub.tag;
 
 import com.linkedin.common.*;
 import com.linkedin.common.urn.Urn;
@@ -7,6 +7,7 @@ import com.linkedin.common.urn.TagUrn;
 
 import java.util.ArrayList;
 
+import static com.progressive.minds.chimera.core.datahub.Constants.GLOBAL_TAGS_ASPECT_NAME;
 import static com.progressive.minds.chimera.core.datahub.common.genericUtils.*;
 
 public class ManageGlobalTags {
@@ -21,8 +22,8 @@ public class ManageGlobalTags {
         }
         GlobalTags globalTags = new GlobalTags().setTags(tagAssociationArray);
         MetadataChangeProposal proposal = createProposal(String.valueOf(entityUrn), entityType,
-                "globalTags", changeType,globalTags);
-        return emitProposal(proposal, "globalTags");
+                GLOBAL_TAGS_ASPECT_NAME, changeType,globalTags);
+        return emitProposal(proposal, entityType);
     }
 
     public static String addTags(Urn entityUrn, String entityType, String changeType, ArrayList<String> tagNames, String Context)
@@ -35,7 +36,7 @@ public class ManageGlobalTags {
         }
         GlobalTags globalTags = new GlobalTags().setTags(tagAssociationArray);
         MetadataChangeProposal proposal = createProposal(String.valueOf(entityUrn), entityType,
-                "globalTags", changeType,globalTags);
-        return emitProposal(proposal, "globalTags");
+                GLOBAL_TAGS_ASPECT_NAME, changeType,globalTags);
+        return emitProposal(proposal, entityType);
     }
 }

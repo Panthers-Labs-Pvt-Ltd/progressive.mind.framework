@@ -1,12 +1,15 @@
 package com.progressive.minds.chimera.core.datahub.modal;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import java.util.Map;
-import java.util.HashMap;
 import java.util.List;
-import java.util.ArrayList;
 
+@Getter
+@Setter
 public class GlossaryNodeGroup {
     @NotNull
     public String name;
@@ -25,7 +28,6 @@ public class GlossaryNodeGroup {
 
     public GlossaryNodeGroup(){}
 
-    // Constructor for GlossaryNodeGroup
     public GlossaryNodeGroup(String name, String definition, GlossaryNodeGroup parentGlossaryNodeGroup,
                              List<Owners> Ownership,
                              Map<String, String> customProperties) {

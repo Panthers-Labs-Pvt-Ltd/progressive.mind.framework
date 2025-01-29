@@ -1,6 +1,3 @@
-package com.progressive.minds.chimera.core.datahub.datasets;
-
-
 import com.linkedin.common.urn.Urn;
 import com.linkedin.common.urn.UrnUtils;
 import com.linkedin.metadata.aspect.patch.builder.StructuredPropertiesPatchBuilder;

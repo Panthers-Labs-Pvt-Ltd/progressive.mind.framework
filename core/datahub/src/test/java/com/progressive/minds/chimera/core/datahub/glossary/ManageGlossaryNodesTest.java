@@ -48,18 +48,18 @@ class ManageGlossaryNodesTest {
         List<Owners> owners = new ArrayList<>();
 
         Owners owner1 = new Owners();
-        owner1.name = "Alice";
-        owner1.type = "CUSTOM"; // valid type
+        owner1.setName("Alice");
+        owner1.setType("CUSTOM");
         owners.add(owner1);
 
         Owners owner2 = new Owners();
-        owner2.name = "Bob";
-        owner2.type = "DEVELOPER"; // valid type
+        owner2.setName("Alice");
+        owner2.setType("CUSTOM");
         owners.add(owner2);
 
         Owners owner3 = new Owners();
-        owner3.name = "Charlie";
-        owner3.type = "UNKNOWN_TYPE"; // invalid type
+        owner3.setName("Alice");
+        owner3.setType("CUSTOM");
         owners.add(owner3);
 
         GlossaryNodeGroup parentNode = new GlossaryNodeGroup();

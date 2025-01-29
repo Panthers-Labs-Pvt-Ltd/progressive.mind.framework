@@ -21,53 +21,52 @@ public class ManageGlossaryTerms {
         String retVal = "";
         for (GlossaryTerm glossaryTerm : glossaryTerms) {
 
-            if (glossaryTerm.glossaryTermName == null || glossaryTerm.glossaryTermName.isEmpty()) {
+            if (glossaryTerm.getGlossaryTermName() == null || glossaryTerm.getGlossaryTermName().isEmpty()) {
                 return "Glossary term name is required.";
             }
-            if (glossaryTerm.documentations == null || glossaryTerm.documentations.isEmpty()) {
+            if (glossaryTerm.getDocumentations() == null || glossaryTerm.getDocumentations().isEmpty()) {
                 return "Glossary term definition is required.";
             }
 
-            GlossaryTermUrn glossaryNodeUrn = new GlossaryTermUrn(glossaryTerm.glossaryTermName);
+            GlossaryTermUrn glossaryNodeUrn = new GlossaryTermUrn(glossaryTerm.getGlossaryTermName());
 
 
             GlossaryTermInfo termInfo = new GlossaryTermInfo()
                     .setId(glossaryNodeUrn.getNameEntity())
-                    .setName(glossaryTerm.glossaryTermName)
-                    .setDefinition(glossaryTerm.documentations)
-                    .setTermSource(glossaryTerm.sourceRef);
+                    .setName(glossaryTerm.getGlossaryTermName())
+                    .setDefinition(glossaryTerm.getDocumentations())
+                    .setTermSource(glossaryTerm.getSourceRef());
 
-            if (glossaryTerm.sourceURL != null && !glossaryTerm.sourceURL.isEmpty()) {
-                termInfo.setSourceUrl(new Url(glossaryTerm.sourceURL));
+            if (glossaryTerm.getSourceURL() != null && !glossaryTerm.getSourceURL().isEmpty()) {
+                termInfo.setSourceUrl(new Url(glossaryTerm.getSourceURL()));
             }
 
-            if (glossaryTerm.glossaryNodeRecord != null && !glossaryTerm.glossaryNodeRecord.name.isEmpty()) {
+            if (glossaryTerm.getGlossaryNodeRecord() != null && !glossaryTerm.getGlossaryNodeRecord().name.isEmpty()) {
                 // createGlossaryNode()
-                termInfo.setParentNode(new GlossaryNodeUrn(glossaryTerm.glossaryNodeRecord.name));
+                termInfo.setParentNode(new GlossaryNodeUrn(glossaryTerm.getGlossaryNodeRecord().name));
             }
 
 
             MetadataChangeProposal glossaryTermProposal = createProposal(String.valueOf(glossaryNodeUrn), GLOSSARY_TERM_ENTITY_NAME,
-                    GLOSSARY_TERM_INFO_ASPECT_NAME, "UPSERT", termInfo);
+                    GLOSSARY_TERM_INFO_ASPECT_NAME, ACTION_TYPE, termInfo);
 
             emitProposal(glossaryTermProposal, "glossaryTermProperties");
 
             GlossaryRelatedTerms relatedTerms = new GlossaryRelatedTerms();
-            if (glossaryTerm.glossaryRelatedTermsRecord != null && !glossaryTerm.glossaryRelatedTermsRecord.isEmpty()) {
-                for (GlossaryRelatedTerm glossaryRelatedTerm : glossaryTerm.glossaryRelatedTermsRecord) {
-                    if (glossaryRelatedTerm.RelatedTermName != null && glossaryRelatedTerm.RelatedTermName.length > 0) {
+            if (glossaryTerm.getGlossaryRelatedTermsRecord() != null && !glossaryTerm.getGlossaryRelatedTermsRecord().isEmpty()) {
+                for (GlossaryRelatedTerm glossaryRelatedTerm : glossaryTerm.getGlossaryRelatedTermsRecord()) {
+                    if (glossaryRelatedTerm.getRelatedTermName() != null && glossaryRelatedTerm.getRelatedTermName().length > 0) {
                         GlossaryTermUrnArray contains = new GlossaryTermUrnArray();
                         GlossaryTermUrnArray inherits = new GlossaryTermUrnArray();
                         GlossaryTermUrnArray containedBy = new GlossaryTermUrnArray();
                         GlossaryTermUrnArray inheritedBy = new GlossaryTermUrnArray();
 
-                        for (String termName : glossaryRelatedTerm.RelatedTermName) {
-                            System.out.println("Related Term: " + termName);
-                            if ("INHERITED BY".equalsIgnoreCase(glossaryRelatedTerm.RelationType)) {
+                        for (String termName : glossaryRelatedTerm.getRelatedTermName()) {
+                            if ("INHERITED BY".equalsIgnoreCase(glossaryRelatedTerm.getRelationType())) {
                                 inheritedBy.add(new GlossaryTermUrn(termName));
-                            } else if ("CONTAINED BY".equalsIgnoreCase(glossaryRelatedTerm.RelationType)) {
+                            } else if ("CONTAINED BY".equalsIgnoreCase(glossaryRelatedTerm.getRelationType())) {
                                 containedBy.add(new GlossaryTermUrn(termName));
-                            } else if ("INHERITS".equalsIgnoreCase(glossaryRelatedTerm.RelationType)) {
+                            } else if ("INHERITS".equalsIgnoreCase(glossaryRelatedTerm.getRelationType())) {
                                 inherits.add(new GlossaryTermUrn(termName));
                             } else {
                                 contains.add(new GlossaryTermUrn(termName));
@@ -83,7 +82,7 @@ public class ManageGlossaryTerms {
             }
 
             MetadataChangeProposal relatedTermsProposal = createProposal(String.valueOf(glossaryNodeUrn), GLOSSARY_TERM_ENTITY_NAME,
-                    GLOSSARY_RELATED_TERM_ASPECT_NAME, "UPSERT", relatedTerms);
+                    GLOSSARY_RELATED_TERM_ASPECT_NAME, ACTION_TYPE, relatedTerms);
             retVal = emitProposal(relatedTermsProposal, GLOSSARY_RELATED_TERM_ASPECT_NAME);
         }
         return retVal;

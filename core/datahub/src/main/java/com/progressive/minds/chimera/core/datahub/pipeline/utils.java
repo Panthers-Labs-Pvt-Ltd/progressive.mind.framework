@@ -1,14 +1,13 @@
 package com.progressive.minds.chimera.core.datahub.pipeline;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import com.progressive.minds.chimera.core.datahub.datasets.ManageDatasets;
-import com.progressive.minds.chimera.core.datahub.modal.Dataset;
 import com.progressive.minds.chimera.core.datahub.modal.Pipeline;
 import com.progressive.minds.chimera.foundational.logging.ChimeraLogger;
 import com.progressive.minds.chimera.foundational.logging.ChimeraLoggerFactory;
-
 import java.io.IOException;
 
 public class utils {
@@ -17,6 +16,8 @@ public class utils {
         ChimeraLogger DatahubLogger = ChimeraLoggerFactory.getLogger(ManagePipeline.class);
         InputFormat = InputFormat.trim();
         String SchemaFormat;
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
 
         if (InputFormat.startsWith("{") || InputFormat.startsWith("["))  SchemaFormat="JSON";
         else if (InputFormat.contains(":") && !InputFormat.contains("{"))  SchemaFormat = "YAML";
@@ -24,7 +25,9 @@ public class utils {
         Pipeline pipeline;
         switch (SchemaFormat.toUpperCase()) {
             case "JSON":
-                ObjectMapper objectMapper = new ObjectMapper();
+                objectMapper.setPropertyNamingStrategy(PropertyNamingStrategies.LOWER_CAMEL_CASE);
+
+
                 try {
                     pipeline = objectMapper.readValue(InputFormat, Pipeline.class);
                 } catch (IOException e) {

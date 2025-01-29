@@ -1,5 +1,3 @@
-package com.progressive.minds.chimera.core.datahub.datasets;
-
 import com.linkedin.common.urn.DataJobUrn;
 import com.linkedin.common.urn.DatasetUrn;
 import com.linkedin.common.urn.UrnUtils;

@@ -3,58 +3,62 @@ package com.progressive.minds.chimera.core.datahub.modal;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class Users {
-    public String Title;
+    private String title;
     @NotNull
-    public String FirstName;
+    private String firstName;
     @NotNull
-    public String LastName;
-    public String DisplayName;
+    private String lastName;
+    private String displayName;
     @NotNull
-    public String Email;
-    public String Manager;
-    public Boolean Active;
-    public String CountryCode;
-    public Long DepartmentId;
-    public String DepartmentName;
-    public String AboutMe;
-    public List<String> Skills;
-    public List<String> Teams;
-    public String Phone;
-    public String Slack;
-    public List<String> Platform;
-    public String PictureLink;
+    private String email;
+    private String manager;
+    private Boolean active;
+    private String countryCode;
+    private Long departmentId;
+    private String departmentName;
+    private String aboutMe;
+    private List<String> skills;
+    private List<String> teams;
+    private String phone;
+    private String slack;
+    private List<String> platform;
+    private String pictureLink;
     public Users() {
 
     }
 
-    public Users(String firstName, String lastName,String email) {
-        this.FirstName = firstName;
-        this.LastName = lastName;
-        this.Email = email;
-
+    public Users(String firstName, String lastName, String email) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
     }
 
-    public Users(String title, String firstName, String lastName, String displayName, String email,
-                 String manager, Boolean active, String countryCode, Long departmentId,
-                 String departmentName, String aboutMe, List<String> skills, List<String> teams,
-                 String phone, String slack, List<String> platform, String PictureLink) {
-        this.Title = title;
-        this.FirstName = firstName;
-        this.LastName = lastName;
-        this.DisplayName = displayName;
-        this.Email = email;
-        this.Manager = manager;
-        this.Active = active;
-        this.CountryCode = countryCode;
-        this.DepartmentId = departmentId;
-        this.DepartmentName = departmentName;
-        this.AboutMe = aboutMe;
-        this.Skills = skills;
-        this.Teams = teams;
-        this.Phone = phone;
-        this.Slack = slack;
-        this.Platform = platform;
-        this.PictureLink = PictureLink;
+    public Users(String aboutMe, String title, String firstName, String lastName, String displayName, String email,
+                 String manager, Boolean active, String countryCode, Long departmentId, String departmentName,
+                 List<String> skills, List<String> teams, String phone, String slack, List<String> platform,
+                 String pictureLink) {
+        this.aboutMe = aboutMe;
+        this.title = title;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.displayName = displayName;
+        this.email = email;
+        this.manager = manager;
+        this.active = active;
+        this.countryCode = countryCode;
+        this.departmentId = departmentId;
+        this.departmentName = departmentName;
+        this.skills = skills;
+        this.teams = teams;
+        this.phone = phone;
+        this.slack = slack;
+        this.platform = platform;
+        this.pictureLink = pictureLink;
     }
 }

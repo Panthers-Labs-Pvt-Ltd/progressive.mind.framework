@@ -1,19 +1,20 @@
 package com.progressive.minds.chimera.core.datahub.modal;
 
-import javax.validation.constraints.NotNull;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 public class GlossaryRelatedTerm {
 
-    // Instance Variables
-    public String[] RelatedTermName;
-    public String RelationType;
-    public GlossaryRelatedTerm() {
-    }
+    private String[] relatedTermName;  // Renamed to camelCase
+    private String relationType;       // Renamed to camelCase
 
-    // Constructor
-    public GlossaryRelatedTerm(@NotNull String[] RelatedTermName, @NotNull String RelationType) {
-        this.RelatedTermName = RelatedTermName;
-        this.RelationType = RelationType;
+    public GlossaryRelatedTerm(){}
 
+    // Constructor with Lombok's generated NoArgsConstructor
+    public GlossaryRelatedTerm(String[] relatedTermName, String relationType) {
+        this.relatedTermName = relatedTermName;
+        this.relationType = relationType;
     }
 }

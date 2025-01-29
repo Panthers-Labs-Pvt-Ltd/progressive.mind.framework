@@ -1,10 +1,26 @@
 package com.progressive.minds.chimera.core.datahub.modal;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.validation.constraints.NotNull;
 
+@Setter
+@Getter
 public class Property {
+
+    // Getters and Setters
     @NotNull
-    public String name;
+    private String name;
+
     @NotNull
-    public String value;
+    private String value;
+
+    public Property(){}
+    // Constructor
+    public Property(String name, String value) {
+        this.name = name;
+        this.value = value;
+    }
+
 }
