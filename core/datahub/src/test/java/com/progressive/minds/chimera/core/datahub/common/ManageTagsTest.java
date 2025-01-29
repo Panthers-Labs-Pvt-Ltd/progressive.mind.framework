@@ -1,9 +1,7 @@
 package com.progressive.minds.chimera.core.datahub.common;
 
-import com.linkedin.common.urn.Urn;
+import com.progressive.minds.chimera.core.datahub.tag.ManageTags;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class ManageTagsTest {
     @Test

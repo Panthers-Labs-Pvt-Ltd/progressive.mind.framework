@@ -25,7 +25,7 @@ import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 
-import static com.progressive.minds.chimera.core.datahub.Constants.SYSTEM_USER;
+import static com.progressive.minds.chimera.core.datahub.Constants.*;
 import static com.progressive.minds.chimera.core.datahub.common.genericUtils.*;
 
 import java.util.Map;
@@ -55,8 +55,8 @@ public class ManageDomain  {
             Domains domains = new Domains().setDomains(DomainUrn);
 
             MetadataChangeProposal domainProposal = createProposal(assetsUrn,
-                    entityType, "domains", "UPSERT", domains);
-            String retval = emitProposal(domainProposal, "domains");
+                    entityType, DOMAINS_ASPECT_NAME, ACTION_TYPE, domains);
+            String retval = emitProposal(domainProposal, DOMAINS_ASPECT_NAME);
             DatahubLogger.logInfo(LoggerTag + "Mapping "+ entityType+" With Domain Completed With " + retval);
         }
     }
@@ -93,12 +93,12 @@ public class ManageDomain  {
 
             MetadataChangeProposal proposal = new MetadataChangeProposal();
             proposal.setEntityUrn(domainUrn);
-            proposal.setEntityType("domain");
-            proposal.setAspectName("domainProperties");
+            proposal.setEntityType(DOMAIN_ENTITY_NAME);
+            proposal.setAspectName(DOMAIN_PROPERTIES_ASPECT_NAME);
             proposal.setAspect(genericAspect);
             proposal.setChangeType(ChangeType.UPSERT);
 
-            return emitProposal(proposal, "domain");
+            return emitProposal(proposal, DOMAIN_ENTITY_NAME);
 
         } catch (URISyntaxException | JsonProcessingException | ExecutionException | InterruptedException e) {
             throw new RuntimeException("Failed to create domain: " + domainName, e);
@@ -137,12 +137,12 @@ public class ManageDomain  {
             }
 
 
-                MetadataChangeProposal proposal = createProposal(String.valueOf(domainUrn), "domain",
-                    "domainProperties", "UPSERT", domainProperties);
+                MetadataChangeProposal proposal = createProposal(String.valueOf(domainUrn), DOMAIN_ENTITY_NAME,
+                    DOMAIN_PROPERTIES_ASPECT_NAME, ACTION_TYPE, domainProperties);
 
             DatahubLogger.logInfo(LoggerTag + "Preparing for MetadataChangeProposal : " + proposal);
 
-            String retVal = emitProposal(proposal, "domain");
+            String retVal = emitProposal(proposal, DOMAIN_ENTITY_NAME);
 
             if (domainRecords.domainHierarchy != null && !domainRecords.domainHierarchy.isEmpty())
             {
@@ -179,8 +179,8 @@ public class ManageDomain  {
         Ownership ownership = new Ownership()
                 .setOwners(ownerArray);
 
-        MetadataChangeProposal proposal = createProposal(String.valueOf(domainUrn), "domain",
-                "ownership", "UPSERT", ownership);
+        MetadataChangeProposal proposal = createProposal(String.valueOf(domainUrn), DOMAIN_ENTITY_NAME,
+                OWNERSHIP_ASPECT_NAME, ACTION_TYPE, ownership);
         String retVal = emitProposal(proposal, "domainOwnership");
         return retVal;
     }
@@ -203,12 +203,12 @@ public class ManageDomain  {
         // Create MetadataChangeProposal
         MetadataChangeProposal proposal = new MetadataChangeProposal();
         proposal.setEntityUrn(assetUrn); // Set the asset URN
-        proposal.setAspectName("domain"); // Aspect name
+        proposal.setAspectName(DOMAIN_ENTITY_NAME); // Aspect name
         proposal.setAspect(genericAspect); // Set the aspect
         proposal.setChangeType(ChangeType.UPSERT); // Change type
 
         // Emit the proposal using the RestEmitter (assume initialized globally)
-        return emitProposal(proposal, "domain");
+        return emitProposal(proposal, DOMAIN_ENTITY_NAME);
 
     }
 
@@ -271,12 +271,12 @@ public class ManageDomain  {
                     genericAspect.setContentType("application/json");
                     MetadataChangeProposal proposal = new MetadataChangeProposal();
                     proposal.setEntityUrn(domainUrn);
-                    proposal.setAspectName("domain");
+                    proposal.setAspectName(DOMAIN_ENTITY_NAME);
                     proposal.setAspect(genericAspect);
                     proposal.setChangeType(ChangeType.UPSERT);
                     DatahubLogger.logInfo(LoggerTag + "Submit Change Proposal Asset Type : "+ assetsUrn + "Proposal " + proposal);
 
-                    emitProposal(proposal, "domain");
+                    emitProposal(proposal, DOMAIN_ENTITY_NAME);
                 }
                 else
                 {

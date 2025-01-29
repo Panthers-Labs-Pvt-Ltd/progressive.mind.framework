@@ -26,9 +26,9 @@ public class CreateGlossaryTerm {
     public static void main(String[] args) {
         try {
             // Set Source URL
-            com.linkedin.common.url.Url sc = new Url("http://example.com/glossary-term-details");
+            Url sc = new Url("http://example.com/glossary-term-details");
             GlossaryNodeUrn parentNodeUrn = GlossaryNodeUrn.createFromString("urn:li:glossaryNode:XXXXX");
-            ;
+
 
             GlossaryTermInfo termInfo = new GlossaryTermInfo()
                     .setName("CUSTOM_dataProductUrn")

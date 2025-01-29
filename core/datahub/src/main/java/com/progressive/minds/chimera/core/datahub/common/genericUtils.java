@@ -19,9 +19,13 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 public class genericUtils {
-static String DATAHUB_URL = "http://localhost:8080";
-static String DATAHUB_AUTH_TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJhY3RvclR5cGUiOiJVU0VSIiwiYWN0b3JJZCI6ImRhdGFodWIiLCJ0eXBlIjoiUEVSU09OQUwiLCJ2ZXJzaW9uIjoiMiIsImp0aSI6IjY5ZDRlY2QyLTM2NDItNDk3YS05OTIwLThiZjQyM2I3Yjg3OSIsInN1YiI6ImRhdGFodWIiLCJleHAiOjE3Mzk4OTE4NzgsImlzcyI6ImRhdGFodWItbWV0YWRhdGEtc2VydmljZSJ9.lWCSLgZ096DdlI6lsqTgicd-uKYi4RNf1pOHaCCM-WI";
+public static String DATAHUB_URL = "http://localhost:8080";
+public static String DATAHUB_AUTH_TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJhY3RvclR5cGUiOiJVU0VSIiwiYWN0b3JJZCI6ImRhdGFodWIiLCJ0eXBlIjoiUEVSU09OQUwiLCJ2ZXJzaW9uIjoiMiIsImp0aSI6IjY5ZDRlY2QyLTM2NDItNDk3YS05OTIwLThiZjQyM2I3Yjg3OSIsInN1YiI6ImRhdGFodWIiLCJleHAiOjE3Mzk4OTE4NzgsImlzcyI6ImRhdGFodWItbWV0YWRhdGEtc2VydmljZSJ9.lWCSLgZ096DdlI6lsqTgicd-uKYi4RNf1pOHaCCM-WI";
     private static final ChimeraLogger DatahubLogger = ChimeraLoggerFactory.getLogger(genericUtils.class);
+
+    public static <T> T getOrElse(T value, T defaultValue) {
+        return (value != null) ? value : defaultValue;
+    }
 
     // Method to create MetadataChangeProposal for DataProduct
     public static MetadataChangeProposal createProposal(String entityUrn, String entityType,
@@ -104,7 +108,6 @@ static String DATAHUB_AUTH_TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJhY3RvclR5cGUiOiJVU0V
         });
         return status[0];
     }
-
     public static String emitProposal(MetadataChangeProposal proposal, String Type) throws IOException,
             ExecutionException, InterruptedException {
         Emitter emitter = RestEmitter.create(b -> b

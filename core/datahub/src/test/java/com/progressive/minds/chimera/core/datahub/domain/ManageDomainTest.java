@@ -1,16 +1,15 @@
 package com.progressive.minds.chimera.core.datahub.domain;
 
+import com.ibm.icu.impl.data.ResourceReader;
 import io.datahubproject.openapi.generated.OwnershipType;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 
 
@@ -19,7 +18,10 @@ String domainName = "Panthers Labs - Chimera";
     @Test
     void createDomain() throws IOException {
 
-        String content = Files.readString(Paths.get("/home/manish/Chimera2.0/chimera/Product_Documentation.md"));
+        //String content = Files.readString(Paths.get("/home/manish/Chimera2.0/chimera/Product_Documentation.md"));
+        String content = new String(Objects.requireNonNull(ResourceReader.class.getClassLoader()
+                .getResourceAsStream("Sample.md")).readAllBytes(), StandardCharsets.UTF_8);
+
         String domainDesc = content;
         Map<String, String> customProperties = new HashMap<>();
         customProperties.put("Property1", "Value1");

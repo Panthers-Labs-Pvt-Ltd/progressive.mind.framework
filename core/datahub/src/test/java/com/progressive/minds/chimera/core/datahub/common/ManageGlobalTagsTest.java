@@ -6,6 +6,7 @@ import com.linkedin.common.urn.GlossaryTermUrn;
 import com.linkedin.common.urn.Urn;
 import com.linkedin.domain.Domains;
 import com.linkedin.mxe.MetadataChangeProposal;
+import com.progressive.minds.chimera.core.datahub.tag.ManageGlobalTags;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
@@ -25,7 +26,7 @@ class ManageGlobalTagsTest {
     }
 
     @Test
-    void addDomainToAsstes() throws Exception {
+    void addDomainToAssets() throws Exception {
         String dataProductUrnString = "urn:li:dataProduct:manishdataproduct11";
         String domainUrnString = "urn:li:domain:manishwebworld";
 
