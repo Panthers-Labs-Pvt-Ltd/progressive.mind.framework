@@ -29,6 +29,7 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import static com.linkedin.data.template.SetMode.REMOVE_IF_NULL;
+import static com.progressive.minds.chimera.core.datahub.Constants.*;
 import static com.progressive.minds.chimera.core.datahub.common.genericUtils.*;
 
 public class ManageDataProduct {
@@ -119,13 +120,13 @@ public class ManageDataProduct {
                 }
                 dataProductProperties.setAssets(dataProductAssociationArray);
             }
-
-            MetadataChangeProposal proposal = createProposal(String.valueOf(dataProductUrn), "dataProduct",
-                    "dataProductProperties", "UPSERT", dataProductProperties);
+            
+            MetadataChangeProposal proposal = createProposal(String.valueOf(dataProductUrn), DATA_PRODUCT_ENTITY_NAME,
+                    DATA_PRODUCT_PROPERTIES_ASPECT_NAME, ACTION_TYPE, dataProductProperties);
 
             DatahubLogger.logInfo(LoggerTag + "Preparing for MetadataChangeProposal : " + proposal);
 
-            retVal = emitProposal(proposal, "dataProduct");
+            retVal = emitProposal(proposal, DATA_PRODUCT_ENTITY_NAME);
 
             if (retVal.equalsIgnoreCase(dataProductUrn.toString())) {
                 DatahubLogger.logInfo(LoggerTag + String.format("Data Product %s Created on Datahub With URN %s",
@@ -133,7 +134,7 @@ public class ManageDataProduct {
 
                 if (Owners != null && !Owners.isEmpty()) {
                     DatahubLogger.logInfo(LoggerTag + "Mapping Owners Information's with Data Product");
-                    ManageOwners.addOwners(dataProductUrn, "dataProduct", "ownership", "UPSERT",
+                    ManageOwners.addOwners(dataProductUrn, DATA_PRODUCT_ENTITY_NAME, OWNERSHIP_ASPECT_NAME, ACTION_TYPE,
                             Owners);
                 }
 
@@ -146,15 +147,15 @@ public class ManageDataProduct {
                     Domains domains = new Domains().setDomains(DomainUrn);
 
                     MetadataChangeProposal domainProposal = createProposal(retVal,
-                            "dataProduct", "domains", "UPSERT", domains);
-                    String retval = emitProposal(domainProposal, "domains");
+                            DATA_PRODUCT_ENTITY_NAME, DOMAINS_ASPECT_NAME, ACTION_TYPE, domains);
+                    String retval = emitProposal(domainProposal, DOMAINS_ASPECT_NAME);
                     DatahubLogger.logInfo(LoggerTag + "Mapping Data Product With Domain Completed With " + retval);
                 }
 
                 if (globalTags != null &&  ArrayUtils.isNotEmpty(globalTags)) {
                     DatahubLogger.logInfo(LoggerTag + "Mapping Global Tags With Data Product");
                     String retval = ManageGlobalTags.addTags(Urn.createFromString(dataProductUrn.toString()),
-                            "dataProduct", "UPSERT", globalTags);
+                            DATA_PRODUCT_ENTITY_NAME, ACTION_TYPE, globalTags);
                     DatahubLogger.logInfo(LoggerTag + "Mapping Global Tags With Data Product Completed With " + retval);
                 } else {
                     DatahubLogger.logInfo("GlobalTags array is null or empty.");
@@ -177,8 +178,8 @@ public class ManageDataProduct {
                     GlossaryTerms glossaryTerm = new GlossaryTerms()
                             .setTerms(glossaryTermAssociationArray).setAuditStamp(createdStamp);
                     MetadataChangeProposal glossaryProposal = createProposal(dataProductUrn.toString(),
-                            "dataProduct", "glossaryTerms", "UPSERT", glossaryTerm);
-                    String retval = emitProposal(glossaryProposal, "glossaryTerms");
+                            DATA_PRODUCT_ENTITY_NAME, GLOSSARY_TERMS_ASPECT_NAME, ACTION_TYPE, glossaryTerm);
+                    String retval = emitProposal(glossaryProposal, GLOSSARY_TERMS_ASPECT_NAME);
                     DatahubLogger.logInfo(LoggerTag + "Mapping Glossary Terms Tags Data Product Completed " + retval);
                 } else {
                     System.out.println("Glossary Terms array is null or empty.");
@@ -209,9 +210,9 @@ public class ManageDataProduct {
                 .setName(dataProductName)
                 .setAssets(dataProductAssociationArray);
 
-        MetadataChangeProposal proposal = createProposal(String.valueOf(dataProductUrn), "dataProduct",
-                "dataProductProperties", "UPSERT", dataProductProperties);
-        String retval = emitProposal(proposal, "dataProductProperties");
+        MetadataChangeProposal proposal = createProposal(String.valueOf(dataProductUrn), DATA_PRODUCT_ENTITY_NAME,
+                DATA_PRODUCT_PROPERTIES_ASPECT_NAME, ACTION_TYPE, dataProductProperties);
+        String retval = emitProposal(proposal, DATA_PRODUCT_PROPERTIES_ASPECT_NAME);
         DatahubLogger.logInfo(LoggerTag + "Setting Data Product Properties " + retval);
 
 

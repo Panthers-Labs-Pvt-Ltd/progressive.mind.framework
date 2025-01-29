@@ -58,7 +58,7 @@ String dataProductUrn = manageDataProduct.createDataProduct(
     customPropertiesMap
 );
 
-manageDataProduct.addAssetToDataProduct("SampleDataProduct", "urn:li:dataset:(urn:li:dataPlatform:hive,SampleDataset,PROD)");
+String returnVal = manageDataProduct.addAssetToDataProduct("SampleDataProduct", "urn:li:dataset:(urn:li:dataPlatform:hive,SampleDataset,PROD)");
 ```
 
 ## Logging
