@@ -14,10 +14,9 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 @EnableMethodSecurity
 @Profile({"prod", "default"})
-public class ChimeraSecurityConfig {
+public class SpringSecurityConfig {
 
 
-  @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http
         // Disable CSRF for simplicity; enable it in production
@@ -25,9 +24,19 @@ public class ChimeraSecurityConfig {
 
         // Configure authorization rules
         .authorizeHttpRequests(auth -> auth
+            .requestMatchers("/actuator/health", "/actuator/info")
+            .permitAll()
+
+            // Permit access to Swagger UI and OpenAPI endpoints
+            .requestMatchers(
+                "/swagger-ui/**", // Swagger UI resources
+                "/v3/api-docs/**",    // OpenAPI JSON
+                "/v3/api-docs.yaml"   // OpenAPI YAML (optional)
+            ).permitAll()
+
             .requestMatchers("/api/v1/pipelines/**").hasRole("admin")
             .requestMatchers("/user/**").hasRole("user")
-            .anyRequest().authenticated()
+            .anyRequest().authenticated()  // All other requests require authentication
         )
 
         // Configure OAuth2 Resource Server to use JWT
@@ -37,6 +46,7 @@ public class ChimeraSecurityConfig {
 
     return http.build();
   }
+
 
   @Bean
   public JwtAuthenticationConverter jwtAuthenticationConverter() {

@@ -1,7 +1,7 @@
 server:
   port: 8080
 spring:
-  config:
+  cloud:
     activate:
       on-profile: dev
   application:
@@ -30,11 +30,16 @@ mybatis:
     default-statement-timeout: 30
 
 management:
-  context-path: /manage # Management endpoint context
+  health:
+    consul:
+      enabled: false
+  server:
+    servlet:
+      context-path: /actuator  # Custom path for Actuator endpoints
   endpoints:
     web:
       exposure:
-        include: health,info,metrics # Expose specific management endpoints
+        include: health, info  # Expose health and info endpoints
 
 security:
   userName: chimera # Username for private endpoint access

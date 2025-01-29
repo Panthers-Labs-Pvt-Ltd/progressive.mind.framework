@@ -1,7 +1,7 @@
 server:
   port: 8080
 spring:
-  config:
+  cloud:
     activate:
       on-profile: prod
   application:
@@ -43,11 +43,13 @@ jwt:
       principle-attribute: chimera # Attribute to be used as principal
 
 management:
-  context-path: /manage # Management endpoint context
+  server:
+    servlet:
+      context-path: /actuator  # Correct management context path
   endpoints:
     web:
       exposure:
-        include: health,info,metrics # Expose specific management endpoints
+        include: health,info,metrics
 
 resilience4j.circuitbreaker:
   instances:
