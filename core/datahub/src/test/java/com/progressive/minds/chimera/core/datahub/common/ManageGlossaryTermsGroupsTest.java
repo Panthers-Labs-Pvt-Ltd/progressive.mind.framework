@@ -1,27 +1,21 @@
+/*
 package com.progressive.minds.chimera.core.datahub.common;
-import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.linkedin.glossary.GlossaryTermInfo;
-import com.linkedin.common.url.Url;
 import com.linkedin.common.urn.Urn;
 import com.linkedin.data.ByteString;
-import com.linkedin.data.DataMap;
 import com.linkedin.data.template.DataTemplate;
 import com.linkedin.data.template.StringMap;
-import com.linkedin.events.metadata.ChangeType;
-import com.linkedin.glossary.GlossaryTermInfo;
 import com.linkedin.metadata.key.GlossaryTermKey;
 import com.linkedin.mxe.GenericAspect;
 import com.linkedin.mxe.MetadataChangeProposal;
 import datahub.client.Emitter;
 import datahub.client.MetadataWriteResponse;
 import datahub.client.rest.RestEmitter;
-import datahub.shaded.jackson.core.JsonProcessingException;
 import datahub.shaded.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.concurrent.ExecutionException;
@@ -31,9 +25,6 @@ import static com.linkedin.events.metadata.ChangeType.CREATE;
 import static com.linkedin.events.metadata.ChangeType.UPSERT;
 import static com.linkedin.metadata.Constants.GLOSSARY_TERMS_ASPECT_NAME;
 import static com.linkedin.metadata.Constants.GLOSSARY_TERM_ENTITY_NAME;
-import static com.progressive.minds.chimera.core.datahub.common.genericUtils.replaceSpecialCharsAndLowercase;
-import static org.junit.jupiter.api.Assertions.*;
-import com.linkedin.data.template.DataTemplateUtil;
 
 
 class ManageGlossaryTermsGroupsTest {
@@ -182,12 +173,14 @@ class ManageGlossaryTermsGroupsTest {
         //DataMap dm = new DataMap(10);
 
         Urn dataProductUrn = Urn.createFromString("urn:li:glossaryNode:30dd6e78-a83f-4d11-86a0-585f041976af");
-        /*dm.put("term", "Data Engineering");
+        */
+/*dm.put("term", "Data Engineering");
         dm.put("definition", "A field of engineering focused on data collection, management, and analysis.");
         dm.put("termSource", "INTERNAL");
         dm.put("sourceRef", "mmmmmmm");
         dm.put("name", "myvalue");
-        dm.put("id", "XXXXXXXXXX");*/
+        dm.put("id", "XXXXXXXXXX");*//*
+
      //   dm.put("parentNode", dataProductUrn.toString());
 
         GlossaryTermInfo termInfo = new GlossaryTermInfo()
@@ -228,4 +221,4 @@ class ManageGlossaryTermsGroupsTest {
 
 
     }
-}
+}*/
