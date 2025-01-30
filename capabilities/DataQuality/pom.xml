@@ -10,8 +10,7 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <groupId>com.progressive.minds.chimera</groupId>
-    <artifactId>DataQuality</artifactId>
+    <artifactId>capabilities.DataQuality</artifactId>
     <version>1.0-SNAPSHOT</version>
 
 
