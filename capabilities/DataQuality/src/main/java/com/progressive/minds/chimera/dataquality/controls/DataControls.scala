@@ -1,11 +1,7 @@
-package com.progressive.minds.chimera.capabilities.DataQuality.controls
+package com.progressive.minds.chimera.dataquality.controls
 
-import org.nwg.edl.tachyon.common.metadata.dto.PipelineDetails
-import org.nwg.edl.tachyon.core.dbmgmt.modal.EdlDataControlsLog
-import org.nwg.edl.tachyon.core.dbmgmt.repository.EdlDataControlsLogRepository
-
-import org.apache.spark.sql.{DataFrame, SparkSession}
 import org.apache.spark.sql.types.StructType
+import org.apache.spark.sql.{DataFrame, SparkSession}
 
 trait DataControls {
 
@@ -19,5 +15,4 @@ trait DataControls {
   def registerResult(controlResults: EdlDataControlsLog): Boolean = {
     EdlDataControlsLogRepository.addNewEdlDataControlsLog(controlResults)
   }
-
 }

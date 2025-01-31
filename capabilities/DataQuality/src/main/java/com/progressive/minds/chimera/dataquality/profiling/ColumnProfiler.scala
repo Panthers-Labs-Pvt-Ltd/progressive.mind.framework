@@ -1,14 +1,6 @@
-package com.progressive.minds.chimera.capabilities.DataQuality.profiling
+package com.progressive.minds.chimera.dataquality.profiling
 
-import scala.None.getOrElse
-import com.amazon.deequ.analyzers.DataTypeInstances
-import com.amazon.deequ.profiles.ColumnProfilerRunner
-import org.apache.spark
-import org.nwg.edl.tachyon.core.dbmgmt.modal.{EdlNumDataProfiler, EdlStdDataProfiler}
-import org.nwg.edl.tachyon.core.dbmgmt.repository.{EdlNumDataProfilerRepository, EdlStdDataProfilerRepository}
-import org.apache.spark.sql.{DataFrame, Row, SparkSession}
-import org.apache.spark.sql.functions.lit
-import org.apache.spark.sql.types.{DoubleType, LongType, StringType, StructField, StructType}
+import org.apache.spark.sql.{DataFrame, SparkSession}
 
 import java.math.BigInteger
 

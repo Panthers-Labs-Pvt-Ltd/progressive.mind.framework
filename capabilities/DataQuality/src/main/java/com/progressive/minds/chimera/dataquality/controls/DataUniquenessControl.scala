@@ -1,16 +1,10 @@
-package com.progressive.minds.chimera.capabilities.DataQuality.controls
+package com.progressive.minds.chimera.dataquality.controls
+
+import org.apache.spark.sql.types.StructType
+import org.apache.spark.sql.{DataFrame, SparkSession}
 
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-
-import org.nwg.edl.tachyon.common.metadata.dto.PipelineDetails
-import org.nwg.edl.tachyon.core.dbmgmt.modal.EdlDataControlsLog
-import org.nwg.edl.tachyon.core.exception.EDLException
-import org.nwg.edl.tachyon.core.logging.EDLLogger
-
-import org.apache.spark.sql.{DataFrame, SparkSession}
-import org.apache.spark.sql.types.StructType
-import org.apache.spark.sql.functions._
 
 class DataUniquenessControl() extends DataControls {
   final private val edlLogger = new EDLLogger(this.getClass)
@@ -38,7 +32,7 @@ class DataUniquenessControl() extends DataControls {
 
   override def validate(): Boolean = {
     val loggerTag = "DataUniquenessControl"
-    edlLogger.logInfo(loggerTag, "Started")
+    edlLogger.logInfo(loggerTag + "Started")
     val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
     val startTime = LocalDateTime.now().format(formatter)
     val result = uniquenessCheck(sparkSession, sourceDf, targetDf)
@@ -70,7 +64,7 @@ class DataUniquenessControl() extends DataControls {
   def uniquenessCheck(spark: SparkSession, sourceDf: DataFrame, targetDf: DataFrame): Boolean = {
     var result: Boolean = false
     val loggerTag = "uniquenessCheck"
-    edlLogger.logInfo(loggerTag, "Started")
+    edlLogger.logInfo(loggerTag + "Started")
     val sourceUniqueCount = sourceDf.dropDuplicates().count
     val targetUniqueCount = targetDf.dropDuplicates().count
 
@@ -80,43 +74,43 @@ class DataUniquenessControl() extends DataControls {
     var metricsDf = spark.emptyDataFrame
 
     if (spark.catalog.tableExists("dqMetrics")) {
-      edlLogger.logInfo(loggerTag, "dqMetrics Exists")
+      edlLogger.logInfo(loggerTag + "dqMetrics Exists")
       metricsDf = spark.sql("select * from dqMetrics")
-      edlLogger.logInfo(loggerTag, "metricsDf created")
+      edlLogger.logInfo(loggerTag + "metricsDf created")
       if (metricsDf.limit(1).count > 0) {
         val firstMetric = metricsDf.first()
-        edlLogger.logInfo(loggerTag, "first element from Metric fetched")
+        edlLogger.logInfo(loggerTag + "first element from Metric fetched")
         if (metricsDf.select("source_count").count() > 0) {
-          edlLogger.logInfo(loggerTag, "source count exist")
+          edlLogger.logInfo(loggerTag + "source count exist")
           sourceCount = firstMetric.getAs[Long]("source_count")
-          edlLogger.logInfo(loggerTag, "source count from dqMetric is : " + sourceCount)
+          edlLogger.logInfo(loggerTag + "source count from dqMetric is : " + sourceCount)
         }
         if (metricsDf.select("target_count").count() > 0) {
-          edlLogger.logInfo(loggerTag, "target count exist")
+          edlLogger.logInfo(loggerTag + "target count exist")
           targetCount = firstMetric.getAs[Long]("target_count")
-          edlLogger.logInfo(loggerTag, "target count from dqMetric is : " + targetCount)
+          edlLogger.logInfo(loggerTag + "target count from dqMetric is : " + targetCount)
         }
       }
     }
     if (sourceCount == 0) {
       sourceCount = sourceDf.count()
-      edlLogger.logInfo(loggerTag, "source count from dataframe is :: " + sourceCount)
+      edlLogger.logInfo(loggerTag + "source count from dataframe is :: " + sourceCount)
     }
     if (targetCount == 0) {
       targetCount = targetDf.count()
-      edlLogger.logInfo(loggerTag, "target count from dataframe is :: " + targetCount)
+      edlLogger.logInfo(loggerTag + "target count from dataframe is :: " + targetCount)
     }
 
-    edlLogger.logInfo(loggerTag, s"SourceCount :: $sourceCount and SourceUniquenessCount :: $sourceUniqueCount")
-    edlLogger.logInfo(loggerTag, s"TargetCount :: $targetCount and TargetUniquenessCount :: $targetUniqueCount")
+    edlLogger.logInfo(loggerTag + s"SourceCount :: $sourceCount and SourceUniquenessCount :: $sourceUniqueCount")
+    edlLogger.logInfo(loggerTag + s"TargetCount :: $targetCount and TargetUniquenessCount :: $targetUniqueCount")
 
     if (sourceCount == targetCount) {
       if ((sourceUniqueCount == sourceCount) && (targetUniqueCount == targetCount)) {
-        edlLogger.logInfo(loggerTag, "DataFrame has unique values and not duplicated.")
+        edlLogger.logInfo(loggerTag + "DataFrame has unique values and not duplicated.")
         result = true
       } else {
-        edlLogger.logInfo(loggerTag, "DataFrame has duplicate Values.")
-        edlLogger.logInfo(loggerTag, s"DataFrame has duplicate Values. Source " +
+        edlLogger.logInfo(loggerTag + "DataFrame has duplicate Values.")
+        edlLogger.logInfo(loggerTag + s"DataFrame has duplicate Values. Source " +
           s"Source duplicate: " + (sourceCount - sourceUniqueCount) +
           s"Target duplicate: " + (targetCount - targetUniqueCount))
         errorStr.append(s"Number of Duplicate records Source: " + (sourceCount - sourceUniqueCount) +

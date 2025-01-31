@@ -1,12 +1,12 @@
-package com.progressive.minds.chimera.capabilities.DataQuality.profiling.utils
-
-import scala.reflect.runtime.currentMirror
-import scala.tools.reflect.ToolBox
-import scala.util.Try
+package com.progressive.minds.chimera.dataquality.profiling.utils
 
 import com.amazon.deequ.VerificationResult
 import com.amazon.deequ.repository.{MetricsRepository, ResultKey}
 import org.apache.spark.sql.DataFrame
+
+import scala.reflect.runtime.currentMirror
+import scala.tools.reflect.ToolBox
+import scala.util.Try
 
 object DeequUtils {
   type Verifier = (DataFrame, MetricsRepository, ResultKey) => VerificationResult

@@ -1,18 +1,13 @@
-package com.progressive.minds.chimera.capabilities.DataQuality.controls
+package com.progressive.minds.chimera.dataquality.controls
 
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-import java.util.Locale
-import org.nwg.edl.tachyon.common.metadata.dto.PipelineDetails
-import org.nwg.edl.tachyon.core.dbmgmt.modal.EdlDataControlsLog
-import org.nwg.edl.tachyon.core.exception.EDLException
-import org.nwg.edl.tachyon.core.logging.EDLLogger
-import org.apache.spark.sql.DataFrame
-import org.apache.spark.sql.SparkSession
-import org.apache.spark.sql.functions.{col, var_pop}
+import org.apache.spark.sql.{DataFrame, SparkSession}
+import org.apache.spark.sql.functions.col
 import org.apache.spark.sql.types.StructType
 
 import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 
 class DataAccuracyControl() extends DataControls {
@@ -40,7 +35,7 @@ class DataAccuracyControl() extends DataControls {
 
   override def validate(): Boolean = {
     val loggerTag = "validate"
-    edlLogger.logInfo(loggerTag, "Started")
+    edlLogger.logInfo(loggerTag + "Started")
     val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
     val startTime = LocalDateTime.now().format(formatter)
     val result = compareDf(sourceDf, targetDf)
@@ -67,7 +62,7 @@ class DataAccuracyControl() extends DataControls {
       throw new EDLException(errorClass = "EDLDataQualityException.DATA_ACCURACY_EXCEPTION",
         messageParameters = Map("exception" -> resultMessage), cause = null)
     }
-    edlLogger.logInfo(loggerTag, "Completed")
+    edlLogger.logInfo(loggerTag + "Completed")
     true
   }
 
@@ -93,7 +88,7 @@ class DataAccuracyControl() extends DataControls {
     val sourceSchema = sourceNewDf.schema
     val targetSchema = targetNewDf.schema
     val isCompatible = compareSchemas(sourceSchema, targetSchema)
-    edlLogger.logInfo(loggerTag, "Schema Matched :: " + isCompatible)
+    edlLogger.logInfo(loggerTag + "Schema Matched :: " + isCompatible)
 
     if (sourceSchema.equals(targetSchema)) {
       val diffDF = compareDataFrameInChunks(sourceNewDf, targetNewDf)
@@ -101,7 +96,7 @@ class DataAccuracyControl() extends DataControls {
       if (compareCount == 0) {
         result = true
       } else {
-        edlLogger.logInfo(loggerTag, s"DataFrame has mismatched input from source" +
+        edlLogger.logInfo(loggerTag + s"DataFrame has mismatched input from source" +
           s" to Target: " + diffDF.show(false))
         errorStr.append(s"Data level comparison between 1000 records is not matching. Number of mismatch from source " +
           s" to target for sample 1000 record is : "
@@ -109,8 +104,8 @@ class DataAccuracyControl() extends DataControls {
       }
     } else {
       errorStr.append(s"Schema between Source Dataframe and target DataFrame is not matching")
-      edlLogger.logInfo(loggerTag, "Source_Schema " + sourceSchema)
-      edlLogger.logInfo(loggerTag, "Target_Schema " + targetSchema)
+      edlLogger.logInfo(loggerTag + "Source_Schema " + sourceSchema)
+      edlLogger.logInfo(loggerTag + "Target_Schema " + targetSchema)
       result = false
       schemaCheck = false
     }
@@ -120,7 +115,7 @@ class DataAccuracyControl() extends DataControls {
   def compareDataFrameInChunks(df1: DataFrame, df2: DataFrame): DataFrame = {
     val loggerTag = "CompareDataFrameInChunks"
     val chunkSize = 500
-    edlLogger.logInfo(loggerTag, "DataFrames comaprison in chunks for Accuracy Check")
+    edlLogger.logInfo(loggerTag + "DataFrames comaprison in chunks for Accuracy Check")
     val columnChunks = df1.columns.grouped(chunkSize).toList
     var diffDF: DataFrame = null
 

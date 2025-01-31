@@ -1,17 +1,11 @@
-package com.progressive.minds.chimera.capabilities.DataQuality.controls
-
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-
-import org.nwg.edl.tachyon.common.metadata.dto.PipelineDetails
-import org.nwg.edl.tachyon.core.dbmgmt.modal.EdlDataControlsLog
-import org.nwg.edl.tachyon.core.exception.EDLException
-import org.nwg.edl.tachyon.core.logging.EDLLogger
-
-import org.apache.spark.sql.{DataFrame, SparkSession}
+package com.progressive.minds.chimera.dataquality.controls
 
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.types._
+import org.apache.spark.sql.{DataFrame, SparkSession}
+
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 
 class DataCompletenessControl() extends DataControls {
@@ -41,7 +35,7 @@ class DataCompletenessControl() extends DataControls {
 
   override def validate(): Boolean = {
     val loggerTag = "validate"
-    edlLogger.logInfo(loggerTag, "Started")
+    edlLogger.logInfo(loggerTag + "Started")
     val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
     val startTime = LocalDateTime.now().format(formatter)
     val result = completenessCheck(sparkSession, sourceDf, targetDf)
@@ -88,7 +82,7 @@ class DataCompletenessControl() extends DataControls {
     val sumDiff = sourceSum.except(targetSum)
 
     if (sumDiff.limit(1).count() > 0) {
-      edlLogger.logInfo(loggerTag, s"Sum values are different in source and target Dataframe" + sumDiff.select("*").show())
+      edlLogger.logInfo(loggerTag + s"Sum values are different in source and target Dataframe" + sumDiff.select("*").show())
       errorStr.append(s"Sum between Source and Target is not matching.")
       result = false
     }
@@ -100,7 +94,7 @@ class DataCompletenessControl() extends DataControls {
     val minDiff = sourceMin.except(targetMin)
 
     if (minDiff.limit(1).count() > 0) {
-      edlLogger.logInfo(loggerTag, s"Minimum values are different in source and target Dataframe" + minDiff.show())
+      edlLogger.logInfo(loggerTag + s"Minimum values are different in source and target Dataframe" + minDiff.show())
       errorStr.append(s"Minimum Values between Source and Target is not matching." + minDiff.show())
       result = false
     }
@@ -112,7 +106,7 @@ class DataCompletenessControl() extends DataControls {
     val maxDiff = sourceMax.except(targetMax)
 
     if (maxDiff.limit(1).count() > 0) {
-      edlLogger.logInfo(loggerTag, s"Maximum values are different in source and target Dataframe" + maxDiff.show())
+      edlLogger.logInfo(loggerTag + s"Maximum values are different in source and target Dataframe" + maxDiff.show())
       errorStr.append(s"Maximum Values between Source and Target is not matching." + maxDiff.show())
       result = false
     }
@@ -124,7 +118,7 @@ class DataCompletenessControl() extends DataControls {
     val avgDiff = sourceAvg.except(targetAvg)
 
     if (avgDiff.limit(1).count() > 0) {
-      edlLogger.logInfo(loggerTag, s"Average values are different in source and target Dataframe" + avgDiff.show())
+      edlLogger.logInfo(loggerTag + s"Average values are different in source and target Dataframe" + avgDiff.show())
       errorStr.append(s"Average Values between Source and Target is not matching." + avgDiff.show())
       result = false
     }
@@ -148,47 +142,47 @@ class DataCompletenessControl() extends DataControls {
           val firstMetric = metricsDf.first()
           if (metricsDf.select("source_count").count() > 0) {
             sourceDfCount = firstMetric.getAs[Long]("source_count")
-            edlLogger.logInfo(loggerTag, "source Count from DQMetrics is :: " + sourceDfCount)
+            edlLogger.logInfo(loggerTag + "source Count from DQMetrics is :: " + sourceDfCount)
           }
           if (metricsDf.select("target_count").count() > 0) {
             targetDfCount = firstMetric.getAs[Long]("target_count")
-            edlLogger.logInfo(loggerTag, "target Count from DQMetrics is :: " + sourceDfCount)
+            edlLogger.logInfo(loggerTag + "target Count from DQMetrics is :: " + sourceDfCount)
           }
         }
       }
       if (sourceDfCount == 0) {
         sourceDfCount = sourceDf.count()
-        edlLogger.logInfo(loggerTag, "source count from dataframe is :: " + sourceDfCount)
+        edlLogger.logInfo(loggerTag + "source count from dataframe is :: " + sourceDfCount)
       }
       if (targetDfCount == 0) {
         targetDfCount = targetDf.count()
-        edlLogger.logInfo(loggerTag, "target count from daatframe is :: " + targetDfCount)
+        edlLogger.logInfo(loggerTag + "target count from daatframe is :: " + targetDfCount)
       }
 
-      edlLogger.logInfo(loggerTag, "SourceDF count is :: " + sourceDfCount)
-      edlLogger.logInfo(loggerTag, "TargetDf count is :: " + targetDfCount)
+      edlLogger.logInfo(loggerTag + "SourceDF count is :: " + sourceDfCount)
+      edlLogger.logInfo(loggerTag + "TargetDf count is :: " + targetDfCount)
 
       if (sourceDfCount == targetDfCount) {
-        edlLogger.logInfo(loggerTag, "source and target count matched")
+        edlLogger.logInfo(loggerTag + "source and target count matched")
         aggregateResult = aggregateCheck(sourceDf, targetDf)
 
         if (aggregateResult == true) {
-          edlLogger.logInfo(loggerTag, "Source And Target Aggregation Matched")
+          edlLogger.logInfo(loggerTag + "Source And Target Aggregation Matched")
           result = true
         }
         else {
-          edlLogger.logInfo(loggerTag, "Source and Target Aggregation Not Matched")
+          edlLogger.logInfo(loggerTag + "Source and Target Aggregation Not Matched")
           errorStr.append(s"Aggregation is not matching between Source and Target")
         }
       }
       else {
-        edlLogger.logInfo(loggerTag, "Source and Target Count not matched")
+        edlLogger.logInfo(loggerTag + "Source and Target Count not matched")
         errorStr.append(s"Count is not matching between Source and Target. Source Count:" + sourceDfCount +
           s"Target Count: " + targetDfCount)
       }
     } catch {
       case e: Exception =>
-        edlLogger.logWarning(loggerTag, "Exception During Completeness Check" + e)
+        edlLogger.logWarning(loggerTag + "Exception During Completeness Check" + e)
     }
     result
 

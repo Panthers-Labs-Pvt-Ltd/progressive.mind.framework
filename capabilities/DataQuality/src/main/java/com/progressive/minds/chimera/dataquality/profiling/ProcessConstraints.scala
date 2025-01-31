@@ -1,16 +1,12 @@
-package com.progressive.minds.chimera.capabilities.DataQuality.profiling
+package com.progressive.minds.chimera.dataquality.profiling
 
-
-
-import scala.collection.JavaConversions
-import org.nwg.edl.tachyon.core.dbmgmt.repository.{EdlDqRulesRepository, EdlDqSuggestionsRepository}
-import org.nwg.edl.tachyon.core.logging.EDLLogger
-import org.apache.spark.sql.{DataFrame, Row, SparkSession}
+import com.progressive.minds.chimera.foundational.logging.ChimeraLoggerFactory
 import org.apache.spark.sql.functions.{col, expr, lit}
 import org.apache.spark.sql.types.{LongType, StringType, StructField, StructType}
+import org.apache.spark.sql.{DataFrame, Row, SparkSession}
 
 object ProcessConstraints {
-  val edlLogger = new EDLLogger(this.getClass)
+  val edlLogger = ChimeraLoggerFactory.getLogger(this.getClass)
 
   def getConstraints(spark: SparkSession, tableName: String): DataFrame = {
     // TODO check how we can do IN caluse
@@ -70,8 +66,6 @@ object ProcessConstraints {
       .master("local")
       .appName("DeequRunner Test example")
       .getOrCreate()
-
-    import spark.implicits._
     val params = collection.mutable.Map[String, String]()
 
     for (arg <- args) {

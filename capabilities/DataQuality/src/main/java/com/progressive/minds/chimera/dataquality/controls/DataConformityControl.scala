@@ -1,16 +1,11 @@
-package com.progressive.minds.chimera.capabilities.DataQuality.controls
+package com.progressive.minds.chimera.dataquality.controls
+
+import org.apache.spark.sql.types.{StructField, StructType}
+import org.apache.spark.sql.{DataFrame, SparkSession}
 
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
-
-import org.nwg.edl.tachyon.common.metadata.dto.PipelineDetails
-import org.nwg.edl.tachyon.core.dbmgmt.modal.EdlDataControlsLog
-import org.nwg.edl.tachyon.core.exception.EDLException
-import org.nwg.edl.tachyon.core.logging.EDLLogger
-
-import org.apache.spark.sql.{DataFrame, SparkSession}
-import org.apache.spark.sql.types.{StructType, StructField}
 
 class DataConformityControl() extends DataControls {
   final private val edlLogger = new EDLLogger(this.getClass)
@@ -42,7 +37,7 @@ class DataConformityControl() extends DataControls {
 
   override def validate(): Boolean = {
     val loggerTag = "validate"
-    edlLogger.logInfo(loggerTag, "Started")
+    edlLogger.logInfo(loggerTag + "Started")
     val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
     val startTime = LocalDateTime.now().format(formatter)
     val result = conformityCheck(sourceDf, inboundSchema)
@@ -83,10 +78,10 @@ class DataConformityControl() extends DataControls {
     val loggerTag = "conformityCheck"
     var sourceFields: Array[StructField] = null
     var targetFields: Array[StructField] = null
-    edlLogger.logInfo(loggerTag, "SourceSchema")
+    edlLogger.logInfo(loggerTag + "SourceSchema")
 
     sourceDf.printSchema().toString
-    edlLogger.logInfo(loggerTag, "Target Schema Struct " + targetSchema.toString())
+    edlLogger.logInfo(loggerTag + "Target Schema Struct " + targetSchema.toString())
     if(targetSchema.isEmpty) {
       return true
     }

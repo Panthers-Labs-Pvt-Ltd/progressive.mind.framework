@@ -1,29 +1,24 @@
-package com.progressive.minds.chimera.capabilities.DataQuality.profiling
+package com.progressive.minds.chimera.dataquality.profiling
+
+import com.amazon.deequ.suggestions.rules.UniqueIfApproximatelyUniqueRule
+import com.amazon.deequ.suggestions.{ConstraintSuggestionRunner, Rules}
+import com.progressive.minds.chimera.foundational.logging.ChimeraLoggerFactory
+import org.apache.spark.sql.functions.{col, lit}
+import org.apache.spark.sql.{AnalysisException, DataFrame, SparkSession}
 
 import java.util.Locale
-import com.amazon.deequ.suggestions.{ConstraintSuggestionRunner, Rules}
-import com.amazon.deequ.suggestions.Rules._
-import com.amazon.deequ.suggestions.rules.UniqueIfApproximatelyUniqueRule
-import org.nwg.edl.tachyon.core.dbmgmt.repository.EdlDqSuggestionsRepository
-import org.nwg.edl.tachyon.core.exception.EDLException
-import org.nwg.edl.tachyon.core.logging.EDLLogger
-import org.nwg.edl.tachyon.core.utility.caster.EDIProcessor
-import org.apache.spark.sql.{AnalysisException, DataFrame, SparkSession}
-import org.apache.spark.sql.functions.{col, lit}
 
 object DataProfile {
 
-  val edlLogger = new EDLLogger(this.getClass)
+  val logger = ChimeraLoggerFactory.getLogger(this.getClass)
   val loggerTag = "DataProfile"
 
-  edlLogger.logInfo(loggerTag, "Creating Spark Session for Data Profiling")
+  logger.logInfo("Creating Spark Session for Data Profiling")
 
   val spark = SparkSession.builder()
     .master("local")
     .appName("DeequRunner Test Example")
     .getOrCreate()
-
-  import spark.implicits._
 
   def deequProfiling(df: Option[DataFrame], path: String, databaseNane: String,
                      tableName: String, ediBusinessDay: String): Unit = {
@@ -50,7 +45,7 @@ object DataProfile {
   def runProfiler(df: DataFrame, databaseName: String, tableName: String): DataFrame = {
     val rec_count = df.limit(1).count()
     if (rec_count > 0) {
-      edlLogger.logInfo(loggerTag, "count greater than zero")
+      logger.logInfo("count greater than zero")
 
       val df_curr = df.select(df.columns.map(x => col(x).as(x.toLowerCase(Locale.ROOT))): _*).repartition(200).cache()
       val suggestionResults = {
@@ -60,7 +55,7 @@ object DataProfile {
           .addConstraintRule(UniqueIfApproximatelyUniqueRule())
           .run()
       }
-      edlLogger.logInfo(loggerTag, "creating suggestion Dataframe")
+      logger.logInfo("creating suggestion Dataframe")
 
       val suggestionDataFrame = suggestionResults.constraintSuggestions.flatMap {
           case (column, suggestions) =>

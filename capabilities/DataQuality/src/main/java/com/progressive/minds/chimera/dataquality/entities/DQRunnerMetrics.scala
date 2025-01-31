@@ -1,11 +1,12 @@
-package com.progressive.minds.chimera.capabilities.DataQuality.entities
+package com.progressive.minds.chimera.dataquality.entities
 
-import java.sql.Timestamp
-import java.util.Calendar
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.{DataFrame, SparkSession}
 
-case class DeequRunnerMetrics() {
+import java.sql.Timestamp
+import java.util.Calendar
+
+case class DQRunnerMetrics() {
   var runnerStartTime: Calendar = _
   var getRulesStartTime: Calendar = _
   var getRulesEndTime: Calendar = _
@@ -16,7 +17,7 @@ case class DeequRunnerMetrics() {
   var persistChecksStartTime: Calendar = _
   var persistChecksEndTime: Calendar = _
   var runnerEndTime: Calendar = _
-  var processStatus: DeequRunnerProcessStatus.Value = DeequRunnerProcessStatus.Unknown
+  var processStatus: DQProcessStatus.Value = DQProcessStatus.Unknown
   var processStatusDescription: String = _
   var deequRules: Long = _
   var deequErrors: Long = _
@@ -49,16 +50,16 @@ case class DeequRunnerMetrics() {
 
   def toDf(spark: SparkSession): DataFrame ={
     val obj = DeequRunnerMetricsDf(
-    checkForNullorReturnTimestamp(runnerStartTime),
-    checkForNullorReturnTimestamp(getRulesStartTime),
-    checkForNullorReturnTimestamp(getRulesEndTime),
-    checkForNullorReturnTimestamp(executeRulesStartTime),
-    checkForNullorReturnTimestamp(executeRulesEndTime),
-    checkForNullorReturnTimestamp(persistAnalysersStartTime),
-    checkForNullorReturnTimestamp(persistAnalysersEndTime),
-    checkForNullorReturnTimestamp(persistChecksStartTime),
-    checkForNullorReturnTimestamp(persistChecksEndTime),
-    checkForNullorReturnTimestamp(runnerEndTime),
+    checkForNullOrReturnTimestamp(runnerStartTime),
+    checkForNullOrReturnTimestamp(getRulesStartTime),
+    checkForNullOrReturnTimestamp(getRulesEndTime),
+    checkForNullOrReturnTimestamp(executeRulesStartTime),
+    checkForNullOrReturnTimestamp(executeRulesEndTime),
+    checkForNullOrReturnTimestamp(persistAnalysersStartTime),
+    checkForNullOrReturnTimestamp(persistAnalysersEndTime),
+    checkForNullOrReturnTimestamp(persistChecksStartTime),
+    checkForNullOrReturnTimestamp(persistChecksEndTime),
+    checkForNullOrReturnTimestamp(runnerEndTime),
     processStatus.toString,
     processStatusDescription,
     deequRules,
@@ -73,7 +74,7 @@ case class DeequRunnerMetrics() {
 
   }
 
-  def checkForNullorReturnTimestamp(value: Calendar): Timestamp ={
+  private def checkForNullOrReturnTimestamp(value: Calendar): Timestamp ={
     if(!value.eq(null)) {
       new Timestamp(value.getTime.getTime)
     } else null

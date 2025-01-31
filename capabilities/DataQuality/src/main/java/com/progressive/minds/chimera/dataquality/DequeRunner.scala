@@ -1,28 +1,24 @@
-package com.progressive.minds.chimera.capabilities.DataQuality
+package com.progressive.minds.chimera.dataquality
 
 import com.amazon.deequ.VerificationResult
+import com.progressive.minds.chimera.dataquality.entities.{DQRunnerMetrics, DQProcessStatus}
+import com.progressive.minds.chimera.dataquality.profiling.utils.DeequUtils
+import com.progressive.minds.chimera.foundational.logging.ChimeraLoggerFactory
 import org.apache.spark.sql.functions.lit
 import org.apache.spark.sql.types.{DoubleType, StringType, StructField, StructType}
-import scala.collection.JavaConversions._
+import org.apache.spark.sql.{DataFrame, Row, SparkSession}
 
 import java.util
-import org.apache.spark.sql.{DataFrame, Row, SparkSession}
-import com.progressive.minds.chimera.capabilities.DataQuality.entities.{DeequRunnerMetrics, DeequRunnerProcessStatus}
-import com.progressive.minds.chimera.capabilities.DataQuality.profiling.utils.DeequUtils
-import org.nwg.edl.tachyon.core.dbmgmt.repository.{EdlDataQualityLogRepository, EdlDqUserConfigLogRepository, EdlDqUserConfigRepository}
-import org.nwg.edl.tachyon.core.exception.EDLException
-import org.nwg.edl.tachyon.core.logging.EDLLogger
-import org.nwg.edl.tachyon.core.utility.EDLUtils
-
-import scala.collection.mutable
+import scala.collection.JavaConversions._
 import scala.collection.mutable.Map
 
-object EdlDeequRunner {
-  private val logger = new EDLLogger(this.getClass)
+object DeequRunner {
+  private val logger = ChimeraLoggerFactory.getLogger(this.getClass)
   private val loggerTag = "EDLDeequRunner"
 
   def getDqRules(spark: SparkSession, databaseName: String, tableName: String, stageName: String): DataFrame = {
-    logger.logInfo(loggerTag, s"Fetching Data Quality Rules for $databaseName.$tableName")
+    logger
+    logger.logInfo(s"Fetching Data Quality Rules for $databaseName.$tableName")
     var scalaMap = Map.empty[String, String]
     if (stageName.isEmpty) {
       scalaMap = Map("databaseNm" -> databaseName, "tableNm" -> tableName, "activeFlg" -> "Y")
@@ -37,14 +33,14 @@ object EdlDeequRunner {
 
   def execute(spark: SparkSession, batchId: String, dataFrame: DataFrame, databaseName: String,
               tableName: String, businessDate: String, instance: String, pipelineName: String,
-              controlNames: Option[Seq[String]], stageName: Option[String], pipelineVersion: String): DeequRunnerMetrics = {
+              controlNames: Option[Seq[String]], stageName: Option[String], pipelineVersion: String): DQRunnerMetrics = {
     val audit_time = EDLUtils.convertTimeFormat("yyyy-MM-dd HH:mm::ss.SSS", EDLUtils.currentGMTCalender())
     var sourceRecordDuplicateCount: Double = 0
     var blank_row: Double = 0
     var actual_count: Double = 0
-    val metrics = new DeequRunnerMetrics
+    val metrics = new DQRunnerMetrics
     if (dataFrame.limit(1).count() == 0) {
-      logger.logError(loggerTag, " There is no records in Datframe for which DQ check is requested")
+      logger.logError(loggerTag + " There is no records in Datframe for which DQ check is requested")
       return null
     }
     try {
@@ -102,7 +98,6 @@ object EdlDeequRunner {
         StructField("tableNm", StringType, false),
         StructField("databaseNm", StringType, false)))
       var analysisResultDf = spark.createDataFrame(spark.sparkContext.emptyRDD[Row], analysisResultSchema)
-      import spark.implicits._
 
       val rulesDf = getDqRules(spark, databaseName, tableName, stageName.getOrElse(""))
       metrics.deequRules = rulesDf.count()
@@ -116,7 +111,7 @@ object EdlDeequRunner {
           val ruleControlNm = row.getAs[String](fieldName = "controlNm")
           val ruleNm = row.getAs[String](fieldName = "ruleNm")
           val ruleColNm = row.getAs[String](fieldName = "ruleCol")
-          logger.logInfo(loggerTag, s"Executing DQ Rule $ruleNm for $ruleColNm")
+          logger.logInfo(loggerTag + s"Executing DQ Rule $ruleNm for $ruleColNm")
 
           val schema = rulesDf.schema
           val rowRdd = spark.sparkContext.parallelize(Seq(row))
@@ -167,7 +162,7 @@ object EdlDeequRunner {
             .withColumnRenamed("constraint", "dqConstraint")
 
           checkResultsDf = checkResultsDf.union(checkResultsDfTmp)
-          logger.logInfo(loggerTag, s"DQ Rule $ruleNm for $ruleColNm Executes Successfully")
+          logger.logInfo(loggerTag + s"DQ Rule $ruleNm for $ruleColNm Executes Successfully")
         })
 
         edlAnalysisResultDf.createOrReplaceTempView("dqAnalysisResults")
@@ -175,16 +170,16 @@ object EdlDeequRunner {
         EdlDqUserConfigLogRepository.addNewEdlDqUserConfigLogs(analysisResultDf)
 
         metrics.persistAnalysersEndTime = EDLUtils.currentGMTCalender()
-        logger.logInfo(loggerTag, "Deequ analysis results Added in Tachyon")
-        logger.logInfo(loggerTag, "Writing deequ check results")
+        logger.logInfo(loggerTag + "Deequ analysis results Added in Tachyon")
+        logger.logInfo(loggerTag + "Writing deequ check results")
         metrics.persistChecksStartTime = EDLUtils.currentGMTCalender()
         edlCheckResultsDf.createOrReplaceTempView("dqCheckResults")
-        logger.logInfo(loggerTag, "Temporary Deequ Check results created")
+        logger.logInfo(loggerTag + "Temporary Deequ Check results created")
 
-        logger.logInfo(loggerTag, "Check results of created")
+        logger.logInfo(loggerTag  + "Check results of created")
         checkResultsDf.show(false)
         EdlDataQualityLogRepository.addNewEdlDataQualityLogs(checkResultsDf)
-        logger.logInfo(loggerTag, "check results Dataframe added to DataQualityLogs")
+        logger.logInfo(loggerTag + "check results Dataframe added to DataQualityLogs")
         metrics.persistChecksEndTime = EDLUtils.currentGMTCalender()
         metrics.runnerEndTime = EDLUtils.currentGMTCalender()
 
@@ -200,71 +195,71 @@ object EdlDeequRunner {
         metrics.deequPasses = checkResultsDf.where("constraintStatus = 'Success'")
           .count()
 
-        logger.logInfo(loggerTag, "deequErrors, deequWarnings, deeqPasses :: +" +
+        logger.logInfo(loggerTag + "deequErrors, deequWarnings, deeqPasses :: +" +
           s"${metrics.deequErrors}, ${metrics.deequWarnings}, ${metrics.deequPasses}")
 
         val uniqueness_df_count = analysisResultDf.where("ruleName = 'Uniqueness'").limit(1).count()
-        logger.logInfo(loggerTag, s"uniqueness_df_count is $uniqueness_df_count")
+        logger.logInfo(loggerTag + s"uniqueness_df_count is $uniqueness_df_count")
         val size_df_count = analysisResultDf.where("ruleName = 'Size'").limit(1).count()
-        logger.logInfo(loggerTag, s"size_df_count is ${size_df_count}")
+        logger.logInfo(loggerTag + s"size_df_count is ${size_df_count}")
         val completeness_df_count = analysisResultDf.where("ruleName = 'Completeness'").limit(1).count()
-        logger.logInfo(loggerTag, s"completeness_df_count is ${completeness_df_count}")
+        logger.logInfo(loggerTag + s"completeness_df_count is ${completeness_df_count}")
         var raw_dup_count = ""
         var raw_count = ""
         var raw_blank = ""
         if (uniqueness_df_count > 0) {
           raw_dup_count = analysisResultDf.where("ruleName = 'Uniqueness'")
             .select("actua;Value").first().mkString("")
-          logger.logInfo(loggerTag, "raw_dup_count :: " + raw_dup_count)
+          logger.logInfo(loggerTag + "raw_dup_count :: " + raw_dup_count)
         }
 
         if (size_df_count > 0) {
           raw_count = analysisResultDf.where("ruleName = 'Size'")
             .select("actua;Value").first().mkString("")
-          logger.logInfo(loggerTag, "raw_count :: " + raw_count)
+          logger.logInfo(loggerTag + "raw_count :: " + raw_count)
         }
 
         if (completeness_df_count > 0) {
           raw_blank = analysisResultDf.where("ruleName = 'Completeness'")
             .select("actua;Value").first().mkString("")
-          logger.logInfo(loggerTag, "raw_blank :: " + raw_blank)
+          logger.logInfo(loggerTag + "raw_blank :: " + raw_blank)
         }
 
         if (!raw_count.isEmpty) {
           actual_count = raw_count.toDouble
-          logger.logInfo(loggerTag, "actual_count :: " + actual_count.toString)
+          logger.logInfo(loggerTag + "actual_count :: " + actual_count.toString)
         }
 
         if (!raw_dup_count.isEmpty && actual_count != 0) {
           sourceRecordDuplicateCount = actual_count - (actual_count * raw_dup_count.toDouble)
-          logger.logInfo(loggerTag, "sourceDuplicateCount :: " + sourceRecordDuplicateCount.toString)
+          logger.logInfo(loggerTag + "sourceDuplicateCount :: " + sourceRecordDuplicateCount.toString)
         }
 
         if (!raw_blank.isEmpty && actual_count != 0) {
           blank_row = actual_count - (actual_count * raw_blank.toDouble)
-          logger.logInfo(loggerTag, "blank_row :: " + blank_row.toString)
+          logger.logInfo(loggerTag + "blank_row :: " + blank_row.toString)
         }
 
         if (metrics.deequWarnings > 0) {
-          logger.logWarning(loggerTag, "Dq processing has generated %s warnings".format(metrics.deequWarnings))
+          logger.logWarning(loggerTag + "Dq processing has generated %s warnings".format(metrics.deequWarnings))
         }
 
         if (metrics.deequErrors > 0) {
-          logger.logError(loggerTag, "Dq processing has generated %s errors".format(metrics.deequErrors))
+          logger.logError(loggerTag + s"Dq processing has generated %s errors".format(metrics.deequErrors))
           throw new EDLException(errorClass = "EDLDataQualityExcception.DEEQU_FAILURE",
             messageParameters = scala.collection.immutable.Map("exception" ->
               "Dq processing has generated %s errors".format(metrics.deequErrors)),
             cause = null)
         }
-        metrics.processStatus = DeequRunnerProcessStatus.Success
+        metrics.processStatus = DQProcessStatus.Success
       }
-      logger.logInfo(loggerTag, s"execute function completed")
+      logger.logInfo(loggerTag + s"execute function completed")
 
     }
     catch {
       case e: Exception =>
-        logger.logError(loggerTag, s"An unexpected error has occurres - $e")
-        metrics.processStatus = DeequRunnerProcessStatus.Error
+        logger.logError(loggerTag + s"An unexpected error has occurres - $e")
+        metrics.processStatus = DQProcessStatus.Error
         throw new EDLException(errorClass = "EDLDataQualityException.DEEQU_FAILURE",
           messageParameters = scala.collection.immutable.Map("exception" ->
             "Dq procesing has generated %s errors".format(metrics.deequErrors)),
@@ -289,7 +284,7 @@ object EdlDeequRunner {
 
     metricsDf.createOrReplaceTempView("dqMetrics")
     metricsDf.show(false)
-    logger.logInfo(loggerTag, "Deequ Full Metrics results")
+    logger.logInfo(loggerTag + s"Deequ Full Metrics results")
     metrics
   }
 }

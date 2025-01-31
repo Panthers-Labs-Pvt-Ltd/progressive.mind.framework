@@ -1,15 +1,10 @@
-package com.progressive.minds.chimera.capabilities.DataQuality.controls
+package com.progressive.minds.chimera.dataquality.controls
+
+import org.apache.spark.sql.types.StructType
+import org.apache.spark.sql.{DataFrame, SparkSession}
 
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-
-import org.nwg.edl.tachyon.common.metadata.dto.PipelineDetails
-import org.nwg.edl.tachyon.core.dbmgmt.modal.EdlDataControlsLog
-import org.nwg.edl.tachyon.core.exception.EDLException
-import org.nwg.edl.tachyon.core.logging.EDLLogger
-
-import org.apache.spark.sql.{DataFrame, SparkSession}
-import org.apache.spark.sql.types.StructType
 
 class DataConsistencyControl() extends DataControls {
   final private val edlLogger = new EDLLogger(this.getClass)
@@ -45,7 +40,7 @@ class DataConsistencyControl() extends DataControls {
 
   override def validate(): Boolean = {
     val loggerTag = "validate"
-    edlLogger.logInfo(loggerTag, "Started")
+    edlLogger.logInfo(loggerTag + "Started")
     val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
     val startTime = LocalDateTime.now().format(formatter)
     val result = consistencyCheck(sparkSession, sourceDf, databaseName,
@@ -108,7 +103,7 @@ class DataConsistencyControl() extends DataControls {
       }
     }
     if (spark.catalog.tableExists(s"$databaseName.$tableName")) {
-      edlLogger.logInfo(loggerTag, s" Table $databaseName.$tableName Exists...")
+      edlLogger.logInfo(loggerTag + s" Table $databaseName.$tableName Exists...")
       val previousDayCount = spark.sql(queryStr.toString).count()
 
       if (previousDayCount > 0) {
@@ -117,12 +112,12 @@ class DataConsistencyControl() extends DataControls {
         val threshold = 10
 
         if (variance > threshold || variance < -threshold) {
-          edlLogger.logInfo(loggerTag, s"The variance between the count of current date and previous date is not within 10% range. " +
+          edlLogger.logInfo(loggerTag + s"The variance between the count of current date and previous date is not within 10% range. " +
             s"Variance is : $variance")
           errorStr.append(s"Variance difference percentage between current and previous day is " + variance)
           result = false
         } else {
-          edlLogger.logInfo(loggerTag, s"The variance between the count of current date and previous date is within 10% range. " +
+          edlLogger.logInfo(loggerTag + s"The variance between the count of current date and previous date is within 10% range. " +
             s"Variance is : $variance")
           result = true
         }

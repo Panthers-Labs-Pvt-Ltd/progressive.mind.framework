@@ -1,22 +1,14 @@
-package com.progressive.minds.chimera.capabilities.DataQuality.controls
+package com.progressive.minds.chimera.dataquality.controls
 
-import java.time.{LocalDateTime, LocalTime}
 import java.time.format.DateTimeFormatter
+import java.time.{LocalDateTime, LocalTime}
 import java.util
 //port java.util.Locale
-import scala.collection.JavaConversions._
-
-import org.nwg.edl.tachyon.common.metadata.dto.PipelineDetails
-import org.nwg.edl.tachyon.core.dbmgmt.modal.{EdlDataControlsLog, EdlSlaConfig}
-import org.nwg.edl.tachyon.core.dbmgmt.repository.{EdlSlaConfigRepository}
-import org.nwg.edl.tachyon.core.exception.EDLException
-import org.nwg.edl.tachyon.core.logging.EDLLogger
-
+import org.apache.spark.sql.types.StructType
 import org.apache.spark.sql.{DataFrame, SparkSession}
 
-import org.apache.spark.sql.types.StructType
-
 import java.text.SimpleDateFormat
+import scala.collection.JavaConversions._
 
 
 class DataTimelinessControl() extends DataControls {
@@ -52,7 +44,7 @@ class DataTimelinessControl() extends DataControls {
 
   override def validate(): Boolean = {
     val loggerTag = "DataTimelinessControl"
-    edlLogger.logInfo(loggerTag, "Started")
+    edlLogger.logInfo(loggerTag + "Started")
     val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
     val startTime = LocalDateTime.now().format(formatter)
     val result = timelinessCheck(databaseName, tableName)
@@ -79,7 +71,7 @@ class DataTimelinessControl() extends DataControls {
       throw new EDLException(errorClass = "EDLDataQualityException.DATA_TIMELINESS_EXCEPTION",
         messageParameters = Map("exception" -> resultMessage), cause = null)
     }
-    edlLogger.logInfo(loggerTag, "Completed")
+    edlLogger.logInfo(loggerTag + "Completed")
     true
   }
 
