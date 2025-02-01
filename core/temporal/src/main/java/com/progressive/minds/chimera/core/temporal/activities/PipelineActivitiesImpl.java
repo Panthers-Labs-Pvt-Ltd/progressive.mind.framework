@@ -7,9 +7,20 @@ public class PipelineActivitiesImpl implements PipelineActivities {
     }
 
     @Override
+    public Boolean getPipelineMetadata() {
+        return true;
+    }
+
+    @Override
+    public Boolean getExecutionEngine() {
+        return true;
+    }
+
+    @Override
     public void execute() {
         System.out.println("Executing...");
     }
+
 
     @Override
     public void complete() {

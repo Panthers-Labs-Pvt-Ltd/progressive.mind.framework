@@ -28,8 +28,7 @@ public class DataContractExample {
         DatasetUrn datasetUrn = new DatasetUrn(platform, datasetName, fabric);
 
 
-*/
-/*
+
         // Create a dataset snapshot with the data contract schema
         DatasetSnapshot datasetSnapshot = new DatasetSnapshot()
                 .setUrn(datasetUrn)
@@ -37,7 +36,6 @@ public class DataContractExample {
                         new DatasetAspect().
                 });
 
-*//*
 
 
 

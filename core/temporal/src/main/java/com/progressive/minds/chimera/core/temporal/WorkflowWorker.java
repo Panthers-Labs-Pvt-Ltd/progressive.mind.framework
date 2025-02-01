@@ -42,15 +42,13 @@ This setup allows the worker to handle tasks related to the registered workflows
  */
 
 
+import com.progressive.minds.chimera.core.temporal.workflows.implementations.*;
 import io.temporal.client.WorkflowClient;
 import io.temporal.serviceclient.WorkflowServiceStubs;
 import io.temporal.worker.Worker;
 import io.temporal.worker.WorkerFactory;
 import com.progressive.minds.chimera.core.temporal.activities.PipelineActivitiesImpl;
 import com.progressive.minds.chimera.core.temporal.controller.implementations.IngestionWorkflowImpl;
-import com.progressive.minds.chimera.core.temporal.workflows.implementations.ExtractWorkflowImpl;
-import com.progressive.minds.chimera.core.temporal.workflows.implementations.LoadWorkflowImpl;
-import com.progressive.minds.chimera.core.temporal.workflows.implementations.TransformWorkflowImpl;
 
 public class WorkflowWorker {
     public static void main(String[] args) {
@@ -65,9 +63,11 @@ public class WorkflowWorker {
         // Register parent and child workflows
         worker.registerWorkflowImplementationTypes(
                 IngestionWorkflowImpl.class,
+                PreProcessingImpl.class,
                 ExtractWorkflowImpl.class,
                 TransformWorkflowImpl.class,
-                LoadWorkflowImpl.class
+                LoadWorkflowImpl.class,
+                PostProcessingImpl.class
         );
 
         // Register activities

@@ -1,5 +1,6 @@
 import com.linkedin.common.urn.Urn;
 import com.linkedin.common.urn.UrnUtils;
+import com.linkedin.metadata.aspect.patch.builder.DatasetPropertiesPatchBuilder;
 import com.linkedin.metadata.aspect.patch.builder.StructuredPropertiesPatchBuilder;
 import com.linkedin.mxe.MetadataChangeProposal;
 import datahub.client.MetadataWriteResponse;
@@ -24,6 +25,14 @@ public class DatasetStructuredPropertiesExample {
         customProperties.put("sensitivity", "high");
         customProperties.put("dataClassification", "confidential");
 */
+
+        DatasetPatchBuilder dpb = new DatasetPropertiesPatchBuilder()
+                .setCustomProperties()
+                .setName()
+                .setDescription()
+                .setExternalUrl()
+                .setQualifiedName()
+                .setUri()
 
         List<String> customPropertiesList = new ArrayList<>();
 

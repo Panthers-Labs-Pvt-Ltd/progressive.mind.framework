@@ -15,4 +15,9 @@ class ManageDatasetsTest {
         ManageDatasets.createDataset(fileContent, "manish");
 
     }
-}
+
+    @Test
+    void modifyDataset() throws Exception {
+        ManageDatasets.modifyDatasetProperties();
+    }
+    }

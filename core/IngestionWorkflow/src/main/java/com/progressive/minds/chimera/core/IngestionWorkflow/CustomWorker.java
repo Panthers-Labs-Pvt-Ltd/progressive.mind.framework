@@ -1,13 +1,11 @@
-package com.progressive.minds.chimera.core.databaseOps.apacheComet;
+package com.progressive.minds.chimera.core.IngestionWorkflow;
 
 import com.progressive.minds.chimera.core.temporal.controller.implementations.IngestionWorkflowImpl;
-import com.progressive.minds.chimera.core.temporal.workflows.PreProcessing;
 import com.progressive.minds.chimera.core.temporal.workflows.implementations.*;
 import io.temporal.client.WorkflowClient;
 import io.temporal.serviceclient.WorkflowServiceStubs;
 import io.temporal.worker.Worker;
 import io.temporal.worker.WorkerFactory;
-import com.progressive.minds.chimera.core.databaseOps.apacheComet.ProcessDataUsingTemporal;
 
 public class CustomWorker {
     public static void main(String[] args) {

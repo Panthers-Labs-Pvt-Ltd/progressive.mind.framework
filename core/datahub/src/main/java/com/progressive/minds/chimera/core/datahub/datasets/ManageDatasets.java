@@ -11,6 +11,8 @@ import com.linkedin.data.template.StringArray;
 import com.linkedin.data.template.StringMap;
 import com.linkedin.dataset.DatasetProperties;
 import com.linkedin.dataset.EditableDatasetProperties;
+import com.linkedin.metadata.aspect.patch.builder.DatasetPropertiesPatchBuilder;
+import com.linkedin.metadata.aspect.patch.builder.OwnershipPatchBuilder;
 import com.linkedin.mxe.MetadataChangeProposal;
 import com.linkedin.schema.*;
 import com.progressive.minds.chimera.core.datahub.modal.*;
@@ -19,10 +21,13 @@ import com.progressive.minds.chimera.foundational.logging.ChimeraLoggerFactory;
 import com.progressive.minds.chimera.core.datahub.domain.ManageDomain;
 import com.progressive.minds.chimera.core.datahub.dataproduct.ManageDataProduct;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 import static com.progressive.minds.chimera.core.datahub.Constants.*;
@@ -164,8 +169,8 @@ public class ManageDatasets {
 
             DatasetProperties datasetProperties = new DatasetProperties()
                     .setName(datasetsInfo.getDisplayName())
-                    .setCustomProperties(MapCustomProperties).
-                    setDescription(datasetsInfo.getDescription())
+                    .setCustomProperties(MapCustomProperties)
+                    .setDescription(datasetsInfo.getDescription())
                     .setQualifiedName(datasetsInfo.getQualifiedName())
                     .setExternalUrl(new com.linkedin.common.url.Url(datasetsInfo.getUri()));
 
@@ -217,6 +222,34 @@ public class ManageDatasets {
             }
 
         }
+    }
+
+    public static void modifyDatasetProperties()
+            throws IOException, ExecutionException, InterruptedException, URISyntaxException {
+
+        MetadataChangeProposal ds = new DatasetPropertiesPatchBuilder()
+                .urn(UrnUtils.toDatasetUrn("hive", "fct_users_deleted", "PROD"))
+                .addCustomProperty("cluster_name", "datahubproject.acryl.io")
+                .addCustomProperty("retention_time", "2 years")
+                .addCustomProperty("name", "mansih")
+                .build();
+
+
+    /*    OwnershipPatchBuilder ownershipPatchBuilder = new OwnershipPatchBuilder()
+                .urn(UrnUtils.getUrn("urn:li:dataset:(urn:li:dataPlatform:hive,fct_users_created,PROD)"));
+
+        for (Owners owner : ownersList) {
+            if (changeType.equalsIgnoreCase("ADD")) {
+                ownershipPatchBuilder.addOwner(new CorpuserUrn(owner.getName()), OwnershipType.CUSTOM);
+            } else {
+                ownershipPatchBuilder.removeOwner(new CorpuserUrn(owner.getName()));
+            }*/
+
+       /*     MetadataChangeProposal proposal = createProposal(entityUrn, entityType,
+                    DATASET_PROPERTIES_ASPECT_NAME, "PATCH", ds);*/
+            emitProposal(ds, DATASET_PROPERTIES_ASPECT_NAME);
+
+        //}
     }
 }
 

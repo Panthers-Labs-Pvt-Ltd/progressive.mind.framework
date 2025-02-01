@@ -21,6 +21,7 @@
         <module>orchestration-service</module>
          <module>data-lineage</module>
         <module>temporal</module>
+        <module>IngestionWorkflow</module>
         <module>decision-engine</module>
         <module>apacheComet</module>
         <module>api-service</module>

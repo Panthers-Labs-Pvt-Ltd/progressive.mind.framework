@@ -9,7 +9,17 @@ import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
 import org.apache.spark.sql.SparkSession;
 
-public class ProcessDataUsingTemporal implements PipelineActivities {
+public class ProcessDataUsingTemporal implements PipelineActivities, sparkSession {
+    @Override
+    public Boolean getPipelineMetadata() {
+        return true;
+    }
+
+    @Override
+    public Boolean getExecutionEngine() {
+        return true;
+    }
+
     /**
      *
      */
@@ -65,13 +75,13 @@ public class ProcessDataUsingTemporal implements PipelineActivities {
 
         System.out.println("KKKK Executing Spark Read......");
         try {
-            SparkSession spark = SparkSession.builder()
+           /* SparkSession spark = SparkSession.builder()
                     .appName("Shared Spark Session for Data Read")
                     .master("local[*]")
                     .config("spark.driver.extraJavaOptions", "add-opens=java.base/sun.nio.ch=ALL-UNNAMED")
                     .config("spark.executor.extraJavaOptions", "add-opens=java.base/sun.nio.ch=ALL-UNNAMED")
                     .config ("jdk.module.addopens", "java.base/sun.nio.ch=ALL-UNNAMED")
-                    .getOrCreate();
+                    .getOrCreate();*/
             String Folder = "/home/manish/Chimera/core/dataSource/src/test/resources/flight_parquet";
 
             Dataset<Row> dataFrame = spark.emptyDataFrame();

@@ -1,7 +1,12 @@
 package com.progressive.minds.chimera.core.datahub.ownership;
 
 import com.linkedin.common.*;
+import com.linkedin.common.urn.UrnUtils;
+import com.linkedin.events.metadata.ChangeType;
+import com.linkedin.metadata.aspect.patch.builder.OwnershipPatchBuilder;
+import com.linkedin.metadata.aspect.patch.builder.StructuredPropertiesPatchBuilder;
 import com.linkedin.mxe.MetadataChangeProposal;
+import com.progressive.minds.chimera.core.datahub.modal.Field;
 import com.progressive.minds.chimera.core.datahub.modal.Owners;
 import com.progressive.minds.chimera.foundational.logging.ChimeraLogger;
 import com.progressive.minds.chimera.foundational.logging.ChimeraLoggerFactory;
@@ -30,20 +35,20 @@ public class ManageOwners {
 
         OwnerArray ownerArray = new OwnerArray();
         DatahubLogger.logInfo("Adding Owners.......");
-         ownersInfo.forEach((ownerName, ownershipType) -> {
-                Owner owner;
-                try {
-                    owner = new Owner()
-                            .setOwner(new CorpuserUrn(ownerName))
-                            .setSource(new OwnershipSource().setType(MANUAL))
-                            .setTypeUrn(Urn.createFromString(String.valueOf(DEFAULT_OWNERSHIP_TYPE_URN)))
-                            .setType(OwnershipType.CUSTOM)
-                    ;
-                } catch (URISyntaxException e) {
-                    throw new RuntimeException(e);
-                }
-                ownerArray.add(owner);
-            });
+        ownersInfo.forEach((ownerName, ownershipType) -> {
+            Owner owner;
+            try {
+                owner = new Owner()
+                        .setOwner(new CorpuserUrn(ownerName))
+                        .setSource(new OwnershipSource().setType(MANUAL))
+                        .setTypeUrn(Urn.createFromString(String.valueOf(DEFAULT_OWNERSHIP_TYPE_URN)))
+                        .setType(OwnershipType.CUSTOM)
+                ;
+            } catch (URISyntaxException e) {
+                throw new RuntimeException(e);
+            }
+            ownerArray.add(owner);
+        });
         AuditStamp createdStamp = new AuditStamp()
                 .setActor(new CorpuserUrn(DATAHUB_ACTOR))
                 .setTime(Instant.now().toEpochMilli());
@@ -53,7 +58,7 @@ public class ManageOwners {
                 .setOwners(ownerArray).setLastModified(createdStamp);
 
         MetadataChangeProposal proposal = createProposal(String.valueOf(entityUrn), entityType,
-                aspectName, changeType,ownership);
+                OWNERSHIP_ASPECT_NAME, changeType, ownership);
 
         return emitProposal(proposal, entityType);
     }
@@ -87,10 +92,29 @@ public class ManageOwners {
                 .setOwners(ownerArray).setLastModified(createdStamp);
 
         MetadataChangeProposal proposal = createProposal(String.valueOf(entityUrn), entityType,
-                aspectName, changeType,ownership);
+                OWNERSHIP_ASPECT_NAME, changeType, ownership);
 
         return emitProposal(proposal, entityType);
 
     }
 
+    public static void modifyOwners(String changeType, String entityUrn, String entityType, List<Owners> ownersList)
+            throws IOException, ExecutionException, InterruptedException, URISyntaxException {
+        MetadataChangeProposal ownershipPatchBuilder = new OwnershipPatchBuilder()
+                .urn(UrnUtils.getUrn("urn:li:dataset:(urn:li:dataPlatform:hive,fct_users_created,PROD)"))
+                .addOwner(new CorpuserUrn("urn:li:corpuser:manish.kumar@natwest.com"), OwnershipType.CUSTOM).build();
+
+/*        for (Owners owner : ownersList) {
+            if (changeType.equalsIgnoreCase("ADD")) {
+                ownershipPatchBuilder.addOwner(new CorpuserUrn(owner.getName()), OwnershipType.CUSTOM);
+            } else {
+                ownershipPatchBuilder.removeOwner(new CorpuserUrn(owner.getName()));
+            }*/
+
+            MetadataChangeProposal proposal = createProposal(entityUrn, entityType,
+                    OWNERSHIP_ASPECT_NAME, "PATCH", ownershipPatchBuilder);
+             emitProposal(proposal, entityType);
+
+      //  }
+    }
 }

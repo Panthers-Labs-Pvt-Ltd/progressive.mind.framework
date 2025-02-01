@@ -15,9 +15,6 @@ public class searchAssets {
         filters.put("aspect", aspect);
         List<MetadataAspectV2> returnVal = MetadataAspectV2Repository.getConfig(filters);
         System.out.println(returnVal.size());
-        if (returnVal.size() >0)
-            return true;
-        else
-            return false;
+        return !returnVal.isEmpty();
     }
 }
