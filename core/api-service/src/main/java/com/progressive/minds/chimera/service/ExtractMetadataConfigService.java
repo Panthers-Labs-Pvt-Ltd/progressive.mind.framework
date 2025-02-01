@@ -1,11 +1,17 @@
 package com.progressive.minds.chimera.service;
 
 import com.progressive.minds.chimera.dto.ExtractMetadataResponse;
+import com.progressive.minds.chimera.dto.ExtractMetadata;
 import com.progressive.minds.chimera.dto.ExtractMetadataConfig;
 import com.progressive.minds.chimera.dto.FileExtractMetadataConfig;
 import com.progressive.minds.chimera.dto.NoSqlExtractMetadataConfig;
 import com.progressive.minds.chimera.dto.RelationalExtractMetadataConfig;
 import com.progressive.minds.chimera.dto.StreamExtractMetadataConfig;
+
+import com.progressive.minds.chimera.dto.RelationalExtractMetadataTable;
+import com.progressive.minds.chimera.dto.FileExtractMetadataTable;
+import com.progressive.minds.chimera.dto.NoSqlExtractMetadataTable;
+import com.progressive.minds.chimera.dto.StreamExtractMetadataTable;
 
 import static com.progressive.minds.chimera.entity.ExtractMetadataConfigDynamicSqlEntity.*;
 import static com.progressive.minds.chimera.entity.FileExtractMetadataConfigDynamicSqlEntity.*;
@@ -13,19 +19,29 @@ import static com.progressive.minds.chimera.entity.NoSqlExtractMetadataConfigDyn
 import static com.progressive.minds.chimera.entity.RelationalExtractMetadataConfigDynamicSqlEntity.*;
 import static com.progressive.minds.chimera.entity.StreamsExtractMetadataConfigDynamicSqlEntity.*;
 
+import static com.progressive.minds.chimera.entity.NoSqlExtractMetadataDynamicSqlEntity.*;
+import static com.progressive.minds.chimera.entity.FileExtractMetadataDynamicSqlEntity.*;
+import static com.progressive.minds.chimera.entity.RelationalExtractMetadataDynamicSqlEntity.*;
+import static com.progressive.minds.chimera.entity.StreamsExtractMetadataDynamicSqlEntity.*;
+
 import com.progressive.minds.chimera.repository.ExtractMetadataConfigDBMapper;
+import com.progressive.minds.chimera.repository.ExtractConfigDBMapper;
 import com.progressive.minds.chimera.repository.FileExtractMetadataConfigDBMapper;
 import com.progressive.minds.chimera.repository.NoSqlExtractMetadataConfigDBMapper;
 import com.progressive.minds.chimera.repository.RelationalExtractMetadataConfigDBMapper;
 import com.progressive.minds.chimera.repository.StreamsExtractMetadataConfigDBMapper;
 
+import com.progressive.minds.chimera.repository.RelationalExtractMetadataTableDBMapper;
+import com.progressive.minds.chimera.repository.FileExtractMetadataTableDBMapper;
+import com.progressive.minds.chimera.repository.NoSqlExtractMetadataTableDBMapper;
+import com.progressive.minds.chimera.repository.StreamsExtractMetadataTableDBMapper;
+
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.math.BigInteger;
 
-import org.apache.ibatis.annotations.DeleteProvider;
 import org.mybatis.dynamic.sql.SqlBuilder;
-import org.mybatis.dynamic.sql.SqlTable;
 import org.mybatis.dynamic.sql.delete.render.DeleteStatementProvider;
 
 import static org.mybatis.dynamic.sql.SqlBuilder.equalTo;
@@ -50,13 +66,32 @@ public class ExtractMetadataConfigService {
     private final NoSqlExtractMetadataConfigDBMapper NoSqlDBMapper;
     private final RelationalExtractMetadataConfigDBMapper RelationalDBMapper;
     private final StreamsExtractMetadataConfigDBMapper StreamsDBMapper;
+    private final ExtractConfigDBMapper extractConfigDBMapper;
+    private final RelationalExtractMetadataTableDBMapper relationalExDBMapper;
+    private final FileExtractMetadataTableDBMapper fileExDBMapper;
+    private final NoSqlExtractMetadataTableDBMapper noSqlExDBMapper;
+    private final StreamsExtractMetadataTableDBMapper streamEXDBMapper;
     
-    public ExtractMetadataConfigService(ExtractMetadataConfigDBMapper ExtractDBMapper, FileExtractMetadataConfigDBMapper FileDBMapper, NoSqlExtractMetadataConfigDBMapper NoSqlDBMapper, RelationalExtractMetadataConfigDBMapper RelationalDBMapper, StreamsExtractMetadataConfigDBMapper StreamsDBMapper) {
+    public ExtractMetadataConfigService(ExtractMetadataConfigDBMapper ExtractDBMapper,
+                                        FileExtractMetadataConfigDBMapper FileDBMapper,
+                                        NoSqlExtractMetadataConfigDBMapper NoSqlDBMapper,
+                                        RelationalExtractMetadataConfigDBMapper RelationalDBMapper,
+                                        StreamsExtractMetadataConfigDBMapper StreamsDBMapper,
+                                        ExtractConfigDBMapper extractConfigDBMapper,
+                                        RelationalExtractMetadataTableDBMapper relationalExDBMapper,
+                                        FileExtractMetadataTableDBMapper fileExDBMapper,
+                                        NoSqlExtractMetadataTableDBMapper noSqlExDBMapper,
+                                        StreamsExtractMetadataTableDBMapper streamEXDBMapper) {
         this.ExtractDBMapper = ExtractDBMapper;
         this.FileDBMapper = FileDBMapper;
         this.NoSqlDBMapper = NoSqlDBMapper;
         this.RelationalDBMapper = RelationalDBMapper;
         this.StreamsDBMapper = StreamsDBMapper;
+        this.extractConfigDBMapper = extractConfigDBMapper;
+        this.relationalExDBMapper = relationalExDBMapper;
+        this.noSqlExDBMapper = noSqlExDBMapper;
+        this.streamEXDBMapper = streamEXDBMapper;
+        this.fileExDBMapper = fileExDBMapper;
     }
 
     public List<ExtractMetadataResponse> getExtractMetadata() {
@@ -536,6 +571,119 @@ private <T extends ExtractMetadataConfig> void mapCommonFields(ExtractMetadataRe
   target.setUpdatedTimestamp(source.getUpdatedTimestamp());
   target.setUpdatedBy(source.getUpdatedBy());
   target.setActiveFlag(source.getActiveFlag());
+}
+
+public List<ExtractMetadataConfig> getExtractConfigByPipelineName(String pipelineName) {
+    logger.info("Fetching Extract Metadata Config for pipeline : " + pipelineName);
+    SelectStatementProvider selectStatement = select(extractMetadataConfig.allColumns())
+        .from(extractMetadataConfig)
+        .where(extractMetadataConfig.pipelineName, isEqualTo(pipelineName))
+        .orderBy(extractMetadataConfig.pipelineName, extractMetadataConfig.sequenceNumber)
+        .build()
+        .render(RenderingStrategies.MYBATIS3);
+
+    return extractConfigDBMapper.selectMany(selectStatement);
+}
+
+public FileExtractMetadataTable getFileConfigByPipelineName(String pipelineName, int sequenceNumber) {
+    logger.info("Fetching File Metadata Config for pipeline : " + pipelineName);
+    SelectStatementProvider selectStatement = select(
+        fileExtractTable.fileName,
+        fileExtractTable.filePath,
+        fileExtractTable.schemaPath,
+        fileExtractTable.sizeInByte,
+        fileExtractTable.compressionType
+    )
+        .from(fileExtractTable)
+        .where(fileExtractTable.pipelineName, isEqualTo(pipelineName))
+        .and(fileExtractTable.sequenceNumber, isEqualTo(sequenceNumber))
+        .build()
+        .render(RenderingStrategies.MYBATIS3);
+
+    return fileExDBMapper.selectOne(selectStatement).orElse(null);
+}
+
+public RelationalExtractMetadataTable getRelationalConfigByPipelineName(String pipelineName, int sequenceNumber) {
+    logger.info("Fetching Relational Metadata Config for pipeline : " + pipelineName);
+    SelectStatementProvider selectStatement = select(relationalExtractTable.allColumns())
+        .from(relationalExtractTable)
+        .where(relationalExtractTable.pipelineName, isEqualTo(pipelineName))
+        .and(relationalExtractTable.sequenceNumber, isEqualTo(sequenceNumber))
+        .build()
+        .render(RenderingStrategies.MYBATIS3);
+
+    return relationalExDBMapper.selectOne(selectStatement).orElse(null);
+}
+
+public StreamExtractMetadataTable getStreamConfigByPipelineName(String pipelineName, int sequenceNumber) {
+    logger.info("Fnulletching Stream Metadata Config for pipeline : " + pipelineName);
+    SelectStatementProvider selectStatement = select(streamsExtractTable.allColumns())
+        .from(streamsExtractTable)
+        .where(streamsExtractTable.pipelineName, isEqualTo(pipelineName))
+        .and(streamsExtractTable.sequenceNumber, isEqualTo(sequenceNumber))
+        .build()
+        .render(RenderingStrategies.MYBATIS3);
+
+    return streamEXDBMapper.selectOne(selectStatement).orElse(null);
+}
+
+public NoSqlExtractMetadataTable getNoSqlConfigByPipelineName(String pipelineName, int sequenceNumber) {
+    logger.info("Fetching NoSql Metadata Config for pipeline : " + pipelineName);
+    SelectStatementProvider selectStatement = select(noSqlExtractTable.allColumns())
+        .from(noSqlExtractTable)
+        .where(noSqlExtractTable.pipelineName, isEqualTo(pipelineName))
+        .and(noSqlExtractTable.sequenceNumber, isEqualTo(sequenceNumber))
+        .build()
+        .render(RenderingStrategies.MYBATIS3);
+
+    return noSqlExDBMapper.selectOne(selectStatement).orElse(null);
+}
+
+
+public List<ExtractMetadata> getPipelineMetadata(String pipelineName) {
+
+    List<ExtractMetadata> extractMetadata = new ArrayList<ExtractMetadata>();
+    List<ExtractMetadataConfig> ec = getExtractConfigByPipelineName(pipelineName);
+    ec.forEach(config -> {
+        ExtractMetadata extract = new ExtractMetadata();
+        extract.setPipelineName(config.getPipelineName());
+        extract.setSequenceNumber(config.getSequenceNumber());
+        extract.setExtractSourceType(config.getExtractSourceType());
+        extract.setExtractSourceSubType(config.getExtractSourceSubType());
+        extract.setDataframeName(config.getDataframeName());
+        extract.setSourceConfiguration(config.getSourceConfiguration());
+        extract.setPredecessorSequences(config.getPredecessorSequences());
+        extract.setSuccessorSequences(config.getSuccessorSequences());
+        extract.setRowFilter(config.getRowFilter());
+        extract.setColumnFilter(config.getColumnFilter());
+        extract.setDataSourceConnectionName(config.getDataSourceConnectionName());
+        extract.setCreatedBy(config.getCreatedBy());
+        extract.setCreatedTimestamp(config.getCreatedTimestamp());
+        extract.setUpdatedBy(config.getUpdatedBy());
+        extract.setUpdatedTimestamp(config.getUpdatedTimestamp());
+        extract.setActiveFlag(config.getActiveFlag());
+
+        switch (config.getExtractSourceType()) {
+            case "Relational" -> {
+                extract.setRelationalMetadata(getRelationalConfigByPipelineName(pipelineName, config.getSequenceNumber()));
+            }
+            case "Files" -> {
+                extract.setFileMetadata(getFileConfigByPipelineName(pipelineName, config.getSequenceNumber()));
+            }
+            case "Stream" -> {
+                extract.setStreamMetadata(getStreamConfigByPipelineName(pipelineName,config.getSequenceNumber()));
+            }
+            case "NoSql" -> {
+                extract.setNoSqlMetadata(getNoSqlConfigByPipelineName(pipelineName, config.getSequenceNumber()));
+            }
+        }
+        extractMetadata.add(extract);
+    });
+
+
+
+    return extractMetadata;
+    
 }
 
 

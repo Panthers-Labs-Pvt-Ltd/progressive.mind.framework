@@ -11,6 +11,8 @@ public final class PersistMetadataConfigDynamicSqlEntity {
 
     public static final SqlColumn<String> pipelineName = persistMetadataConfig.pipelineName;
     public static final SqlColumn<Integer> sequenceNumber = persistMetadataConfig.sequenceNumber;
+    public static final SqlColumn<String> sinkType = persistMetadataConfig.sinkType;
+    public static final SqlColumn<String> sinkSubType = persistMetadataConfig.sinkSubType;
     public static final SqlColumn<String> dataSourceConnectionName = persistMetadataConfig.dataSourceConnectionName;
     public static final SqlColumn<String> databaseName = persistMetadataConfig.databaseName;
     public static final SqlColumn<String> tableName = persistMetadataConfig.tableName;
@@ -35,6 +37,8 @@ public final class PersistMetadataConfigDynamicSqlEntity {
 
         public final SqlColumn<String> pipelineName = column("PIPELINE_NAME", JDBCType.VARCHAR);
         public final SqlColumn<Integer> sequenceNumber = column("SEQUENCE_NUMBER", JDBCType.INTEGER);
+        public final SqlColumn<String> sinkType = column("SINK_TYPE", JDBCType.VARCHAR);
+        public final SqlColumn<String> sinkSubType = column("SINK_SUB_TYPE", JDBCType.VARCHAR);
         public final SqlColumn<String> dataSourceConnectionName = column("DATA_SOURCE_CONNECTION_NAME", JDBCType.VARCHAR);
         public final SqlColumn<String> databaseName = column("DATABASE_NAME", JDBCType.VARCHAR);
         public final SqlColumn<String> tableName = column("TABLE_NAME", JDBCType.VARCHAR);

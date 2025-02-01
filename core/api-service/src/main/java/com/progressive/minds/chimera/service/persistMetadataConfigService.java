@@ -73,6 +73,8 @@ public class persistMetadataConfigService {
             .into(persistMetadataConfig)
             .map(PersistMetadataConfigDynamicSqlEntity.pipelineName).toProperty("pipelineName")
             .map(PersistMetadataConfigDynamicSqlEntity.sequenceNumber).toProperty("sequenceNumber")
+            .map(PersistMetadataConfigDynamicSqlEntity.sinkType).toProperty("sinkType")
+            .map(PersistMetadataConfigDynamicSqlEntity.sinkSubType).toProperty("sinkSubType")
             .map(PersistMetadataConfigDynamicSqlEntity.dataSourceConnectionName).toProperty("dataSourceConnectionName")
             .map(PersistMetadataConfigDynamicSqlEntity.databaseName).toProperty("databaseName")
             .map(PersistMetadataConfigDynamicSqlEntity.tableName).toProperty("tableName")
@@ -100,6 +102,8 @@ public class persistMetadataConfigService {
   public int updateConfig(PersistMetadataConfig data) {
     // Build the update statement
     UpdateStatementProvider updateStatementProvider = SqlBuilder.update(PersistMetadataConfigDynamicSqlEntity.persistMetadataConfig)
+        .set(PersistMetadataConfigDynamicSqlEntity.sinkType).equalToWhenPresent(data.getSinkType())
+        .set(PersistMetadataConfigDynamicSqlEntity.sinkSubType).equalToWhenPresent(data.getSinkSubType())
         .set(PersistMetadataConfigDynamicSqlEntity.dataSourceConnectionName).equalToWhenPresent(data.getDataSourceConnectionName())
         .set(PersistMetadataConfigDynamicSqlEntity.databaseName).equalToWhenPresent(data.getDatabaseName())
         .set(PersistMetadataConfigDynamicSqlEntity.tableName).equalToWhenPresent(data.getTableName())

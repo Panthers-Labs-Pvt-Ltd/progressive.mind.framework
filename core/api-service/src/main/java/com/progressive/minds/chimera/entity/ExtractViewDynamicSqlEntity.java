@@ -3,7 +3,6 @@ package com.progressive.minds.chimera.entity;
 
 import java.math.BigInteger;
 import java.sql.JDBCType;
-import java.sql.Timestamp;
 import org.mybatis.dynamic.sql.SqlColumn;
 import org.mybatis.dynamic.sql.SqlTable;
 

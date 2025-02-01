@@ -1,6 +1,7 @@
 package com.progressive.minds.chimera.controller;
 
 import com.progressive.minds.chimera.common.dto.GenericResponse;
+import com.progressive.minds.chimera.dto.ExtractMetadata;
 import com.progressive.minds.chimera.dto.ExtractMetadataResponse;
 import com.progressive.minds.chimera.foundational.logging.ChimeraLogger;
 import com.progressive.minds.chimera.foundational.logging.ChimeraLoggerFactory;
@@ -8,6 +9,7 @@ import com.progressive.minds.chimera.service.ExtractMetadataConfigService;
 import java.util.List;
 
 import javax.annotation.CheckForNull;
+import javax.ws.rs.GET;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -86,6 +88,13 @@ public class ExtractMetadataConfigController {
                 .statusCode(HttpStatus.OK.name())
                 .build();
         return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @GetMapping("/get/{name}")
+    public ResponseEntity<List<ExtractMetadata>> getExtractConfig(@PathVariable("name") String name) {
+        return ResponseEntity.ok(extractMetadataConfigService.getPipelineMetadata(name));
+
+
     }
 
 

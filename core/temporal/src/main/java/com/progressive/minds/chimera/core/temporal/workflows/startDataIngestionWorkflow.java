@@ -6,7 +6,7 @@ import io.temporal.serviceclient.WorkflowServiceStubs;
 
 public class startDataIngestionWorkflow {
 
-    public static boolean runWorkflow(String TaskQueue)
+    public static void main(String[] args)
     {
 
         WorkflowServiceStubs service = WorkflowServiceStubs.newInstance();
@@ -23,7 +23,6 @@ public class startDataIngestionWorkflow {
 
         // Start the workflow execution
         workflow.runPipeline("TestPipeline");
-        return true;
     }
  }
 
