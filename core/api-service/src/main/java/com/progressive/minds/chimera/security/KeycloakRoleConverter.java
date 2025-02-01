@@ -10,7 +10,7 @@ import org.springframework.security.oauth2.jwt.Jwt;
 
 public class KeycloakRoleConverter {
 
-    private static final String CLIENT_ID = "chimera_api"; // Replace with your client ID
+    private static final String CLIENT_ID = "chimera_api_client"; // Replace with your client ID
 
     @SuppressWarnings("unchecked")
     public Collection<GrantedAuthority> convertRoles(Jwt jwt) {
