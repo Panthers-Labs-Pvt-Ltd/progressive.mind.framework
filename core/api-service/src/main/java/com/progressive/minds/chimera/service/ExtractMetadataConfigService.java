@@ -71,6 +71,8 @@ public class ExtractMetadataConfigService {
     private final FileExtractMetadataTableDBMapper fileExDBMapper;
     private final NoSqlExtractMetadataTableDBMapper noSqlExDBMapper;
     private final StreamsExtractMetadataTableDBMapper streamEXDBMapper;
+    private final dataSourcesService dataSourcesService;
+    private final DataSourceConnectionsService dataSourcesConnService;
     
     public ExtractMetadataConfigService(ExtractMetadataConfigDBMapper ExtractDBMapper,
                                         FileExtractMetadataConfigDBMapper FileDBMapper,
@@ -81,7 +83,9 @@ public class ExtractMetadataConfigService {
                                         RelationalExtractMetadataTableDBMapper relationalExDBMapper,
                                         FileExtractMetadataTableDBMapper fileExDBMapper,
                                         NoSqlExtractMetadataTableDBMapper noSqlExDBMapper,
-                                        StreamsExtractMetadataTableDBMapper streamEXDBMapper) {
+                                        StreamsExtractMetadataTableDBMapper streamEXDBMapper,
+                                        dataSourcesService dataSourcesService,
+                                        DataSourceConnectionsService dataSourcesConnService) {
         this.ExtractDBMapper = ExtractDBMapper;
         this.FileDBMapper = FileDBMapper;
         this.NoSqlDBMapper = NoSqlDBMapper;
@@ -92,6 +96,8 @@ public class ExtractMetadataConfigService {
         this.noSqlExDBMapper = noSqlExDBMapper;
         this.streamEXDBMapper = streamEXDBMapper;
         this.fileExDBMapper = fileExDBMapper;
+        this.dataSourcesService = dataSourcesService;
+        this.dataSourcesConnService = dataSourcesConnService;
     }
 
     public List<ExtractMetadataResponse> getExtractMetadata() {
@@ -640,7 +646,7 @@ public NoSqlExtractMetadataTable getNoSqlConfigByPipelineName(String pipelineNam
 }
 
 
-public List<ExtractMetadata> getPipelineMetadata(String pipelineName) {
+public List<ExtractMetadata> getExtractMetadata(String pipelineName) {
 
     List<ExtractMetadata> extractMetadata = new ArrayList<ExtractMetadata>();
     List<ExtractMetadataConfig> ec = getExtractConfigByPipelineName(pipelineName);
@@ -677,6 +683,8 @@ public List<ExtractMetadata> getPipelineMetadata(String pipelineName) {
                 extract.setNoSqlMetadata(getNoSqlConfigByPipelineName(pipelineName, config.getSequenceNumber()));
             }
         }
+        extract.setDataSource(dataSourcesService.getDataSourceByTypeAndSubtype(config.getExtractSourceType(), config.getExtractSourceSubType()));
+        extract.setDataSourceConnection(dataSourcesConnService.getConnectionByName(config.getDataSourceConnectionName()).orElse(null));
         extractMetadata.add(extract);
     });
 

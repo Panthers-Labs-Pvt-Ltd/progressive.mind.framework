@@ -92,7 +92,7 @@ public class ExtractMetadataConfigController {
 
     @GetMapping("/get/{name}")
     public ResponseEntity<List<ExtractMetadata>> getExtractConfig(@PathVariable("name") String name) {
-        return ResponseEntity.ok(extractMetadataConfigService.getPipelineMetadata(name));
+        return ResponseEntity.ok(extractMetadataConfigService.getExtractMetadata(name));
 
 
     }

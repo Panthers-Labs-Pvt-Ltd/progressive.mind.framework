@@ -1,6 +1,7 @@
 package com.progressive.minds.chimera.controller;
 
 import com.progressive.minds.chimera.common.dto.GenericResponse;
+import com.progressive.minds.chimera.dto.PersistMetadata;
 import com.progressive.minds.chimera.dto.PersistMetadataConfig;
 import com.progressive.minds.chimera.foundational.logging.ChimeraLogger;
 import com.progressive.minds.chimera.foundational.logging.ChimeraLoggerFactory;
@@ -148,6 +149,12 @@ public class PersistMetadataConfigController {
             .statusCode(HttpStatus.OK.name())
             .build();
         return ResponseEntity.status(HttpStatus.OK).body(genericResponse);
+    }
+
+    @GetMapping("/get/{name}")
+    public ResponseEntity<List<PersistMetadata>> getPersistMetadataConfig(@PathVariable("name") String name) {
+        logger.logInfo("Fetching persist Metadata for pipeline: " + name + " from the database.");
+        return ResponseEntity.ok(persistMetadataConfigService.getPersistMetadata(name));
     }
 
 }

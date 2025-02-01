@@ -59,5 +59,9 @@ public class ExtractMetadata {
   private NoSqlExtractMetadataTable noSqlMetadata;
 
   private StreamExtractMetadataTable streamMetadata;
+
+  private DataSources dataSource;
+
+  private DataSourceConnections dataSourceConnection;
 }
 
