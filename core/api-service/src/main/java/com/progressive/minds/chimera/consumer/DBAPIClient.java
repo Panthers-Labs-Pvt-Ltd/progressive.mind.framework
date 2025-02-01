@@ -19,6 +19,7 @@ import com.progressive.minds.chimera.dto.ExtractMetadataResponse;
 
 public class DBAPIClient {
     private static  HttpClient httpClient;
+    private ObjectMapper mapper;
  //   private final String accessToken;
 
  //   public DBAPIClient(String accessToken) {
@@ -26,6 +27,8 @@ public class DBAPIClient {
         httpClient = HttpClient.newBuilder()
                 .connectTimeout(Duration.ofSeconds(10))
                 .build();
+        this.mapper = new ObjectMapper();
+
 //        this.accessToken = accessToken;
     }
 
@@ -37,15 +40,22 @@ public class DBAPIClient {
                 .header("Accept", "application/json");
     }
 
-    public String get(String url) throws IOException, InterruptedException {
+    // public String get(String url) throws IOException, InterruptedException {
+    //     HttpRequest request = createRequestBuilder(url)
+    //             .GET()
+    //             .build();
+
+    //     HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+    //     return response.body();
+    // }
+
+    public <T> T get(String url, TypeReference<T> typeReference) throws IOException, InterruptedException {
         HttpRequest request = createRequestBuilder(url)
                 .GET()
                 .build();
 
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-        ObjectMapper mapper = new ObjectMapper();
-        List<ExtractMetadataResponse> extractMetadataConfig = mapper.readValue(response, new TypeReference<>() {});
-        return response.body();
+         return mapper.readValue(response.body(), typeReference);
     }
 
     public String post(String url, String jsonBody) throws IOException, InterruptedException {
