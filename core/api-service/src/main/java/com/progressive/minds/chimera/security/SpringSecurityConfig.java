@@ -34,8 +34,8 @@ public class SpringSecurityConfig {
                 "/v3/api-docs.yaml"   // OpenAPI YAML (optional)
             ).permitAll()
 
-            .requestMatchers("/api/v1/pipelines/**").hasRole("admin")
-            .requestMatchers("/user/**").hasRole("user")
+            .requestMatchers("/api/v1/pipelines/**").hasRole("chimera_admin")
+            .requestMatchers("/user/**").hasRole("chimera_user")
             .anyRequest().authenticated()  // All other requests require authentication
         )
 
