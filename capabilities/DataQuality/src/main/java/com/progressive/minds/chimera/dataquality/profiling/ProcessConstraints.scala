@@ -19,7 +19,7 @@ object ProcessConstraints {
       constraints_df
     }
     catch {
-      case e: Exception => edlLogger.logError("ProcessConstraints", e.toString)
+      case e: Exception => edlLogger.logError("ProcessConstraints" + e.toString)
         throw (e)
     }
   }

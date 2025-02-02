@@ -1,15 +1,18 @@
 package com.progressive.minds.chimera.dataquality
 
 import com.amazon.deequ.VerificationResult
-import com.progressive.minds.chimera.dataquality.entities.{DQRunnerMetrics, DQProcessStatus}
+import com.progressive.minds.chimera.dataquality.entities.{DQProcessStatus, DQRunnerMetrics}
 import com.progressive.minds.chimera.dataquality.profiling.utils.DeequUtils
 import com.progressive.minds.chimera.foundational.logging.ChimeraLoggerFactory
+import com.progressive.minds.chimera.foundational.exception
+import com.progressive.minds.chimera.foundational.exception.ChimeraException
 import org.apache.spark.sql.functions.lit
 import org.apache.spark.sql.types.{DoubleType, StringType, StructField, StructType}
 import org.apache.spark.sql.{DataFrame, Row, SparkSession}
 
 import java.util
 import scala.collection.JavaConversions._
+import scala.collection.mutable
 import scala.collection.mutable.Map
 
 object DeequRunner {
@@ -103,7 +106,7 @@ object DeequRunner {
       metrics.deequRules = rulesDf.count()
       metrics.getRulesEndTime = EDLUtils.currentGMTCalender()
       if (metrics.deequRules == 0) {
-        logger.logError(loggerTag, metrics.deequRules + "rules returned for table: %s "
+        logger.logError(loggerTag + metrics.deequRules + "rules returned for table: %s "
           .format(tableName))
         return null
       } else {
@@ -246,10 +249,10 @@ object DeequRunner {
 
         if (metrics.deequErrors > 0) {
           logger.logError(loggerTag + s"Dq processing has generated %s errors".format(metrics.deequErrors))
-          throw new EDLException(errorClass = "EDLDataQualityExcception.DEEQU_FAILURE",
+          throw new ChimeraException(errorClass = "EDLDataQualityExcception.DEEQU_FAILURE",
             messageParameters = scala.collection.immutable.Map("exception" ->
               "Dq processing has generated %s errors".format(metrics.deequErrors)),
-            cause = null)
+            cause = null, summary="")
         }
         metrics.processStatus = DQProcessStatus.Success
       }
@@ -288,5 +291,3 @@ object DeequRunner {
     metrics
   }
 }
-
-

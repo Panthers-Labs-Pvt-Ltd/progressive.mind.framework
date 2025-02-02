@@ -1,0 +1,69 @@
+server:
+  port: 8080
+spring:
+  cloud:
+  application:
+    name: chimera_dq_service
+  datasource:
+    url: jdbc:postgresql://127.0.0.1:5432/postgres?currentSchema=data_quality # PostgreSQL for default environment
+    driverClassName: org.postgresql.Driver
+    username: postgres
+    password: password
+    hikari:
+      poolName: PostgresqlHikariCP
+      maxLifetime: 1200000 # 20 minutes
+      maximumPoolSize: 10 # Maximum connections in the pool
+      minimumIdle: 1 # Minimum idle connections in the pool
+  flyway:
+    enabled: true
+    schemas: data_quality
+    cleanDisabled: true
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          client-id: chimera_api
+          issuer-uri: http://localhost:3000/realms/chimera-api-service-realm
+          jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/certs
+mybatis:
+  type-aliases-package: com.progressive.minds.chimera.entity
+  type-handlers-package: com.progressive.minds.chimera.configuration.handler
+  configuration:
+    map-underscore-to-camel-case: true
+    default-fetch-size: 100
+    default-statement-timeout: 30
+jwt:
+  auth:
+    converter:
+      resource-id: chimera_api # Resource ID for JWT authentication
+      principle-attribute: chimera # Attribute to be used as principal
+management:
+  health:
+    consul:
+      enabled: false
+  server:
+    servlet:
+      context-path: /actuator  # Custom path for Actuator endpoints
+  endpoints:
+    web:
+      exposure:
+        include: health, info  # Expose health and info endpoints
+resilience4j.circuitbreaker:
+  instances:
+    externalService:
+      registerHealthIndicator: true
+      slidingWindowSize: 10
+      permittedNumberOfCallsInHalfOpenState: 3
+      slidingWindowType: TIME_BASED
+      minimumNumberOfCalls: 20
+      waitDurationInOpenState: 50s
+      failureRateThreshold: 50
+      eventConsumerBufferSize: 10
+resilience4j.ratelimiter:
+  instances:
+    externalService:
+      limitForPeriod: 10
+      limitRefreshPeriod: 1s
+      timeoutDuration: 0
+      registerHealthIndicator: true
+      eventConsumerBufferSize: 100

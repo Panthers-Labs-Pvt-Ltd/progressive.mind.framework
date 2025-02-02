@@ -1,26 +1,26 @@
-package com.progressive.minds.chimera.capabilities.DataQuality
-
-import java.util
-import java.io.ByteArrayOutputStream
-import java.nio.charset.StandardCharsets
-import java.text.SimpleDateFormat
-import java.util.{Calendar, TimeZone}
-import scala.util.matching.Regex
-import scala.collection.JavaConversions._
+package com.progressive.minds.chimera.dataquality
 
 import com.fasterxml.jackson.core.{JsonEncoding, JsonGenerator}
 import com.fasterxml.jackson.databind.{DeserializationFeature, JsonNode, ObjectMapper}
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import org.nwg.edl.tachyon.core.logging.EDLLogger
+import com.progressive.minds.chimera.foundational.logging.ChimeraLoggerFactory
+
+import java.io.ByteArrayOutputStream
+import java.nio.charset.StandardCharsets
+import java.text.SimpleDateFormat
+import java.util
+import java.util.{Calendar, TimeZone}
+import scala.collection.JavaConversions._
+import scala.util.matching.Regex
 
 
 object EDLUtils {
   private val mapper = new ObjectMapper().registerModule(DefaultScalaModule)
     .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
-  private val edlLogger: EDLLogger = new EDLLogger(this.getClass)
+  private val edlLogger = ChimeraLoggerFactory.getLogger(this.getClass)
 
   def getFileNameFromCsvPath(filePath: String): String = {
     val tableName: String = filePath.substring(filePath.lastIndexOf("/") + 1, filePath.length)

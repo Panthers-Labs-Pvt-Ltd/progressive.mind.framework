@@ -13,11 +13,152 @@
     <artifactId>capabilities.DataQuality</artifactId>
     <version>1.0-SNAPSHOT</version>
 
+    <properties>
+        <spring-boot.version>3.4.1</spring-boot.version>
+    </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <groupId>org.springframework.boot</groupId>
+                <version>${spring-boot.version}</version>
+            </plugin>
+            <plugin>
+                <artifactId>flyway-maven-plugin</artifactId>
+                <configuration>
+                    <!-- Update the URL to point to your actual database, this config is as per my DB -->
+                    <defaultSchema>data_quality</defaultSchema>
+                    <password>password</password>
+                    <schemas>
+                        <schema>data_quality</schema>
+                    </schemas>
+                    <url>jdbc:postgresql://127.0.0.1:5432/postgres</url>
+                    <user>postgres</user>
+                </configuration>
+                <groupId>org.flywaydb</groupId>
+                <version>10.0.0</version>
+            </plugin>
+        </plugins>
+    </build>
+
     <dependencies>
         <dependency>
             <groupId>com.amazon.deequ</groupId>
             <artifactId>deequ</artifactId>
             <version>2.0.8-spark-3.5</version>
         </dependency>
+
+        <!-- Spring Boot Starter (includes core functionality for a Spring Boot application) -->
+        <dependency>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <version>${spring-boot.version}</version>
+        </dependency>
+
+        <dependency>
+            <artifactId>spring-cloud-dependencies</artifactId>
+            <groupId>org.springframework.cloud</groupId>
+            <scope>import</scope>
+            <type>pom</type>
+            <version>${spring-cloud.version}</version>
+        </dependency>
+
+        <dependency>
+            <artifactId>spring-boot-starter-aop</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <version>${spring-boot.version}</version>
+        </dependency>
+        <!-- MyBatis Spring Boot Starter (MyBatis integration with Spring Boot) -->
+        <dependency>
+            <artifactId>mybatis-spring-boot-starter</artifactId>
+            <groupId>org.mybatis.spring.boot</groupId>
+            <version>3.0.4</version>
+        </dependency>
+        <dependency>
+            <artifactId>mybatis-dynamic-sql</artifactId>
+            <groupId>org.mybatis.dynamic-sql</groupId>
+            <version>1.5.2</version>
+        </dependency>
+
+        <!-- Spring Boot Starter JDBC (Required for MyBatis to function correctly) -->
+        <dependency>
+            <artifactId>spring-boot-starter-jdbc</artifactId>
+            <exclusions>
+                <exclusion>
+                    <artifactId>tomcat-jdbc</artifactId>
+                    <groupId>org.apache.tomcat</groupId>
+                </exclusion>
+            </exclusions>
+            <groupId>org.springframework.boot</groupId>
+            <version>${spring-boot.version}</version>
+        </dependency>
+
+        <!-- Spring Boot Starter Security -->
+        <dependency>
+            <artifactId>spring-boot-starter-security</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <version>${spring-boot.version}</version>
+        </dependency>
+
+        <!-- OAuth2 Resource Server -->
+        <dependency>
+            <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <version>${spring-boot.version}</version>
+        </dependency>
+
+        <dependency>
+            <artifactId>spring-cloud-starter-circuitbreaker-resilience4j</artifactId>
+            <groupId>org.springframework.cloud</groupId>
+        </dependency>
+
+        <dependency>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <version>${spring-boot.version}</version>
+        </dependency>
+
+        <dependency>
+            <artifactId>foundational.logging</artifactId>
+            <groupId>com.progressive.minds.chimera</groupId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <version>2.8.4</version>
+        </dependency>
+
+        <dependency>
+            <artifactId>jakarta.validation-api</artifactId>
+            <groupId>jakarta.validation</groupId>
+            <version>3.1.0</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
+        <dependency>
+            <artifactId>gson</artifactId>
+            <groupId>com.google.code.gson</groupId>
+            <version>2.10.1</version>
+        </dependency>
+
+        <!-- Flyway dependency -->
+        <!-- https://mvnrepository.com/artifact/org.flywaydb/flyway-core -->
+        <dependency>
+            <artifactId>flyway-database-postgresql</artifactId>
+            <groupId>org.flywaydb</groupId>
+            <scope>runtime</scope>
+            <version>11.1.1</version>
+        </dependency>
+
     </dependencies>
 </project>

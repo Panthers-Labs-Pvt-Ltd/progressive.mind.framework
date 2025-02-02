@@ -1,5 +1,6 @@
 package com.progressive.minds.chimera.dataquality.controls
 
+import com.progressive.minds.chimera.foundational.logging.ChimeraLoggerFactory
 import org.apache.spark.sql.{DataFrame, SparkSession}
 import org.apache.spark.sql.functions.col
 import org.apache.spark.sql.types.StructType
@@ -11,7 +12,7 @@ import java.util.Locale
 
 
 class DataAccuracyControl() extends DataControls {
-  final private val edlLogger = new EDLLogger(this.getClass)
+  final private val edlLogger = ChimeraLoggerFactory.getLogger(this.getClass)
   val errorStr: StringBuffer = new StringBuffer()
   private var sourceDf: DataFrame = _
   private var targetDf: DataFrame = _
