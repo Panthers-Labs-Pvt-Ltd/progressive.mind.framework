@@ -1,11 +1,8 @@
 server:
   port: 8080
 spring:
-  cloud:
-    activate:
-      on-profile: dev
   application:
-    name: chimera_api_service
+    name: chimera_api_service_dev
   datasource:
     url: jdbc:postgresql://127.0.0.1:5432/postgres?currentSchema=data_pipeline # PostgreSQL for default environment
     driverClassName: org.postgresql.Driver

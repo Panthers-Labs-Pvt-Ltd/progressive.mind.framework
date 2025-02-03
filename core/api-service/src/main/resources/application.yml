@@ -1,7 +1,8 @@
 server:
   port: 8080
 spring:
-  cloud:
+  profiles:
+    default: local
   application:
     name: chimera_api_service
   datasource:
@@ -22,7 +23,7 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          client-id: chimera_api
+          client-id: chimera_api_client
           issuer-uri: http://localhost:3000/realms/chimera
           jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/certs
 
