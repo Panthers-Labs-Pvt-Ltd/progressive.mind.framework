@@ -13,33 +13,38 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
-@Profile({"prod", "default"})
+@Profile({"prod", "local"})
 public class SpringSecurityConfig {
 
 
+  @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http
-        // Disable CSRF for simplicity; enable it in production
+        // Disable CSRF (enable it in production if needed)
         .csrf(AbstractHttpConfigurer::disable)
 
         // Configure authorization rules
         .authorizeHttpRequests(auth -> auth
-            .requestMatchers("/actuator/health", "/actuator/info")
-            .permitAll()
+            // Permit actuator health check
+            .requestMatchers("/actuator/health", "/actuator/info").permitAll()
 
-            // Permit access to Swagger UI and OpenAPI endpoints
+            // Permit Swagger UI & API Docs
             .requestMatchers(
-                "/swagger-ui/**", // Swagger UI resources
-                "/v3/api-docs/**",    // OpenAPI JSON
-                "/v3/api-docs.yaml"   // OpenAPI YAML (optional)
+                "/swagger-ui/**",
+                "/swagger-ui.html",
+                "/v3/api-docs/**",
+                "/v3/api-docs.yaml"
             ).permitAll()
 
-            .requestMatchers("/api/v1/pipelines/**").hasRole("admin")
-            .requestMatchers("/user/**").hasRole("user")
-            .anyRequest().authenticated()  // All other requests require authentication
+            // Role-based authorization
+            .requestMatchers("/api/v1/pipelines/**").hasRole("chimera_admin")
+            .requestMatchers("/user/**").hasRole("chimera_user")
+
+            // authentication for everything else
+            .anyRequest().authenticated()
         )
 
-        // Configure OAuth2 Resource Server to use JWT
+        //  OAuth2 Resource Server with JWT converter
         .oauth2ResourceServer(oauth2 -> oauth2.jwt(
             jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())
         ));

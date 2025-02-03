@@ -1,11 +1,8 @@
 server:
   port: 8080
 spring:
-  cloud:
-    activate:
-      on-profile: prod
   application:
-    name: chimera_api_service
+    name: chimera_api_service_prod
   datasource:
     url: jdbc:postgresql://127.0.0.1:5432/postgres?currentSchema=data_pipeline # PostgreSQL for default environment
     driverClassName: org.postgresql.Driver
@@ -24,8 +21,8 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          client-id: chimera_api
-          issuer-uri: http://localhost:3000/realms/chimera-api-service-realm
+          client-id: chimera_api_client
+          issuer-uri: http://localhost:3000/realms/chimera
           jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/certs
 
 mybatis:
@@ -35,12 +32,6 @@ mybatis:
     map-underscore-to-camel-case: true
     default-fetch-size: 100
     default-statement-timeout: 30
-
-jwt:
-  auth:
-    converter:
-      resource-id: chimera_api # Resource ID for JWT authentication
-      principle-attribute: chimera # Attribute to be used as principal
 
 management:
   server:

@@ -1,0 +1,506 @@
+dataProductName: Finance
+pipelineName: Chimera Sample Data Pipeline
+pipelineDescription: Chimera Sample Data Pipeline to show what we can configure at the time of pipeline creation
+FabricType: DEV
+processingEngine: spark
+domainName: natwestdomain
+inActiveFlag : false
+uri: 'http://pantherlabs.io/dept.sql'
+tags:
+  - name: department
+    value: this table contains department related mapping
+  - name: employee dept
+    value: this table contains employee department mapping
+properties:
+  - name: PII
+    value: 'Yes, Internal department'
+  - name: Confidential
+    value: 'Yes'
+owners:
+  - name: Manish Kumar
+    type: BUSINESS_OWNER
+  - name: Prashant Kumar
+    type: Data Creator
+glossaryTerm:
+  - glossaryTermName: dataset glossary
+    documentations: glossary TermName Department documentations
+  - glossaryTermName: dataset 1 glossary
+    documentations: glossary TermName Department documentations
+stages:
+  - stageName: PreInitialization Stage
+    stageType: Pre-Init
+    stageDescription: This is initialization stage which is responsible to prepare system to run the pipeline
+    stageUrl: 'http://pantherlabs.io/dept.sql'
+    stageStatus : IN_PROGRESS
+    properties:
+      - name: PII
+        value: 'Yes, Internal department'
+      - name: Confidential
+        value: 'Yes'
+    inputDataset:
+      - name : PreInit_dataset_1
+        description : my input dataset description created at PreInitialization Stage
+        dataProductName: Finance
+        displayName: chimeradb.PreInit_dataset_1
+        FabricType: DEV
+        datasetPlatformName: oracle
+        qualifiedName: chimeradb.PreInit_dataset_1
+        uri: 'http://pantherlabs.io/dept.sql'
+        domain: natwestdomain
+        tags:
+          - name: department
+            value: this table contains department related mapping
+          - name: employee dept
+            value: this table contains employee department mapping
+        properties:
+          - name: PII
+            value: 'Yes, Internal department'
+          - name: Confidential
+            value: 'Yes'
+        owners:
+          - name: Manish Kumar
+            type: BUSINESS_OWNER
+          - name: Prashant Kumar
+            type: Data Creator
+        glossaryTerm:
+          - glossaryTermName: dataset glossary
+            documentations: glossary TermName Department documentations
+          - glossaryTermName: dataset 1 glossary
+            documentations: glossary TermName Department documentations
+        fields:
+          - name: deptno
+            type: Integer
+            displayName: DepartmentNumber
+            description: DepartmentNumber Column indicated valid department number
+            fieldCanonicalName: dept.deptno
+            maxLength: 2
+            isPartitionKey: false
+            isPrimaryKey: true
+            isNullable: false
+            foreignKey: null
+            tags:
+              - name: deptno
+                value: Attribute will keep unique deptno
+            glossaryTerm:
+              - glossaryTermName: Department
+                documentations: glossary TermName Department documentations
+              - glossaryTermName: DeptNo
+                documentations: glossary TermName Department documentations
+          - name: dname
+            type: string
+            displayName: DepartmentName
+            description: Department Name Description
+            fieldCanonicalName: dept.dname
+            maxLength: 14
+            isPartitionKey: false
+            isPrimaryKey: false
+            isSampleTime: false
+            isNullable: false
+            foreignKey: null
+            tags: null
+            glossaryTerm: null
+          - name: loc
+            type: string
+            displayName: Location
+            description: Location Name Description
+            fieldCanonicalName: dept.loc
+            maxLength: 14
+            isPartitionKey: false
+            isPrimaryKey: false
+            isSampleTime: false
+            isNullable: false
+            foreignKey: null
+            tags: null
+            glossaryTerm: null
+      - name : PreInit_dataset_2
+        description: my second dataset description PreInitialization Stage
+        dataProductName: Finance
+        displayName: chimeradb.PreInit_dataset_2
+        FabricType: DEV
+        datasetPlatformName: oracle
+        qualifiedName: chimeradb.PreInit_dataset_2
+        uri: 'http://pantherlabs.io/dept.sql'
+        domain: natwestdomain
+        tags:
+          - name: department
+            value: this table contains department related mapping
+          - name: employee dept
+            value: this table contains employee department mapping
+        properties:
+          - name: PII
+            value: 'Yes, Internal department'
+          - name: Confidential
+            value: 'Yes'
+        owners:
+          - name: Manish Kumar
+            type: BUSINESS_OWNER
+          - name: Prashant Kumar
+            type: Data Creator
+        glossaryTerm:
+          - glossaryTermName: dataset glossary
+            documentations: glossary TermName Department documentations
+          - glossaryTermName: dataset 1 glossary
+            documentations: glossary TermName Department documentations
+        fields:
+          - name: deptno
+            type: Integer
+            displayName: DepartmentNumber
+            description: DepartmentNumber Column indicated valid department number
+            fieldCanonicalName: dept.deptno
+            maxLength: 2
+            isPartitionKey: false
+            isPrimaryKey: true
+            isNullable: false
+            foreignKey: null
+            tags:
+              - name: deptno
+                value: Attribute will keep unique deptno
+            glossaryTerm:
+              - glossaryTermName: Department
+                documentations: glossary TermName Department documentations
+              - glossaryTermName: DeptNo
+                documentations: glossary TermName Department documentations
+          - name: dname
+            type: string
+            displayName: DepartmentName
+            description: Department Name Description
+            fieldCanonicalName: dept.dname
+            maxLength: 14
+            isPartitionKey: false
+            isPrimaryKey: false
+            isSampleTime: false
+            isNullable: false
+            foreignKey: null
+            tags: null
+            glossaryTerm: null
+          - name: loc
+            type: string
+            displayName: Location
+            description: Location Name Description
+            fieldCanonicalName: dept.loc
+            maxLength: 14
+            isPartitionKey: false
+            isPrimaryKey: false
+            isSampleTime: false
+            isNullable: false
+            foreignKey: null
+            tags: null
+            glossaryTerm: null
+  - stageName: Extract Initialization Stage
+    stageType: Extract
+    stageDescription: This is Extract stage which is responsible to read data from Source during Pipeline run
+    stageUrl: 'http://pantherlabs.io/dept.sql'
+    stageStatus : IN_PROGRESS
+    properties:
+      - name: PII
+        value: 'Yes, Internal department'
+      - name: Confidential
+        value: 'Yes'
+    inputDataset:
+      - name : Extract Dataset 1
+        dataProductName: Finance
+        displayName: chimeradb.Extract_dataset_1
+        FabricType: DEV
+        datasetPlatformName: s3
+        qualifiedName: chimeradb.Extract_dataset_1
+        uri: 'http://pantherlabs.io/dept.sql'
+        domain: natwestdomain
+        description : my 1 input dataset description
+        tags:
+          - name: department
+            value: this table contains department related mapping
+          - name: employee dept
+            value: this table contains employee department mapping
+        properties:
+          - name: PII
+            value: 'Yes, Internal department'
+          - name: Confidential
+            value: 'Yes'
+        owners:
+          - name: Manish Kumar
+            type: BUSINESS_OWNER
+          - name: Prashant Kumar
+            type: Data Creator
+        glossaryTerm:
+          - glossaryTermName: dataset glossary
+            documentations: glossary TermName Department documentations
+          - glossaryTermName: dataset 1 glossary
+            documentations: glossary TermName Department documentations
+        fields:
+          - name: deptno
+            type: Integer
+            displayName: DepartmentNumber
+            description: DepartmentNumber Column indicated valid department number
+            fieldCanonicalName: dept.deptno
+            maxLength: 2
+            isPartitionKey: false
+            isPrimaryKey: true
+            isNullable: false
+            foreignKey: null
+            tags:
+              - name: deptno
+                value: Attribute will keep unique deptno
+            glossaryTerm:
+              - glossaryTermName: Department
+                documentations: glossary TermName Department documentations
+              - glossaryTermName: DeptNo
+                documentations: glossary TermName Department documentations
+          - name: dname
+            type: string
+            displayName: DepartmentName
+            description: Department Name Description
+            fieldCanonicalName: dept.dname
+            maxLength: 14
+            isPartitionKey: false
+            isPrimaryKey: false
+            isSampleTime: false
+            isNullable: false
+            foreignKey: null
+            tags: null
+            glossaryTerm: null
+          - name: loc
+            type: string
+            displayName: Location
+            description: Location Name Description
+            fieldCanonicalName: dept.loc
+            maxLength: 14
+            isPartitionKey: false
+            isPrimaryKey: false
+            isSampleTime: false
+            isNullable: false
+            foreignKey: null
+            tags: null
+            glossaryTerm: null
+      - name : Extract dataset 2
+        description: my 1 second dataset description
+        dataProductName: Finance
+        displayName: chimeradb.dept
+        FabricType: DEV
+        datasetPlatformName: oracle
+        qualifiedName: chimeradb.Extract_dataset_2
+        uri: 'http://pantherlabs.io/dept.sql'
+        domain: natwestdomain
+        tags:
+          - name: department
+            value: this table contains department related mapping
+          - name: employee dept
+            value: this table contains employee department mapping
+        properties:
+          - name: PII
+            value: 'Yes, Internal department'
+          - name: Confidential
+            value: 'Yes'
+        owners:
+          - name: Manish Kumar
+            type: BUSINESS_OWNER
+          - name: Prashant Kumar
+            type: Data Creator
+        glossaryTerm:
+          - glossaryTermName: dataset glossary
+            documentations: glossary TermName Department documentations
+          - glossaryTermName: dataset 1 glossary
+            documentations: glossary TermName Department documentations
+        fields:
+          - name: deptno
+            type: Integer
+            displayName: DepartmentNumber
+            description: DepartmentNumber Column indicated valid department number
+            fieldCanonicalName: dept.deptno
+            maxLength: 2
+            isPartitionKey: false
+            isPrimaryKey: true
+            isNullable: false
+            foreignKey: null
+            tags:
+              - name: deptno
+                value: Attribute will keep unique deptno
+            glossaryTerm:
+              - glossaryTermName: Department
+                documentations: glossary TermName Department documentations
+              - glossaryTermName: DeptNo
+                documentations: glossary TermName Department documentations
+          - name: dname
+            type: string
+            displayName: DepartmentName
+            description: Department Name Description
+            fieldCanonicalName: dept.dname
+            maxLength: 14
+            isPartitionKey: false
+            isPrimaryKey: false
+            isSampleTime: false
+            isNullable: false
+            foreignKey: null
+            tags: null
+            glossaryTerm: null
+          - name: loc
+            type: string
+            displayName: Location
+            description: Location Name Description
+            fieldCanonicalName: dept.loc
+            maxLength: 14
+            isPartitionKey: false
+            isPrimaryKey: false
+            isSampleTime: false
+            isNullable: false
+            foreignKey: null
+            tags: null
+            glossaryTerm: null
+  - stageName: Transform Initialization Stage
+    stageType: Transform
+    stageDescription: This is Transformation stage which is responsible to apply Transformation on Source Data
+    stageUrl: 'http://pantherlabs.io/dept.sql'
+    stageStatus : IN_PROGRESS
+    properties:
+      - name: PII
+        value: 'Yes, Internal department'
+      - name: Confidential
+        value: 'Yes'
+    inputDataset:
+      - name : Transform_dataset_1
+        dataProductName: Finance
+        displayName: chimeradb.Transform_dataset_1
+        FabricType: DEV
+        datasetPlatformName: s3
+        qualifiedName: chimeradb.Transform_dataset_1
+        uri: 'http://pantherlabs.io/dept.sql'
+        domain: natwestdomain
+        description : my 1 Transform dataset description
+        tags:
+          - name: department
+            value: this table contains department related mapping
+          - name: employee dept
+            value: this table contains employee department mapping
+        properties:
+          - name: PII
+            value: 'Yes, Internal department'
+          - name: Confidential
+            value: 'Yes'
+        owners:
+          - name: Manish Kumar
+            type: BUSINESS_OWNER
+          - name: Prashant Kumar
+            type: Data Creator
+        glossaryTerm:
+          - glossaryTermName: dataset glossary
+            documentations: glossary TermName Department documentations
+          - glossaryTermName: dataset 1 glossary
+            documentations: glossary TermName Department documentations
+        fields:
+          - name: deptno
+            type: Integer
+            displayName: DepartmentNumber
+            description: DepartmentNumber Column indicated valid department number
+            fieldCanonicalName: dept.deptno
+            maxLength: 2
+            isPartitionKey: false
+            isPrimaryKey: true
+            isNullable: false
+            foreignKey: null
+            tags:
+              - name: deptno
+                value: Attribute will keep unique deptno
+            glossaryTerm:
+              - glossaryTermName: Department
+                documentations: glossary TermName Department documentations
+              - glossaryTermName: DeptNo
+                documentations: glossary TermName Department documentations
+          - name: dname
+            type: string
+            displayName: DepartmentName
+            description: Department Name Description
+            fieldCanonicalName: dept.dname
+            maxLength: 14
+            isPartitionKey: false
+            isPrimaryKey: false
+            isSampleTime: false
+            isNullable: false
+            foreignKey: null
+            tags: null
+            glossaryTerm: null
+          - name: loc
+            type: string
+            displayName: Location
+            description: Location Name Description
+            fieldCanonicalName: dept.loc
+            maxLength: 14
+            isPartitionKey: false
+            isPrimaryKey: false
+            isSampleTime: false
+            isNullable: false
+            foreignKey: null
+            tags: null
+            glossaryTerm: null
+      - name : Transform_dataset_2
+        description: my 2 Transform second dataset description
+        dataProductName: Finance
+        displayName: chimeradb.Transform_2
+        FabricType: DEV
+        datasetPlatformName: oracle
+        qualifiedName: chimeradb.Transform_2
+        uri: 'http://pantherlabs.io/dept.sql'
+        domain: natwestdomain
+        tags:
+          - name: department
+            value: this table contains department related mapping
+          - name: employee dept
+            value: this table contains employee department mapping
+        properties:
+          - name: PII
+            value: 'Yes, Internal department'
+          - name: Confidential
+            value: 'Yes'
+        owners:
+          - name: Manish Kumar
+            type: BUSINESS_OWNER
+          - name: Prashant Kumar
+            type: Data Creator
+        glossaryTerm:
+          - glossaryTermName: dataset glossary
+            documentations: glossary TermName Department documentations
+          - glossaryTermName: dataset 1 glossary
+            documentations: glossary TermName Department documentations
+        fields:
+          - name: deptno
+            type: Integer
+            displayName: DepartmentNumber
+            description: DepartmentNumber Column indicated valid department number
+            fieldCanonicalName: dept.deptno
+            maxLength: 2
+            isPartitionKey: false
+            isPrimaryKey: true
+            isNullable: false
+            foreignKey: null
+            tags:
+              - name: deptno
+                value: Attribute will keep unique deptno
+            glossaryTerm:
+              - glossaryTermName: Department
+                documentations: glossary TermName Department documentations
+              - glossaryTermName: DeptNo
+                documentations: glossary TermName Department documentations
+          - name: dname
+            type: string
+            displayName: DepartmentName
+            description: Department Name Description
+            fieldCanonicalName: dept.dname
+            maxLength: 14
+            isPartitionKey: false
+            isPrimaryKey: false
+            isSampleTime: false
+            isNullable: false
+            foreignKey: null
+            tags: null
+            glossaryTerm: null
+          - name: loc
+            type: string
+            displayName: Location
+            description: Location Name Description
+            fieldCanonicalName: dept.loc
+            maxLength: 14
+            isPartitionKey: false
+            isPrimaryKey: false
+            isSampleTime: false
+            isNullable: false
+            foreignKey: null
+            tags: null
+            glossaryTerm: null

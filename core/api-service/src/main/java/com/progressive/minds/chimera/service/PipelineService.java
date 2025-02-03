@@ -55,6 +55,7 @@ public class PipelineService {
     return dataPipeLineDBMapper.selectMany(selectStatement);
   }
 
+  // TODO: Vivek - Why are we trying to map properties again. Should it not be mapped in the Entity already?
   public int insertPipeline(DataPipeline pipeline) {
     InsertStatementProvider<DataPipeline> insertRow =
         SqlBuilder.insert(pipeline)
@@ -102,5 +103,4 @@ public class PipelineService {
     // Execute the delete operation and return the number of rows affected
     return dataPipeLineDBMapper.delete(deleteStatementProvider);
   }
-
 }

@@ -1,8 +1,0 @@
-{
-    "scheme": "http",
-    "host": "localhost",
-    "port": 9200,
-    "bulk_kwargs": {
-        "chunk_size": 500
-    }
-}

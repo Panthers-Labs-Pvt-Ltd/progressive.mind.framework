@@ -1,7 +1,8 @@
 server:
   port: 8080
 spring:
-  cloud:
+  profiles:
+    default: local
   application:
     name: chimera_api_service
   datasource:

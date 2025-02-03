@@ -46,7 +46,7 @@ public class ErrorClassesJsonReader {
             return substitutor.replace(messageTemplate.replaceAll("<([a-zA-Z\\d_-]+)>", "\\$\\{$1\\}"));
         } catch (IllegalArgumentException ex) {
             // TODO: Check if this is the right exception to throw
-            throw Exception.internalError(
+            throw ChimeraException.internalError(
                     String.format("Could not replace parameters for error class: '%s' Parameters: %s", errorClass, messageParameters),
                     (Throwable) ex
             );
@@ -61,7 +61,7 @@ public class ErrorClassesJsonReader {
 
         ErrorInfo errorInfo = errorInfoMap.get(mainErrorClass);
         if (errorInfo == null) {
-            throw Exception.internalError("Cannot find main error class: " + errorClass);
+            throw ChimeraException.internalError("Cannot find main error class: " + errorClass);
         }
 
         if (subErrorClass == null) {
@@ -70,7 +70,7 @@ public class ErrorClassesJsonReader {
 
         Map<String, ErrorSubInfo> subClassMap = errorInfo.getSubClass();
         if (subClassMap == null || !subClassMap.containsKey(subErrorClass)) {
-            throw Exception.internalError("Cannot find sub error class: " + errorClass);
+            throw ChimeraException.internalError("Cannot find sub error class: " + errorClass);
         }
 
         return errorInfo.getMessageTemplate() + " " + subClassMap.get(subErrorClass).getMessageTemplate();
@@ -90,7 +90,7 @@ public class ErrorClassesJsonReader {
                     .filter(key -> key.contains("."))
                     .findFirst()
                     .ifPresent(key -> {
-                        throw Exception.internalError("Found the (sub-)error class with dots: " + key);
+                        throw ChimeraException.internalError("Found the (sub-)error class with dots: " + key);
                     });
             return map;
         } catch (IOException e) {
