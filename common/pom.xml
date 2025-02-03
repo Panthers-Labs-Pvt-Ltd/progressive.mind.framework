@@ -17,6 +17,7 @@
         <module>tags</module>
         <module>kvstore</module>
         <module>util</module>
+       <module>workflows</module>
     </modules>
 
     <dependencies>
