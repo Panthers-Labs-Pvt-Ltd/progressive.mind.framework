@@ -9,7 +9,6 @@ import com.progressive.minds.chimera.service.ExtractMetadataConfigService;
 import java.util.List;
 
 import javax.annotation.CheckForNull;
-import javax.ws.rs.GET;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
