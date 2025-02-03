@@ -6,7 +6,7 @@
 
     <parent>
         <groupId>com.progressive.minds.chimera</groupId>
-        <artifactId>capabilities</artifactId>
+        <artifactId>DataManagement</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 

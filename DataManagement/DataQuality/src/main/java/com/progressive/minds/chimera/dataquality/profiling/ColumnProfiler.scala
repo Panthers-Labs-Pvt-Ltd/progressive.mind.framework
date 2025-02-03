@@ -1,5 +1,7 @@
 package com.progressive.minds.chimera.dataquality.profiling
 
+import com.amazon.deequ.analyzers.DataTypeInstances
+import com.amazon.deequ.profiles.ColumnProfilerRunner
 import org.apache.spark.sql.{DataFrame, SparkSession}
 
 import java.math.BigInteger
