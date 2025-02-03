@@ -15,7 +15,7 @@ services:
 
   keycloak:
     build:
-      context: ../../Setup/keycloak
+      context: ../keycloak
       dockerfile: Dockerfile
     container_name: keycloak
     environment:
