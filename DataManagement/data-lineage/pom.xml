@@ -6,12 +6,12 @@
 
     <parent>
         <groupId>com.progressive.minds.chimera</groupId>
-        <artifactId>core</artifactId>
+        <artifactId>DataManagement</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
     <groupId>com.progressive.minds.chimera</groupId>
-    <artifactId>data-lineage</artifactId>
+    <artifactId>DataManagement.data-lineage</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>

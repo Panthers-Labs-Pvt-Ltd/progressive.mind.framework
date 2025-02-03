@@ -16,6 +16,8 @@
     <packaging>pom</packaging>
 
     <modules>
+        <module>datahub </module>
+        <module>data-lineage</module>
         <module>DataObservability</module>
         <module>DataQuality</module>
     </modules>
