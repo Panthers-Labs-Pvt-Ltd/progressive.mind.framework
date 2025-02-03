@@ -21,3 +21,14 @@ CONSTRAINT edl_data_control_pkey
 CONSTRAINT edl_data_control_unq
 	UNIQUE(control_name)
 );		
+
+comment on column edl_data_controls.row_num 'Running serial number'
+comment on column edl_data_controls.control_id 'Auto generated sequence';
+comment on column edl_data_controls.control_name 'Name of the Control e.g Completness /UNIQUEess';
+comment on column edl_data_controls.control_desc 'Description or definition of Control names';
+comment on column edl_data_controls.reserved_1 'reserved_5 - Reserved attributes for future use';
+comment on column edl_data_controls.created_ts 'creation timestamp';
+comment on column edl_data_controls.updated_ts 'Updation timestamp';
+comment on column edl_data_controls.created_by	'Created by User';
+comment on column edl_data_controls.updated_by  'Updated by User';
+comment on column edl_data_controls.active_flg  'Active Inactive Flag';
