@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: api-cloud-config
+  cloud:
+    # General Vault configuration (AUTHENTICATION)
+    vault:
+      uri: http://127.0.0.1:8200
+      token: hvs.5MtvnL328wOUFfyYexHerPiG #need to remove this-
+      kv:
+        enabled: true
+        backend: secret
+        profile-separator: '/'
+        default-context: api-cloud-config
+
+    # Config Server Vault backend
+    config:
+      server:
+        vault:
+          kv-version: 2
+        git:
+          enabled: false
+          uri: https://gitlab.com/progressive.mind.framework/chimera
