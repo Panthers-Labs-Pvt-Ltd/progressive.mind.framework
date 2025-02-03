@@ -3,20 +3,19 @@ version: '3.8'
 services:
   vault:
     image: hashicorp/vault:latest
-    container_name: vault-dev
-    restart: always
+    container_name: vault
+    command: server -config=/vault/config/config.hcl
+    environment:
+      VAULT_ADDR: "http://0.0.0.0:8200"
     ports:
       - "8200:8200"
-    environment:
-      VAULT_DEV_ROOT_TOKEN_ID: root
-      VAULT_ADDR: localhost:8200
-      VAULT_API_ADDR: localhost:8200
-      VAULT_LOG_LEVEL: debug
     cap_add:
       - IPC_LOCK
-    command: vault server -dev
     volumes:
-      - vault_data:/vault/data
+      - ./vault/config:/vault/config
+      - ./vault/data:/vault/data
+    networks:
+      - vault-net
 
-volumes:
-  vault_data:
+networks:
+  vault-net:
