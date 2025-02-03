@@ -2,7 +2,7 @@ server:
   port: 8080
 spring:
   application:
-    name: chimera_api_service_prod
+    name: chimera_api_service_local
   datasource:
     url: jdbc:postgresql://127.0.0.1:5432/postgres?currentSchema=data_pipeline # PostgreSQL for default environment
     driverClassName: org.postgresql.Driver
@@ -62,4 +62,3 @@ resilience4j.ratelimiter:
       timeoutDuration: 0
       registerHealthIndicator: true
       eventConsumerBufferSize: 100
-
