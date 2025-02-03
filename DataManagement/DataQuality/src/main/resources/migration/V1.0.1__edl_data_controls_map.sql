@@ -26,3 +26,22 @@ CONSTRAINT edl_dc_metrics_unq
 CONSTRAINT edl_data_controls_map_edl_data_controls_name_fk
 FOREIGN KEY (control_name) REFERENCES edl_data_controls
 );		
+
+comment on column edl_data_controls_map.row_num 'Running serial number'
+comment on column edl_data_controls_map.map_id 'Auto generated sequence';
+comment on column edl_data_controls_map.control_name 'Name of the Control e.g Completness /UNIQUEess';
+comment on column edl_data_controls_map.control_desc 'Description or definition of Control names';
+comment on column edl_data_controls_map.reserved_1 'reserved_5 - Reserved attributes for future use';
+comment on column edl_data_controls_map.created_ts 'creation timestamp';
+comment on column edl_data_controls_map.updated_ts 'Updation timestamp';
+comment on column edl_data_controls_map.created_by	'Created by User';
+comment on column edl_data_controls_map.updated_by  'Updated by User';
+comment on column edl_data_controls_map.active_flg  'Active Inactive Flag';
+comment on column edl_data_controls_map.process_typ_nm	'Process Type Name from which this control needs to be mapped eg transformBatchPipeline/PersistBatchPipeline';
+comment on column edl_data_controls_map.ref_metadata  'Ref Metedata which needs to be used for this control based on Process Type name BatchPipelineOrigin/BatchPipelineDeestination';
+comment on column edl_data_controls_map.check_lvl  'ERROR/WARNING OR INFO';
+
+
+
+
+
