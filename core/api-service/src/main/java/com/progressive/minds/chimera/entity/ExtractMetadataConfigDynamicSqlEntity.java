@@ -33,7 +33,7 @@ public class ExtractMetadataConfigDynamicSqlEntity {
         public final SqlColumn<String> extractSourceType = column("EXTRACT_SOURCE_TYPE", JDBCType.VARCHAR);
         public final SqlColumn<String> extractSourceSubType = column("EXTRACT_SOURCE_SUB_TYPE", JDBCType.VARCHAR);
         public final SqlColumn<String> dataSourceConnectionName = column("DATA_SOURCE_CONNECTION_NAME", JDBCType.VARCHAR);
-        public final SqlColumn<String> sourceConfiguration = column("SOURCE_CONFIGURATION", JDBCType.LONGNVARCHAR);
+        public final SqlColumn<String> sourceConfiguration = column("SOURCE_CONFIGURATION", JDBCType.CLOB);
         public final SqlColumn<String> dataframeName = column("DATAFRAME_NAME", JDBCType.VARCHAR);
         public final SqlColumn<String> predecessorSequences = column("PREDECESSOR_SEQUENCES", JDBCType.LONGNVARCHAR);
         public final SqlColumn<String> successorSequences = column("SUCCESSOR_SEQUENCES", JDBCType.LONGNVARCHAR);

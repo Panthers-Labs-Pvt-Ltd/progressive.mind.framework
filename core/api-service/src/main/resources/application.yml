@@ -6,25 +6,28 @@ spring:
   application:
     name: chimera_api_service
   datasource:
-    url: jdbc:postgresql://127.0.0.1:5432/postgres?currentSchema=data_pipeline # PostgreSQL for default environment
+#    url: jdbc:postgresql://127.0.0.1:5432/postgres?currentSchema=data_pipeline # PostgreSQL for default environment
+    url: jdbc:postgresql://localhost:5432/chimera_db # PostgreSQL for default environment
     driverClassName: org.postgresql.Driver
-    username: postgres
-    password: password
+    username: chimera
+    password: chimera123
     hikari:
       poolName: PostgresqlHikariCP
       maxLifetime: 1200000 # 20 minutes
       maximumPoolSize: 10 # Maximum connections in the pool
       minimumIdle: 1 # Minimum idle connections in the pool
   flyway:
-    enabled: true
+    enabled: false
     schemas: data_pipeline
     cleanDisabled: true
   security:
     oauth2:
       resourceserver:
         jwt:
-          client-id: chimera_api_client
-          issuer-uri: http://localhost:3000/realms/chimera
+          client-id: chimera_api_service
+#          issuer-uri: http://localhost:3000/realms/chimera-api-service-realm
+          issuer-uri: "http://192.168.0.109:8800/realms/chimera_api"
+#          issuer-uri: "http://localhost:8800/realms/chimera_api"
           jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/certs
 
 mybatis:

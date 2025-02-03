@@ -6,11 +6,13 @@ import static com.progressive.minds.chimera.entity.PersistMetadataConfigDynamicS
 import static org.mybatis.dynamic.sql.SqlBuilder.isEqualTo;
 import static org.mybatis.dynamic.sql.SqlBuilder.select;
 
+import com.progressive.minds.chimera.dto.PersistMetadata;
 import com.progressive.minds.chimera.dto.PersistMetadataConfig;
 import com.progressive.minds.chimera.entity.PersistMetadataConfigDynamicSqlEntity;
 import com.progressive.minds.chimera.repository.PersistMetadataConfigDBMapper;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.CheckForNull;
 import org.mybatis.dynamic.sql.SqlBuilder;
@@ -27,6 +29,14 @@ public class persistMetadataConfigService {
 
     @Autowired
     private PersistMetadataConfigDBMapper persistMetadataConfigDBMapper;
+    private final dataSourcesService dataSourcesService;
+    private final DataSourceConnectionsService dataSourcesConnService;
+
+    @Autowired
+    public persistMetadataConfigService(dataSourcesService dataSourcesService, DataSourceConnectionsService dataSourcesConnService) {
+        this.dataSourcesService = dataSourcesService;
+        this.dataSourcesConnService = dataSourcesConnService;
+    }
 
     public long getTotalNumberOfDataSources() {
       SelectStatementProvider countStatementProvider =
@@ -73,6 +83,8 @@ public class persistMetadataConfigService {
             .into(persistMetadataConfig)
             .map(PersistMetadataConfigDynamicSqlEntity.pipelineName).toProperty("pipelineName")
             .map(PersistMetadataConfigDynamicSqlEntity.sequenceNumber).toProperty("sequenceNumber")
+            .map(PersistMetadataConfigDynamicSqlEntity.sinkType).toProperty("sinkType")
+            .map(PersistMetadataConfigDynamicSqlEntity.sinkSubType).toProperty("sinkSubType")
             .map(PersistMetadataConfigDynamicSqlEntity.dataSourceConnectionName).toProperty("dataSourceConnectionName")
             .map(PersistMetadataConfigDynamicSqlEntity.databaseName).toProperty("databaseName")
             .map(PersistMetadataConfigDynamicSqlEntity.tableName).toProperty("tableName")
@@ -100,6 +112,8 @@ public class persistMetadataConfigService {
   public int updateConfig(PersistMetadataConfig data) {
     // Build the update statement
     UpdateStatementProvider updateStatementProvider = SqlBuilder.update(PersistMetadataConfigDynamicSqlEntity.persistMetadataConfig)
+        .set(PersistMetadataConfigDynamicSqlEntity.sinkType).equalToWhenPresent(data.getSinkType())
+        .set(PersistMetadataConfigDynamicSqlEntity.sinkSubType).equalToWhenPresent(data.getSinkSubType())
         .set(PersistMetadataConfigDynamicSqlEntity.dataSourceConnectionName).equalToWhenPresent(data.getDataSourceConnectionName())
         .set(PersistMetadataConfigDynamicSqlEntity.databaseName).equalToWhenPresent(data.getDatabaseName())
         .set(PersistMetadataConfigDynamicSqlEntity.tableName).equalToWhenPresent(data.getTableName())
@@ -148,5 +162,40 @@ public class persistMetadataConfigService {
     return persistMetadataConfigDBMapper.delete(deleteStatementProvider);
   }
 
+  public List<PersistMetadata> getPersistMetadata(String pipelineName) {
+     List<PersistMetadata> persistMetadata = new ArrayList<PersistMetadata>();
+    List<PersistMetadataConfig> pc = getPersistMetadataByPipelineName(pipelineName);
+    pc.forEach(config -> {
+      PersistMetadata metadata = new PersistMetadata();
+        metadata.setPipelineName(config.getPipelineName());
+        metadata.setSequenceNumber(config.getSequenceNumber());
+        metadata.setSinkType(config.getSinkType());
+        metadata.setSinkSubType(config.getSinkSubType());
+        metadata.setDataSourceConnectionName(config.getDataSourceConnectionName());
+        metadata.setDatabaseName(config.getDatabaseName());
+        metadata.setTableName(config.getTableName());
+        metadata.setSchemaName(config.getSchemaName());
+        metadata.setPartitionKeys(config.getPartitionKeys());
+        metadata.setTargetSql(config.getTargetSql());
+        metadata.setTargetPath(config.getTargetPath());
+        metadata.setWriteMode(config.getWriteMode());
+        metadata.setSinkConfiguration(config.getSinkConfiguration());
+        metadata.setSortColumns(config.getSortColumns());
+        metadata.setDedupColumns(config.getDedupColumns());
+        metadata.setKafkaTopic(config.getKafkaTopic());
+        metadata.setKafkaKey(config.getKafkaKey());
+        metadata.setKafkaMessage(config.getKafkaMessage());
+        metadata.setCreatedBy(config.getCreatedBy());
+        metadata.setCreatedTimestamp(config.getCreatedTimestamp());
+        metadata.setUpdatedBy(config.getUpdatedBy());
+        metadata.setUpdatedTimestamp(config.getUpdatedTimestamp());
+        metadata.setActiveFlag(config.getActiveFlag());
+        metadata.setDataSource(dataSourcesService.getDataSourceByTypeAndSubtype(config.getSinkType(), config.getSinkSubType()));
+        metadata.setDataSourceConnection(dataSourcesConnService.getConnectionByName(config.getDataSourceConnectionName()).orElse(null));
+        persistMetadata.add(metadata);
+  });
+  return persistMetadata;
+
+}
 }
 

@@ -16,7 +16,7 @@ import lombok.Setter;
 @Setter
 @Getter
 
-public class PersistMetadataConfig {
+public class PersistMetadata {
 
   @NotBlank(message = "Pipeline Name cannot be blank")
   private String pipelineName;
@@ -65,4 +65,8 @@ public class PersistMetadataConfig {
   private String updatedBy;
 
   private String activeFlag; // Default value 'Y'
+
+  DataSources dataSource;
+
+  DataSourceConnections dataSourceConnection;
 }
