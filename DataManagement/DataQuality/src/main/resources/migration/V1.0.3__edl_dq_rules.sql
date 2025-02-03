@@ -27,3 +27,18 @@ CONSTRAINT edl_dq_unq
 CONSTRAINT edl_dq_rules_config_edl_dc_rules_control_name_fk
 	FOREIGN KEY (control_name) REFERENCES edl_data_controls
 );
+
+comment on column edl_dq_rules.row_num 'Running serial number'
+comment on column edl_dq_rules.rule_id 'Auto generated sequence';
+comment on column edl_dq_rules.rule_desc 'Description of Rule';
+comment on column edl_dq_rules.rule_example 'Example Code How to Write the Logic to use this';
+comment on column edl_dq_rules.reserved_1 'reserved_5 - Reserved attributes for future use';
+comment on column edl_dq_rules.created_ts 'creation timestamp';
+comment on column edl_dq_rules.updated_ts 'Updation timestamp';
+comment on column edl_dq_rules.created_by	'Created by User';
+comment on column edl_dq_rules.updated_by  'Updated by User';
+comment on column edl_dq_rules.active_flg  'Active Inactive Flag';
+
+
+
+
