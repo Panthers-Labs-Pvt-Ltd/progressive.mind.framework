@@ -12,16 +12,17 @@ object ProcessConstraints {
     // TODO check how we can do IN caluse
     // val scolaMap Mop (tableName" -> sql Text)
     // val constraints_df = OqConstrointSuggestionRepository ListDqConstraintSuggestionByColumn
-    try {
-      val constraints_df = EdlDqSuggestionsRepository.listEdlDqSuggestionsByColumn(
-        spark, "sql_Text", tableName)
-      constraints_df.show()
-      constraints_df
-    }
-    catch {
-      case e: Exception => edlLogger.logError("ProcessConstraints" + e.toString)
-        throw (e)
-    }
+//    try {
+//      val constraints_df = EdlDqSuggestionsRepository.listEdlDqSuggestionsByColumn(
+//        spark, "sql_Text", tableName)
+//      constraints_df.show()
+//      constraints_df
+//    }
+//    catch {
+//      case e: Exception => edlLogger.logError("ProcessConstraints" + e.toString)
+//        throw (e)
+//    }
+    spark.emptyDataFrame
   }
 
   def processConstraintsIntoRules(spark: SparkSession, suggestionsDf: DataFrame, ids: Seq[String],
@@ -58,7 +59,7 @@ object ProcessConstraints {
   }
 
   def persistRules(df: DataFrame): Unit = {
-    EdlDqRulesRepository.addNewEdlDqRules(df)
+    // EdlDqRulesRepository.addNewEdlDqRules(df)
   }
 
   def main(args: Array[String]): Unit = {

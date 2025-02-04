@@ -60,9 +60,11 @@ public class CoarseDQService {
     public List<DataControls> getCoarseDQControls() {
         logger.logInfo("Fetching coarse data quality controls.");
         DataControls dataControls = new DataControls();
+
         SelectStatementProvider selectStatement = select(dataControls.allColumns()).from(dataControls)
                 .build()
                 .render(RenderingStrategies.MYBATIS3);
+
         return dataControlsDQRepository.selectMany(selectStatement);
     }
 
