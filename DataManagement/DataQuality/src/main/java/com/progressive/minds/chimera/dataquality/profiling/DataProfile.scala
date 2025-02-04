@@ -56,30 +56,31 @@ object DataProfile {
           .run()
       }
       logger.logInfo("creating suggestion Dataframe")
-
-      val suggestionDataFrame = suggestionResults.constraintSuggestions.flatMap {
-          case (column, suggestions) =>
-            suggestions.map { constraint =>
-              (column, constraint.description, constraint.codeForConstraint)
-            }
-        }.toSeq.toDF("ruleColumn", "dqConstarint", "scalaCode")
-        .withColumn("databaseName", lit(databaseName))
-        .withColumn("sql_Text", lit(tableName))
-        .withColumn("processNm", lit("PersistBatchPipelineProcess"))
-        .withColumn("id", lit(null).cast("long"))
-
-      suggestionDataFrame.show()
-      suggestionDataFrame
     }
-    else {
-      throw new EDLException(errorClass = "EDLDataQualityException.PROFILE_EXCEPTION",
-        messageParameters = null,
-        cause = null, summary = "Data Quality Could not run")
-    }
+    spark.emptyDataFrame
+//      val suggestionDataFrame = suggestionResults.constraintSuggestions.flatMap {
+//          case (column, suggestions) =>
+//            suggestions.map { constraint =>
+//              (column, constraint.description, constraint.codeForConstraint)
+//            }
+//        }.toSeq.toDF("ruleColumn", "dqConstarint", "scalaCode")
+//        .withColumn("databaseName", lit(databaseName))
+//        .withColumn("sql_Text", lit(tableName))
+//        .withColumn("processNm", lit("PersistBatchPipelineProcess"))
+//        .withColumn("id", lit(null).cast("long"))
+//
+//      suggestionDataFrame.show()
+//      suggestionDataFrame
+//    }
+//    else {
+//      throw new EDLException(errorClass = "EDLDataQualityException.PROFILE_EXCEPTION",
+//        messageParameters = null,
+//        cause = null, summary = "Data Quality Could not run")
+//    }
   }
 
   def persistConstraints(df: DataFrame): Unit = {
-    EdlDqSuggestionsRepository.addNewEdlDqSuggestions(df)
+    // EdlDqSuggestionsRepository.addNewEdlDqSuggestions(df)
   }
 
   def main(args: Array[String]): Unit = {

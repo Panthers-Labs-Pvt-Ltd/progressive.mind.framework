@@ -1,4 +1,4 @@
-package com.progressive.minds.chimera.dataquality.profiling.utils
+package com.progressive.minds.chimera.dataquality.common
 
 import com.amazon.deequ.VerificationResult
 import com.amazon.deequ.repository.{MetricsRepository, ResultKey}
