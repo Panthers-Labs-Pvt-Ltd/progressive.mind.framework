@@ -18,8 +18,8 @@ public class FetchPipelineMetadataWorkflowImpl implements FetchPipelineMetadata 
     );
 
     @Override
-    public void getPipelineMetadata(String pipelineName) throws IOException, InterruptedException {
-        PipelineMetadata pipelineMetadata = activities.getPipelineMetadata(pipelineName);
+    public PipelineMetadata getPipelineMetadata(String pipelineName) throws IOException, InterruptedException {
+        return activities.getPipelineMetadata(pipelineName);
     }
 
 }

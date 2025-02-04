@@ -1,9 +1,11 @@
 package com.progressive.minds.chimera.common.workflows;
 
 import com.progressive.minds.chimera.common.workflows.activities.activityImplementations.FetchPipelineMetadataActivityImpl;
+import com.progressive.minds.chimera.common.workflows.activities.activityImplementations.ExtractDataActivityImpl;
 import com.progressive.minds.chimera.common.workflows.workflowImplementations.FetchPipelineMetadataWorkflowImpl;
 import com.progressive.minds.chimera.common.workflows.workflowImplementations.MainWorkflowImpl;
-import io.temporal.api.enums.v1.WorkflowIdReusePolicy;
+import com.progressive.minds.chimera.common.workflows.workflowImplementations.ExtractDataWorkflowImpl;
+// import io.temporal.api.enums.v1.WorkflowIdReusePolicy;
 import io.temporal.client.WorkflowClient;
 import io.temporal.client.WorkflowOptions;
 import io.temporal.serviceclient.WorkflowServiceStubs;
@@ -24,10 +26,12 @@ public class MainApp {
 
         worker.registerWorkflowImplementationTypes(
             MainWorkflowImpl.class,
-            FetchPipelineMetadataWorkflowImpl.class
+            FetchPipelineMetadataWorkflowImpl.class,
+            ExtractDataWorkflowImpl.class
     );
 
-        worker.registerActivitiesImplementations(new FetchPipelineMetadataActivityImpl());
+        worker.registerActivitiesImplementations(new FetchPipelineMetadataActivityImpl(),
+                                                new ExtractDataActivityImpl());
 
         factory.start();
     
