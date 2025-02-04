@@ -47,3 +47,5 @@ Phases of data pipeline:
 
 ### What is a datasource?
 
+### What if an organization does not have a concept of Golden Source or Authoritative Data Source (ADS)?
+
