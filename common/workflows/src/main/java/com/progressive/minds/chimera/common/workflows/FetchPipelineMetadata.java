@@ -5,12 +5,14 @@ import io.temporal.workflow.WorkflowMethod;
 
 import java.io.IOException;
 
+import com.progressive.minds.chimera.dto.PipelineMetadata;
+
 
 @WorkflowInterface
 public interface FetchPipelineMetadata {
 
     @WorkflowMethod
-    public void getPipelineMetadata(String pipelineName) throws IOException, InterruptedException;
+    public PipelineMetadata getPipelineMetadata(String pipelineName) throws IOException, InterruptedException;
 
 }
 
