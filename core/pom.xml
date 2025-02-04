@@ -23,6 +23,7 @@
         <module>decision-engine</module>
         <module>apacheComet</module>
         <module>api-service</module>
+        <module>api-cloud-config</module>
         <module>executionEngine</module>
     </modules>
 </project>
