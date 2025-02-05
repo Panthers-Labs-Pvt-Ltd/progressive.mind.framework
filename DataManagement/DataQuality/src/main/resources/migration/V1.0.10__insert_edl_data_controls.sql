@@ -3,7 +3,13 @@ values 	( 'Completeness', 'A measure of the degree to which data attributes meet
 			( 'Comprehensiveness', 'A measure of the degree to which a dataset used for a report contains all material areas that are relevant to that report.', CURRENT_TIMESTAMP, 'Prashant',null,null,'Y'),
 			( 'Immutability', 'A measure of the degree to which a dataset has not changed post its creation.', CURRENT_TIMESTAMP, 'Prashant',null,null,'Y'),
 			( 'Conformity', 'A measure of the degree to which data values are stored or presented in a format that is consistent with the specified standards.', CURRENT_TIMESTAMP, 'Prashant',null,null,'Y'),
-			( 'Accuracy', 'A measure of the degree to which data values are valid when compared to an authoritative source of references (Golden Source data which can be internal or external to the bank.', CURRENT_TIMESTAMP, 'Prashant',null,null,'Y'),
+			( 'Accuracy', 'A measure of the degree to which data values reflect the real-world objects or events and are valid when compared to an authoritative source of references (Golden Source data which can be internal or external to the organization.', CURRENT_TIMESTAMP, 'Prashant',null,null,'Y'),
 			( 'Uniqueness', 'A measure of the degree to which a data attribute, or combination of attributes, meet the expectation that no duplicate values are present in a data set.', CURRENT_TIMESTAMP, 'Prashant',null,null,'Y'),
-			( 'Timeliness', 'A measure of the degree to which data are accessible for use as specified and in the time frame in which it is expected.', CURRENT_TIMESTAMP, 'Prashant',null,null,'Y'),
-			( 'Consistency', 'A measure of the equivalence of comparable data attributes stored across two or more data sets, or in different locations within the same dataset, at comparable points in time.', CURRENT_TIMESTAMP, 'Prashant',null,null,'Y') ON CONFLICT DO NOTHING;
+			( 'Timeliness', 'A measure of how up-to-date data is and how quickly it is available for analysis', CURRENT_TIMESTAMP, 'Prashant',null,null,'Y'),
+			( 'Conformity', 'A measure of the degree of how well data conforms to the rules, standards, and constraints of its data model or schema.', CURRENT_TIMESTAMP, 'Prashant',null,null,'Y'),
+			( 'Consistency', 'A measure of the equivalence of comparable data attributes stored across different sources and systems, or in different locations within the same dataset, at comparable points in time.', CURRENT_TIMESTAMP, 'Prashant',null,null,'Y'),
+			( 'Usability', 'A measure of how easy it is to access, understand, and use data. Usable data is accessible, user-friendly, and well-documented', CURRENT_TIMESTAMP, 'Prashant',null,null,'Y'),
+			( 'Relevance', 'A measure of how well data meets the needs of its users and stakeholders', CURRENT_TIMESTAMP, 'Prashant',null,null,'Y'),
+			( 'Integrity', 'TBD', CURRENT_TIMESTAMP, 'Prashant',null,null,'Y'),
+			( 'Validity', 'A measure of how well data conforms to the rules, standards, and constraints of its data model or schema. Valid data is accurate, complete, and consistent with its data model', CURRENT_TIMESTAMP, 'Prashant',null,null,'Y'),
+			( 'Trustworthiness', 'TBD', CURRENT_TIMESTAMP, 'Prashant',null,null,'Y') ON CONFLICT DO NOTHING;
