@@ -41,6 +41,9 @@ Phases of data pipeline:
 1. Metadata population - Data owners, etc.
 2. Confirmation of correctness of the schema. This is when the users can population business meanings, uniqueness, PII, and other stuff.
 
+### Jaya
+  Who will be the owner of the data which is ingested from  external Datasources (Actual Data owner(Business) or Operartion Owner (layer) )
+
 ### Internal Data Sources
 
 ## Appendix
