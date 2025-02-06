@@ -68,8 +68,7 @@ before_script :
 #ChimeraRunner,PersonalRunner,Framework,PantherLabs
 build:
   stage: build
-  tags:
-        - ChimeraRunner
+
  
   script:
     - |
