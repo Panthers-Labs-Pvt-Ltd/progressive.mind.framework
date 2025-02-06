@@ -69,7 +69,8 @@ before_script :
 build:
   stage: build
   tags:
-        - Manish
+        - chimera
+ 
   script:
     - |
       echo "Maven Path : $(whereis mvn)"
