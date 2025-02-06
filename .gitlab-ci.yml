@@ -65,11 +65,11 @@ before_script :
       cat "$DOCKERFILE"
 
       }
-
+#ChimeraRunner,PersonalRunner,Framework,PantherLabs
 build:
   stage: build
   tags:
-        - chimera
+        - ChimeraRunner
  
   script:
     - |
