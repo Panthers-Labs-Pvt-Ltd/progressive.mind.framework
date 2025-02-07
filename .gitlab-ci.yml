@@ -65,9 +65,11 @@ before_script :
       cat "$DOCKERFILE"
 
       }
-
+#ChimeraRunner,PersonalRunner,Framework,PantherLabs
 build:
   stage: build
+
+ 
   script:
     - |
       echo "Maven Path : $(whereis mvn)"
