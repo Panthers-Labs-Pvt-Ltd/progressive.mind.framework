@@ -45,9 +45,9 @@ Phases of data pipeline:
   Who will be the owner of the data which is ingested from  external Datasources (Actual Data owner(Business) or Operartion Owner (layer) )
   How do we assign  the owenership to External datasource ? (what are the parameters we need to consider before assgning Ownership)
   Who is respoinsible for providing these details ?
-  How/where  do we store this metadata for external data sources?
-  
-
+  How/where do we store this metadata for external data sources?
+  Are we going to attach these data contracts at the pipeline level ??
+   
 ### Internal Data Sources
 
 ## Appendix
