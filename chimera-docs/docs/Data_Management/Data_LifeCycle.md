@@ -29,7 +29,7 @@ Validation required -
 
 ### Dataset Onboarding
 
-[Data ingestion](../Data_Ingestion.md) is the process of onboarding dataset from external sources and loading it into a data storage system. Data ingestion can be done in real-time or batch mode, depending on the requirements of the data pipeline.
+Data ingestion is the process of onboarded dataset from external sources and loading it into a data storage system. Data ingestion can be done in real-time or batch mode, depending on the requirements of the data pipeline.
 
 Phases of data pipeline:
 
@@ -41,8 +41,12 @@ Phases of data pipeline:
 1. Metadata population - Data owners, etc.
 2. Confirmation of correctness of the schema. This is when the users can population business meanings, uniqueness, PII, and other stuff.
 
-### Jaya
+### Jaya Need Clarity on these items 
   Who will be the owner of the data which is ingested from  external Datasources (Actual Data owner(Business) or Operartion Owner (layer) )
+  How do we assign  the owenership to External datasource ? (what are the parameters we need to consider before assgning Ownership)
+  Who is respoinsible for providing these details ?
+  How/where  do we store this metadata for external data sources?
+  
 
 ### Internal Data Sources
 
