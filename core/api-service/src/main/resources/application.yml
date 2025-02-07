@@ -26,7 +26,7 @@ spring:
         jwt:
           client-id: chimera_api_service
 #          issuer-uri: http://localhost:3000/realms/chimera-api-service-realm
-          issuer-uri: "http://192.168.0.109:8800/realms/chimera_api"
+          issuer-uri: "http://localhost:8800/realms/chimera"
 #          issuer-uri: "http://localhost:8800/realms/chimera_api"
           jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/certs
 

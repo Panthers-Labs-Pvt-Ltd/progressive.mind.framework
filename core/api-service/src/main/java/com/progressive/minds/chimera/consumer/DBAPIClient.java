@@ -90,11 +90,12 @@ public class DBAPIClient {
 
     public static String getToken() throws IOException, InterruptedException{
 //TODO : Remove hardcoding.
-        String tokenUrl = "http://localhost:8800/realms/chimera_api/protocol/openid-connect/token";
+
+        String tokenUrl = "http://localhost:8800/realms/chimera/protocol/openid-connect/token";
 //TODO : get client details from vault.
          Map<String, String> formData = Map.of(
-            "client_id", "chimera_api_service",
-            "client_secret", "lDNMirvQXuSZz1FMkaQE588qc3Y9w3Pf",
+            "client_id", "chimera_api_client",
+            "client_secret", "yhKj2HkNBpyv9ZgV9oqPxHcZOPEb3uBg",
             "grant_type", "client_credentials"
         );
 

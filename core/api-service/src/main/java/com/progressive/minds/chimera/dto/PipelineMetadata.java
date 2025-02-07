@@ -26,7 +26,7 @@ public class PipelineMetadata {
     private Timestamp updatedTimestamp;
     private String updatedBy;
     OrganizationHierarchy org;
-//    DataPipeline dataPipeline;
+    DataPipeline dataPipeline;
     List<ExtractMetadata> extractMetadata;
     List<TransformMetadataConfig> transformMetadata;
     List<PersistMetadata> persistMetadata;

@@ -36,27 +36,22 @@
             <version>${chimera.project.version}</version>
             <scope>compile</scope>
         </dependency>
-        <dependency>
-            <groupId>com.progressive.minds.chimera</groupId>
-            <artifactId>foundational.logging</artifactId>
-            <version>${chimera.project.version}</version>
-        </dependency>
-        <dependency>
+          <dependency>
             <groupId>com.progressive.minds.chimera</groupId>
             <artifactId>core.dataSource</artifactId>
             <version>${chimera.project.version}</version>
         </dependency>
-        <dependency>
-            <groupId>com.progressive.minds.chimera</groupId>
-            <artifactId>foundational.exception</artifactId>
-            <version>${chimera.project.version}</version>
-        </dependency>
 
         <dependency>
+            <groupId>com.progressive.minds.chimera</groupId>
+            <artifactId>core.api-service</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+<!--        <dependency>
             <groupId>org.apache.calcite</groupId>
             <artifactId>calcite-core</artifactId>
             <version>1.38.0</version>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>com.github.jsqlparser</groupId>
             <artifactId>jsqlparser</artifactId>

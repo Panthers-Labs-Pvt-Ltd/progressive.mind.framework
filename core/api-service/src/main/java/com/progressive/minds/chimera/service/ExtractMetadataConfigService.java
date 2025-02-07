@@ -687,11 +687,7 @@ public List<ExtractMetadata> getExtractMetadata(String pipelineName) {
         extract.setDataSourceConnection(dataSourcesConnService.getConnectionByName(config.getDataSourceConnectionName()).orElse(null));
         extractMetadata.add(extract);
     });
-
-
-
     return extractMetadata;
-    
 }
 
 

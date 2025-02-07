@@ -18,7 +18,7 @@ properties:
   - name: Confidential
     value: 'Yes'
 owners:
-  - name: Manish Kumar
+  - name: Manisha Kumar
     type: BUSINESS_OWNER
   - name: Prashant Kumar
     type: Data Creator
