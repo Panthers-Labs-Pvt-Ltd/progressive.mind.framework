@@ -126,8 +126,9 @@
         <junit.version>5.9.1</junit.version>
         <scalatest.version>3.2.17</scalatest.version>
         <junit.jupiter.version>5.10.0</junit.jupiter.version>
-        <mockito.inline.version>5.2.0</mockito.inline.version>
-        <mockito-junit-jupiter.version>5.2.0</mockito-junit-jupiter.version>
+        <mockito.inline.version>5.14.2</mockito.inline.version>
+        <mockito-junit-jupiter.version>5.14.2</mockito-junit-jupiter.version>
+        <mockito-core.version>5.14.2</mockito-core.version>
 
         <!-- Build configurations -->
         <maven.scala.plugin.version>4.7.2</maven.scala.plugin.version>
@@ -195,10 +196,16 @@
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
-            <artifactId>mockito-inline</artifactId>
-            <version>${mockito.inline.version}</version>
+            <artifactId>mockito-core</artifactId>
+            <version>${mockito-core.version}</version>
             <scope>test</scope>
         </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.mockito</groupId>-->
+<!--            <artifactId>core</artifactId>-->
+<!--            <version>${mockito.inline.version}</version>-->
+<!--            <scope>test</scope>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-junit-jupiter</artifactId>
@@ -271,6 +278,14 @@
             <artifactId>spark-sql-kafka-0-10_${spark.scala.version}</artifactId>
             <version>${spark.version}</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api -->
+        <!-- Abhinav. Needed to add this to avoid  java.lang.NoClassDefFoundError: javax/servlet/http/HttpServlet error -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>4.0.1</version>
+        </dependency>
+
 
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -388,6 +403,10 @@
                 <groupId>net.alchim31.maven</groupId>
                 <artifactId>scala-maven-plugin</artifactId>
                 <version>${maven.scala.plugin.version}</version>
+                <configuration>
+                    <scalaCompatVersion>${scala.major.version}</scalaCompatVersion>
+                    <scalaVersion>${scala.version}</scalaVersion>
+                </configuration>
                 <executions>
                     <execution>
                         <id>compile</id>
@@ -473,9 +492,32 @@
                 <artifactId>scalatest-maven-plugin</artifactId>
                 <version>${scalatest.maven.plugin.version}</version>
                 <configuration>
+                    <stdout>F</stdout>
                     <reportsDirectory>${project.build.directory}/surefire-reports</reportsDirectory>
                     <junitxml>.</junitxml>
                     <filereports>WDF TestSuite.txt</filereports>
+                    <argLine>
+                        -XX:+IgnoreUnrecognizedVMOptions
+                        --add-modules jdk.incubator.vector
+                        --add-opens=java.base/java.lang=ALL-UNNAMED
+                        --add-opens=java.base/java.lang.invoke=ALL-UNNAMED
+                        --add-opens=java.base/java.lang.reflect=ALL-UNNAMED
+                        --add-opens=java.base/java.io=ALL-UNNAMED
+                        --add-opens=java.base/java.net=ALL-UNNAMED
+                        --add-opens=java.base/java.nio=ALL-UNNAMED
+                        --add-opens=java.base/java.util=ALL-UNNAMED
+                        --add-opens=java.base/java.util.concurrent=ALL-UNNAMED
+                        --add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED
+                        --add-opens=java.base/jdk.internal.ref=ALL-UNNAMED
+                        --add-opens=java.base/sun.nio.ch=ALL-UNNAMED
+                        --add-opens=java.base/sun.nio.cs=ALL-UNNAMED
+                        --add-opens=java.base/sun.security.action=ALL-UNNAMED
+                        --add-opens=java.base/sun.util.calendar=ALL-UNNAMED
+                        --add-opens=java.security.jgss/sun.security.krb5=ALL-UNNAMED
+                        -Djdk.reflect.useDirectMethodHandle=false
+                        -Dio.netty.tryReflectionSetAccessible=true
+                        -Xmx1024m
+                    </argLine>
                 </configuration>
                 <executions>
                     <execution>
