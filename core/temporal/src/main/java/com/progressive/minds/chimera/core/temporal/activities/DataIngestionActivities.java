@@ -1,10 +1,9 @@
 package com.progressive.minds.chimera.core.temporal.activities;
 
-import com.progressive.minds.chimera.dto.ExtractView;
-
 import java.io.IOException;
 import java.util.List;
 
+import com.progressive.minds.chimera.dto.ExtractView;
 import org.apache.spark.sql.SparkSession;
 import io.temporal.activity.ActivityInterface;
 import io.temporal.activity.ActivityMethod;

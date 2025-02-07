@@ -1,0 +1,10 @@
+.idea/
+*.iml
+**/*.iml
+target/
+.metals/
+.vscode/
+.bloop/
+.DS_Store
+.scalafmt.conf
+*.log

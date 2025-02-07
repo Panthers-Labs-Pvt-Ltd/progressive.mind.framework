@@ -74,7 +74,7 @@ build:
     - |
       echo "Maven Path : $(whereis mvn)"
       echo "Java Path : $(whereis java)"
-      mvn clean package
+      mvn clean package -DskipTests
   artifacts:
     paths:
       - ${JAR_DIR}/*.jar

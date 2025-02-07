@@ -3,11 +3,12 @@ package com.progressive.minds.chimera.core.temporal.activities;
 import java.io.IOException;
 import java.util.List;
 
+import com.progressive.minds.chimera.dto.ExtractView;
 import org.apache.spark.sql.SparkSession;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.progressive.minds.chimera.consumer.DBAPIClient;
-import com.progressive.minds.chimera.dto.ExtractView;
+//import com.progressive.minds.chimera.dto.ExtractView;
 
 public class DataIngestionActivitiesImpl implements DataIngestionActivities{
 

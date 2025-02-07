@@ -29,7 +29,7 @@ Validation required -
 
 ### Dataset Onboarding
 
-Data ingestion is the process of onboarded dataset from external sources and loading it into a data storage system. Data ingestion can be done in real-time or batch mode, depending on the requirements of the data pipeline.
+[Data ingestion](../Data_Ingestion.md) is the process of onboarding dataset from external sources and loading it into a data storage system. Data ingestion can be done in real-time or batch mode, depending on the requirements of the data pipeline.
 
 Phases of data pipeline:
 

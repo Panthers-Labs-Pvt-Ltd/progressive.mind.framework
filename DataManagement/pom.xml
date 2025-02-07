@@ -19,6 +19,7 @@
         <module>datahub </module>
         <module>data-lineage</module>
         <module>DataObservability</module>
+        <module>deequ</module>
         <module>DataQuality</module>
     </modules>
 
