@@ -19,11 +19,12 @@
         <module>dataSource</module>
         <module>observability</module>
         <module>orchestration-service</module>
+        <module>api-service</module>
         <module>temporal</module>
         <module>decision-engine</module>
         <module>apacheComet</module>
-        <module>api-service</module>
         <module>api-cloud-config</module>
         <module>executionEngine</module>
+        <module>workflows</module>
     </modules>
 </project>

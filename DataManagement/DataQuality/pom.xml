@@ -51,8 +51,8 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.amazon.deequ</groupId>
-            <artifactId>deequ</artifactId>
+            <groupId>com.progressive.minds.chimera</groupId>
+            <artifactId>DataManagement.deequ</artifactId>
             <version>2.0.8-spark-3.5</version>
         </dependency>
 
