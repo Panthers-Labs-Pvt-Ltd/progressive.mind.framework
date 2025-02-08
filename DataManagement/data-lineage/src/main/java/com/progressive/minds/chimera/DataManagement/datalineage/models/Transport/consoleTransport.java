@@ -18,7 +18,7 @@ import static com.progressive.minds.chimera.DataManagement.datalineage.models.Op
  *Behavior
  * Events are serialized to JSON. Then each event is logged with INFO level to logger with name ConsoleTransport.
  */
-public class Console implements OpenLineageTransportTypes.ConsoleAsTransport, SharedLogger {
+public class consoleTransport implements OpenLineageTransportTypes.ConsoleAsTransport, SharedLogger {
 String LoggerTag = "[Open Lineage] - ConsoleAsTransport";
 
     public OpenLineageClient set() {

@@ -27,7 +27,7 @@ import java.io.IOException;
  * Events are serialized to JSON, and then appended to a file, separated by newlines.
  * Intrinsic newline characters within the event JSON are eliminated to ensure one-line events.
  */
-public class GCP implements OpenLineageTransportTypes.GCPAsTransport, SharedLogger {
+public class GCPTransport implements OpenLineageTransportTypes.GCPAsTransport, SharedLogger {
     String LoggerTag = "[Open Lineage] - GCPAsTransport";
 
     public OpenLineageClient set(String inProjectId, String inLocation, String CredentialsFilePath) {

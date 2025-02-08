@@ -1,11 +1,41 @@
 package com.progressive.minds.chimera.DataManagement.datalineage.facets;
 
+import io.openlineage.client.OpenLineage;
+import io.openlineage.client.OpenLineage.ColumnLineageDatasetFacet;
+import io.openlineage.client.OpenLineage.ColumnLineageDatasetFacetFields;
+import io.openlineage.client.OpenLineage.ColumnLineageDatasetFacetFieldsBuilder;
+import io.openlineage.client.OpenLineage.InputField;
+import io.openlineage.client.OpenLineage.InputFieldBuilder;
 
+import io.openlineage.client.OpenLineage;
+import io.openlineage.client.OpenLineage.ColumnLineageDatasetFacet;
+import io.openlineage.client.OpenLineage.ColumnLineageDatasetFacetFields;
+import io.openlineage.client.OpenLineage.ColumnLineageDatasetFacetFieldsBuilder;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
+import io.openlineage.client.OpenLineage.ColumnLineageDatasetFacet;
+import io.openlineage.client.OpenLineage.ColumnLineageDatasetFacetFieldsAdditional;
+import io.openlineage.client.OpenLineage.ColumnLineageDatasetFacetFieldsAdditionalBuilder;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.json.JsonReadFeature;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.progressive.minds.chimera.DataManagement.datalineage.models.OpenLineageDialect;
 import com.progressive.minds.chimera.dto.*;
 import io.openlineage.client.OpenLineage;
+import io.openlineage.client.OpenLineageClientUtils;
+import io.openlineage.sql.OpenLineageSql;
+import io.openlineage.sql.SqlMeta;
+import org.apache.hadoop.shaded.org.eclipse.jetty.websocket.common.frames.DataFrame;
 import org.apache.spark.sql.SparkSession;
+import org.apache.spark.sql.types.StructField;
 import org.apache.spark.sql.types.StructType;
 import org.jetbrains.annotations.NotNull;
+import za.co.absa.cobrix.spark.cobol.utils.SparkUtils;
 
 import javax.annotation.Nullable;
 import java.net.URI;
@@ -13,11 +43,17 @@ import java.net.URISyntaxException;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.progressive.minds.chimera.DataManagement.datalineage.models.OpenLineageDialect.SPARKSQL;
 import static com.progressive.minds.chimera.DataManagement.datalineage.utils.Utility.*;
 import static io.openlineage.spark.agent.util.ScalaConversionUtils.toScalaOption;
 public class DatasetFacets {
 
-    static String STRING_DEFAULTS = "-";
+    public record ColumnLineageMap(String targetColumn, String sourceColumn, String sourceTable) {
+        public ColumnLineageMap() {
+            this("NA", "NA", "NA");
+        }
+    }
+        static String STRING_DEFAULTS = "-";
     /**
      * OpenLineageChimera.DocumentationDatasetFacet is a facet in OpenLineageChimera used to capture documentation-related
      * metadata for a dataset. This facet is useful for adding extra documentation information, such as descriptions,
@@ -325,8 +361,7 @@ public class DatasetFacets {
                     datasetURN = String.format("urn:li:dataset:(urn:li:dataPlatform:%s,%s,%s)",
                             nvl(inExtractMetadata.getDataSourceConnection().getDataSourceSubType(), STRING_DEFAULTS),
                             nvl(inExtractMetadata.getRelationalMetadata().getDatabaseName(), STRING_DEFAULTS) + "." +
-                                    //nvl(inExtractMetadata.getRelationalMetadata().getSchemaName()," ")+ "." +
-                                    nvl(instanceRun, STRING_DEFAULTS) + ".",
+                                    nvl(instanceRun, STRING_DEFAULTS),
                             System.getProperty("EXECUTION_ENV", "PROD"));
                 }
                 case "nosql" -> {
@@ -375,9 +410,6 @@ public class DatasetFacets {
 
             StructType inSchema = getDataFrameSchema(inSparkSession, inExtractMetadata.getDataframeName());
             OpenLineage.DatasetVersionDatasetFacet version = openLineageProducer.newDatasetVersionDatasetFacet("1");
-            // String ddlSchema = "name STRING, age INT, city STRING";
-            // StructType inSchema = (StructType) DataType.fromDDL(ddlSchema);
-            // StructType inSchema =StructType.fromDDL(""); //TODO Provide Struct Schema
             OpenLineage.SchemaDatasetFacet schema = getDatasourceSchema(openLineageProducer, inSchema);
             OpenLineage.OwnershipDatasetFacet ownership = getDatasetOwners(openLineageProducer, ownersMap);
             OpenLineage.StorageDatasetFacet storage = openLineageProducer.newStorageDatasetFacet("storageLayer", "File Format");
@@ -425,36 +457,59 @@ public class DatasetFacets {
      * @throws URISyntaxException
      */
     public static OpenLineage.OutputDataset
-    setOutputDataset(OpenLineage openLineageProducer,  PersistMetadata inPersistMetadata) throws URISyntaxException {
+    setOutputDataset(OpenLineage openLineageProducer,  PersistMetadata inPersistMetadata,
+                     PipelineMetadata inPipelineMetadata, SparkSession inSparkSession) throws URISyntaxException {
 
         Map<String, String> persistInfo = new HashMap<>();
-        /*OpenLineageChimera.DatasetFacets DF = openLineageProducer.newDatasetFacetsBuilder()
-                .schema(buildSchema(extractDf.schema))
-                .dataSource(getDatasourceDatasetFacet(openLineageProducer,
-                        inExtractMetadata.getDataSourceConnectionName(),inExtractMetadata.getDataSourceType(),
-                        null))
-                .documentation(getDocumentationDatasetFacet(openLineageProducer,
-                        inExtractMetadata.getPipelineName(), persistInfo))
-                .storage(openLineageProducer.newStorageDatasetFacet
-                        ("Processed Layer", element.getFileFmt))
-                .build();
-*/
+        Map<String, String> dataSourceMap = new HashMap<>();
+        String datasetURN;
+        String datasetName=nvl(inPersistMetadata.getDatabaseName(), STRING_DEFAULTS) + "." +
+                nvl(inPersistMetadata.getTableName(), STRING_DEFAULTS);
+        String SourceType = inPersistMetadata.getDataSourceConnection().getDataSourceType().toLowerCase(Locale.ROOT);
+        StructType inSchema = getDataFrameSchema(inSparkSession, inPersistMetadata.getTargetSql());
+
+        switch (SourceType) {
+                 case "relational" -> {
+                dataSourceMap.put("ConnectionName", nvl(inPersistMetadata.getDataSourceConnection().getDataSourceConnectionName(), STRING_DEFAULTS));
+                dataSourceMap.put("DataSourceType", nvl(inPersistMetadata.getDataSourceConnection().getDataSourceType(), STRING_DEFAULTS));
+                dataSourceMap.put("DataSourceSubType", nvl(inPersistMetadata.getDataSourceConnection().getDataSourceSubType(), STRING_DEFAULTS));
+                dataSourceMap.put("Connection URL", nvl(inPersistMetadata.getDataSourceConnection().getConnectionMetadata(), STRING_DEFAULTS));
+                datasetURN = String.format("urn:li:dataset:(urn:li:dataPlatform:%s,%s,%s)",
+                        nvl(inPersistMetadata.getDataSourceConnection().getDataSourceSubType(), STRING_DEFAULTS),
+                        datasetName,
+                        System.getProperty("EXECUTION_ENV", "PROD"));
+            }
+            default -> {
+                dataSourceMap.put("ConnectionName", nvl(inPersistMetadata.getDataSourceConnection().getDataSourceConnectionName(), STRING_DEFAULTS));
+                datasetURN = String.format("urn:li:dataset:(urn:li:dataPlatform:%s,%s,%s)", "default", "default",
+                        System.getProperty("EXECUTION_ENV", "PROD"));
+            }
+        }
+
         OpenLineage.DocumentationDatasetFacet documentation = getDocumentationDatasetFacet(openLineageProducer,
                 inPersistMetadata.getPipelineName(), persistInfo);
 
         OpenLineage.DatasourceDatasetFacet dataSource = getDatasourceDatasetFacet(openLineageProducer,
                 inPersistMetadata.getDataSourceConnectionName(),inPersistMetadata.getDataSource().getDataSourceType(),
-                null);
+                dataSourceMap);
+
+        Map<String, String> ownersMap = new HashMap<>();
+        ownersMap.put("Owning-Domain", nvl(inPipelineMetadata.getOrgHierName(), STRING_DEFAULTS));
+        List<Map<String, String>> symlinkUris = new ArrayList<>();
 
         OpenLineage.DatasetVersionDatasetFacet version = openLineageProducer.newDatasetVersionDatasetFacet("1");
 
-        StructType inSchema =StructType.fromDDL(""); //TODO Provide Struct Schema
         OpenLineage.SchemaDatasetFacet schema = getDatasourceSchema(openLineageProducer, inSchema);
-        OpenLineage.OwnershipDatasetFacet ownership = getDatasetOwners(openLineageProducer, null);
-        OpenLineage.StorageDatasetFacet storage = openLineageProducer.newStorageDatasetFacet("storageLayer", "File Format");
-        OpenLineage.ColumnLineageDatasetFacet columnLineage= null;
-        OpenLineage.SymlinksDatasetFacet symlinks = getSymlinksDatasetFacet(openLineageProducer, null);
-        OpenLineage.LifecycleStateChangeDatasetFacet lifecycleStateChange = getDataSetStateChange(openLineageProducer, "","","");
+        OpenLineage.OwnershipDatasetFacet ownership = getDatasetOwners(openLineageProducer, ownersMap);
+        OpenLineage.StorageDatasetFacet storage = openLineageProducer
+                .newStorageDatasetFacet("storageLayer", inPersistMetadata.getDataSourceConnection().getDataSourceSubType());
+        OpenLineage.SymlinksDatasetFacet symlinks = getSymlinksDatasetFacet(openLineageProducer, symlinkUris);
+
+        OpenLineage.ColumnLineageDatasetFacet columnLineage = openLineageProducer.newColumnLineageDatasetFacetBuilder().build();
+
+
+        OpenLineage.LifecycleStateChangeDatasetFacet lifecycleStateChange = getDataSetStateChange(openLineageProducer,
+                datasetURN,datasetURN,"CREATE");
 
         OpenLineage.DatasetFacets datasetFacets  = openLineageProducer.newDatasetFacetsBuilder()
                 .documentation(documentation)
@@ -478,8 +533,8 @@ public class DatasetFacets {
                 .newOutputDatasetBuilder()
                 .facets(datasetFacets)
                 .outputFacets(outputFacets)
-                .namespace("")
-                .name("")
+                .namespace(datasetURN)
+                .name(datasetName)
                 .outputFacets(outputFacets)
                 .facets(datasetFacets).build();
     }
@@ -502,5 +557,143 @@ public class DatasetFacets {
             filePath = inFullPath.split("://")[0];
         }
         return new String[]{dataPlatform, filePath};
+    }
+
+    public static void getColumnLevelLineage
+            (OpenLineage openLineageProducer, String SQLQuery, String dataframe, String namespace, SparkSession inSparkSession)
+    {
+        // return type OpenLineage.ColumnLineageDatasetFacet
+        //            (OpenLineage openLineageProducer, String SQLQuery, String dataframe, String namespace, SparkSession inSparkSession)
+        StructType inSchema = getDataFrameSchema(inSparkSession, dataframe);
+        List<String> columns = new ArrayList<>();
+        String modifiedQuery = "";
+        for (StructField field : inSchema.fields()) {
+            columns.add(field.name());
+        }
+        if (SQLQuery.toLowerCase(Locale.ROOT).replaceAll("\\s+", "").startsWith("select*")) {
+            String columnList = String.join(",", columns);
+             modifiedQuery = SQLQuery.replace("*", columnList);
+        }
+        else
+        {
+            modifiedQuery = SQLQuery;
+        }
+
+       SqlMeta SQLLineage = OpenLineageSql.parse(Arrays.asList(modifiedQuery), String.valueOf(SPARKSQL)).get();
+        String extractedLineage = SQLLineage.columnLineage().toString();
+
+        ObjectMapper mapper  = JsonMapper.builder()
+            .enable(JsonReadFeature.ALLOW_BACKSLASH_ESCAPING_ANY_CHARACTER)
+            .build();
+        try {
+            JsonNode receivedMessage  = mapper.readTree(extractedLineage);
+            Integer StartNum = 0;
+            Map<String, ColumnLineageMap> colMapping = new HashMap<>();
+
+            for (JsonNode element : receivedMessage) {
+                JsonNode targetColumnNode = element.path("descendant").get("name");
+                String targetColumn = targetColumnNode != null ? targetColumnNode.asText() : "Unknown";
+
+                try {
+                    JsonNode lineageNode = mapper.readTree(element.get("lineage").toString());
+                    Iterator<JsonNode> subElements = lineageNode.elements();
+
+                    while (subElements.hasNext()) {
+                        JsonNode subElement = subElements.next();
+
+                        String subElementName = subElement.get("name") != null ? subElement.get("name").asText() : "Unknown";
+                        String subElementOrigin = subElement.get("origin") != null ? subElement.get("origin").asText() : "Unknown";
+
+                        String key = StartNum + "#" + targetColumn;
+                        colMapping.put(key, new ColumnLineageMap(targetColumn, subElementName, subElementOrigin));
+
+                        StartNum++;
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            colMapping.forEach((key, value) -> System.out.println(key + " -> " + value));
+            List<ColumnLineageDatasetFacetFields> fields = new ArrayList<>();
+
+            // Process each entry in the input map
+            for (Map.Entry<String, ColumnLineageMap> entry : colMapping.entrySet()) {
+                String targetColumn = entry.getKey();
+                ColumnLineageMap lineageMap = entry.getValue();
+
+                OpenLineage.InputFieldTransformationsBuilder IT = openLineageProducer.newInputFieldTransformationsBuilder()
+                        .description("description")
+                        .masking(false)
+                        .type("transformation Type")
+                        .subtype("transformation Subtype");
+                OpenLineage.InputFieldTransformations IFT =IT.build();
+
+                // Build the input field
+                InputField inputField = new InputFieldBuilder()
+                        .namespace("source_namespace")
+                        .name(lineageMap.sourceTable)
+                        .field(lineageMap.sourceColumn).transformations(Collections.singletonList(IFT))
+                        .build();
+
+                ColumnLineageDatasetFacetFieldsAdditionalBuilder CLD = new ColumnLineageDatasetFacetFieldsAdditionalBuilder()
+                        .inputFields(Collections.singletonList(inputField))
+                        .transformationType("STP")
+                        .transformationDescription("NO TRA");
+
+                // Build the field-level lineage
+                ColumnLineageDatasetFacetFields fieldLineage = new ColumnLineageDatasetFacetFieldsBuilder()
+                        .put(lineageMap.targetColumn, CLD.build())
+                        .build();
+
+                // Add to the fields map
+                fields.add(fieldLineage);
+            }
+            String LL = SparkUtils.prettyJSON(OpenLineageClientUtils.toJson(fields));
+        System.out.println("fieldsfieldsfieldsfields ====" + LL);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+        /*
+        List<StructField> schema = Arrays.asList(inSchema.fields());
+
+
+        for (StructField field : schema) {
+            String fieldName = field.name();
+             Map<String, ColumnLineageMap> colMapping = new HashMap<>();
+
+            List<Map.Entry<String, ColumnLineageMap>> searchColumn = colMapping.entrySet()
+                    .stream()
+                    .filter(entry -> entry.getValue().targetColumn().replaceAll("\"", "")
+                            .equalsIgnoreCase(fieldName))
+                    .collect(Collectors.toList());
+
+
+            List<ColumnLineageDatasetFacetFieldsAdditionalInputField> inputFields = new ArrayList<>();
+ColumnLineageDatasetFacetFieldsAdditionalBuilder CB = new ColumnLineageDatasetFacetFieldsAdditionalBuilder()
+
+            for (Map.Entry<String, ColumnLineageMap> mapField : searchColumn) {
+                ColumnLineageMap columnLineageMap = mapField.getValue();
+
+                if (columnLineageMap.targetColumn().replaceAll("\"", "")
+                        .equalsIgnoreCase(fieldName)) {
+                    inputFields.add(openLineageProducer.newColumnLineageDatasetFacetFieldsAdditionalInputFields(
+                            "namespace",
+                            columnLineageMap.sourceTable().replaceAll("\"", ""),
+                            columnLineageMap.sourceColumn().replaceAll("\"", "")
+                    ));
+                }
+            }
+
+            ColumnLineageDatasetFacetFieldsAdditional additionalFields =
+                    openLineageProducer.newColumnLineageDatasetFacetFieldsAdditionalBuilder()
+                            .inputFields(inputFields)
+                            .transformationType("STP")
+                            .transformationDescription("No Transformation Description")
+                            .build();
+
+            dl.put(fieldName, additionalFields);
+        }
+*/
+
     }
 }

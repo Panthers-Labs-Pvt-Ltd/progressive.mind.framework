@@ -27,7 +27,7 @@ import java.util.Map;
  * headers - dictionary specifying HTTP request headers. Optional.
  * compression - string, name of algorithm used by HTTP client to compress request body. Optional, default value null, allowed values: gzip. Added in v1.13.0.
  */
-public class HTTP implements OpenLineageTransportTypes.HTTPAsTransport, SharedLogger {
+public class httpTransport implements OpenLineageTransportTypes.HTTPAsTransport, SharedLogger {
     String LoggerTag = "[Open Lineage] - HTTPAsTransport";
     public OpenLineageClient set(URI url, @Nullable String endpoint,
                                  @Nullable Integer timeoutInMillis, @Nullable  String APIKey,

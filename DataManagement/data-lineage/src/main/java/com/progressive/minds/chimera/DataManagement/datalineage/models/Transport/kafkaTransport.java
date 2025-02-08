@@ -29,7 +29,7 @@ import io.openlineage.client.transports.KafkaTransport;
  * Behavior
  * Events are serialized to JSON, and then dispatched to the Kafka topic.
  */
-public class Kafka implements OpenLineageTransportTypes.KafkaAsTransport, SharedLogger {
+public class kafkaTransport implements OpenLineageTransportTypes.KafkaAsTransport, SharedLogger {
     String LoggerTag = "[Open Lineage] - KafkaAsTransport";
     public OpenLineageClient set(String topicName, String messageKey, List<String> bootstrapServers) {
         LineageLogger.logInfo( "Setting Kafka As Open Lineage Transport Type");

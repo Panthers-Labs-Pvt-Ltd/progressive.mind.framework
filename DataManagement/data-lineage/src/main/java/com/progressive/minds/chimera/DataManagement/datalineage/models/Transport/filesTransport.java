@@ -17,7 +17,7 @@ import io.openlineage.client.transports.FileTransport;
  * Events are serialized to JSON, and then appended to a file, separated by newlines.
  * Intrinsic newline characters within the event JSON are eliminated to ensure one-line events.
  */
-public class Files implements OpenLineageTransportTypes.FilesAsTransport, SharedLogger {
+public class filesTransport implements OpenLineageTransportTypes.FilesAsTransport, SharedLogger {
 String LoggerTag = "[Open Lineage] - FilesAsTransport";
 
     public OpenLineageClient set(String inFilePath) {

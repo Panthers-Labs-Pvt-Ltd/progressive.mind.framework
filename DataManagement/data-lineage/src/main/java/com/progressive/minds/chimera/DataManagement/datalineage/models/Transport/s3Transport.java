@@ -25,7 +25,7 @@ import io.openlineage.client.transports.s3.S3Transport;
  *      Shared credentials config file (by default ~/.aws/config)
  *      EC2 instance credentials (convenient in EMR and Glue)
  */
-public class S3 implements OpenLineageTransportTypes.S3Transport, SharedLogger {
+public class s3Transport implements OpenLineageTransportTypes.S3Transport, SharedLogger {
 String LoggerTag = "[Open Lineage] - S3AsTransport";
 
     public OpenLineageClient set(String inS3EndPoint, String inBucketName, String inFilePrefix ) {

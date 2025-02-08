@@ -9,7 +9,6 @@ import io.openlineage.client.OpenLineage.InputDataset;
 import io.openlineage.client.OpenLineage.JobFacets;
 import io.openlineage.client.OpenLineage.OutputDataset;
 import io.openlineage.client.OpenLineageClientUtils;
-import io.openlineage.client.transports.ConsoleTransport;
 import io.openlineage.client.utils.UUIDUtils;
 import org.apache.spark.sql.SparkSession;
 import za.co.absa.cobrix.spark.cobol.utils.SparkUtils;
@@ -23,13 +22,21 @@ import static com.progressive.minds.chimera.DataManagement.datalineage.facets.Da
 import static com.progressive.minds.chimera.DataManagement.datalineage.facets.DatasetFacets.setOutputDataset;
 import static com.progressive.minds.chimera.DataManagement.datalineage.facets.JobFacets.JobStartFacet;
 import static com.progressive.minds.chimera.DataManagement.datalineage.facets.JobFacets.getJobFacet;
-
+import com.progressive.minds.chimera.DataManagement.datalineage.models.Transport.*;
 public class ChimeraOpenLineage  {
 
     public static RunEvent OpenLineageWrapper(RunEvent.EventType eventType,
-                                              PipelineMetadata inPipelineMetadata, SparkSession inSparkSession) {
-        OpenLineageClient openLineageClient = OpenLineageClient.builder().transport(new ConsoleTransport()).build();
-        return buildEvent(RunEvent.EventType.START, inPipelineMetadata, inSparkSession);
+                                              PipelineMetadata inPipelineMetadata,
+                                              SparkSession inSparkSession,
+                                              String transportType,
+                                              Map<String,String> transportProperties) {
+
+
+        OpenLineageClient client = new TransportType().set(transportType, transportProperties);
+        RunEvent runEvent =buildEvent(RunEvent.EventType.START, inPipelineMetadata, inSparkSession);
+        client.emit(runEvent);
+
+        return runEvent;
 
  /*       String json = SparkUtils.prettyJSON(OpenLineageClientUtils.toJson(event))
         lineageData.append(json).append(",\n")
@@ -75,11 +82,12 @@ public class ChimeraOpenLineage  {
         List<OutputDataset> outputs = new ArrayList<>();
         inPipelineMetadata.getPersistMetadata().forEach(persistMetadata ->
         {
-           /* try {
-                outputs.add(setOutputDataset(openLineageProducer, persistMetadata));
+            try {
+                outputs.add(setOutputDataset(openLineageProducer, persistMetadata, inPipelineMetadata,
+                         inSparkSession));
             } catch (URISyntaxException e) {
                 throw new RuntimeException(e);
-            }*/
+            }
         });
 
         RunEvent runStateUpdate = RunFacets.getRunEvent(openLineageProducer,  runId, JobStartFacet,
