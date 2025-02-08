@@ -75,6 +75,11 @@
     </dependency>
 
     <dependency>
+      <groupId>org.springframework.cloud</groupId>
+      <artifactId>spring-cloud-starter-config</artifactId>
+    </dependency>
+
+    <dependency>
       <artifactId>foundational.logging</artifactId>
       <groupId>com.progressive.minds.chimera</groupId>
       <version>1.0-SNAPSHOT</version>
