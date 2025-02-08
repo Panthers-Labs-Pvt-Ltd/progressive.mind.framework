@@ -30,6 +30,13 @@ public class ChimeraOpenLineage  {
                                               PipelineMetadata inPipelineMetadata, SparkSession inSparkSession) {
         OpenLineageClient openLineageClient = OpenLineageClient.builder().transport(new ConsoleTransport()).build();
         return buildEvent(RunEvent.EventType.START, inPipelineMetadata, inSparkSession);
+
+ /*       String json = SparkUtils.prettyJSON(OpenLineageClientUtils.toJson(event))
+        lineageData.append(json).append(",\n")
+        event = extractOperation(RunEvent.EventType.COMPLETE, event.getRun.getRunId, extractList, extractDf, sparkSession)
+        json = SparkUtils.prettyJSON(OpenLineageClientUtils.toJson(event))
+        lineageData.append(json).append(",\n")*/
+
     }
 
     public static RunEvent buildEvent(RunEvent.EventType eventType, PipelineMetadata inPipelineMetadata,
