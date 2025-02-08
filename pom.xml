@@ -38,13 +38,6 @@
     <name>Chimera Data Engineering</name>
     <description>Data Engineering</description>
     <packaging>pom</packaging>
-    <!--This will be treated like grandparent-->
-    <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.4.1</version>
-        <relativePath/>
-    </parent>
     <modules>
        <module>common</module>
        <module>foundational</module>
@@ -59,6 +52,14 @@
                 <groupId>software.amazon.awssdk</groupId>
                 <artifactId>bom</artifactId>
                 <version>${aws.java.sdk2.version}</version> <!-- Use the latest version -->
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <!-- Import Spring Boot BOM- Inheriting was wrong since it was not needed for non-spring boot modules-->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring-boot.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -152,6 +153,8 @@
         <commons-text.version>1.10.0</commons-text.version>
         <commons-csv.version>1.9.0</commons-csv.version>
         <antlr4.version>4.9.3</antlr4.version>
+        <!-- Spring Boot versions -->
+        <spring-boot.version>3.4.1</spring-boot.version>
         <!-- Spring Cloud versions -->
         <spring-cloud.version>2024.0.0</spring-cloud.version>
     </properties>
