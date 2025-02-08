@@ -1,0 +1,51 @@
+{
+  "dashboard": {
+    "id": null,
+    "title": "System Metrics",
+    "tags": [],
+    "timezone": "browser",
+    "schemaVersion": 16,
+    "version": 0,
+    "refresh": "5s",
+    "panels": [
+      {
+        "type": "graph",
+        "title": "CPU Usage",
+        "targets": [
+          {
+            "expr": "rate(node_cpu_seconds_total{mode=\"idle\"}[5m])",
+            "legendFormat": "{{cpu}}",
+            "refId": "A"
+          }
+        ],
+        "datasource": "Prometheus",
+        "xaxis": {
+          "show": true
+        },
+        "yaxis": {
+          "show": true,
+          "format": "percent"
+        }
+      },
+      {
+        "type": "graph",
+        "title": "Memory Usage",
+        "targets": [
+          {
+            "expr": "node_memory_MemAvailable_bytes",
+            "legendFormat": "Available Memory",
+            "refId": "B"
+          }
+        ],
+        "datasource": "Prometheus",
+        "xaxis": {
+          "show": true
+        },
+        "yaxis": {
+          "show": true,
+          "format": "bytes"
+        }
+      }
+    ]
+  }
+}
