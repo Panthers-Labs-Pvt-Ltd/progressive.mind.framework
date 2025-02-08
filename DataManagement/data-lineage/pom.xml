@@ -21,7 +21,6 @@
         <kafka.client.version>3.5.0</kafka.client.version>
         <sql.formatter.version>2.0.5</sql.formatter.version>
         <corbix.version>2.6.9</corbix.version>
-        <scala.major.version>2.12</scala.major.version>
     </properties>
 
     <dependencies>

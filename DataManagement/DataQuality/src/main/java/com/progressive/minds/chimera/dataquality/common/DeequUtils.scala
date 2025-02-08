@@ -12,8 +12,7 @@ object DeequUtils {
   type Verifier = (DataFrame, MetricsRepository, ResultKey) => VerificationResult
   type VerifierNoRepo = DataFrame => VerificationResult
 
-  def executeRulesNoRepo(rulesDf: DataFrame,
-                         deequTargetDf: DataFrame): VerificationResult ={
+  def executeRulesNoRepo(rulesDf: DataFrame, deequTargetDf: DataFrame): VerificationResult = {
     val verificationResult: VerifierNoRepo = getVerifierNoRepo(rulesDf).get
     verificationResult(deequTargetDf)
   }
