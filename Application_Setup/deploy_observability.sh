@@ -12,6 +12,7 @@ echo "Namespace '$NAMESPACE' is ready."
 echo "Applying common resources..."
 kubectl apply -f common/configmap.yaml -n $NAMESPACE
 kubectl apply -f common/secret.yaml -n $NAMESPACE
+kubectl apply -f prometheus/prometheus-configmap.yaml -n $NAMESPACE
 echo "Common resources applied successfully."
 
 # Define the directories
@@ -39,6 +40,11 @@ for DIR in "${DIRECTORIES[@]}"; do
   fi
   echo
 done
+
+# Apply Ingress resources
+echo "Applying Ingress resources..."
+kubectl apply -f ingress.yaml -n $NAMESPACE
+echo "Ingress resources applied successfully."
 
 echo "Deployment complete. Resources are being created in the '$NAMESPACE' namespace."
 
