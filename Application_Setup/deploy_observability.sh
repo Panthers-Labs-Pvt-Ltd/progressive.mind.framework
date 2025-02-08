@@ -15,6 +15,11 @@ kubectl apply -f common/secret.yaml -n $NAMESPACE
 kubectl apply -f prometheus/prometheus-configmap.yaml -n $NAMESPACE
 echo "Common resources applied successfully."
 
+# Apply Grafana dashboard
+echo "Applying Grafana dashboard..."
+kubectl apply -f grafana/grafana-dashboards-configmap.yaml -n $NAMESPACE
+echo "Grafana dashboard applied successfully."
+
 # Define the directories
 DIRECTORIES=("grafana" "prometheus" "jaeger")
 
@@ -40,6 +45,8 @@ for DIR in "${DIRECTORIES[@]}"; do
   fi
   echo
 done
+# Apply the prometheus service monitor
+# kubectl apply -f prometheus/prometheus-service-monitor.yaml -n $NAMESPACE
 
 # Apply Ingress resources
 echo "Applying Ingress resources..."
