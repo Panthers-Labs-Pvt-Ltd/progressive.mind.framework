@@ -1,94 +1,54 @@
 services:
   otel-collector:
-    image: otel/opentelemetry-collector:latest
-    container_name: otel-collector
-    ports:
-      - "${OTEL_GRPC_PORT:-4317}:4317" # OTLP gRPC
-      - "${OTEL_HTTP_PORT:-4318}:4318" # OTLP HTTP
-      - "${ZIPKIN_PORT:-55681}:55681" # Zipkin receiver
-      - "${PROMETHEUS_PORT:-8888}:8888" # Prometheus metrics
-    volumes:
-      - ./otel-collector-config.yaml:/etc/prometheus/otel-collector-config.yaml
-    command:
-      - "--config=/etc/otel-collector-config.yaml"
+    extends:
+      file: otel-collector/otel-collector.yml
+      service: otel-collector
+    environment:
+      - OTEL_VERSION=0.38.0
+      - OTEL_GRPC_PORT=4317
+      - OTEL_HTTP_PORT=4318
+      - ZIPKIN_PORT=55681
+      - PROMETHEUS_PORT=8888
 
   jaeger:
-    image: jaegertracing/all-in-one:latest
-    container_name: jaeger
-    ports:
-      - "${JAEGER_UI_PORT:-16686}:16686" # Jaeger UI
-      - "${JAEGER_HTTP_PORT:-14268}:14268" # Jaeger collector HTTP
-      - "${JAEGER_GRPC_PORT:-14250}:14250" # OTLP gRPC
-      - "${ZIPKIN_API_PORT:-9411}:9411" # Zipkin compatible API
+    extends:
+      file: jaeger/jaeger.yml
+      service: jaeger
+    environment:
+      - JAEGER_VERSION=1.29.0
+      - JAEGER_UI_PORT=16686
+      - JAEGER_HTTP_PORT=14268
+      - JAEGER_GRPC_PORT=14250
+      - ZIPKIN_API_PORT=9411
 
   prometheus:
-    image: prom/prometheus:latest
-    container_name: prometheus
-    ports:
-      - "${PROMETHEUS_UI_PORT:-9090}:9090" # Prometheus UI
-    volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    extends:
+      file: prometheus/prometheus-server.yml
+      service: prometheus
+    environment:
+      - PROMETHEUS_VERSION=2.26.0
+      - PROMETHEUS_UI_PORT=9090
     networks:
-      - monitoring
+      - observability
 
   grafana:
-    image: grafana/grafana:latest
-    container_name: grafana
-    ports:
-      - "${GRAFANA_PORT:-3000}:3000"
+    extends:
+      file: grafana/grafana.yml
+      service: grafana
     environment:
-      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD:-admin}
-    volumes:
-      - ./grafana/provisioning:/etc/grafana/provisioning
+      - GRAFANA_VERSION=7.5.5
+      - GRAFANA_PORT=3000
     networks:
-      - monitoring
+      - observability
 
-  postgres-db:
-    image: postgres:13-alpine3.17
-    restart: always
-    ports:
-      - "${POSTGRES_PORT:-5432}:5432"
-    environment:
-      - POSTGRES_USER=${POSTGRES_USER:-postgres}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres}
-      - POSTGRES_DB=${POSTGRES_DB:-chimera}
-
-  #Create Image for the daemon
-  #nodeexporter
-  server:
-    image:
-    build:
-      context: .
-      dockerfile:
-    command:
-    environment:
-      - AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
-      - AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
-      - ENV=dev
-      - GCP_PROJECT_ID=$GCP_PROJECT_ID
-      - GCP_REGION=$GCP_REGION
-      - MAGE_DATABASE_CONNECTION_URL=postgresql+psycopg2://postgres:postgres@postgres-db:5432/mage
-      - MAX_NUMBER_OF_FILE_VERSIONS=$MAX_NUMBER_OF_FILE_VERSIONS
-      - REQUIRE_USER_AUTHENTICATION=$REQUIRE_USER_AUTHENTICATION
-      - path_to_keyfile=$GCP_PATH_TO_CREDENTIALS
-      - AUTHENTICATION_MODE=$AUTHENTICATION_MODE
-      - LDAP_SERVER=$LDAP_SERVER
-      - LDAP_BIND_DN=$LDAP_BIND_DN
-      - LDAP_BIND_PASSWORD=$LDAP_BIND_PASSWORD
-      - LDAP_BASE_DN=$LDAP_BASE_DN
-      - LDAP_AUTHENTICATION_FILTER=$LDAP_AUTHENTICATION_FILTER
-      - LDAP_AUTHORIZATION_FILTER=$LDAP_AUTHORIZATION_FILTER
-      - LDAP_ADMIN_USERNAME=$LDAP_ADMIN_USERNAME
-      - SERVER_VERBOSITY=$SERVER_VERBOSITY
-      - DISABLE_NOTEBOOK_EDIT_ACCESS=$DISABLE_NOTEBOOK_EDIT_ACCESS
-    ports:
-      - 6789:6789
-    volumes:
-      -
-    restart: on-failure:5
-    stdin_open: true # used for interactive debugging
-    tty: true # used for interactive debugging
+#  postgres-db:
+#    extends:
+#      file: services/postgres-db.yml
+#      service: postgres-db
+#    environment:
+#      - POSTGRES_VERSION=13-alpine3.17
+#      - POSTGRES_PORT=5432
 
 networks:
-  monitoring:
+  observability:
     driver: bridge
