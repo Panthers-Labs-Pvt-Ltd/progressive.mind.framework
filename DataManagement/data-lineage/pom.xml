@@ -31,6 +31,12 @@
             <version>${chimera.project.version}</version>
         </dependency>
         <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-catalyst_${spark.scala.version}</artifactId>
+            <version>${spark.version}</version> <!-- Use the same version as your Spark core -->
+        </dependency>
+
+        <dependency>
             <groupId>com.progressive.minds.chimera</groupId>
             <artifactId>core.databaseOps</artifactId>
             <version>${chimera.project.version}</version>
