@@ -22,7 +22,7 @@ class DataConformityControl() extends DataControls {
 //
 //
 //  override def apply(sparkSession: SparkSession, sourceDF: DataFrame, targetDf: DataFrame,
-//                     processTypeName: String, instanceId: String, partitionColumn: String,
+  //                     processTypeName: String, instanceId: String, partitionColumn: String,
 //                     databaseName: String, tableName: String, checkLevel: String, inboundSchema: StructType,
 //                     batchPipelineDetails: PipelineDetails): Unit = {
 //    this.sourceDf = sourceDF

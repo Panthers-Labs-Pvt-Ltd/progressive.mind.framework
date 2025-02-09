@@ -27,26 +27,27 @@ case class DQRunnerMetrics() {
   var tableCount: Long = _
   var blank_row: Long = _
 
-  protected case class DeequRunnerMetricsDf (runner_start_time: java.sql.Timestamp,
-                                             get_rules_start_time: java.sql.Timestamp,
-                                             get_rules_end_time: java.sql.Timestamp,
-                                             execute_rules_start_time: java.sql.Timestamp,
-                                             execute_rules_end_time: java.sql.Timestamp,
-                                             persist_analysers_start_time: java.sql.Timestamp,
-                                             persist_analysers_end_time: java.sql.Timestamp,
-                                             persist_checks_start_time: java.sql.Timestamp,
-                                             persist_checks_end_time: java.sql.Timestamp,
-                                             runner_end_time: java.sql.Timestamp,
-                                             deequ_status: String,
-                                             deequ_status_message: String,
-                                             deequ_rules: Long,
-                                             deequ_errors:Long,
-                                             deequ_warnings: Long,
-                                             deequ_passes:Long,
-                                             source_duplicate_count: Long,
-                                             table_count: Long,
-                                             blank_row: Long
-                                            )
+  protected case class DeequRunnerMetricsDf (
+      runner_start_time: java.sql.Timestamp,
+      get_rules_start_time: java.sql.Timestamp,
+      get_rules_end_time: java.sql.Timestamp,
+      execute_rules_start_time: java.sql.Timestamp,
+      execute_rules_end_time: java.sql.Timestamp,
+      persist_analysers_start_time: java.sql.Timestamp,
+      persist_analysers_end_time: java.sql.Timestamp,
+      persist_checks_start_time: java.sql.Timestamp,
+      persist_checks_end_time: java.sql.Timestamp,
+      runner_end_time: java.sql.Timestamp,
+      deequ_status: String,
+      deequ_status_message: String,
+      deequ_rules: Long,
+      deequ_errors:Long,
+      deequ_warnings: Long,
+      deequ_passes:Long,
+      source_duplicate_count: Long,
+      table_count: Long,
+      blank_row: Long
+      )
 
   def toDf(spark: SparkSession): DataFrame ={
     val obj = DeequRunnerMetricsDf(
@@ -71,14 +72,9 @@ case class DQRunnerMetrics() {
     blank_row)
     val rdd:RDD[DeequRunnerMetricsDf] = spark.sparkContext.parallelize(Seq(obj))
     spark.createDataFrame(rdd)
-
   }
 
   private def checkForNullOrReturnTimestamp(value: Calendar): Timestamp ={
-    if(!value.eq(null)) {
-      new Timestamp(value.getTime.getTime)
-    } else null
+    if(value != null) {new Timestamp(value.getTime.getTime)} else null
   }
-
-
 }

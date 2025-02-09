@@ -21,7 +21,8 @@ object DeequRunner {
       scalaMap = mutable.Map("databaseNm" -> databaseName, "tableNm" -> tableName, "activeFlg" -> "Y")
     }
     else {
-      scalaMap = mutable.Map("databaseNm" -> databaseName, "tableNm" -> tableName, "processTypNm" -> stageName, "activeFlg" -> "Y")
+      scalaMap = mutable.Map("databaseNm" -> databaseName, "tableNm" -> tableName,
+        "processTypNm" -> stageName, "activeFlg" -> "Y")
     }
     // TODO: Commented temporarily to avoid compilation error
     // val rules_df = EdlDqUserConfigRepository.listEdlDqUserConfigByColumns(spark,
@@ -32,9 +33,10 @@ object DeequRunner {
 
   }
 
-  def execute(spark: SparkSession, batchId: String, dataFrame: DataFrame, databaseName: String,
-              tableName: String, businessDate: String, instance: String, pipelineName: String,
-              controlNames: Option[Seq[String]], stageName: Option[String], pipelineVersion: String): DQRunnerMetrics = {
+  def execute
+  (spark: SparkSession, batchId: String, dataFrame: DataFrame,databaseName: String, tableName: String,
+    businessDate: String,instance: String, pipelineName: String, controlNames: Option[Seq[String]],
+    stageName: Option[String], pipelineVersion: String): DQRunnerMetrics = {
     val audit_time = EDLUtils.convertTimeFormat("yyyy-MM-dd HH:mm::ss.SSS", EDLUtils.currentGMTCalender())
     var sourceRecordDuplicateCount: Double = 0
     var blank_row: Double = 0
@@ -188,8 +190,6 @@ object DeequRunner {
         logger.logInfo(loggerTag + "check results Dataframe added to DataQualityLogs")
         metrics.persistChecksEndTime = EDLUtils.currentGMTCalender()
         metrics.runnerEndTime = EDLUtils.currentGMTCalender()
-
-
         metrics.deequErrors = checkResultsDf
           .where("checkLevel = 'Error' and constraintStatus = 'Failure'")
           .count()
@@ -252,11 +252,11 @@ object DeequRunner {
 
         if (metrics.deequErrors > 0) {
           logger.logError(loggerTag + s"Dq processing has generated %s errors".format(metrics.deequErrors))
-//          // TODO: Commented temporarily to avoid compilation error
+          //          // TODO: Commented temporarily to avoid compilation error
           //          throw new ChimeraException(errorClass = "EDLDataQualityException.DEEQU_FAILURE",
-//            messageParameters = scala.collection.immutable.Map("exception" ->
-//              "Dq processing has generated %s errors".format(metrics.deequErrors)),
-//            cause = null, summary="")
+          //            messageParameters = scala.collection.immutable.Map("exception" ->
+          //              "Dq processing has generated %s errors".format(metrics.deequErrors)),
+          //            cause = null, summary="")
         }
         metrics.processStatus = DQProcessStatus.Success
       }
@@ -267,11 +267,11 @@ object DeequRunner {
       case e: Exception =>
         logger.logError(loggerTag + s"An unexpected error has occurred - $e")
         metrics.processStatus = DQProcessStatus.Error
-        // TODO: Commented temporarily to avoid compilation error
-//        throw new EDLException(errorClass = "EDLDataQualityException.DEEQU_FAILURE",
-//          messageParameters = scala.collection.immutable.Map("exception" ->
-//            "Dq processing has generated %s errors".format(metrics.deequErrors)),
-//          cause = e)
+      // TODO: Commented temporarily to avoid compilation error
+      //        throw new EDLException(errorClass = "EDLDataQualityException.DEEQU_FAILURE",
+      //          messageParameters = scala.collection.immutable.Map("exception" ->
+      //            "Dq processing has generated %s errors".format(metrics.deequErrors)),
+      //          cause = e)
     }
 
     val metricsDf = metrics.toDf(spark).withColumn("job_id", lit(batchId))

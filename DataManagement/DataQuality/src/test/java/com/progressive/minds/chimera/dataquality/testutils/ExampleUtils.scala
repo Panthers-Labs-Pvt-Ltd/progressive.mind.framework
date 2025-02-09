@@ -2,19 +2,9 @@ package com.progressive.minds.chimera.dataquality.testutils
 
 import org.apache.spark.sql.{DataFrame, SparkSession}
 
-case class Item(
-                                id: Long,
-                                productName: String,
-                                description: String,
-                                priority: String,
-                                numViews: Long
-                              )
+case class Item(id: Long,productName: String,description: String,priority: String,numViews: Long)
 
-case class Manufacturer(
-                                        id: Long,
-                                        manufacturerName: String,
-                                        countryCode: String
-                                      )
+case class Manufacturer(id: Long,manufacturerName: String,countryCode: String)
 
 object ExampleUtils {
 

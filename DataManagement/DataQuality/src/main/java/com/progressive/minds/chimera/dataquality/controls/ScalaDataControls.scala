@@ -12,17 +12,18 @@ trait ScalaDataControls {
 
   def validate(): Boolean
 
-  def apply(sparkSession: SparkSession, sourceDF: DataFrame, targetDf: DataFrame,
-            processTypeName: String, instanceId: String, partitionColumn: String,
-            databaseName: String, tableName: String, checkLevel: String, inboundSchema: StructType,
-            batchId: BigInt): Unit
+// def apply(
+  // sparkSession: SparkSession, sourceDF: DataFrame,
+  // targetDf: DataFrame,processTypeName : String, instanceId: String,
+  // partitionColumn: String, databaseName: String, tableName: String,
+  // checkLevel: String, inboundSchema: StructType, batchId: BigInt): Unit
 
   def registerResult(controlResults: DataControlsLog): Boolean = {
 //    val insertStatement = SqlBuilder.insert(controlResults)
 //      .into(DataControlsLog)
 //      .build
 //      .render(RenderingStrategies.MYBATIS3)
-    // dataControlsLogRepository.(controlResults)
-    true
+// dataControlsLogRepository.(controlResults)
+true
   }
 }

@@ -13,7 +13,6 @@ import java.time.format.DateTimeFormatter
 import java.util
 import java.util.Locale
 
-
 class ScalaDataAccuracyControl() extends DataControls {
 //  final private val edlLogger = ChimeraLoggerFactory.getLogger(this.getClass)
 //  val errorStr: StringBuffer = new StringBuffer()
@@ -27,9 +26,9 @@ class ScalaDataAccuracyControl() extends DataControls {
 //  private val
 //
 //  override def apply(sparkSession: SparkSession, sourceDF: DataFrame, targetDf: DataFrame,
-//                     processTypeName: String, instanceId: String, partitionColumn: String,
-//                     databaseName: String, tableName: String, checkLevel: String, inboundSchema: StructType,
-//                     batchId: BigInt): Unit = {
+  //  processTypeName: String, instanceId: String, partitionColumn: String,
+  //  databaseName: String, tableName: String, checkLevel: String, inboundSchema: StructType,
+  //  batchId: BigInt): Unit = {
 //    this.sourceDf = sourceDF
 //    this.targetDf = targetDf
 //    this.partitionColumn = partitionColumn
@@ -104,7 +103,8 @@ class ScalaDataAccuracyControl() extends DataControls {
 //      } else {
 //        edlLogger.logInfo(loggerTag + s"DataFrame has mismatched input from source" +
 //          s" to Target: " + diffDF.show(false))
-//        errorStr.append(s"Data level comparison between 1000 records is not matching. Number of mismatch from source " +
+//        errorStr.append(s"Data level comparison between 1000 records is not matching.
+  //        Number of mismatch from source " +
 //          s" to target for sample 1000 record is : "
 //          + compareCount)
 //      }
