@@ -1,6 +1,6 @@
 package com.progressive.minds.chimera.dataquality.controls
 
-import com.progressive.minds.chimera.dataquality.entities.DataControlsLog
+import com.progressive.minds.chimera.dataquality.entities.DataControlsLogEntity
 import com.progressive.minds.chimera.foundational.exception.ChimeraException
 import com.progressive.minds.chimera.foundational.logging.ChimeraLoggerFactory
 import org.apache.spark.sql.{DataFrame, SparkSession}
@@ -13,7 +13,7 @@ import java.time.format.DateTimeFormatter
 import java.util
 import java.util.Locale
 
-class ScalaDataAccuracyControl() extends DataControls {
+// class ScalaDataAccuracyControl() extends DataControls {
 //  final private val edlLogger = ChimeraLoggerFactory.getLogger(this.getClass)
 //  val errorStr: StringBuffer = new StringBuffer()
 //  private var sourceDf: DataFrame = _
@@ -162,6 +162,6 @@ class ScalaDataAccuracyControl() extends DataControls {
 //    }
 //  }
 
-  override def validate(): Boolean = true
+//  override def validate(): Boolean = true
 
-}
+// }

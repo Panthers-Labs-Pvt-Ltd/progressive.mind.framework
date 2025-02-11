@@ -28,6 +28,8 @@ config_version: 4
 #
 # https://docs.greatexpectations.io/docs/guides/setup/configuring_data_contexts/how_to_configure_credentials
 
+# TODO: Ensure that backend is set to Postgres.
+
 
 config_variables_file_path: uncommitted/config_variables.yml
 
@@ -42,26 +44,26 @@ stores:
   expectations_store:
     class_name: ExpectationsStore
     store_backend:
-      class_name: TupleFilesystemStoreBackend
-      base_directory: expectations/
+      class_name: DatabaseStoreBackend
+      credentials: ${db_creds}
 
   validation_results_store:
     class_name: ValidationResultsStore
     store_backend:
-      class_name: TupleFilesystemStoreBackend
+      class_name: DatabaseStoreBackend
       base_directory: uncommitted/validations/
 
   checkpoint_store:
     class_name: CheckpointStore
     store_backend:
-      class_name: TupleFilesystemStoreBackend
+      class_name: DatabaseStoreBackend
       suppress_store_backend_id: true
       base_directory: checkpoints/
 
   validation_definition_store:
     class_name: ValidationDefinitionStore
     store_backend:
-      class_name: TupleFilesystemStoreBackend
+      class_name: DatabaseStoreBackend
       base_directory: validation_definitions/
 
 expectations_store_name: expectations_store

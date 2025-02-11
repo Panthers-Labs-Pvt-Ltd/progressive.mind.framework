@@ -9,7 +9,7 @@ import org.apache.spark.sql.{DataFrame, SparkSession}
 import java.text.SimpleDateFormat
 //import scala.collection.JavaConversions._
 
-class DataTimelinessControl() extends DataControls {
+// class DataTimelinessControl() extends DataControls {
 //  final private val edlLogger = new EDLLogger(this.getClass)
 //  val errorStr: StringBuffer = new StringBuffer()
 //  private var sourceDf: DataFrame = _
@@ -95,5 +95,5 @@ class DataTimelinessControl() extends DataControls {
 //    }
 //    result
 //  }
-override def validate(): Boolean = true
-}
+// override def validate(): Boolean = true
+// }

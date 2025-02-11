@@ -3,7 +3,7 @@ package com.progressive.minds.chimera.dataquality.entities;
 import org.mybatis.dynamic.sql.SqlColumn;
 import org.mybatis.dynamic.sql.SqlTable;
 
-public class DQRules extends SqlTable {
+public class DQRulesEntity extends SqlTable {
 
 //    create table if not exists edl_dq_rules
 //            (
@@ -51,7 +51,7 @@ public class DQRules extends SqlTable {
     public final SqlColumn<String> updatedBy = column("UPDATED_BY");
     public final SqlColumn<String> activeFlg = column("ACTIVE_FLG");
 
-    public DQRules() {
+    public DQRulesEntity() {
         super("EDL_DQ_RULES");
     }
 

@@ -6,7 +6,7 @@ import org.apache.spark.sql.{DataFrame, SparkSession}
 import java.sql.Timestamp
 import java.util.Calendar
 
-case class DQRunnerMetrics() {
+case class DQRunnerMetricsEntity() {
   var runnerStartTime: Calendar = _
   var getRulesStartTime: Calendar = _
   var getRulesEndTime: Calendar = _

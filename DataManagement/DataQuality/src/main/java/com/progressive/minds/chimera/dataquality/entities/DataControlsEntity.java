@@ -6,7 +6,7 @@ import org.mybatis.dynamic.sql.SqlTable;
 import java.sql.JDBCType;
 import java.sql.Timestamp;
 
-public final class DataControls extends SqlTable {
+public final class DataControlsEntity extends SqlTable {
     /*  Data Controls Table */
 //    row_num 					serial,
 //    control_id					varchar(255) default('DC-'::text ||
@@ -45,7 +45,7 @@ public final class DataControls extends SqlTable {
     public final SqlColumn<String> updatedBy = column("UPDATED_BY", JDBCType.VARCHAR);
     public final SqlColumn<String> activeFlg = column("ACTIVE_FLG", JDBCType.VARCHAR);
 
-    public DataControls() {
+    public DataControlsEntity() {
         super("DATA_CONTROLS");
     }
 

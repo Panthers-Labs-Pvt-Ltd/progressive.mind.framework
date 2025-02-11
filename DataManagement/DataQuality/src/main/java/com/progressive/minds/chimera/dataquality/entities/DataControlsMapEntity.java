@@ -3,7 +3,7 @@ package com.progressive.minds.chimera.dataquality.entities;
 import org.mybatis.dynamic.sql.SqlColumn;
 import org.mybatis.dynamic.sql.SqlTable;
 
-public class DataControlsMap extends SqlTable {
+public class DataControlsMapEntity extends SqlTable {
 //    create table if not exists edl_data_controls_map
 //            (
 //                    row_num 					serial,
@@ -27,7 +27,7 @@ public class DataControlsMap extends SqlTable {
 //    active_flg					varchar(1)	default 'Y':: CHARACTER VARYING
 //);
 
-    public DataControlsMap() {
+    public DataControlsMapEntity() {
         super("edl_data_controls_map");
     }
     public final SqlColumn<String> mapId = column("map_id");

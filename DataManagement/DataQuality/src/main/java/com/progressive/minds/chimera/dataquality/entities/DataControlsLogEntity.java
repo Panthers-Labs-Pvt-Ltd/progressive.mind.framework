@@ -3,7 +3,7 @@ package com.progressive.minds.chimera.dataquality.entities;
 import org.mybatis.dynamic.sql.SqlColumn;
 import org.mybatis.dynamic.sql.SqlTable;
 
-public class DataControlsLog extends SqlTable {
+public class DataControlsLogEntity extends SqlTable {
     public final SqlColumn<Integer> rowNum = column("row_num");
     public final SqlColumn<Integer> dcLogId = column("dc_log_id");
     public final SqlColumn<String> batchId = column("batch_id");
@@ -14,7 +14,7 @@ public class DataControlsLog extends SqlTable {
     public final SqlColumn<String> statusDesc = column("status_desc");
     public final SqlColumn<String> status = column("status");
 
-    public DataControlsLog() {
+    public DataControlsLogEntity() {
         super("edl_data_control_log");
     }
 }

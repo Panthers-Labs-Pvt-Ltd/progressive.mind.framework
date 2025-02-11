@@ -9,6 +9,21 @@ This module provides two distinct approaches to data quality:
 
 ## Workflow
 
+### Workflow for writing a new rule for a data asset
+
+If a rule is already present, just add the rule to the data asset. If a rule is not present, create it first and then attach.
+
+```mermaid
+graph TD;
+    Z[Ready to attach new dq rules to a Data Asset] --> Y[Search for Rule];
+    Y --> A[Check if Rule is Present];
+    A -->|Yes| B[Add Rule to Data Asset];
+    A -->|No| C[Create Rule];
+    C --> D[Attach Rule to Data Asset];
+```
+
+### Workflow for running Data Quality Checks
+
 ```mermaid
 graph TD;
     A[Data Pipeline] --> B[Data Profiling];
@@ -48,6 +63,40 @@ graph TD;
   subgraph Incident 
       N
   end
+```
+
+### Working Principle
+
+1. Data Pipeline: Data pipeline is responsible for moving data from source to destination. It is also responsible for profiling data and running coarse data quality checks.
+2. Data Profiling: Data profiling is the process of analyzing data to understand its structure, content, and quality. Data profiling helps organizations identify data quality issues, resolve data quality problems, and prevent data quality errors.
+3. Coarse DQ Check: Coarse data quality checks are simple, automated checks that help organizations identify data quality issues, resolve data quality problems, and prevent data quality errors. Coarse data quality checks are designed to quickly assess data quality and flag potential data quality issues.
+
+```text
+Within Pipeline: [Optimization Goal: To ensure that pipeline runs quickly]
+    Profiling Activity: Passes -> DataFrame and Table Identifier
+    Coarse DQ Check Activity: Passes -> DataFrame and Table Identifier
+        Fetch DQ Rules: Uses -> Table Identifier
+        Run DQ Rules: Uses -> DataFrame
+        Log DQ Results: Uses -> Table Identifier and DQ Results
+    Issue Management Activity: Passes -> Table Identifier and DQ Results
+In off-line mode: [Optimization Goal: To use less resources]
+    Batched Incremental DQ Activity: Passes -> Table Identifier
+        Fetch DQ Rules: Uses -> Table Identifier
+        Run DQ Rules: Uses -> DataFrame
+        Log DQ Results: Uses -> Table Identifier and DQ Results
+    Detailed DQ Checks Activity: Passes -> Table Identifier
+        Fetch DQ Rules: Uses -> Table Identifier
+        Run DQ Rules: Uses -> DataFrame
+        Log DQ Results: Uses -> Table Identifier and DQ Results
+        Trend Analysis: Uses -> Table Identifier and DQ Results
+        DQ Log Decision: Uses -> Table Identifier and DQ Results
+            Threshold Breached: Uses -> Table Identifier and DQ Results
+                UI - Data Quality Register: Uses -> Table Identifier and DQ Results
+            Threshold Not Breached: Uses -> Table Identifier and DQ Results
+        Triage: Uses -> Table Identifier and DQ Results
+        Investigate: Uses -> Table Identifier and DQ Results
+        Resolve: Uses -> Table Identifier and DQ Results
+        Prevent: Uses -> Table Identifier and DQ Results
 ```
 
 ## Data Quality Dimensions
@@ -97,6 +146,10 @@ Please see [Data Usability](Data_Usability.md) for more information.
 ### Trustworthiness
 
 Please see [Data Trustworthiness](Data_Trustworthiness.md) for more information.
+
+## Data Quality Model
+
+
 
 ## Data Quality Tools
 

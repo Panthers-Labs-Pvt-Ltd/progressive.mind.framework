@@ -6,7 +6,7 @@ import org.apache.spark.sql.{DataFrame, SparkSession}
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-class DataConsistencyControl() extends DataControls {
+// class DataConsistencyControl() extends DataControls {
 //  final private val edlLogger = new EDLLogger(this.getClass)
 //  val errorStr: StringBuffer = new StringBuffer()
 //  private var sourceDf: DataFrame = _
@@ -131,6 +131,5 @@ class DataConsistencyControl() extends DataControls {
 //    result
 //  }
 
-  override def validate(): Boolean = true
-}
-
+//  override def validate(): Boolean = true
+// }

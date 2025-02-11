@@ -3,7 +3,7 @@ package com.progressive.minds.chimera.dataquality.profiling
 import com.amazon.deequ.analyzers.DataTypeInstances
 import com.amazon.deequ.profiles.ColumnProfilerRunner
 import com.progressive.minds.chimera.dataquality.entities
-import com.progressive.minds.chimera.dataquality.entities.StandardDataProfiler
+import com.progressive.minds.chimera.dataquality.entities.StandardDataProfilerEntity
 import com.progressive.minds.chimera.dataquality.repository.DQRepository
 import org.apache.spark.sql.{DataFrame, SparkSession}
 

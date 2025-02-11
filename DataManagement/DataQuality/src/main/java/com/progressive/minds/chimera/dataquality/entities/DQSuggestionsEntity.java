@@ -3,7 +3,7 @@ package com.progressive.minds.chimera.dataquality.entities;
 import org.mybatis.dynamic.sql.SqlColumn;
 import org.mybatis.dynamic.sql.SqlTable;
 
-public class DQSuggestions extends SqlTable {
+public class DQSuggestionsEntity extends SqlTable {
     public final SqlColumn<Integer> rowNum = column("row_num");
     public final SqlColumn<String> dqCnstntId = column("dq_cnstnt_id");
     public final SqlColumn<String> processTypNm = column("process_typ_nm");
@@ -18,7 +18,7 @@ public class DQSuggestions extends SqlTable {
     public final SqlColumn<String> reserved2 = column("reserved_2");
     public final SqlColumn<String> reserved1 = column("reserved_1");
 
-    public DQSuggestions() {
+    public DQSuggestionsEntity() {
         super("edl_dq_suggestions");
     }
 }

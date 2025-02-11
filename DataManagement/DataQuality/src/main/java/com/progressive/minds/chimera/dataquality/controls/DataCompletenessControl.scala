@@ -7,7 +7,7 @@ import org.apache.spark.sql.{DataFrame, SparkSession}
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-class DataCompletenessControl() extends DataControls {
+// class DataCompletenessControl() extends DataControls {
 //  final private val edlLogger = new EDLLogger(this.getClass)
 //  val errorStr: StringBuffer = new StringBuffer()
 //  private var sourceDf: DataFrame = _
@@ -186,5 +186,5 @@ class DataCompletenessControl() extends DataControls {
 //    result
 //
 //      }
-  override def validate(): Boolean = true
-}
+//  override def validate(): Boolean = true
+//}

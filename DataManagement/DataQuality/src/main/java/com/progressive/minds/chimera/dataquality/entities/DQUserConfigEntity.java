@@ -5,7 +5,7 @@ import org.mybatis.dynamic.sql.SqlTable;
 
 import java.sql.Timestamp;
 
-public class DQUserConfig extends SqlTable {
+public class DQUserConfigEntity extends SqlTable {
     public final SqlColumn<Integer> rowNum = column("row_num");
     public final SqlColumn<String> dqConfigId = column("dq_config_id");
     public final SqlColumn<String> controlNm = column("control_nm");
@@ -27,7 +27,7 @@ public class DQUserConfig extends SqlTable {
     public final SqlColumn<String> updatedBy = column("updated_by");
     public final SqlColumn<String> activeFlg = column("active_flg");
 
-    public DQUserConfig() {
+    public DQUserConfigEntity() {
         super("edl_dq_user_config");
     }
 }

@@ -7,7 +7,7 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
-class DataConformityControl() extends DataControls {
+// class DataConformityControl() extends DataControls {
 //  final private val edlLogger = new EDLLogger(this.getClass)
 //  val errorStr: StringBuffer = new StringBuffer()
 //  private var sourceDf: DataFrame = _
@@ -132,6 +132,6 @@ class DataConformityControl() extends DataControls {
 //    result
 //  }
 
-  override def validate(): Boolean = true
-}
+//  override def validate(): Boolean = true
+// }
 

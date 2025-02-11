@@ -2,7 +2,7 @@ package com.progressive.minds.chimera.dataquality
 
 import com.amazon.deequ.VerificationResult
 import com.progressive.minds.chimera.dataquality.common.DeequUtils
-import com.progressive.minds.chimera.dataquality.entities.{DQProcessStatus, DQRunnerMetrics}
+import com.progressive.minds.chimera.dataquality.entities.{DQProcessStatus, DQRunnerMetricsEntity}
 import com.progressive.minds.chimera.foundational.logging.ChimeraLoggerFactory
 import org.apache.spark.sql.functions.lit
 import org.apache.spark.sql.types.{DoubleType, StringType, StructField, StructType}
@@ -36,12 +36,12 @@ object DeequRunner {
   def execute
   (spark: SparkSession, batchId: String, dataFrame: DataFrame,databaseName: String, tableName: String,
     businessDate: String,instance: String, pipelineName: String, controlNames: Option[Seq[String]],
-    stageName: Option[String], pipelineVersion: String): DQRunnerMetrics = {
+    stageName: Option[String], pipelineVersion: String): DQRunnerMetricsEntity = {
     val audit_time = EDLUtils.convertTimeFormat("yyyy-MM-dd HH:mm::ss.SSS", EDLUtils.currentGMTCalender())
     var sourceRecordDuplicateCount: Double = 0
     var blank_row: Double = 0
     var actual_count: Double = 0
-    val metrics = new DQRunnerMetrics
+    val metrics = new DQRunnerMetricsEntity
     if (dataFrame.limit(1).count() == 0) {
       logger.logError(loggerTag + " There is no records in DataFrame for which DQ check is requested")
       return null

@@ -3,8 +3,8 @@ package com.progressive.minds.chimera.dataquality.service;
 import com.progressive.minds.chimera.common.util.ChimeraDataFrame;
 import com.progressive.minds.chimera.common.util.Engine;
 import com.progressive.minds.chimera.dataquality.repository.DQRepository;
-import com.progressive.minds.chimera.dataquality.entities.DQRules;
-import com.progressive.minds.chimera.dataquality.entities.DataControls;
+import com.progressive.minds.chimera.dataquality.entities.DQRulesEntity;
+import com.progressive.minds.chimera.dataquality.entities.DataControlsEntity;
 import com.progressive.minds.chimera.foundational.logging.ChimeraLogger;
 import com.progressive.minds.chimera.foundational.logging.ChimeraLoggerFactory;
 import org.mybatis.dynamic.sql.SqlBuilder;
@@ -25,10 +25,10 @@ public class CoarseDQService {
     private Engine engine;
 
     @Autowired
-    private DQRepository<DataControls> dataControlsDQRepository;
+    private DQRepository<DataControlsEntity> dataControlsDQRepository;
 
     @Autowired
-    private DQRepository<DQRules> dqRulesRepository;
+    private DQRepository<DQRulesEntity> dqRulesRepository;
 
     public CoarseDQService(ChimeraDataFrame dataFrame, Engine engine) {
         this.dataFrame = dataFrame;
@@ -57,11 +57,11 @@ public class CoarseDQService {
      * Fetches coarse data quality controls.
      * @return List of coarse data quality controls.
      */
-    public List<DataControls> getCoarseDQControls() {
+    public List<DataControlsEntity> getCoarseDQControls() {
         logger.logInfo("Fetching coarse data quality controls.");
-        DataControls dataControls = new DataControls();
+        DataControlsEntity dataControlsEntity = new DataControlsEntity();
 
-        SelectStatementProvider selectStatement = select(dataControls.allColumns()).from(dataControls)
+        SelectStatementProvider selectStatement = select(dataControlsEntity.allColumns()).from(dataControlsEntity)
                 .build()
                 .render(RenderingStrategies.MYBATIS3);
 
@@ -72,10 +72,10 @@ public class CoarseDQService {
      * Updates coarse data quality controls.
      * @return List of coarse data quality rules.
      */
-    public List<DQRules> getCoarseDQRules() {
+    public List<DQRulesEntity> getCoarseDQRules() {
         logger.logInfo("Fetching coarse data quality rules.");
-        DQRules dqRules = new DQRules();
-        SelectStatementProvider selectStatement = select(dqRules.allColumns()).from(dqRules)
+        DQRulesEntity dqRulesEntity = new DQRulesEntity();
+        SelectStatementProvider selectStatement = select(dqRulesEntity.allColumns()).from(dqRulesEntity)
                 .build()
                 .render(RenderingStrategies.MYBATIS3);
 
@@ -85,16 +85,16 @@ public class CoarseDQService {
     /**
      * Insert coarse data quality rules.
      *
-     * @param dqRules List of coarse data quality rules.
+     * @param dqRulesEntity List of coarse data quality rules.
      * @return
      */
-    public int insertCoarseDQRules(DQRules dqRules) {
+    public int insertCoarseDQRules(DQRulesEntity dqRulesEntity) {
         logger.logInfo("Updating coarse data quality rules.");
 
         // update the rule
-        InsertStatementProvider<DQRules> insertStatement =
-                SqlBuilder.insert(dqRules)
-                        .into(DQRules.of("EDL_DQ_RULES"))
+        InsertStatementProvider<DQRulesEntity> insertStatement =
+                SqlBuilder.insert(dqRulesEntity)
+                        .into(DQRulesEntity.of("EDL_DQ_RULES"))
                         .build()
                         .render(RenderingStrategies.MYBATIS3);
         return dqRulesRepository.insert(insertStatement);
@@ -103,16 +103,16 @@ public class CoarseDQService {
     /**
      * Insert coarse data quality controls.
      *
-     * @param dataControls List of coarse data quality controls.
+     * @param dataControlsEntity List of coarse data quality controls.
      * @return
      */
-    public int insertCoarseDQControls(DataControls dataControls) {
+    public int insertCoarseDQControls(DataControlsEntity dataControlsEntity) {
         logger.logInfo("Updating coarse data quality controls.");
 
         // update the control
-        InsertStatementProvider<DataControls> insertStatement =
-                SqlBuilder.insert(dataControls)
-                        .into(DataControls.of("EDL_DATA_CONTROLS"))
+        InsertStatementProvider<DataControlsEntity> insertStatement =
+                SqlBuilder.insert(dataControlsEntity)
+                        .into(DataControlsEntity.of("EDL_DATA_CONTROLS"))
                         .build()
                         .render(RenderingStrategies.MYBATIS3);
         return dataControlsDQRepository.insert(insertStatement);
