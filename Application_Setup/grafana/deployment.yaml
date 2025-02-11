@@ -28,4 +28,12 @@ spec:
                   name: grafana-secret
                   key: admin-password
           ports:
-            - containerPort: 3000 # Retained as the default; used only for internal communication
+            - containerPort: 3000
+          volumeMounts:
+            - name: grafana-dashboards
+              mountPath: /var/lib/grafana/dashboards
+              readOnly: true
+      volumes:
+        - name: grafana-dashboards
+          configMap:
+            name: grafana-dashboards
