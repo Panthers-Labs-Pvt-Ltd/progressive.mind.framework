@@ -8,6 +8,7 @@ services:
     environment:
       - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD:-admin}
     volumes:
-      - ./grafana/provisioning:/etc/grafana/provisioning
+      - ./grafana/provisioning:/grafana/provisioning
+      - ./grafana/dashboards:/grafana/dashboards
     networks:
       - observability
