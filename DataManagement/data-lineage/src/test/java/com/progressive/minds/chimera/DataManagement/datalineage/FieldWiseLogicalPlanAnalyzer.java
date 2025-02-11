@@ -65,7 +65,7 @@ public class FieldWiseLogicalPlanAnalyzer {
     /**
      * Extracts field-wise transformation details from the logical plan.
      */
-    private static Map<String, List<String>> extractFieldWiseTransformations(LogicalPlan plan) {
+    static Map<String, List<String>> extractFieldWiseTransformations(LogicalPlan plan) {
         Map<String, List<String>> fieldTransformations = new HashMap<>();
         traverseLogicalPlan(plan, fieldTransformations);
         return fieldTransformations;

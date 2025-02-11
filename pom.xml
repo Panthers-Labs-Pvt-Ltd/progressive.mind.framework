@@ -38,13 +38,6 @@
     <name>Chimera Data Engineering</name>
     <description>Data Engineering</description>
     <packaging>pom</packaging>
-    <!--This will be treated like grandparent-->
-    <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.4.1</version>
-        <relativePath/>
-    </parent>
     <modules>
        <module>common</module>
        <module>foundational</module>
@@ -59,6 +52,14 @@
                 <groupId>software.amazon.awssdk</groupId>
                 <artifactId>bom</artifactId>
                 <version>${aws.java.sdk2.version}</version> <!-- Use the latest version -->
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <!-- Import Spring Boot BOM- Inheriting was wrong since it was not needed for non-spring boot modules-->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring-boot.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -152,6 +153,8 @@
         <commons-text.version>1.10.0</commons-text.version>
         <commons-csv.version>1.9.0</commons-csv.version>
         <antlr4.version>4.9.3</antlr4.version>
+        <!-- Spring Boot versions -->
+        <spring-boot.version>3.4.1</spring-boot.version>
         <!-- Spring Cloud versions -->
         <spring-cloud.version>2024.0.0</spring-cloud.version>
     </properties>
@@ -246,13 +249,6 @@
             <artifactId>spark-streaming_${spark.scala.version}</artifactId>
             <version>${spark.version}</version>
         </dependency>
-
-        <dependency>
-            <groupId>org.glassfish.jersey.containers</groupId>
-            <artifactId>jersey-container-servlet-core</artifactId>
-            <version>2.35</version>
-        </dependency>
-
         <!-- Spark Core -->
         <dependency>
             <groupId>org.apache.spark</groupId>
@@ -269,6 +265,11 @@
             <groupId>org.apache.spark</groupId>
             <artifactId>spark-sql_${spark.scala.version}</artifactId>
             <version>${spark.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.containers</groupId>
+            <artifactId>jersey-container-servlet-core</artifactId>
+            <version>2.34</version>
         </dependency>
         <dependency>
             <groupId>org.apache.spark</groupId>
@@ -292,17 +293,11 @@
             <artifactId>javax.servlet-api</artifactId>
             <version>4.0.1</version>
         </dependency>
-
-
+        <!-- https://mvnrepository.com/artifact/org.apache.iceberg/iceberg-spark-runtime-3.5 -->
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>${slf4j-api.version}</version> <!-- Example latest -->
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId> <!-- Or your chosen binding -->
-            <version>${slf4j-api.version}</version>
+            <groupId>org.apache.iceberg</groupId>
+            <artifactId>iceberg-spark-runtime-3.5_2.12</artifactId>
+            <version>1.7.1</version>
         </dependency>
         <!-- Apache Comet libraries -->
         <!-- https://mvnrepository.com/artifact/com.ebiznext/comet-spark3 -->
@@ -313,12 +308,16 @@
             <artifactId>comet-spark-spark3.5_${spark.scala.version}</artifactId>
             <version>0.4.0</version>
         </dependency>
-
-        <!-- https://mvnrepository.com/artifact/org.yaml/snakeyaml -->
+        <!-- Logging -->
         <dependency>
-            <groupId>org.yaml</groupId>
-            <artifactId>snakeyaml</artifactId>
-            <version>2.3</version>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j-api.version}</version> <!-- Example latest -->
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId> <!-- Or your chosen binding -->
+            <version>${slf4j-api.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
@@ -336,6 +335,14 @@
             <artifactId>log4j-layout-template-json</artifactId>
             <version>${log4j.api.version}</version>
         </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.yaml/snakeyaml -->
+        <dependency>
+            <groupId>org.yaml</groupId>
+            <artifactId>snakeyaml</artifactId>
+            <version>2.3</version>
+        </dependency>
+
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
@@ -559,7 +566,6 @@
                     </execution>
                 </executions>
             </plugin>
-            <!-- Style checks Commented By Manish
             <plugin>
                 <groupId>org.scalastyle</groupId>
                 <artifactId>scalastyle-maven-plugin</artifactId>
@@ -575,6 +581,7 @@
                     </sourceDirectories>
                     <testSourceDirectories>
                         <directory>${basedir}/src/test/java</directory>
+                        <directory>${basedir}/src/test/scala</directory>
                     </testSourceDirectories>
                     <configLocation>scalastyle-config.xml</configLocation>
                     <outputFile>${basedir}/target/scalastyle-output.xml</outputFile>
@@ -594,7 +601,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>3.1.2</version>
+                <version>3.6.0</version>
                 <configuration>
                     <failOnViolation>true</failOnViolation>
                     <includeTestSourceDirectory>true</includeTestSourceDirectory>
@@ -604,6 +611,7 @@
                     </sourceDirectories>
                     <testSourceDirectories>
                         <directory>${basedir}/src/test/java</directory>
+                        <directory>${basedir}/src/test/scala</directory>
                     </testSourceDirectories>
                     <configLocation>checkstyle.xml</configLocation>
                     <outputFile>${basedir}/target/checkstyle-output.xml</outputFile>
@@ -615,7 +623,7 @@
                     <dependency>
                         <groupId>com.puppycrawl.tools</groupId>
                         <artifactId>checkstyle</artifactId>
-                        <version>9.3</version>
+                        <version>10.21.2</version>
                     </dependency>
                 </dependencies>
                 <executions>
@@ -625,7 +633,7 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>-->
+            </plugin>
         </plugins>
     </build>
 

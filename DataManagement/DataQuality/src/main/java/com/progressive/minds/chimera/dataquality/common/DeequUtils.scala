@@ -12,8 +12,7 @@ object DeequUtils {
   type Verifier = (DataFrame, MetricsRepository, ResultKey) => VerificationResult
   type VerifierNoRepo = DataFrame => VerificationResult
 
-  def executeRulesNoRepo(rulesDf: DataFrame,
-                         deequTargetDf: DataFrame): VerificationResult ={
+  def executeRulesNoRepo(rulesDf: DataFrame, deequTargetDf: DataFrame): VerificationResult = {
     val verificationResult: VerifierNoRepo = getVerifierNoRepo(rulesDf).get
     verificationResult(deequTargetDf)
   }
@@ -40,14 +39,14 @@ object DeequUtils {
     }
     val verifierSrcCode =
     s"""{
-        |import com.amazon.deequ.constraints.ConstrainableDataTypes
-        |import com.amazon.deequ.(VerificationResult, VerificationSuite)
-        |import org.apache.spark.sql.DataFrame
-        |import com.amazon.deequ.analyzers.Size
-        |
-        |val warningChecks = Seq(
-        |${
-      constraintWarningCheckCodes.map {
+      |import com.amazon.deequ.constraints.ConstrainableDataTypes
+      |import com.amazon.deequ.(VerificationResult, VerificationSuite)
+      |import org.apache.spark.sql.DataFrame
+      |import com.amazon.deequ.analyzers.Size
+      |
+      |val warningChecks = Seq(
+      |${
+        constraintWarningCheckCodes.map {
         (checkWarningSrcCode _).tupled
       }.mkString(", \n ")
     }

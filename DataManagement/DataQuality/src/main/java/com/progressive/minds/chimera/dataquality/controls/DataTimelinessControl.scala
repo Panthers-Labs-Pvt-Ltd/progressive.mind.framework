@@ -6,10 +6,8 @@ import java.util
 //port java.util.Locale
 import org.apache.spark.sql.types.StructType
 import org.apache.spark.sql.{DataFrame, SparkSession}
-
 import java.text.SimpleDateFormat
-import scala.collection.JavaConversions._
-
+//import scala.collection.JavaConversions._
 
 class DataTimelinessControl() extends DataControls {
 //  final private val edlLogger = new EDLLogger(this.getClass)
@@ -26,10 +24,11 @@ class DataTimelinessControl() extends DataControls {
 //  private var checkLevel: String = _
 //
 //
-//  override def apply(sparkSession: SparkSession, sourceDF: DataFrame, targetDf: DataFrame,
-//                     processTypeName: String, instanceId: String, partitionColumn: String,
-//                     databaseName: String, tableName: String, checkLevel: String, inboundSchema: StructType,
-//                     batchPipelineDetails: PipelineDetails): Unit = {
+//override def apply(sparkSession: SparkSession, sourceDF: DataFrame,
+  //  targetDf: DataFrame, processTypeName : String, instanceId : String, partitionColumn : String,
+  // databaseName: String, tableName: String,
+  // checkLevel: String, inboundSchema: StructType,
+// batchPipelineDetails: PipelineDetails): Unit = {
 //    this.sourceDf = sourceDF
 //    this.targetDf = targetDf
 //    this.partitionColumn = partitionColumn

@@ -627,7 +627,7 @@ public class DatasetFacets {
                         .type("transformation Type")
                         .subtype("transformation Subtype");
                 OpenLineage.InputFieldTransformations IFT =IT.build();
-
+                java. util. List<OpenLineage. InputField> inputFields = new ArrayList<>();
                 // Build the input field
                 InputField inputField = new InputFieldBuilder()
                         .namespace("source_namespace")
@@ -696,4 +696,18 @@ ColumnLineageDatasetFacetFieldsAdditionalBuilder CB = new ColumnLineageDatasetFa
 */
 
     }
-}
+    public static void testColumnLevelLineage
+            (OpenLineage openLineageProducer, String SQLQuery, String dataframe, String namespace, SparkSession inSparkSession) {
+
+        List<InputField> inputField= new ArrayList<>();
+
+
+        ColumnLineageDatasetFacetFieldsAdditionalBuilder CB = new ColumnLineageDatasetFacetFieldsAdditionalBuilder()
+                .inputFields(inputField)
+                .transformationDescription("")
+                .transformationType("")
+                .put("dsfds", new ColumnLineageDatasetFacetFieldsAdditionalBuilder());
+
+
+    }
+    }
