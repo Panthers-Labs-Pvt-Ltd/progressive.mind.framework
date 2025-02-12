@@ -1,4 +1,4 @@
-package com.progressive.minds.chimera.common.workflows;
+package com.progressive.minds.chimera.core.workflows;
 
 import io.temporal.workflow.WorkflowInterface;
 import io.temporal.workflow.WorkflowMethod;
