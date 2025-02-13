@@ -159,9 +159,8 @@
             <!-- scoverage -->
             <plugin>
                 <!-- https://mvnrepository.com/artifact/org.scoverage/scalac-scoverage-plugin -->
-
                 <groupId>org.scoverage</groupId>
-                <artifactId>scalac-scoverage-plugin_${scala.major.version}.${scala.minor.version}</artifactId>
+                <artifactId>scalac-scoverage-plugin_${scala.version}</artifactId>
                 <version>2.3.0</version>
                 <configuration>
                     <highlighting>true</highlighting>

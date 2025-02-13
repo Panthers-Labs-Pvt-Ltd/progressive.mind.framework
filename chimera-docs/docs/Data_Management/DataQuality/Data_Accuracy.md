@@ -35,3 +35,5 @@ To build a model to measure accuracy, you need to follow these steps:
 7. Deploy the model: Deploy the model in production, monitor the performance of the model, and update the model as needed.
 
 Accuracy can be measured using metrics such as error rate, precision, recall, F1 score, and confusion matrix.
+
+## GX Rules related to Accuracy

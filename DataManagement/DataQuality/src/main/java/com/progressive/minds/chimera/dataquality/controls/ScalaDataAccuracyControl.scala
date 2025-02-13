@@ -1,6 +1,6 @@
 package com.progressive.minds.chimera.dataquality.controls
 
-import com.progressive.minds.chimera.dataquality.entities.DataControlsLog
+import com.progressive.minds.chimera.dataquality.entities.DataControlsLogEntity
 import com.progressive.minds.chimera.foundational.exception.ChimeraException
 import com.progressive.minds.chimera.foundational.logging.ChimeraLoggerFactory
 import org.apache.spark.sql.{DataFrame, SparkSession}
@@ -13,8 +13,7 @@ import java.time.format.DateTimeFormatter
 import java.util
 import java.util.Locale
 
-
-class ScalaDataAccuracyControl() extends DataControls {
+// class ScalaDataAccuracyControl() extends DataControls {
 //  final private val edlLogger = ChimeraLoggerFactory.getLogger(this.getClass)
 //  val errorStr: StringBuffer = new StringBuffer()
 //  private var sourceDf: DataFrame = _
@@ -27,9 +26,9 @@ class ScalaDataAccuracyControl() extends DataControls {
 //  private val
 //
 //  override def apply(sparkSession: SparkSession, sourceDF: DataFrame, targetDf: DataFrame,
-//                     processTypeName: String, instanceId: String, partitionColumn: String,
-//                     databaseName: String, tableName: String, checkLevel: String, inboundSchema: StructType,
-//                     batchId: BigInt): Unit = {
+  //  processTypeName: String, instanceId: String, partitionColumn: String,
+  //  databaseName: String, tableName: String, checkLevel: String, inboundSchema: StructType,
+  //  batchId: BigInt): Unit = {
 //    this.sourceDf = sourceDF
 //    this.targetDf = targetDf
 //    this.partitionColumn = partitionColumn
@@ -104,7 +103,8 @@ class ScalaDataAccuracyControl() extends DataControls {
 //      } else {
 //        edlLogger.logInfo(loggerTag + s"DataFrame has mismatched input from source" +
 //          s" to Target: " + diffDF.show(false))
-//        errorStr.append(s"Data level comparison between 1000 records is not matching. Number of mismatch from source " +
+//        errorStr.append(s"Data level comparison between 1000 records is not matching.
+  //        Number of mismatch from source " +
 //          s" to target for sample 1000 record is : "
 //          + compareCount)
 //      }
@@ -162,6 +162,6 @@ class ScalaDataAccuracyControl() extends DataControls {
 //    }
 //  }
 
-  override def validate(): Boolean = true
+//  override def validate(): Boolean = true
 
-}
+// }

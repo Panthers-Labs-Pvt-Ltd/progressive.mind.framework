@@ -1,6 +1,6 @@
 package com.progressive.minds.chimera.dataquality.controls
 
-import com.progressive.minds.chimera.dataquality.entities.{DQRules, DataControlsLog}
+import com.progressive.minds.chimera.dataquality.entities.{DQRulesEntity, DataControlsLogEntity}
 import com.progressive.minds.chimera.dataquality.repository.DQRepository
 import org.apache.spark.sql.types.StructType
 import org.apache.spark.sql.{DataFrame, SparkSession}
@@ -12,17 +12,18 @@ trait ScalaDataControls {
 
   def validate(): Boolean
 
-  def apply(sparkSession: SparkSession, sourceDF: DataFrame, targetDf: DataFrame,
-            processTypeName: String, instanceId: String, partitionColumn: String,
-            databaseName: String, tableName: String, checkLevel: String, inboundSchema: StructType,
-            batchId: BigInt): Unit
+// def apply(
+  // sparkSession: SparkSession, sourceDF: DataFrame,
+  // targetDf: DataFrame,processTypeName : String, instanceId: String,
+  // partitionColumn: String, databaseName: String, tableName: String,
+  // checkLevel: String, inboundSchema: StructType, batchId: BigInt): Unit
 
-  def registerResult(controlResults: DataControlsLog): Boolean = {
+  def registerResult(controlResults: DataControlsLogEntity): Boolean = {
 //    val insertStatement = SqlBuilder.insert(controlResults)
 //      .into(DataControlsLog)
 //      .build
 //      .render(RenderingStrategies.MYBATIS3)
-    // dataControlsLogRepository.(controlResults)
-    true
+// dataControlsLogRepository.(controlResults)
+true
   }
 }

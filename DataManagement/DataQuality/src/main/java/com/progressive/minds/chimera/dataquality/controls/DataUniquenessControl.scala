@@ -6,7 +6,7 @@ import org.apache.spark.sql.{DataFrame, SparkSession}
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-class DataUniquenessControl() extends DataControls {
+// class DataUniquenessControl() extends DataControls {
 //  final private val edlLogger = new EDLLogger(this.getClass)
 //  final private val errorStr: StringBuffer = new StringBuffer()
 //  private var sourceDf: DataFrame = _
@@ -18,10 +18,10 @@ class DataUniquenessControl() extends DataControls {
 //
 //
 //
-//  override def apply(sparkSession: SparkSession, sourceDF: DataFrame, targetDf: DataFrame,
-//                     processTypeName: String, instanceId: String, partitionColumn: String,
-//                     databaseName: String, tableName: String, checkLevel: String, inboundSchema: StructType,
-//                     batchPipelineDetails: PipelineDetails): Unit = {
+//override def apply(sparkSession: SparkSession, sourceDF: DataFrame,
+  // targetDf: DataFrame,processTypeName: String, instanceId: String, partitionColumn: String,
+// databaseName: String, tableName: String, checkLevel: String,
+// inboundSchema: StructType,batchPipelineDetails: PipelineDetails): Unit = {
 //    this.sourceDf = sourceDF
 //    this.targetDf = targetDf
 //    this.processTypeName = processTypeName
@@ -124,5 +124,5 @@ class DataUniquenessControl() extends DataControls {
 //      }
 //      result
 //    }
-override def validate(): Boolean = true
-  }
+//   override def validate(): Boolean = true
+// }

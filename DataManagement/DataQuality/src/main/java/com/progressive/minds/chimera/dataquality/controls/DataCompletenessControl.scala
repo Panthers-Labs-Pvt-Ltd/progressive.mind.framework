@@ -7,8 +7,7 @@ import org.apache.spark.sql.{DataFrame, SparkSession}
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-
-class DataCompletenessControl() extends DataControls {
+// class DataCompletenessControl() extends DataControls {
 //  final private val edlLogger = new EDLLogger(this.getClass)
 //  val errorStr: StringBuffer = new StringBuffer()
 //  private var sourceDf: DataFrame = _
@@ -19,9 +18,8 @@ class DataCompletenessControl() extends DataControls {
 //  private var sparkSession: SparkSession = _
 //  private var checkLevel: String = _
 //
-//
 //  override def apply(sparkSession: SparkSession, sourceDF: DataFrame, targetDf: DataFrame,
-//                     processTypeName: String, instanceId: String, partitionColumn: String,
+  //                     processTypeName: String, instanceId: String, partitionColumn: String,
 //                     databaseName: String, tableName: String, checkLevel: String, inboundSchema: StructType,
 //                     batchPipelineDetails: PipelineDetails): Unit = {
 //    this.sourceDf = sourceDF
@@ -82,7 +80,8 @@ class DataCompletenessControl() extends DataControls {
 //    val sumDiff = sourceSum.except(targetSum)
 //
 //    if (sumDiff.limit(1).count() > 0) {
-//      edlLogger.logInfo(loggerTag + s"Sum values are different in source and target Dataframe" + sumDiff.select("*").show())
+//      edlLogger.logInfo(loggerTag + s"Sum values are different in source and target Dataframe"
+//      + sumDiff.select("*").show())
 //      errorStr.append(s"Sum between Source and Target is not matching.")
 //      result = false
 //    }
@@ -187,6 +186,5 @@ class DataCompletenessControl() extends DataControls {
 //    result
 //
 //      }
-
-  override def validate(): Boolean = true
-}
+//  override def validate(): Boolean = true
+//}

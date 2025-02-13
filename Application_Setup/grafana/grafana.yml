@@ -1,0 +1,14 @@
+version: '3.8'
+services:
+  grafana:
+    image: grafana/grafana:${GRAFANA_VERSION:-latest}
+    container_name: grafana
+    ports:
+      - "${GRAFANA_PORT:-3000}:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD:-admin}
+    volumes:
+      - ./grafana/provisioning:/grafana/provisioning
+      - ./grafana/dashboards:/grafana/dashboards
+    networks:
+      - observability

@@ -23,20 +23,18 @@ object DataProfilingExample extends App {
 
     val rawData = session.createDataFrame(rows)
 
-    /* Make deequ profile this data. It will execute the three passes over the data and avoid
-       any shuffles. */
+    /* Make deequ profile this data. It will execute the three passes over the data and avoid any shuffles. */
     val result = ColumnProfilerRunner()
       .onData(rawData)
       .run()
 
     /* We get a profile for each column which allows to inspect the completeness of the column,
-       the approximate number of distinct values and the inferred datatype. */
-    result.profiles.foreach { case (productName, profile) =>
-
-      println(s"Column '$productName':\n " +
-        s"\tcompleteness: ${profile.completeness}\n" +
-        s"\tapproximate number of distinct values: ${profile.approximateNumDistinctValues}\n" +
-        s"\tdatatype: ${profile.dataType}\n")
+    the approximate number of distinct values and the inferred datatype. */
+result.profiles.foreach { case (productName, profile) =>
+println(s"Column '$productName':\n " +
+  s"\tcompleteness: ${profile.completeness}\n" +
+  s"\tapproximate number of distinct values: ${profile.approximateNumDistinctValues}\n" +
+  s"\tdatatype: ${profile.dataType}\n")
     }
 
     /* For numeric columns, we get descriptive statistics */

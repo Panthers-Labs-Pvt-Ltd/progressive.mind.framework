@@ -6,7 +6,7 @@ import org.apache.spark.sql.{DataFrame, SparkSession}
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-class DataConsistencyControl() extends DataControls {
+// class DataConsistencyControl() extends DataControls {
 //  final private val edlLogger = new EDLLogger(this.getClass)
 //  val errorStr: StringBuffer = new StringBuffer()
 //  private var sourceDf: DataFrame = _
@@ -23,9 +23,9 @@ class DataConsistencyControl() extends DataControls {
 //
 //
 //  override def apply(sparkSession: SparkSession, sourceDF: DataFrame, targetDf: DataFrame,
-//                     processTypeName: String, instanceId: String, partitionColumn: String,
-//                     databaseName: String, tableName: String, checkLevel: String, inboundSchema: StructType,
-//                     batchPipelineDetails: PipelineDetails): Unit = {
+  //  processTypeName: String, instanceId: String, partitionColumn: String,
+  //  databaseName: String, tableName: String, checkLevel: String, inboundSchema: StructType,
+  //  batchPipelineDetails: PipelineDetails): Unit = {
 //    this.sourceDf = sourceDF
 //    this.targetDf = targetDf
 //    this.partitionColumn = partitionColumn
@@ -71,7 +71,7 @@ class DataConsistencyControl() extends DataControls {
 //  }
 //
 //  def consistencyCheck(spark: SparkSession, dataFrame: DataFrame, databaseName: String, tableName: String,
-//                       instanceId: String, partitionColumns: String): Boolean ={
+  //  instanceId: String, partitionColumns: String): Boolean ={
 //    var result:Boolean = false
 //    val loggerTag = "consistencyCheck"
 //    val queryStr: StringBuffer = new StringBuffer()
@@ -112,12 +112,14 @@ class DataConsistencyControl() extends DataControls {
 //        val threshold = 10
 //
 //        if (variance > threshold || variance < -threshold) {
-//          edlLogger.logInfo(loggerTag + s"The variance between the count of current date and previous date is not within 10% range. " +
+//          edlLogger.logInfo(loggerTag + s"The variance between the count of current date
+  //          and previous date is not within 10% range. " +
 //            s"Variance is : $variance")
 //          errorStr.append(s"Variance difference percentage between current and previous day is " + variance)
 //          result = false
 //        } else {
-//          edlLogger.logInfo(loggerTag + s"The variance between the count of current date and previous date is within 10% range. " +
+//          edlLogger.logInfo(loggerTag + s"The variance between the count of current date and
+  //          previous date is within 10% range. " +
 //            s"Variance is : $variance")
 //          result = true
 //        }
@@ -129,6 +131,5 @@ class DataConsistencyControl() extends DataControls {
 //    result
 //  }
 
-  override def validate(): Boolean = true
-}
-
+//  override def validate(): Boolean = true
+// }

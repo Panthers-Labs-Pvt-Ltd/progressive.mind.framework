@@ -1,0 +1,16 @@
+version: '3.8'
+services:
+  otel-collector:
+    image: otel/opentelemetry-collector:${OTEL_VERSION:-latest}
+    container_name: otel-collector
+    ports:
+      - "${OTEL_GRPC_PORT:-4317}:4317"
+      - "${OTEL_HTTP_PORT:-4318}:4318"
+      - "${ZIPKIN_PORT:-55681}:55681"
+      - "${PROMETHEUS_PORT:-8888}:8888"
+    volumes:
+      - ./otel-collector-config.yaml:/etc/prometheus/otel-collector-config.yaml
+    command:
+      - "--config=/etc/otel-collector-config.yaml"
+    networks:
+        - observability

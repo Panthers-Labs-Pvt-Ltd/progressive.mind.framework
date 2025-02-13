@@ -12,4 +12,8 @@ public interface ChimeraDataFrame {
      * Writes data to a destination.
      */
     void write();
+
+    // TODO: Implement the following methods:
+    // VectorSchemaRoot
+    // https://arrow.apache.org/docs/java/
 }

@@ -20,8 +20,7 @@ object DataProfile {
     .appName("DeequRunner Test Example")
     .getOrCreate()
 
-  def deequProfiling(df: Option[DataFrame], path: String, databaseNane: String,
-                     tableName: String, ediBusinessDay: String): Unit = {
+  def deequProfiling(df: Option[DataFrame],databaseNane: String,tableName: String, ediBusinessDay : String): Unit = {
     if (!df.isEmpty) {
       try {
         val suggestionDf = runProfiler(df.getOrElse(null), databaseNane, tableName)
@@ -86,7 +85,7 @@ object DataProfile {
   def main(args: Array[String]): Unit = {
     val params = collection.mutable.Map[String, String]()
 
-    for (arg <- args) {
+    for {arg <- args} {
       val Array(key, value) = arg.split("==")
       params += (key -> value)
     }
@@ -97,18 +96,18 @@ object DataProfile {
         val path = params("path")
         val database = params("database")
         val table = params("table")
-        DataProfile.deequProfiling(None, path, database, table, "")
+        DataProfile.deequProfiling(None, path, database, table)
       }
       else if (profileType.equals("database")) {
         val database = params("database")
-        DataProfile.deequProfiling(None, "", database, "", "")
+        DataProfile.deequProfiling(None, "", database, "")
       }
       else if (profileType.equals("table")) {
         val path = params("path")
         val database = params("database")
         val table = params("table")
         val ediBusinessDay = params("ediBusinessDay")
-        DataProfile.deequProfiling(None, path, database, table, ediBusinessDay)
+        DataProfile.deequProfiling(None, database, table,ediBusinessDay)
       }
       else {
       }
@@ -118,5 +117,3 @@ object DataProfile {
     }
   }
 }
-
-    

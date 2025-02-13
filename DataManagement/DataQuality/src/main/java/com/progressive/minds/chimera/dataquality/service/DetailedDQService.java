@@ -2,8 +2,8 @@ package com.progressive.minds.chimera.dataquality.service;
 
 import com.progressive.minds.chimera.common.util.ChimeraDataFrame;
 import com.progressive.minds.chimera.common.util.Engine;
-import com.progressive.minds.chimera.dataquality.entities.DQRules;
-import com.progressive.minds.chimera.dataquality.entities.DataControls;
+import com.progressive.minds.chimera.dataquality.entities.DQRulesEntity;
+import com.progressive.minds.chimera.dataquality.entities.DataControlsEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +31,7 @@ public class DetailedDQService {
      * Fetches detailed data quality controls.
      * @return List of detailed data quality controls.
      */
-    public List<DataControls> getDetailedDQControls() {
+    public List<DataControlsEntity> getDetailedDQControls() {
         return new ArrayList<>();
     }
 
@@ -40,15 +40,15 @@ public class DetailedDQService {
      * Fetches detailed data quality rules.
      * @return List of detailed data quality rules.
      */
-    public List<DQRules> getDetailedDQRules() {
+    public List<DQRulesEntity> getDetailedDQRules() {
         return new ArrayList<>();
     }
 
     // This method is not implemented yet.
     /**
      * Updates detailed data quality rules.
-     * @param dqRules List of detailed data quality rules.
+     * @param dqRuleEntities List of detailed data quality rules.
      */
-    public void updateDetailedDQRules(List<DQRules> dqRules) {
+    public void updateDetailedDQRules(List<DQRulesEntity> dqRuleEntities) {
     }
 }

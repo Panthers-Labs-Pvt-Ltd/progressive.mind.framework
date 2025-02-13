@@ -22,11 +22,11 @@ object ProcessConstraints {
 //      case e: Exception => edlLogger.logError("ProcessConstraints" + e.toString)
 //        throw (e)
 //    }
-    spark.emptyDataFrame
+  spark.emptyDataFrame
   }
 
   def processConstraintsIntoRules(spark: SparkSession, suggestionsDf: DataFrame, ids: Seq[String],
-                                  constraints: Seq[String]): DataFrame = {
+    constraints: Seq[String]): DataFrame = {
     val schema = StructType(Array(
       StructField("databaseName", StringType, true),
       StructField("dqConstraint", StringType, true),
@@ -40,14 +40,14 @@ object ProcessConstraints {
     var constraintsDf = spark.createDataFrame(spark.sparkContext.emptyRDD[Row], schema)
 
     if (!ids.isEmpty) {
-      for (id <- ids) {
+      for {id <- ids} {
         idsDf = idsDf.union(suggestionsDf.filter(col("id").contains(id)))
         idsDf.show()
       }
     }
 
     if (!constraints.isEmpty) {
-      for (constraint <- constraints) {
+      for {constraint <- constraints} {
         constraintsDf = constraintsDf.union(suggestionsDf.filter(col("scalaCode").
           startsWith("." + constraint.toString())))
       }
@@ -69,7 +69,7 @@ object ProcessConstraints {
       .getOrCreate()
     val params = collection.mutable.Map[String, String]()
 
-    for (arg <- args) {
+    for {arg <- args} {
       val Array(key, value) = arg.split("=")
       params += (key -> value)
     }
@@ -86,11 +86,11 @@ object ProcessConstraints {
         .drop(colName = "id")
 
       val formattedDf = rulesDf.withColumn("scalaCode",
-          expr("substring(scalaCode, 2, length(scalaCode))"))
-        .withColumn("checkLevel", lit("Warning"))
-        .withColumn("statusCd", lit("N"))
-        .withColumn("controlNm", lit("Default"))
-        .withColumn("ruleId", lit(null).cast("long"))
+    expr("substring(scalaCode, 2, length(scalaCode))"))
+    .withColumn("checkLevel", lit("Warning"))
+    .withColumn("statusCd", lit("N"))
+    .withColumn("controlNm", lit("Default"))
+    .withColumn("ruleId", lit(null).cast("long"))
 
       val processedRulesDF = formattedDf.withColumnRenamed("scalaCode", "ruleValue")
       processedRulesDF.show()
