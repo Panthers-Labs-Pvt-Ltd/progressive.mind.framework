@@ -1,4 +1,4 @@
-package com.progressive.minds.chimera.core.workflows.activities;
+package com.progressive.minds.chimera.pipelineutils;
 
 import org.apache.spark.sql.SparkSession;
 

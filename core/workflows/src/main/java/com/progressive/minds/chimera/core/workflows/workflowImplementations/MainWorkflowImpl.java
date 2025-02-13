@@ -30,7 +30,6 @@ public class MainWorkflowImpl implements MainWorkflow {
         List<ExtractMetadata> extractMetadata = pipelineMetadata.getExtractMetadata();
         List<TransformMetadataConfig> transformMetadata = pipelineMetadata.getTransformMetadata();
         List<PersistMetadata> persistMetadata = pipelineMetadata.getPersistMetadata();
-        extractMetadata.forEach(config -> System.out.println(config.getExtractSourceType()));
 
         if (extractMetadata != null && !extractMetadata.isEmpty()) {
             extractMetadata.forEach(config -> {
@@ -38,17 +37,18 @@ public class MainWorkflowImpl implements MainWorkflow {
                 try {
                     extractDataWorkflow.extractData(config);
                 } catch (Exception e) {
+                    //TODO : Add chimeraException
                     throw new RuntimeException(e);
                 }
             });
         }
         if (transformMetadata != null && !transformMetadata.isEmpty()) {
             transformMetadata.forEach(config -> {
-                System.out.println("Transform Metadata : " + config);
                 TransformDataWorkflow transformDataWorkflow = Workflow.newChildWorkflowStub(TransformDataWorkflow.class, childOptions);
                 try {
                     transformDataWorkflow.transformData(config);
                 } catch (Exception e) {
+                    //TODO : Add chimeraException
                     throw new RuntimeException(e);
                 }
             });
@@ -56,11 +56,11 @@ public class MainWorkflowImpl implements MainWorkflow {
 
         if (persistMetadata != null && !persistMetadata.isEmpty()) {
             persistMetadata.forEach(config -> {
-                System.out.println("Persist Metadata : " + config);
                 PersistDataWorkflow persistDataWorkflow = Workflow.newChildWorkflowStub(PersistDataWorkflow.class, childOptions);
                 try {
                     persistDataWorkflow.persistData(config);
                 } catch (Exception e) {
+                    //TODO : Add chimeraException
                     throw new RuntimeException(e);
                 }
             });

@@ -5,6 +5,10 @@ import com.progressive.minds.chimera.core.workflows.activities.activityImplement
 import com.progressive.minds.chimera.core.workflows.activities.activityImplementations.PersistDataActivityImpl;
 import com.progressive.minds.chimera.core.workflows.activities.activityImplementations.TransformDataActivityImpl;
 import com.progressive.minds.chimera.core.workflows.workflowImplementations.*;
+import com.progressive.minds.chimera.pipelineutils.TransformDataUtils;
+import com.progressive.minds.chimera.foundational.logging.ChimeraLogger;
+import com.progressive.minds.chimera.foundational.logging.ChimeraLoggerFactory;
+
 // import io.temporal.api.enums.v1.WorkflowIdReusePolicy;
 import io.temporal.client.WorkflowClient;
 import io.temporal.client.WorkflowOptions;
@@ -15,8 +19,10 @@ import io.temporal.worker.WorkerFactory;
 import java.io.IOException;
 
 public class MainApp {
+    private static final ChimeraLogger logger = ChimeraLoggerFactory.getLogger(TransformDataUtils.class);
 
     public static void main(String[] args) throws IOException, InterruptedException{
+        logger.logInfo("******* Main Workflow Started *******");
         WorkflowServiceStubs service = WorkflowServiceStubs.newLocalServiceStubs();
         WorkflowClient client = WorkflowClient.newInstance(service);
 
