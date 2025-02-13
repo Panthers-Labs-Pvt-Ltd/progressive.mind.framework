@@ -4,7 +4,7 @@
 # Export the versions of the observability tools
 export OTEL_VERSION=0.38.0
 export JAEGER_VERSION=1.29.0
-export PROMETHEUS_VERSION=2.26.0
+#export PROMETHEUS_VERSION=3.1.0
 export POSTGRES_VERSION=13-alpine3.17
 export GRAFANA_VERSION=7.5.5
 
@@ -22,4 +22,9 @@ export GRAFANA_PORT=3000
 export POSTGRES_PORT=5432
 
 # Run docker-compose
-docker-compose -f Application_Setup/docker-compose.yml up -d
+echo "Running docker-compose"
+docker-compose -f docker-compose.yml up -d
+
+# Check the status of the containers
+echo "Checking the status of the containers"
+docker-compose -f docker-compose.yml ps
