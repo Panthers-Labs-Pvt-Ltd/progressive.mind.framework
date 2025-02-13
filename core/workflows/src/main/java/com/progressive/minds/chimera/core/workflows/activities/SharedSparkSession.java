@@ -1,6 +1,5 @@
 package com.progressive.minds.chimera.core.workflows.activities;
 
-import org.apache.spark.SparkConf;
 import org.apache.spark.sql.SparkSession;
 
 public class SharedSparkSession {

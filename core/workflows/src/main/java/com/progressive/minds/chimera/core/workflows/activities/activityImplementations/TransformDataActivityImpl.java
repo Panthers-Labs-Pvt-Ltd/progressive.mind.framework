@@ -1,9 +1,6 @@
 package com.progressive.minds.chimera.core.workflows.activities.activityImplementations;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.progressive.minds.chimera.core.dataSource.formats.jdbc.jdbc;
-import com.progressive.minds.chimera.core.dataSource.sourceTypes.JDBCReader;
 import com.progressive.minds.chimera.core.workflows.activities.TransformDataActivity;
 import com.progressive.minds.chimera.core.workflows.activities.SharedSparkSession;
 import com.progressive.minds.chimera.dto.TransformMetadataConfig;
@@ -13,17 +10,13 @@ import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-
 public class TransformDataActivityImpl implements TransformDataActivity {
 
     private static final ChimeraLogger logger = ChimeraLoggerFactory.getLogger(jdbc.class);
 
     @Override
     public void transformData(TransformMetadataConfig config) {
-        //    String sourceType = config.getExtractSourceSubType();
+        logger.logInfo("Initiating TransformMetadata Flow");
         SparkSession spark = SharedSparkSession.getSparkSession();
         System.out.println("Spark Session fetched. Printing Catalog : " );
         spark.catalog().listTables().show();
