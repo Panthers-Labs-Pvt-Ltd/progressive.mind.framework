@@ -41,16 +41,65 @@ services:
     networks:
       - observability
 
-#  api-gateway:
-#    extends:
-#      file: api-gateway/api-gateway.yml
-#      service: kong-gateway
-#    environment:
-#        - POSTGRES_VERSION=13
-#        - POSTGRES_PORT=5432
-#    networks:
-#      - kong-net
+  api-gateway:
+    extends:
+      file: api-gateway/api-gateway.yml
+      service: kong-gateway
+    environment:
+      - POSTGRES_VERSION=13
+      - POSTGRES_PORT=5432
+    networks:
+      - kong-net
+    depends_on:
+      - kong-migrations
+
+  kong-migrations:
+    image: kong:latest
+    command: kong migrations bootstrap
+    networks:
+      - kong-net
+  taskmanager:
+    extends:
+      file: flink/env-compose.yml
+      service: taskmanager
+    environment:
+      - FLINK_VERSION=1.13.2
+    networks:
+      - engine
+    depends_on:
+      - jobmanager
+
+  jobmanager:
+    extends:
+      file: flink/env-compose.yml
+      service: jobmanager
+    environment:
+      - FLINK_VERSION=1.13.2
+    networks:
+      - engine
+
+  zookeeper:
+    extends:
+      file: flink/env-compose.yml
+      service: zookeeper
+    environment:
+      - FLINK_VERSION=1.13.2
+    networks:
+      - engine
+
+  kafka:
+    extends:
+        file: flink/env-compose.yml
+        service: kafka
+    environment:
+      - FLINK_VERSION=1.13.2
+    networks:
+        - engine
 
 networks:
   observability:
+    driver: bridge
+  kong-net:
+    driver: bridge
+  engine:
     driver: bridge
