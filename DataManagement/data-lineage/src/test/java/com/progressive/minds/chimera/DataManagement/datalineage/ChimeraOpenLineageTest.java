@@ -5,9 +5,11 @@ import org.apache.spark.sql.*;
 import org.apache.spark.sql.catalyst.plans.logical.LogicalPlan;
 import org.apache.spark.sql.types.*;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
@@ -22,6 +24,7 @@ import org.apache.spark.sql.types.StructType;
 import org.junit.jupiter.api.Test;
 import java.util.Map;
 
+import static com.progressive.minds.chimera.DataManagement.datalineage.ChimeraOpenLineage.OpenLineageWrapper;
 import static com.progressive.minds.chimera.DataManagement.datalineage.FieldWiseLogicalPlanAnalyzer.extractFieldWiseTransformations;
 import static com.progressive.minds.chimera.DataManagement.datalineage.facets.DatasetFacets.getColumnLevelLineage;
 
@@ -30,11 +33,12 @@ class ChimeraOpenLineageTest {
             .appName("Shared Spark Session")
             .master("local[*]")
             .getOrCreate();
-/*
+
     @Test
     void openLineageWrapper() throws IOException, InterruptedException {
         OpenLineage.RunEvent.EventType eventType = OpenLineage.RunEvent.EventType.START;
-
+        System.setProperty("API_CLIENT", "chimera_api_client");
+        System.setProperty("API_SECRET", "yhKj2HkNBpyv9ZgV9oqPxHcZOPEb3uBg");
         DBAPIClient dbClient = new DBAPIClient();
         PipelineMetadata inPipelineMetadata = dbClient.get("http://localhost:8080/api/v1/pipelineMetadata/Test_Pipeline",
                 new TypeReference<PipelineMetadata>() {});
@@ -42,7 +46,7 @@ class ChimeraOpenLineageTest {
         lineageMap.putIfAbsent("FileName" , "/home/manish/lineage.json");
        OpenLineageWrapper(eventType,inPipelineMetadata,  spark, "file",lineageMap);
     }
-*/
+
     @Test
     void ColumnLineageTest() throws URISyntaxException {
         // Sample data for first DataFrame

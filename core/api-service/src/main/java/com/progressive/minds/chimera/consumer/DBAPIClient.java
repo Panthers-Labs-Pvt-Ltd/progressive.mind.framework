@@ -93,11 +93,13 @@ public class DBAPIClient {
         String tokenUrl = "http://localhost:8800/realms/chimera_api/protocol/openid-connect/token";
 //TODO : get client details from vault.
          Map<String, String> formData = Map.of(
-            "client_id", "chimera_api_service",
-            "client_secret", "lDNMirvQXuSZz1FMkaQE588qc3Y9w3Pf",
+            "client_id", System.getProperty("API_CLIENT", "chimera_api_client"),
+            "client_secret", System.getProperty("API_SECRET", "yhKj2HkNBpyv9ZgV9oqPxHcZOPEb3uBg"),
             "grant_type", "client_credentials"
         );
 
+         /// chimera_api_service
+        //lDNMirvQXuSZz1FMkaQE588qc3Y9w3Pf
         String requestBody = formData.entrySet()
             .stream()
             .map(entry -> entry.getKey() + "=" + entry.getValue())
