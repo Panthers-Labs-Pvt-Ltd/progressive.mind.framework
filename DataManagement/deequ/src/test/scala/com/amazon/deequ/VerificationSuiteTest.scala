@@ -1,18 +1,18 @@
 /**
-  * Copyright 2024 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-  *
-  * Licensed under the Apache License, Version 2.0 (the "License"). You may not
-  * use this file except in compliance with the License. A copy of the License
-  * is located at
-  *
-  *     http://aws.amazon.com/apache2.0/
-  *
-  * or in the "license" file accompanying this file. This file is distributed on
-  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
-  * express or implied. See the License for the specific language governing
-  * permissions and limitations under the License.
-  *
-  */
+ * Copyright 2024 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"). You may not
+ * use this file except in compliance with the License. A copy of the License
+ * is located at
+ *
+ * http://aws.amazon.com/apache2.0/
+ *
+ * or in the "license" file accompanying this file. This file is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ *
+ */
 
 package com.amazon.deequ
 
@@ -49,9 +49,8 @@ class VerificationSuiteTest extends AnyWordSpec with Matchers with SparkContextS
     "return the correct verification status regardless of the order of checks" in
       withSparkSession { sparkSession =>
 
-        def assertStatusFor(data: DataFrame, checks: Check*)
-                           (expectedStatus: CheckStatus.Value)
-          : Unit = {
+        def assertStatusFor(data: DataFrame, checks: Check*)(expectedStatus: CheckStatus.Value)
+        : Unit = {
           val verificationSuiteStatus =
             VerificationSuite().onData(data).addChecks(checks).run().status
           assert(verificationSuiteStatus == expectedStatus)
@@ -96,8 +95,7 @@ class VerificationSuiteTest extends AnyWordSpec with Matchers with SparkContextS
     "return the correct verification status regardless of the order of checks with period" in
       withSparkSession { sparkSession =>
 
-        def assertStatusFor(data: DataFrame, checks: Check*)
-                           (expectedStatus: CheckStatus.Value)
+        def assertStatusFor(data: DataFrame, checks: Check*)(expectedStatus: CheckStatus.Value)
         : Unit = {
           val verificationSuiteStatus =
             VerificationSuite().onData(data).addChecks(checks).run().status
@@ -448,7 +446,7 @@ class VerificationSuiteTest extends AnyWordSpec with Matchers with SparkContextS
       resultData.show(false)
       val expectedColumns: Set[String] =
         data.columns.toSet + expectedColumn1 + expectedColumn2 + expectedColumn3 +
-          expectedColumn4 + expectedColumn5  + expectedColumn6 + expectedColumn7 + expectedColumn8
+          expectedColumn4 + expectedColumn5 + expectedColumn6 + expectedColumn7 + expectedColumn8
       assert(resultData.columns.toSet == expectedColumns)
 
       val rowLevel1 = resultData.select(expectedColumn1).collect().map(r => r.getAs[Any](0))
@@ -487,12 +485,12 @@ class VerificationSuiteTest extends AnyWordSpec with Matchers with SparkContextS
       val analyzerOptions = Option(AnalyzerOptions(filteredRow = FilteredRowOutcome.NULL))
 
       val complianceRange = new Check(CheckLevel.Error, "rule1")
-        .isContainedIn("attNull", 0, 6, false, false)
+        .isContainedIn("attNull", 0, 6, includeLowerBound = false, includeUpperBound = false)
       val complianceFilteredRange = new Check(CheckLevel.Error, "rule2")
-        .isContainedIn("attNull", 0, 6, false, false)
+        .isContainedIn("attNull", 0, 6, includeLowerBound = false, includeUpperBound = false)
         .where("att1 < 4")
       val complianceFilteredRangeNull = new Check(CheckLevel.Error, "rule3")
-        .isContainedIn("attNull", 0, 6, false, false,
+        .isContainedIn("attNull", 0, 6, includeLowerBound = false, includeUpperBound = false,
           analyzerOptions = analyzerOptions)
         .where("att1 < 4")
       val complianceInArray = new Check(CheckLevel.Error, "rule4")
@@ -870,14 +868,8 @@ class VerificationSuiteTest extends AnyWordSpec with Matchers with SparkContextS
       VerificationSuite().onData(df).addRequiredAnalyzer(Size()).run() match {
         case result =>
           assert(result.status == CheckStatus.Success)
-
-          val analysisDf = AnalyzerContext.successMetricsAsDataFrame(sparkSession,
-              AnalyzerContext(result.metrics))
-
-          val expected = Seq(
-            ("Dataset", "*", "Size", 4.0)
-          ).toDF("entity", "instance", "name", "value")
-
+          val analysisDf = AnalyzerContext.successMetricsAsDataFrame(sparkSession, AnalyzerContext(result.metrics))
+          val expected = Seq(("Dataset", "*", "Size", 4.0)).toDF("entity", "instance", "name", "value")
           assertSameRows(analysisDf, expected)
       }
     }
@@ -900,7 +892,9 @@ class VerificationSuiteTest extends AnyWordSpec with Matchers with SparkContextS
         val analyzers = analyzerToTestReusingResults :: Uniqueness(Seq("att2", "item")) :: Nil
 
         val (separateResults, numSeparateJobs) = sparkMonitor.withMonitoringSession { stat =>
-          val results = analyzers.map { _.calculate(df) }.toSet
+          val results = analyzers.map {
+            _.calculate(df)
+          }.toSet
           (results, stat.jobCount)
         }
 
@@ -965,27 +959,27 @@ class VerificationSuiteTest extends AnyWordSpec with Matchers with SparkContextS
     "if there are previous results in the repository new results should pre preferred in case of " +
       "conflicts" in withSparkSession { sparkSession =>
 
-        val df = getDfWithNumericValues(sparkSession)
+      val df = getDfWithNumericValues(sparkSession)
 
-        val repository = new InMemoryMetricsRepository
-        val resultKey = ResultKey(0, Map.empty)
+      val repository = new InMemoryMetricsRepository
+      val resultKey = ResultKey(0, Map.empty)
 
-        val analyzers = Size() :: Completeness("item") :: Nil
+      val analyzers = Size() :: Completeness("item") :: Nil
 
-        val actualResult = VerificationSuite().onData(df).useRepository(repository)
-            .addRequiredAnalyzers(analyzers).run()
-        val expectedAnalyzerContextOnLoadByKey = AnalyzerContext(actualResult.metrics)
+      val actualResult = VerificationSuite().onData(df).useRepository(repository)
+        .addRequiredAnalyzers(analyzers).run()
+      val expectedAnalyzerContextOnLoadByKey = AnalyzerContext(actualResult.metrics)
 
-        val resultWhichShouldBeOverwritten = AnalyzerContext(Map(Size() -> DoubleMetric(
-          Entity.Dataset, "", "", util.Try(100.0))))
+      val resultWhichShouldBeOverwritten = AnalyzerContext(Map(Size() -> DoubleMetric(
+        Entity.Dataset, "", "", util.Try(100.0))))
 
-        repository.save(resultKey, resultWhichShouldBeOverwritten)
+      repository.save(resultKey, resultWhichShouldBeOverwritten)
 
-        // This should overwrite the previous Size value
-        VerificationSuite().onData(df).useRepository(repository)
-          .addRequiredAnalyzers(analyzers).saveOrAppendResult(resultKey).run()
+      // This should overwrite the previous Size value
+      VerificationSuite().onData(df).useRepository(repository)
+        .addRequiredAnalyzers(analyzers).saveOrAppendResult(resultKey).run()
 
-        assert(expectedAnalyzerContextOnLoadByKey == repository.loadByKey(resultKey).get)
+      assert(expectedAnalyzerContextOnLoadByKey == repository.loadByKey(resultKey).get)
     }
 
     "addAnomalyCheck should work" in withSparkSession { sparkSession =>
@@ -1044,46 +1038,46 @@ class VerificationSuiteTest extends AnyWordSpec with Matchers with SparkContextS
 
     "addAnomalyCheck with duplicate check analyzer should work" in
       withSparkSession { sparkSession =>
-      evaluateWithRepositoryWithHistory { repository =>
+        evaluateWithRepositoryWithHistory { repository =>
 
-        val df = getDfWithNRows(sparkSession, 11)
-        val saveResultsWithKey = ResultKey(5, Map.empty)
+          val df = getDfWithNRows(sparkSession, 11)
+          val saveResultsWithKey = ResultKey(5, Map.empty)
 
-        val analyzers = Completeness("item") :: Nil
+          val analyzers = Completeness("item") :: Nil
 
-        val verificationResultOne = VerificationSuite()
-          .onData(df)
-          .addCheck(Check(CheckLevel.Error, "group-1").hasSize(_ == 11))
-          .useRepository(repository)
-          .addRequiredAnalyzers(analyzers)
-          .saveOrAppendResult(saveResultsWithKey)
-          .addAnomalyCheck(
-            AbsoluteChangeStrategy(Some(-2.0), Some(2.0)),
-            Size(),
-            Some(AnomalyCheckConfig(CheckLevel.Warning, "Anomaly check to fail"))
-          )
-          .run()
+          val verificationResultOne = VerificationSuite()
+            .onData(df)
+            .addCheck(Check(CheckLevel.Error, "group-1").hasSize(_ == 11))
+            .useRepository(repository)
+            .addRequiredAnalyzers(analyzers)
+            .saveOrAppendResult(saveResultsWithKey)
+            .addAnomalyCheck(
+              AbsoluteChangeStrategy(Some(-2.0), Some(2.0)),
+              Size(),
+              Some(AnomalyCheckConfig(CheckLevel.Warning, "Anomaly check to fail"))
+            )
+            .run()
 
-        val verificationResultTwo = VerificationSuite()
-          .onData(df)
-          .useRepository(repository)
-          .addRequiredAnalyzers(analyzers)
-          .saveOrAppendResult(saveResultsWithKey)
-          .addAnomalyCheck(
-            AbsoluteChangeStrategy(Some(-7.0), Some(7.0)),
-            Size(),
-            Some(AnomalyCheckConfig(CheckLevel.Error, "Anomaly check to succeed",
-              Map.empty, Some(0), Some(11)))
-          )
-          .run()
+          val verificationResultTwo = VerificationSuite()
+            .onData(df)
+            .useRepository(repository)
+            .addRequiredAnalyzers(analyzers)
+            .saveOrAppendResult(saveResultsWithKey)
+            .addAnomalyCheck(
+              AbsoluteChangeStrategy(Some(-7.0), Some(7.0)),
+              Size(),
+              Some(AnomalyCheckConfig(CheckLevel.Error, "Anomaly check to succeed",
+                Map.empty, Some(0), Some(11)))
+            )
+            .run()
 
-        val checkResultsOne = verificationResultOne.checkResults.values.toSeq(1).status
-        val checkResultsTwo = verificationResultTwo.checkResults.head._2.status
+          val checkResultsOne = verificationResultOne.checkResults.values.toSeq(1).status
+          val checkResultsTwo = verificationResultTwo.checkResults.head._2.status
 
-        assert(checkResultsOne == CheckStatus.Warning)
-        assert(checkResultsTwo == CheckStatus.Success)
+          assert(checkResultsOne == CheckStatus.Warning)
+          assert(checkResultsTwo == CheckStatus.Success)
+        }
       }
-    }
 
     "write output files to specified locations" in withSparkSession { sparkSession =>
 
@@ -1312,12 +1306,12 @@ class VerificationSuiteTest extends AnyWordSpec with Matchers with SparkContextS
           .isComplete("fake")
 
         val verificationResult = VerificationSuite()
-            .onData(df)
-            .addCheck(checkThatShouldSucceed)
-            .addCheck(checkThatWillThrow)
-            .addCheck(isCompleteCheckThatShouldFailCompleteness)
-            .addCheck(complianceCheckThatShouldSucceed)
-            .run()
+          .onData(df)
+          .addCheck(checkThatShouldSucceed)
+          .addCheck(checkThatWillThrow)
+          .addCheck(isCompleteCheckThatShouldFailCompleteness)
+          .addCheck(complianceCheckThatShouldSucceed)
+          .run()
 
         val checkSuccessResult = verificationResult.checkResults(checkThatShouldSucceed)
         checkSuccessResult.constraintResults.map(_.message) shouldBe List(None)
@@ -1648,8 +1642,7 @@ class VerificationSuiteTest extends AnyWordSpec with Matchers with SparkContextS
       assert(equalityCheck3Result.isDefined && equalityCheck3Result.get.status == CheckStatus.Success)
     }
 
-    def assertRowLevelResults(rowLevelResults: DataFrame,
-                              analyzerOptions: AnalyzerOptions): Unit = {
+    def assertRowLevelResults(rowLevelResults: DataFrame, analyzerOptions: AnalyzerOptions): Unit = {
       val equalityCheck1Results = getRowLevelResults(rowLevelResults.select(check1Description))
       val equalityCheck2Results = getRowLevelResults(rowLevelResults.select(check2Description))
       val equalityCheck3Results = getRowLevelResults(rowLevelResults.select(check3Description))
@@ -1722,6 +1715,7 @@ class VerificationSuiteTest extends AnyWordSpec with Matchers with SparkContextS
   "Verification Suite with == based Min/Max checks and null row behavior" should {
     val col = "attNull"
     val checkDescription = "equality-check"
+
     def mkEqualityCheck(analyzerOptions: AnalyzerOptions): Check = new Check(CheckLevel.Error, checkDescription)
       .hasMin(col, _ == 6, analyzerOptions = Some(analyzerOptions))
       .hasMax(col, _ == 6, analyzerOptions = Some(analyzerOptions))
@@ -1735,8 +1729,7 @@ class VerificationSuiteTest extends AnyWordSpec with Matchers with SparkContextS
     def getRowLevelResults(df: DataFrame): Seq[java.lang.Boolean] =
       df.collect().map { r => r.getAs[java.lang.Boolean](0) }.toSeq
 
-    def assertRowLevelResults(rowLevelResults: DataFrame,
-                              analyzerOptions: AnalyzerOptions): Unit = {
+    def assertRowLevelResults(rowLevelResults: DataFrame, analyzerOptions: AnalyzerOptions): Unit = {
       val equalityCheckResults = getRowLevelResults(rowLevelResults.select(checkDescription))
       val nullOutcome: java.lang.Boolean = analyzerOptions.nullBehavior match {
         case NullBehavior.Fail => false
@@ -1829,8 +1822,7 @@ class VerificationSuiteTest extends AnyWordSpec with Matchers with SparkContextS
       assert(equalityCheck3Result.isDefined && equalityCheck3Result.get.status == CheckStatus.Success)
     }
 
-    def assertRowLevelResults(rowLevelResults: DataFrame,
-                              analyzerOptions: AnalyzerOptions): Unit = {
+    def assertRowLevelResults(rowLevelResults: DataFrame, analyzerOptions: AnalyzerOptions): Unit = {
       val equalityCheck1Results = getRowLevelResults(rowLevelResults.select(check1Description))
       val equalityCheck2Results = getRowLevelResults(rowLevelResults.select(check2Description))
       val equalityCheck3Results = getRowLevelResults(rowLevelResults.select(check3Description))
@@ -1922,8 +1914,7 @@ class VerificationSuiteTest extends AnyWordSpec with Matchers with SparkContextS
     def getRowLevelResults(df: DataFrame): Seq[java.lang.Boolean] =
       df.collect().map { r => r.getAs[java.lang.Boolean](0) }.toSeq
 
-    def assertRowLevelResults(rowLevelResults: DataFrame,
-                              analyzerOptions: AnalyzerOptions): Unit = {
+    def assertRowLevelResults(rowLevelResults: DataFrame, analyzerOptions: AnalyzerOptions): Unit = {
       val equalityCheckResults = getRowLevelResults(rowLevelResults.select(checkDescription))
       val nullOutcome: java.lang.Boolean = analyzerOptions.nullBehavior match {
         case NullBehavior.Fail => false
@@ -2065,9 +2056,7 @@ class VerificationSuiteTest extends AnyWordSpec with Matchers with SparkContextS
       val columnCondition = "color in ('blue')"
       val whereClause = "id <= 3"
 
-      case class CheckConfig(checkName: String,
-                             assertion: Double => Boolean,
-                             checkStatus: CheckStatus.Value,
+      case class CheckConfig(checkName: String, assertion: Double => Boolean, checkStatus: CheckStatus.Value,
                              whereClause: Option[String] = None)
 
       val success = CheckStatus.Success
@@ -2102,25 +2091,31 @@ class VerificationSuiteTest extends AnyWordSpec with Matchers with SparkContextS
 
       val verificationResult = VerificationSuite().onData(df).addChecks(checks).run()
       val actualResults = verificationResult.checkResults.map { case (c, r) => c.description -> r.status }
-      val expectedResults = checkConfigs.map { c => c.checkName -> c.checkStatus}.toMap
+      val expectedResults = checkConfigs.map { c => c.checkName -> c.checkStatus }.toMap
       assert(actualResults == expectedResults)
 
       verificationResult.metrics.values.foreach { metric =>
         val metricValue = metric.asInstanceOf[Metric[Double]].value.toOption.getOrElse(0.0)
-        if (metric.instance.contains("where")) assert(math.abs(metricValue - 0.66) < 0.1)
-        else assert(metricValue == 0.4)
+        if (metric.instance.contains("where")) {
+          assert(math.abs(metricValue - 0.66) < 0.1)
+        } else {
+          assert(metricValue == 0.4)
+        }
       }
 
       val rowLevelResults = VerificationResult.rowLevelResultsAsDataFrame(sparkSession, verificationResult, df)
       checkConfigs.foreach { checkConfig =>
-        val results = rowLevelResults.select(checkConfig.checkName).collect().map { r => r.getAs[Boolean](0)}.toSeq
-        if (checkConfig.whereClause.isDefined) assert(results == Seq(true, false, true, true, true))
-        else assert(results == Seq(true, false, true, false, false))
+        val results = rowLevelResults.select(checkConfig.checkName).collect().map { r => r.getAs[Boolean](0) }.toSeq
+        if (checkConfig.whereClause.isDefined) {
+          assert(results == Seq(true, false, true, true, true))
+        } else {
+          assert(results == Seq(true, false, true, false, false))
+        }
       }
     }
   }
 
-   /** Run anomaly detection using a repository with some previous analysis results for testing */
+  /** Run anomaly detection using a repository with some previous analysis results for testing */
   private[this] def evaluateWithRepositoryWithHistory(test: MetricsRepository => Unit): Unit = {
 
     val repository = new InMemoryMetricsRepository()

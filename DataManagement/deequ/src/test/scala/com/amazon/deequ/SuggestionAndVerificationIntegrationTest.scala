@@ -35,8 +35,7 @@ class SuggestionAndVerificationIntegrationTest extends AnyWordSpec with SparkCon
     "Succeed for all constraints suggested for the data with . in column name" in
       withSparkSession { session =>
 
-        def assertStatusFor(data: DataFrame, checks: Check*)
-                           (expectedStatus: CheckStatus.Value)
+        def assertStatusFor(data: DataFrame, checks: Check*)(expectedStatus: CheckStatus.Value)
         : Unit = {
           val verificationSuiteStatus =
             VerificationSuite().onData(data).addChecks(checks).run().status
