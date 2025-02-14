@@ -26,5 +26,6 @@
         <module>api-cloud-config</module>
         <module>executionEngine</module>
         <module>workflows</module>
+        <module>pipeline</module>
     </modules>
 </project>

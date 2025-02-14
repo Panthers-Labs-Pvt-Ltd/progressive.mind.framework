@@ -1,7 +1,7 @@
-package com.progressive.minds.chimera.common.workflows.workflowImplementations;
+package com.progressive.minds.chimera.core.workflows.workflowImplementations;
 
-import com.progressive.minds.chimera.common.workflows.FetchPipelineMetadata;
-import com.progressive.minds.chimera.common.workflows.activities.FetchPipelineMetadataActivity;
+import com.progressive.minds.chimera.core.workflows.FetchPipelineMetadata;
+import com.progressive.minds.chimera.core.workflows.activities.FetchPipelineMetadataActivity;
 import com.progressive.minds.chimera.dto.PipelineMetadata;
 import io.temporal.activity.ActivityOptions;
 import io.temporal.workflow.Workflow;

@@ -1,4 +1,4 @@
-package com.progressive.minds.chimera.common.workflows.activities;
+package com.progressive.minds.chimera.core.workflows.activities;
 
 import com.progressive.minds.chimera.dto.PipelineMetadata;
 import io.temporal.activity.ActivityInterface;

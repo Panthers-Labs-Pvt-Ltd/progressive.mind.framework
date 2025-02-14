@@ -1,11 +1,11 @@
 package com.progressive.minds.chimera.core.dataSource.formats.jdbc;
 
-import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
 import static com.progressive.minds.chimera.core.dataSource.utility.commonFunctions.*;
 
+import com.progressive.minds.chimera.core.dataSource.utility.JdbcDriver;
 import com.progressive.minds.chimera.foundational.logging.ChimeraLogger;
 import com.progressive.minds.chimera.foundational.logging.ChimeraLoggerFactory;
 import org.apache.spark.sql.Dataset;
@@ -14,112 +14,122 @@ import org.apache.spark.sql.SparkSession;
 
 public class jdbc {
 
-    private static final String loggerTag = "JDBC ";
+    private static final String LOGGER_TAG = "JDBC";
     private static final ChimeraLogger logger = ChimeraLoggerFactory.getLogger(jdbc.class);
 
-    private static final String defaultConf = "[{\"Key\":\"pushDownPredicate\",\"value\":\"true\"}]";
-    private static final String defaultWriteConf = "[{\"Key\":\"queryTimeout\",\"Value\":\"0\"}]";
+    private static final String DEFAULT_READ_CONF = "[{\"Key\":\"pushDownPredicate\",\"Value\":\"true\"}]";
+    private static final String DEFAULT_WRITE_CONF = "[{\"Key\":\"queryTimeout\",\"Value\":\"0\"}]";
 
-    private static final Map<String, String> driverMap = new HashMap<>() {{
-        put("mariadb", "org.mariadb.jdbc.Driver");
-        put("mysql", "com.mysql.cj.jdbc.Driver");
-        put("oracle", "oracle.jdbc.driver.OracleDriver");
-        put("db2", "com.ibm.db2.jcc.DB2Driver");
-        put("mssql", "com.microsoft.sqlserver.jdbc.SQLServerDriver");
-        put("postgres", "org.postgresql.Driver");
-        put("teradata", "com.teradata.jdbc.TeraDriver");
-        put("redshift", "com.amazon.redshift.jdbc42.Driver");
-    }};
+   public static Dataset<Row> read(String sourceType, SparkSession sparkSession, String jdbcUrl,
+                                    String userName, String password, String sqlQuery, String customConf) {
 
-    public static Dataset<Row> read(String inSourceType, SparkSession inSparkSession, String inJDBCUrl,
-                                 String inUserName, String inPassword,
-                                 String inSQLQuery, String inCustomConf) throws Exception {
-
-        String inSourceTyp = capitalize(inSourceType);
-        // validateInputs(inSourceType, inJDBCUrl, inUserName, inPassword, inSQLQuery);
+        String sourceTypeCapitalized = capitalize(sourceType);
+        validateInputs(sourceType, jdbcUrl, userName, password, sqlQuery);
 
         try {
-            logger.logInfo(inSourceTyp + " Table - Read Options: " + inCustomConf);
-            String readOptions = isNullOrBlank(inCustomConf) ? defaultConf : inCustomConf;
+            logger.logInfo(LOGGER_TAG + " : " + sourceTypeCapitalized + " - Read Options: " + customConf);
+
+            String readOptions = isNullOrBlank(customConf) ? DEFAULT_READ_CONF : customConf;
             Map<String, String> extraOptions = getConfig(readOptions);
 
             String numPartitions = extraOptions.getOrDefault("numPartitions", "4");
             String fetchSize = extraOptions.getOrDefault("fetchSize", "5000");
 
-            String driverType = driverMap.getOrDefault(inSourceType.toLowerCase(Locale.ROOT),
-                    "");
+            String driverType = JdbcDriver.getDriver(sourceType.toLowerCase(Locale.ROOT)).orElse("");
+
 
             if (isNullOrBlank(driverType)) {
-                logger.logError(inSourceTyp + "- Invalid Driver Specified for " + inSourceTyp);
-                throw new Exception("DataSourceException.InvalidJDBCDriver");
+                throw new RuntimeException("Invalid JDBC Driver for " + sourceTypeCapitalized);
             }
 
-            return inSparkSession.read()
+            logger.logInfo(LOGGER_TAG + " : " + String.format("Connecting to: %s | Query: %s | User: %s | Driver: %s",
+                    jdbcUrl, sqlQuery, userName, driverType));
+
+            Dataset<Row> df = sparkSession.read()
                     .format("jdbc")
-                    .option("url", inJDBCUrl)
-                    .option("query", inSQLQuery)
-                    .option("user", inUserName)
-                    .option("password", inPassword)
+                    .option("url", jdbcUrl)
+                    .option("query", sqlQuery)
+                    .option("user", userName)
+                    .option("password", password)
                     .option("numPartitions", numPartitions)
                     .option("fetchSize", fetchSize)
                     .option("driver", driverType)
                     .options(extraOptions)
                     .load();
 
+            if (df.isEmpty()) {
+                logger.logWarning(LOGGER_TAG + " : " + "Query returned an empty DataFrame.");
+            }
+
+            return df;
+
         } catch (Exception e) {
-            logger.logError(inSourceTyp + " Data Source - Error executing SQL Query: " + inSQLQuery, e);
-            throw new Exception("DataSourceException.SQLException");
+            logger.logError(LOGGER_TAG + " : " + sourceTypeCapitalized + " - Error executing SQL Query: " + sqlQuery, e);
+            throw new RuntimeException("Database Exception", e);
         }
     }
 
-    public static boolean write(String inSourceType, Dataset<Row> inSourceDataFrame, String inJDBCUrl, String inUserName,
-                                String inPassword, String inDatabaseName, String inTableName,
-                                String inSaveMode, String inCustomConf) throws Exception {
+    public static boolean write(String sourceType, Dataset<Row> dataFrame, String jdbcUrl, String userName,
+                                String password, String databaseName, String tableName, String saveMode,
+                                String customConf) {
 
-        String inSourceTyp = capitalize(inSourceType);
-        validateInputs(inSourceType, inJDBCUrl, inUserName, inPassword, inTableName);
+        String sourceTypeCapitalized = capitalize(sourceType);
+        validateInputs(sourceType, jdbcUrl, userName, password, tableName);
 
         try {
-            String writeOptions = isNullOrBlank(inCustomConf) ? defaultWriteConf : inCustomConf;
+            String writeOptions = isNullOrBlank(customConf) ? DEFAULT_WRITE_CONF : customConf;
             Map<String, String> extraOptions = getConfig(writeOptions);
 
             String numPartitions = extraOptions.getOrDefault("numPartitions", "4");
             String batchSize = extraOptions.getOrDefault("batchsize", "5000");
 
-            logger.logInfo(inSourceTyp + " Writer - JDBC URL: " + inJDBCUrl);
+            logger.logInfo(LOGGER_TAG + " : " + sourceTypeCapitalized + " - Writing to " + databaseName + "." + tableName);
 
-            String driver = extraOptions.getOrDefault("driver", driverMap.getOrDefault(inSourceType.toLowerCase(Locale.ROOT), ""));
+            String driver = JdbcDriver.getDriver(sourceType.toLowerCase(Locale.ROOT)).orElse("");
             if (isNullOrBlank(driver)) {
-                throw new Exception("DataSourceException.InvalidJDBCDriver");
+                throw new RuntimeException("Invalid JDBC Driver for " + sourceTypeCapitalized);
             }
 
-            String DatabaseTableName = inDatabaseName + "." + inTableName;
+            logger.logInfo(LOGGER_TAG + " : " + String.format("Writing to: %s | table: %s | User: %s | Driver: %s",
+                    jdbcUrl, tableName, userName, driver));
 
-            inSourceDataFrame.write()
+            dataFrame.write()
                     .format("jdbc")
-                    .option("url", inJDBCUrl)
-                    .option("dbtable", DatabaseTableName)
-                    .option("user", inUserName)
-                    .option("password", inPassword)
+                    .option("url", jdbcUrl)
+                    .option("dbtable", tableName)
+                    .option("user", userName)
+                    .option("password", password)
                     .option("driver", driver)
                     .option("numPartitions", numPartitions)
                     .option("batchsize", batchSize)
                     .options(extraOptions)
-                    .mode(inSaveMode)
+                    .mode(saveMode)
                     .save();
 
-            logger.logInfo(inSourceTyp + " Writer - Data Write Process Completed successfully");
+            logger.logInfo(LOGGER_TAG + " : " + sourceTypeCapitalized + " - Data written successfully to " + databaseName + "." + tableName);
             return true;
 
         } catch (Exception e) {
-            logger.logError(inSourceTyp + " Data Source- Error writing data to table: " + inTableName, e);
-            throw new Exception("DataSourceException.SQLException");
+            logger.logError(LOGGER_TAG + " : " + sourceTypeCapitalized + " - Error writing to table: " + tableName, e);
+            throw new RuntimeException("Database Write Exception", e);
         }
     }
 
-    private static void validateInputs(String sourceType, String jdbcUrl, String userName, String password,
-                                     String sqlQuery) {
-        // Validation logic
+    private static void validateInputs(String sourceType, String jdbcUrl, String userName, String password, String queryOrTable) {
+        if (isNullOrBlank(sourceType)) {
+            throw new IllegalArgumentException("Source type cannot be null or empty.");
+        }
+        if (isNullOrBlank(jdbcUrl)) {
+            throw new IllegalArgumentException("JDBC URL cannot be null or empty.");
+        }
+        if (isNullOrBlank(userName)) {
+            throw new IllegalArgumentException("Username cannot be null or empty.");
+        }
+        if (isNullOrBlank(password)) {
+            throw new IllegalArgumentException("Password cannot be null or empty.");
+        }
+        if (isNullOrBlank(queryOrTable)) {
+            throw new IllegalArgumentException("SQL Query or Table name cannot be null or empty.");
+        }
     }
-
 }

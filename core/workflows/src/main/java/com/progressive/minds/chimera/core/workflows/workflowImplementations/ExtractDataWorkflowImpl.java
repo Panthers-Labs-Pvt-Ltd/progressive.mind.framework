@@ -1,9 +1,9 @@
-package com.progressive.minds.chimera.common.workflows.workflowImplementations;
+package com.progressive.minds.chimera.core.workflows.workflowImplementations;
 
 import java.time.Duration;
 
-import com.progressive.minds.chimera.common.workflows.ExtractDataWorkflow;
-import com.progressive.minds.chimera.common.workflows.activities.ExtractDataActivity;
+import com.progressive.minds.chimera.core.workflows.ExtractDataWorkflow;
+import com.progressive.minds.chimera.core.workflows.activities.ExtractDataActivity;
 import com.progressive.minds.chimera.dto.ExtractMetadata;
 
 import io.temporal.activity.ActivityOptions;
@@ -18,7 +18,7 @@ public class ExtractDataWorkflowImpl implements ExtractDataWorkflow {
     );
 
     @Override
-    public void extractData(ExtractMetadata config) {
+    public void extractData(ExtractMetadata config) throws Exception {
         activities.extractData(config);
     }
 
