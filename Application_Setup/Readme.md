@@ -89,39 +89,32 @@ echo -n 'your-password' | base64
 
 ---
 
-## Deployment Instructions
-
-1. **Create the Namespace:**
-   ```bash
-   kubectl create namespace observability
-   ```
-
-2. **Apply the Common Configurations:**
-   ```bash
-   kubectl apply -f setup/common/configmap.yaml
-   kubectl apply -f setup/common/secret.yaml
-   ```
-
-3. **Deploy Grafana:**
-   ```bash
-   kubectl apply -f setup/grafana/deployment.yaml
-   kubectl apply -f setup/grafana/service.yaml
-   ```
-
-4. **Deploy Prometheus:**
-   ```bash
-   kubectl apply -f setup/prometheus/deployment.yaml
-   kubectl apply -f setup/prometheus/service.yaml
-   kubectl apply -f setup/prometheus/prometheus-config.yaml
-   ```
-
-5. **Deploy Jaeger:**
-   ```bash
-   kubectl apply -f setup/jaeger/deployment.yaml
-   kubectl apply -f setup/jaeger/service.yaml
-   ```
-
----
+### Deployment Instructions
+## To deploy on server
+- **Prerequisites**:
+    - A Kubernetes cluster with `kubectl` configured.
+    - Deploy the deploy_observability.sh script in the root directory of the project.
+    - Run the script using the following command:
+    ```bash
+    ./deploy_observability.sh
+    ```
+## To deploy on local for local development and testing
+- **Prerequisites**:
+   - We can directly trigger the script to deploy the observability stack and other applications on the local machine. 
+   - which does the docker-compose up
+   - Deploy the run_docker_compose.sh script in the root directory of the project.
+   - Run the script using the following command:
+    ```bash
+    ./run_docker_compose.sh
+    ```
+   
+    - A Kubernetes cluster with `kubectl` configured.
+    - Minikube installed for local testing.
+    - Deploy the deploy_observability_local.sh script in the root directory of the project.
+    - Run the script using the following command:
+    ```bash
+    ./deploy_observability_local.sh
+    ```
 
 ## Accessing the Applications
 

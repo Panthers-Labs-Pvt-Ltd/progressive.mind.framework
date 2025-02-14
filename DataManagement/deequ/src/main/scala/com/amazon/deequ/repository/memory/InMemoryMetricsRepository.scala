@@ -25,16 +25,16 @@ import scala.collection.JavaConversions._
 import java.util.concurrent.ConcurrentHashMap
 
 /** A simple Repository implementation backed by a concurrent hash map */
-class InMemoryMetricsRepository() extends MetricsRepository {
+class InMemoryMetricsRepository extends MetricsRepository {
 
   private val resultsRepository = new ConcurrentHashMap[ResultKey, AnalysisResult]()
 
   /**
-    * Saves Analysis results (metrics)
-    *
-    * @param resultKey represents the version of the dataset deequ checks were run on.
-    * @param analyzerContext The resulting AnalyzerContext of an Analysis
-    */
+   * Saves Analysis results (metrics)
+   *
+   * @param resultKey represents the version of the dataset deequ checks were run on.
+   * @param analyzerContext The resulting AnalyzerContext of an Analysis
+   */
   def save(resultKey: ResultKey, analyzerContext: AnalyzerContext): Unit = {
 
     val successfulMetrics = analyzerContext.metricMap.filter {
@@ -48,10 +48,10 @@ class InMemoryMetricsRepository() extends MetricsRepository {
   }
 
   /**
-    * Get an AnalyzerContext saved using exactly the same resultKey if present
-    *
-    * @param resultKey represents the version of the dataset deequ checks were run on.
-    */
+   * Get an AnalyzerContext saved using exactly the same resultKey if present
+   *
+   * @param resultKey represents the version of the dataset deequ checks were run on.
+   */
   def loadByKey(resultKey: ResultKey): Option[AnalyzerContext] = {
     Option(resultsRepository.get(resultKey)).map { _.analyzerContext }
   }
@@ -74,20 +74,20 @@ class LimitedInMemoryMetricsRepositoryMultipleResultsLoader(
   private[this] var after: Option[Long] = None
 
   /**
-    * Filter out results that don't have specific values for specific tags
-    *
-    * @param tagValues Map with tag names and the corresponding values to filter for
-    */
+   * Filter out results that don't have specific values for specific tags
+   *
+   * @param tagValues Map with tag names and the corresponding values to filter for
+   */
   def withTagValues(tagValues: Map[String, String]): MetricsRepositoryMultipleResultsLoader = {
     this.tagValues = Option(tagValues)
     this
   }
 
   /**
-    * Choose all metrics that you want to load
-    *
-    * @param analyzers A sequence of analyers who's resulting metrics you want to load
-    */
+   * Choose all metrics that you want to load
+   *
+   * @param analyzers A sequence of analyers who's resulting metrics you want to load
+   */
   def forAnalyzers(analyzers: Seq[Analyzer[_, Metric[_]]])
     : MetricsRepositoryMultipleResultsLoader = {
 
@@ -96,20 +96,20 @@ class LimitedInMemoryMetricsRepositoryMultipleResultsLoader(
   }
 
   /**
-    * Only look at AnalysisResults with a history key with a smaller value
-    *
-    * @param dateTime The maximum dateTime of AnalysisResults to look at
-    */
+   * Only look at AnalysisResults with a history key with a smaller value
+   *
+   * @param dateTime The maximum dateTime of AnalysisResults to look at
+   */
   def before(dateTime: Long): MetricsRepositoryMultipleResultsLoader = {
     this.before = Option(dateTime)
     this
   }
 
   /**
-    * Only look at AnalysisResults with a history key with a greater value
-    *
-    * @param dateTime The minimum dateTime of AnalysisResults to look at
-    */
+   * Only look at AnalysisResults with a history key with a greater value
+   *
+   * @param dateTime The minimum dateTime of AnalysisResults to look at
+   */
   def after(dateTime: Long): MetricsRepositoryMultipleResultsLoader = {
     this.after = Option(dateTime)
     this

@@ -41,13 +41,15 @@ services:
     networks:
       - observability
 
-#  postgres-db:
+#  api-gateway:
 #    extends:
-#      file: services/postgres-db.yml
-#      service: postgres-db
+#      file: api-gateway/api-gateway.yml
+#      service: kong-gateway
 #    environment:
-#      - POSTGRES_VERSION=13-alpine3.17
-#      - POSTGRES_PORT=5432
+#        - POSTGRES_VERSION=13
+#        - POSTGRES_PORT=5432
+#    networks:
+#      - kong-net
 
 networks:
   observability:

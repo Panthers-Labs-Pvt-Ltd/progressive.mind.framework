@@ -39,12 +39,12 @@ import java.util.UUID.randomUUID
 class FileSystemMetricsRepository(session: SparkSession, path: String) extends MetricsRepository {
 
   /**
-    * Saves Analysis results (metrics)
-    *
-    * @param resultKey       A ResultKey that represents the version of the dataset deequ
-    *                        DQ checks were run on.
-    * @param analyzerContext The resulting AnalyzerContext of an Analysis
-    */
+   * Saves Analysis results (metrics)
+   *
+   * @param resultKey       A ResultKey that represents the version of the dataset deequ
+   *                        DQ checks were run on.
+   * @param analyzerContext The resulting AnalyzerContext of an Analysis
+   */
   override def save(resultKey: ResultKey, analyzerContext: AnalyzerContext): Unit = {
     val successfulMetrics = analyzerContext.metricMap
       .filter { case (_, metric) => metric.value.isSuccess }
@@ -64,11 +64,11 @@ class FileSystemMetricsRepository(session: SparkSession, path: String) extends M
   }
 
   /**
-    * Get a AnalyzerContext saved using exactly the same resultKey if present
-    *
-    * @param resultKey       A ResultKey that represents the version of the dataset deequ
-    *                        DQ checks were run on.
-    */
+   * Get a AnalyzerContext saved using exactly the same resultKey if present
+   *
+   * @param resultKey       A ResultKey that represents the version of the dataset deequ
+   *                        DQ checks were run on.
+   */
   override def loadByKey(resultKey: ResultKey): Option[AnalyzerContext] = {
     load().get().find(_.resultKey == resultKey).map(_.analyzerContext)
   }
@@ -80,7 +80,7 @@ class FileSystemMetricsRepository(session: SparkSession, path: String) extends M
 }
 
 class FileSystemMetricsRepositoryMultipleResultsLoader(
-  session: SparkSession, path: String) extends MetricsRepositoryMultipleResultsLoader {
+    session: SparkSession, path: String) extends MetricsRepositoryMultipleResultsLoader {
 
   private[this] var tagValues: Option[Map[String, String]] = None
   private[this] var forAnalyzers: Option[Seq[Analyzer[_, Metric[_]]]] = None
@@ -88,20 +88,20 @@ class FileSystemMetricsRepositoryMultipleResultsLoader(
   private[this] var after: Option[Long] = None
 
   /**
-    * Filter out results that don't have specific values for specific tags
-    *
-    * @param tagValues Map with tag names and the corresponding values to filter for
-    */
+   * Filter out results that don't have specific values for specific tags
+   *
+   * @param tagValues Map with tag names and the corresponding values to filter for
+   */
   def withTagValues(tagValues: Map[String, String]): MetricsRepositoryMultipleResultsLoader = {
     this.tagValues = Option(tagValues)
     this
   }
 
   /**
-    * Choose all metrics that you want to load
-    *
-    * @param analyzers A sequence of analyers who's resulting metrics you want to load
-    */
+   * Choose all metrics that you want to load
+   *
+   * @param analyzers A sequence of analyers who's resulting metrics you want to load
+   */
   def forAnalyzers(analyzers: Seq[Analyzer[_, Metric[_]]])
     : MetricsRepositoryMultipleResultsLoader = {
 
@@ -110,20 +110,20 @@ class FileSystemMetricsRepositoryMultipleResultsLoader(
   }
 
   /**
-    * Only look at AnalysisResults with a result key with a smaller value
-    *
-    * @param dateTime The maximum dateTime of AnalysisResults to look at
-    */
+   * Only look at AnalysisResults with a result key with a smaller value
+   *
+   * @param dateTime The maximum dateTime of AnalysisResults to look at
+   */
   def before(dateTime: Long): MetricsRepositoryMultipleResultsLoader = {
     this.before = Option(dateTime)
     this
   }
 
   /**
-    * Only look at AnalysisResults with a result key with a greater value
-    *
-    * @param dateTime The minimum dateTime of AnalysisResults to look at
-    */
+   * Only look at AnalysisResults with a result key with a greater value
+   *
+   * @param dateTime The minimum dateTime of AnalysisResults to look at
+   */
   def after(dateTime: Long): MetricsRepositoryMultipleResultsLoader = {
     this.after = Option(dateTime)
     this
@@ -171,9 +171,9 @@ object FileSystemMetricsRepository {
 
   /* Helper function to write to a binary file on S3 */
   private[fs] def writeToFileOnDfs(
-      session: SparkSession,
-      path: String,
-      writeFunc: BufferedOutputStream => Unit)
+    session: SparkSession,
+    path: String,
+    writeFunc: BufferedOutputStream => Unit)
     : Unit = {
 
     // Create, rename and delete are atomic operations, at least should be according to spec
