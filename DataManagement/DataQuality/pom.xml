@@ -127,12 +127,6 @@
         </dependency>
 
         <dependency>
-            <artifactId>foundational.logging</artifactId>
-            <groupId>com.progressive.minds.chimera</groupId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
             <version>2.8.4</version>
@@ -163,7 +157,7 @@
         <dependency>
             <groupId>com.progressive.minds.chimera</groupId>
             <artifactId>common.util</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>${chimera.project.version}</version>
         </dependency>
 
     </dependencies>

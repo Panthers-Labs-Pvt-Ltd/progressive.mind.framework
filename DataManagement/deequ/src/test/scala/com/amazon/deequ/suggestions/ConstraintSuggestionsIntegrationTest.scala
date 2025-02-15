@@ -20,7 +20,7 @@ package suggestions
 import com.amazon.deequ.analyzers._
 import com.amazon.deequ.constraints.{AnalysisBasedConstraint, Constraint, ConstraintDecorator}
 import com.amazon.deequ.metrics.Metric
-import com.amazon.deequ.suggestions.rules.{NonNegativeNumbersRule, UniqueIfApproximatelyUniqueRule}
+import com.amazon.deequ.suggestions.rules.NonNegativeNumbersRule
 import org.apache.spark.sql.Row
 import org.apache.spark.sql.types.IntegerType
 import org.scalatest.wordspec.AnyWordSpec
@@ -58,7 +58,7 @@ class ConstraintSuggestionsIntegrationTest extends AnyWordSpec with SparkContext
 
           // Unique string id
           val id = s"id$record"
-          // Categorial string value
+          // Categorical string value
           val marketplace = categories(rng.nextInt(categories.length))
           // Non-negative fractional
           val measurement = rng.nextDouble()
@@ -239,25 +239,17 @@ class ConstraintSuggestionsIntegrationTest extends AnyWordSpec with SparkContext
   }
 
   private[this] def assertConstraintExistsIn(constraintSuggestionResult: ConstraintSuggestionResult)
-      (func: (Analyzer[State[_], Metric[_]], Double => Boolean) => Boolean)
-    : Unit = {
-
+    (func: (Analyzer[State[_], Metric[_]], Double => Boolean) => Boolean): Unit = {
     assert(evaluate(constraintSuggestionResult, func))
   }
 
-  private[this] def assertNoConstraintExistsIn(
-      constraintSuggestionResult: ConstraintSuggestionResult)(
-      func: (Analyzer[State[_], Metric[_]], Double => Boolean) => Boolean)
-    : Unit = {
-
+  private[this] def assertNoConstraintExistsIn(constraintSuggestionResult: ConstraintSuggestionResult)
+    (func: (Analyzer[State[_], Metric[_]], Double => Boolean) => Boolean): Unit = {
     assert(!evaluate(constraintSuggestionResult, func))
   }
 
-  private[this] def evaluate(
-      constraintSuggestionResult: ConstraintSuggestionResult,
-      func: (Analyzer[State[_], Metric[_]], Double => Boolean) => Boolean)
-    : Boolean = {
-
+  private[this] def evaluate(constraintSuggestionResult: ConstraintSuggestionResult,
+    func: (Analyzer[State[_], Metric[_]], Double => Boolean) => Boolean): Boolean = {
     constraintSuggestionResult
       .constraintSuggestions.values.reduce(_ ++ _)
       .map(constraintSuggestion => constraintSuggestion.constraint)

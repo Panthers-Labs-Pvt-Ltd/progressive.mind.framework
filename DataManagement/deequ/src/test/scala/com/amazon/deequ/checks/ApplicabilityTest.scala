@@ -1,18 +1,18 @@
 /**
-  * Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-  *
-  * Licensed under the Apache License, Version 2.0 (the "License"). You may not
-  * use this file except in compliance with the License. A copy of the License
-  * is located at
-  *
-  *     http://aws.amazon.com/apache2.0/
-  *
-  * or in the "license" file accompanying this file. This file is distributed on
-  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
-  * express or implied. See the License for the specific language governing
-  * permissions and limitations under the License.
-  *
-  */
+ * Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"). You may not
+ * use this file except in compliance with the License. A copy of the License
+ * is located at
+ *
+ *     http://aws.amazon.com/apache2.0/
+ *
+ * or in the "license" file accompanying this file. This file is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ *
+ */
 
 package com.amazon.deequ
 package checks
@@ -25,26 +25,26 @@ import org.scalatest.wordspec.AnyWordSpec
 class ApplicabilityTest extends AnyWordSpec with SparkContextSpec {
 
   private[this] val schema = StructType(Array(
-      StructField("stringCol", StringType, nullable = true),
-      StructField("stringCol2", StringType, nullable = true),
-      StructField("byteCol", ByteType, nullable = true),
-      StructField("shortCol", ShortType, nullable = true),
-      StructField("intCol", IntegerType, nullable = true),
-      StructField("intCol2", IntegerType, nullable = true),
-      StructField("longCol", LongType, nullable = true),
-      StructField("floatCol", FloatType, nullable = true),
-      StructField("floatCol2", FloatType, nullable = true),
-      StructField("doubleCol", DoubleType, nullable = true),
-      StructField("doubleCol2", DoubleType, nullable = true),
-      StructField("decimalCol", DecimalType.SYSTEM_DEFAULT, nullable = true),
-      StructField("decimalCol2", DecimalType.SYSTEM_DEFAULT, nullable = true),
-      StructField("decimalCol3", DecimalType(5, 2), nullable = true),
-      StructField("decimalCol4", DecimalType(8, 4), nullable = true),
-      StructField("timestampCol", TimestampType, nullable = true),
-      StructField("timestampCol2", TimestampType, nullable = true),
-      StructField("booleanCol", BooleanType, nullable = true),
-      StructField("booleanCol2", BooleanType, nullable = true))
-    )
+    StructField("stringCol", StringType, nullable = true),
+    StructField("stringCol2", StringType, nullable = true),
+    StructField("byteCol", ByteType, nullable = true),
+    StructField("shortCol", ShortType, nullable = true),
+    StructField("intCol", IntegerType, nullable = true),
+    StructField("intCol2", IntegerType, nullable = true),
+    StructField("longCol", LongType, nullable = true),
+    StructField("floatCol", FloatType, nullable = true),
+    StructField("floatCol2", FloatType, nullable = true),
+    StructField("doubleCol", DoubleType, nullable = true),
+    StructField("doubleCol2", DoubleType, nullable = true),
+    StructField("decimalCol", DecimalType.SYSTEM_DEFAULT, nullable = true),
+    StructField("decimalCol2", DecimalType.SYSTEM_DEFAULT, nullable = true),
+    StructField("decimalCol3", DecimalType(5, 2), nullable = true),
+    StructField("decimalCol4", DecimalType(8, 4), nullable = true),
+    StructField("timestampCol", TimestampType, nullable = true),
+    StructField("timestampCol2", TimestampType, nullable = true),
+    StructField("booleanCol", BooleanType, nullable = true),
+    StructField("booleanCol2", BooleanType, nullable = true))
+  )
 
   "Applicability tests for checks" should {
 

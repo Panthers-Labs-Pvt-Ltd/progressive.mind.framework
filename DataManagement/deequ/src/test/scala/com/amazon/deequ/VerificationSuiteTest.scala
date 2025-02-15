@@ -22,7 +22,7 @@ import com.amazon.deequ.anomalydetection.AbsoluteChangeStrategy
 import com.amazon.deequ.checks.Check
 import com.amazon.deequ.checks.CheckLevel
 import com.amazon.deequ.checks.CheckStatus
-import com.amazon.deequ.constraints.Constraint
+import com.amazon.deequ.constraints.{Constraint, ConstraintStatus}
 import com.amazon.deequ.io.DfsUtils
 import com.amazon.deequ.metrics.DoubleMetric
 import com.amazon.deequ.metrics.Entity
@@ -235,44 +235,55 @@ class VerificationSuiteTest extends AnyWordSpec with Matchers with SparkContextS
       val isComplete = new Check(CheckLevel.Error, "rule1").isComplete("att1")
       val completeness = new Check(CheckLevel.Error, "rule2").hasCompleteness("att2", _ > 0.7)
       val isPrimaryKey = new Check(CheckLevel.Error, "rule3").isPrimaryKey("item")
-      val minLength = new Check(CheckLevel.Error, "rule3")
+      val minLength = new Check(CheckLevel.Error, "rule4")
         .hasMinLength("item", _ >= 1, analyzerOptions = Option(AnalyzerOptions(NullBehavior.Fail)))
-      val maxLength = new Check(CheckLevel.Error, "rule4")
+      val maxLength = new Check(CheckLevel.Error, "rule5")
         .hasMaxLength("item", _ <= 1, analyzerOptions = Option(AnalyzerOptions(NullBehavior.Fail)))
       val patternMatch = new Check(CheckLevel.Error, "rule6").hasPattern("att2", "[a-z]".r)
       val min = new Check(CheckLevel.Error, "rule7").hasMin("val1", _ > 1)
       val max = new Check(CheckLevel.Error, "rule8").hasMax("val1", _ <= 3)
       val compliance = new Check(CheckLevel.Error, "rule9")
         .satisfies("item < 1000", "rule9", columns = List("item"))
+      val areUniqueTrue = new Check(CheckLevel.Error, "rule10")
+        .areUnique(Seq("item", "att1")) // att1 is not unique but is unique with item
+      val areUniqueFalse = new Check(CheckLevel.Error, "rule11")
+        .areUnique(Seq("att1", "att2")) // non unique for rows 1,4,6
       val expectedColumn1 = isComplete.description
       val expectedColumn2 = completeness.description
-      val expectedColumn3 = minLength.description
-      val expectedColumn4 = maxLength.description
-      val expectedColumn5 = patternMatch.description
-      val expectedColumn6 = min.description
-      val expectedColumn7 = max.description
-      val expectedColumn8 = compliance.description
+      val expectedColumn3 = isPrimaryKey.description
+      val expectedColumn4 = minLength.description
+      val expectedColumn5 = maxLength.description
+      val expectedColumn6 = patternMatch.description
+      val expectedColumn7 = min.description
+      val expectedColumn8 = max.description
+      val expectedColumn9 = compliance.description
+      val expectedColumn10 = areUniqueTrue.description
+      val expectedColumn11 = areUniqueFalse.description
 
       val suite = new VerificationSuite().onData(data)
         .addCheck(isComplete)
         .addCheck(completeness)
+        .addCheck(isPrimaryKey)
         .addCheck(minLength)
         .addCheck(maxLength)
         .addCheck(patternMatch)
         .addCheck(min)
         .addCheck(max)
         .addCheck(compliance)
+        .addCheck(areUniqueTrue)
+        .addCheck(areUniqueFalse)
 
       val result: VerificationResult = suite.run()
 
       assert(result.status == CheckStatus.Error)
 
-      val resultData = VerificationResult.rowLevelResultsAsDataFrame(session, result, data)
+      val resultData = VerificationResult.rowLevelResultsAsDataFrame(session, result, data).orderBy("item")
 
       resultData.show()
       val expectedColumns: Set[String] =
         data.columns.toSet + expectedColumn1 + expectedColumn2 + expectedColumn3 + expectedColumn4 +
-          expectedColumn5 + expectedColumn6 + expectedColumn7 + expectedColumn8
+          expectedColumn5 + expectedColumn6 + expectedColumn7 + expectedColumn8 + expectedColumn9 + expectedColumn10 +
+          expectedColumn11
       assert(resultData.columns.toSet == expectedColumns)
 
 
@@ -286,19 +297,30 @@ class VerificationSuiteTest extends AnyWordSpec with Matchers with SparkContextS
       assert(Seq(true, true, true, true, true, true).sameElements(rowLevel3))
 
       val rowLevel4 = resultData.select(expectedColumn4).collect().map(r => r.getBoolean(0))
-      assert(Seq(true, false, false, false, false, false).sameElements(rowLevel4))
+      assert(Seq(true, true, true, true, true, true).sameElements(rowLevel4))
 
-      val rowLevel5 = resultData.select(expectedColumn5).collect().map(r => r.getAs[Boolean](0))
-      assert(Seq(true, true, false, true, false, true).sameElements(rowLevel5))
+      val rowLevel5 = resultData.select(expectedColumn5).collect().map(r => r.getBoolean(0))
+      assert(Seq(true, false, false, false, false, false).sameElements(rowLevel5))
 
       val rowLevel6 = resultData.select(expectedColumn6).collect().map(r => r.getAs[Boolean](0))
-      assert(Seq(false, true, true, true, true, true).sameElements(rowLevel6))
+      assert(Seq(true, true, false, true, false, true).sameElements(rowLevel6))
 
       val rowLevel7 = resultData.select(expectedColumn7).collect().map(r => r.getAs[Boolean](0))
-      assert(Seq(true, true, true, false, false, false).sameElements(rowLevel7))
+      assert(Seq(false, true, true, true, true, true).sameElements(rowLevel7))
 
       val rowLevel8 = resultData.select(expectedColumn8).collect().map(r => r.getAs[Boolean](0))
       assert(Seq(true, true, true, false, false, false).sameElements(rowLevel8))
+
+      val rowLevel9 = resultData.select(expectedColumn9).collect().map(r => r.getAs[Boolean](0))
+      assert(Seq(true, true, true, false, false, false).sameElements(rowLevel9))
+
+      // Multiple Uniqueness for item and att1 - att1 is not unique but is unique with item
+      val rowLevel10 = resultData.select(expectedColumn10).collect().map(r => r.getAs[Boolean](0))
+      assert(Seq(true, true, true, true, true, true).sameElements(rowLevel10))
+
+      // Multiple Uniqueness for att1 and att2 - non unique for rows 1,4,6
+      val rowLevel11 = resultData.select(expectedColumn11).collect().map(r => r.getAs[Boolean](0))
+      assert(Seq(false, true, true, false, true, false).sameElements(rowLevel11))
     }
 
     "generate a result that contains row-level results with true for filtered rows" in withSparkSession { session =>
@@ -803,7 +825,7 @@ class VerificationSuiteTest extends AnyWordSpec with Matchers with SparkContextS
         val analyzers = Size() :: // Analyzer that works on overall document
           Completeness("att2") ::
           Uniqueness("att2") :: // Analyzer that works on single column
-          MutualInformation("att1", "att2") :: Nil // Analyzer that works on multi column
+          MutualInformation("att1", "att2") :: Nil // Analyzer that works on multi-column
 
         VerificationSuite().onData(df).addCheck(checkToSucceed)
           .addRequiredAnalyzers(analyzers).run()
@@ -866,7 +888,7 @@ class VerificationSuiteTest extends AnyWordSpec with Matchers with SparkContextS
       val df = getDfFull(sparkSession)
 
       VerificationSuite().onData(df).addRequiredAnalyzer(Size()).run() match {
-        case result =>
+        case result: VerificationResult =>
           assert(result.status == CheckStatus.Success)
           val analysisDf = AnalyzerContext.successMetricsAsDataFrame(sparkSession, AnalyzerContext(result.metrics))
           val expected = Seq(("Dataset", "*", "Size", 4.0)).toDF("entity", "instance", "name", "value")
@@ -1204,7 +1226,7 @@ class VerificationSuiteTest extends AnyWordSpec with Matchers with SparkContextS
         println(checkSuccessResult.constraintResults.map(_.message))
         assert(checkSuccessResult.status == CheckStatus.Success)
 
-        val reasonResult = verificationResult.checkResults(reasonCheck)
+        val _ = verificationResult.checkResults(reasonCheck)
         checkSuccessResult.constraintResults.map(_.message) shouldBe List(None)
         println(checkSuccessResult.constraintResults.map(_.message))
         assert(checkSuccessResult.status == CheckStatus.Success)
@@ -1599,6 +1621,34 @@ class VerificationSuiteTest extends AnyWordSpec with Matchers with SparkContextS
           List(None) // or any expected result
         assert(additionalColsResult.status == CheckStatus.Success) // or expected status
 
+    }
+
+    "isContainedIn constraint should handle values with single quotes" in withSparkSession { session =>
+      import session.implicits._
+      val df = Seq(
+        ("Versicolor"),
+        ("Virginica's"),
+        ("Setosa"),
+        ("Versicolor"),
+        ("Virginica's")
+      ).toDF("variety")
+      val check = Check(CheckLevel.Error, "single quote check")
+        .isContainedIn("variety", Array("Versicolor", "Virginica's", "Setosa"))
+      val verificationResult = VerificationSuite()
+        .onData(df)
+        .addCheck(check)
+        .run()
+      assert(verificationResult.status == CheckStatus.Success)
+      val checkResult = verificationResult.checkResults(check)
+      assert(checkResult.status == CheckStatus.Success)
+      assert(checkResult.constraintResults.size == 1)
+      val constraintResult = checkResult.constraintResults.head
+      assert(constraintResult.status == ConstraintStatus.Success)
+      val metric = constraintResult.metric.getOrElse(fail("Expected metric to be present"))
+      assert(metric.isInstanceOf[DoubleMetric])
+      assert(metric.asInstanceOf[DoubleMetric].value.isSuccess)
+      val metricValue = metric.asInstanceOf[DoubleMetric].value.get
+      assert(metricValue == 1.0)
     }
   }
 
@@ -2057,7 +2107,7 @@ class VerificationSuiteTest extends AnyWordSpec with Matchers with SparkContextS
       val whereClause = "id <= 3"
 
       case class CheckConfig(checkName: String, assertion: Double => Boolean, checkStatus: CheckStatus.Value,
-                             whereClause: Option[String] = None)
+          whereClause: Option[String] = None)
 
       val success = CheckStatus.Success
       val error = CheckStatus.Error

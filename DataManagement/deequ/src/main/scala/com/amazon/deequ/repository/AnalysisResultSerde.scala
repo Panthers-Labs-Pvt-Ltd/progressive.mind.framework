@@ -154,8 +154,7 @@ private[deequ] object AnalysisResultSerializer extends JsonSerializer[AnalysisRe
 
 private[deequ] object AnalysisResultDeserializer extends JsonDeserializer[AnalysisResult] {
 
-  override def deserialize(jsonElement: JsonElement, t: Type,
-                           context: JsonDeserializationContext): AnalysisResult = {
+  override def deserialize(jsonElement: JsonElement, t: Type, context: JsonDeserializationContext): AnalysisResult = {
 
     val jsonObject = jsonElement.getAsJsonObject
 
@@ -218,11 +217,12 @@ private[deequ] object AnalyzerContextDeserializer extends JsonDeserializer[Analy
   }
 }
 
-private[deequ] object AnalyzerSerializer
-  extends JsonSerializer[Analyzer[_ <: State[_], _ <: Metric[_]]] {
+private[deequ] object AnalyzerSerializer extends JsonSerializer[Analyzer[_ <: State[_], _ <: Metric[_]]] {
 
-  override def serialize(analyzer: Analyzer[_ <: State[_], _ <: Metric[_]], t: Type,
-    context: JsonSerializationContext): JsonElement = {
+  override def serialize(analyzer: Analyzer[_ <: State[_], _ <: Metric[_]],
+    `type`: Type, context: JsonSerializationContext): JsonElement = {
+  // override def serialize(analyzer: Analyzer[_ <: State[_], _ <: Metric[_]], t: Type,
+    // context: JsonSerializationContext): JsonElement = {
 
     val result = new JsonObject()
 
@@ -230,81 +230,64 @@ private[deequ] object AnalyzerSerializer
       case size: Size =>
         result.addProperty(ANALYZER_NAME_FIELD, "Size")
         result.addProperty(WHERE_FIELD, size.where.orNull)
-
-
       case completeness: Completeness =>
         result.addProperty(ANALYZER_NAME_FIELD, "Completeness")
         result.addProperty(COLUMN_FIELD, completeness.column)
         result.addProperty(WHERE_FIELD, completeness.where.orNull)
-
-
       case compliance: Compliance =>
         result.addProperty(ANALYZER_NAME_FIELD, "Compliance")
         result.addProperty(WHERE_FIELD, compliance.where.orNull)
         result.addProperty("instance", compliance.instance)
         result.addProperty("predicate", compliance.predicate)
         result.add(COLUMNS_FIELD, context.serialize(compliance.columns.asJava))
-
       case patternMatch: PatternMatch =>
         result.addProperty(ANALYZER_NAME_FIELD, "PatternMatch")
         result.addProperty(COLUMN_FIELD, patternMatch.column)
         result.addProperty(WHERE_FIELD, patternMatch.where.orNull)
         result.addProperty("pattern", patternMatch.pattern.toString())
-
       case sum: Sum =>
         result.addProperty(ANALYZER_NAME_FIELD, "Sum")
         result.addProperty(COLUMN_FIELD, sum.column)
         result.addProperty(WHERE_FIELD, sum.where.orNull)
-
       case ratioOfSums: RatioOfSums =>
         result.addProperty(ANALYZER_NAME_FIELD, "RatioOfSums")
         result.addProperty("numerator", ratioOfSums.numerator)
         result.addProperty("denominator", ratioOfSums.denominator)
         result.addProperty(WHERE_FIELD, ratioOfSums.where.orNull)
-
       case mean: Mean =>
         result.addProperty(ANALYZER_NAME_FIELD, "Mean")
         result.addProperty(COLUMN_FIELD, mean.column)
         result.addProperty(WHERE_FIELD, mean.where.orNull)
-
       case minimum: Minimum =>
         result.addProperty(ANALYZER_NAME_FIELD, "Minimum")
         result.addProperty(COLUMN_FIELD, minimum.column)
         result.addProperty(WHERE_FIELD, minimum.where.orNull)
-
       case maximum: Maximum =>
         result.addProperty(ANALYZER_NAME_FIELD, "Maximum")
         result.addProperty(COLUMN_FIELD, maximum.column)
         result.addProperty(WHERE_FIELD, maximum.where.orNull)
-
       case countDistinct: CountDistinct =>
         result.addProperty(ANALYZER_NAME_FIELD, "CountDistinct")
         result.add(COLUMNS_FIELD, context.serialize(countDistinct.columns.asJava,
           new TypeToken[JList[String]]() {}.getType))
-
       case distinctness: Distinctness =>
         result.addProperty(ANALYZER_NAME_FIELD, "Distinctness")
         result.add(COLUMNS_FIELD, context.serialize(distinctness.columns.asJava))
-
       case entropy: Entropy =>
         result.addProperty(ANALYZER_NAME_FIELD, "Entropy")
         result.addProperty(COLUMN_FIELD, entropy.column)
-
       case mutualInformation: MutualInformation =>
         result.addProperty(ANALYZER_NAME_FIELD, "MutualInformation")
         result.add(COLUMNS_FIELD, context.serialize(mutualInformation.columns.asJava,
           new TypeToken[JList[String]]() {}.getType))
-
       case uniqueValueRatio: UniqueValueRatio =>
         result.addProperty(ANALYZER_NAME_FIELD, "UniqueValueRatio")
         result.add(COLUMNS_FIELD, context.serialize(uniqueValueRatio.columns.asJava,
           new TypeToken[JList[String]]() {}.getType))
-
       case uniqueness: Uniqueness =>
         result.addProperty(ANALYZER_NAME_FIELD, "Uniqueness")
         result.add(COLUMNS_FIELD, context.serialize(uniqueness.columns.asJava,
           new TypeToken[JList[String]]() {}.getType))
-
       case histogram: Histogram if histogram.binningUdf.isEmpty =>
         result.addProperty(ANALYZER_NAME_FIELD, "Histogram")
         result.addProperty(COLUMN_FIELD, histogram.column)
@@ -315,64 +298,51 @@ private[deequ] object AnalyzerSerializer
           result.addProperty("aggregateFunction", histogram.aggregateFunction.function())
           result.addProperty("aggregateColumn", histogram.aggregateFunction.aggregateColumn().get)
         }
-
       case _ : Histogram =>
         throw new IllegalArgumentException("Unable to serialize Histogram with binningUdf!")
-
       case dataType: DataType =>
         result.addProperty(ANALYZER_NAME_FIELD, "DataType")
         result.addProperty(COLUMN_FIELD, dataType.column)
         result.addProperty(WHERE_FIELD, dataType.where.orNull)
-
       case approxCountDistinct: ApproxCountDistinct =>
         result.addProperty(ANALYZER_NAME_FIELD, "ApproxCountDistinct")
         result.addProperty(COLUMN_FIELD, approxCountDistinct.column)
         result.addProperty(WHERE_FIELD, approxCountDistinct.where.orNull)
-
       case correlation: Correlation =>
         result.addProperty(ANALYZER_NAME_FIELD, "Correlation")
         result.addProperty("firstColumn", correlation.firstColumn)
         result.addProperty("secondColumn", correlation.secondColumn)
         result.addProperty(WHERE_FIELD, correlation.where.orNull)
-
       case standardDeviation: StandardDeviation =>
         result.addProperty(ANALYZER_NAME_FIELD, "StandardDeviation")
         result.addProperty(COLUMN_FIELD, standardDeviation.column)
         result.addProperty(WHERE_FIELD, standardDeviation.where.orNull)
-
       case approxQuantile: ApproxQuantile =>
         result.addProperty(ANALYZER_NAME_FIELD, "ApproxQuantile")
         result.addProperty(COLUMN_FIELD, approxQuantile.column)
         result.addProperty("quantile", approxQuantile.quantile)
         result.addProperty("relativeError", approxQuantile.relativeError)
-
       case approxQuantiles: ApproxQuantiles =>
         result.addProperty(ANALYZER_NAME_FIELD, "ApproxQuantiles")
         result.addProperty(COLUMN_FIELD, approxQuantiles.column)
         result.addProperty("quantiles", approxQuantiles.quantiles.mkString(","))
         result.addProperty("relativeError", approxQuantiles.relativeError)
-
       case exactQuantile: ExactQuantile =>
         result.addProperty(ANALYZER_NAME_FIELD, "ExactQuantile")
         result.addProperty(COLUMN_FIELD, exactQuantile.column)
         result.addProperty("quantile", exactQuantile.quantile)
         result.addProperty(WHERE_FIELD, exactQuantile.where.orNull)
-
-
       case minLength: MinLength =>
         result.addProperty(ANALYZER_NAME_FIELD, "MinLength")
         result.addProperty(COLUMN_FIELD, minLength.column)
         result.addProperty(WHERE_FIELD, minLength.where.orNull)
-
       case maxLength: MaxLength =>
         result.addProperty(ANALYZER_NAME_FIELD, "MaxLength")
         result.addProperty(COLUMN_FIELD, maxLength.column)
         result.addProperty(WHERE_FIELD, maxLength.where.orNull)
-
       case _ =>
         throw new IllegalArgumentException(s"Unable to serialize analyzer $analyzer.")
     }
-
     result
   }
 }
@@ -514,7 +484,7 @@ private[deequ] object AnalyzerDeserializer
           json.get(COLUMN_FIELD).getAsString,
           getOptionalWhereParam(json))
 
-      case analyzerName =>
+      case analyzerName: String =>
         throw new IllegalArgumentException(s"Unable to deserialize analyzer $analyzerName.")
     }
 

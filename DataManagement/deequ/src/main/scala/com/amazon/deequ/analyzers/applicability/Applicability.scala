@@ -34,14 +34,14 @@ private[deequ] sealed trait ApplicabilityResult {
 }
 
 private[deequ] case class CheckApplicability(
-  isApplicable: Boolean,
-  failures: Seq[(String, Exception)],
-  constraintApplicabilities: Map[Constraint, Boolean]
+    isApplicable: Boolean,
+    failures: Seq[(String, Exception)],
+    constraintApplicabilities: Map[Constraint, Boolean]
 ) extends ApplicabilityResult
 
 private[deequ] case class AnalyzersApplicability(
-  isApplicable: Boolean,
-  failures: Seq[(String, Exception)]
+    isApplicable: Boolean,
+    failures: Seq[(String, Exception)]
 ) extends ApplicabilityResult
 
 private[deequ] object Applicability {
@@ -163,20 +163,20 @@ private[deequ] object Applicability {
 }
 
 /**
-  * A class to Check whether a check is applicable to some data using the schema of the data.
-  *
-  * @param session The spark session in order to be able to create fake data
-  */
+ * A class to Check whether a check is applicable to some data using the schema of the data.
+ *
+ * @param session The spark session in order to be able to create fake data
+ */
 private[deequ] class Applicability(session: SparkSession) {
 
   import Applicability._
 
   /**
-    * Check whether a check is applicable to some data using the schema of the data.
-    *
-    * @param check A check that may be applicable to some data
-    * @param schema The schema of the data the checks are for
-    */
+   * Check whether a check is applicable to some data using the schema of the data.
+   *
+   * @param check A check that may be applicable to some data
+   * @param schema The schema of the data the checks are for
+   */
   def isApplicable(check: Check, schema: StructType): CheckApplicability = {
 
     val data = generateRandomData(schema, 1000)
@@ -214,15 +214,12 @@ private[deequ] class Applicability(session: SparkSession) {
   }
 
   /**
-    * Check whether analyzers are applicable to some data using the schema of the data.
-    *
-    * @param analyzers Analyzers that may be applicable to some data
-    * @param schema The schema of the data the analyzers are for
-    */
-  def isApplicable(
-      analyzers: Seq[Analyzer[_ <: State[_], Metric[_]]],
-      schema: StructType)
-    : AnalyzersApplicability = {
+   * Check whether analyzers are applicable to some data using the schema of the data.
+   *
+   * @param analyzers Analyzers that may be applicable to some data
+   * @param schema The schema of the data the analyzers are for
+   */
+  def isApplicable(analyzers: Seq[Analyzer[_ <: State[_], Metric[_]]], schema: StructType): AnalyzersApplicability = {
 
     val data = generateRandomData(schema, 1000)
 

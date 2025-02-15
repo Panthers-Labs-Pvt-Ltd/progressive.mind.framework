@@ -18,12 +18,12 @@
         <dependency>
             <groupId>com.progressive.minds.chimera</groupId>
             <artifactId>foundational.logging</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>${chimera.project.version}</version>
         </dependency>
             <dependency>
                 <groupId>com.progressive.minds.chimera</groupId>
                 <artifactId>core.databaseOps</artifactId>
-                <version>1.0-SNAPSHOT</version>
+                <version>${chimera.project.version}</version>
             </dependency>
     </dependencies>
 </project>
