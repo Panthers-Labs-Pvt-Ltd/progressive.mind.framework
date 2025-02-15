@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   jaeger:
-    image: jaegertracing/all-in-one:${JAEGER_VERSION:-latest}
+    image: jaegertracing/all-in-one:${JAEGER_VERSION}
     container_name: jaeger
     ports:
       - "${JAEGER_UI_PORT:-16686}:16686"
