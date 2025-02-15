@@ -1,17 +1,4 @@
 services:
-  postgres:
-    image: postgres:13
-    container_name: postgres
-    ports:
-      - "5433:5432"
-    environment:
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: keycloak_db
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    networks:
-      - key_clock
 
   keycloak:
     build:
@@ -20,7 +7,7 @@ services:
     container_name: keycloak
     environment:
       KC_DB: postgres
-      KC_DB_URL: jdbc:postgresql://postgres:5432/keycloak_db
+      KC_DB_URL: jdbc:postgresql://localhost:5432/chimera_db
       KC_DB_USERNAME: admin
       KC_DB_PASSWORD: password
       KC_HOSTNAME: localhost
