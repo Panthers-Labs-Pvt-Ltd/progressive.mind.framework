@@ -21,10 +21,27 @@ export PROMETHEUS_UI_PORT=9090
 export GRAFANA_PORT=3000
 export POSTGRES_PORT=5432
 
-# Run docker-compose
-echo "Running docker-compose"
-docker-compose -f docker-compose.yml up -d
+# Get Docker version
+docker_version=$(docker --version | awk '{print $3}' | sed 's/,//')
 
-# Check the status of the containers
-echo "Checking the status of the containers"
-docker-compose -f docker-compose.yml ps
+# Parse major, minor, and patch version
+IFS='.' read -r major minor patch <<< "$docker_version"
+
+# Check if Docker version is 20.10.0 or higher
+if (( major > 20 || (major == 20 && minor >= 10) )); then
+  # Run docker-compose
+  echo "Running docker compose"
+  docker compose -f docker-compose.yml up -d
+
+  # Check the status of the containers
+  echo "Checking the status of the containers"
+  docker compose -f docker-compose.yml ps
+else
+  # Run docker-compose
+  echo "Running docker-compose"
+  docker-compose -f docker-compose.yml up -d
+
+  # Check the status of the containers
+  echo "Checking the status of the containers"
+  docker-compose -f docker-compose.yml ps
+fi

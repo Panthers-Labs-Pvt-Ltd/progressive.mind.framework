@@ -50,7 +50,27 @@ This directory contains manifests for deploying and exposing Jaeger.
 
 ---
 
+
+
 ## Configuration Management
+
+## Version Support
+
+| Framework or Tool | Version | Support |
+|-------------------|---------|---------|
+| Postgres          | 16      |         |
+| Spark             | 3.5.4   |         |
+| Python            | 3.10    |         |
+| Java              | 17      |         |
+| Linux             |         |         |
+| Kong              |         |         |
+| Prometheus        |         |         |
+| Jaeger            |         |         |
+| Temporal          |         |         |
+| Vault             |         |         |
+| keycloack         |         |         |
+| grafana           |         |         |
+| flink             |         |         |
 
 ### ConfigMap (`common/configmap.yaml`)
 Stores shared, non-sensitive configuration values. Example:
