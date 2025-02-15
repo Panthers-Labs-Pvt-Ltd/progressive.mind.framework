@@ -4,8 +4,8 @@
 # Export the versions of the observability tools
 export OTEL_VERSION=0.38.0
 export JAEGER_VERSION=1.29.0
-#export PROMETHEUS_VERSION=3.1.0
-export POSTGRES_VERSION=13-alpine3.17
+export PROMETHEUS_VERSION=latest #TO-DO Remove latest
+export POSTGRES_VERSION=16
 export GRAFANA_VERSION=7.5.5
 
 # Export the ports

@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   otel-collector:
-    image: otel/opentelemetry-collector-contrib:${OTEL_VERSION}
+    image: otel/opentelemetry-collector-contrib:${OTEL_VERSION:-0.38.0}
     container_name: otel-collector
     ports:
       - "${OTEL_GRPC_PORT:-4317}:4317"

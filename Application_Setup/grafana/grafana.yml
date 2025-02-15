@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   grafana:
-    image: grafana/grafana:${GRAFANA_VERSION:-latest}
+    image: grafana/grafana:${GRAFANA_VERSION}
     container_name: grafana
     ports:
       - "${GRAFANA_PORT:-3000}:3000"

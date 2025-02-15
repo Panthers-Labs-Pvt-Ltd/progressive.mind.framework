@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   prometheus:
-    image: prom/prometheus:${PROMETHEUS_VERSION:-latest}
+    image: prom/prometheus:${PROMETHEUS_VERSION}
     container_name: prometheus
     ports:
       - "${PROMETHEUS_UI_PORT:-9090}:9090"
