@@ -26,7 +26,7 @@ services:
       file: prometheus/prometheus-server.yml
       service: prometheus
     environment:
-      - PROMETHEUS_VERSION=2.26.0
+      - PROMETHEUS_VERSION=${PROMETHEUS_VESION:-3.1.0}
       - PROMETHEUS_UI_PORT=9090
     networks:
       - observability
@@ -36,18 +36,35 @@ services:
       file: grafana/grafana.yml
       service: grafana
     environment:
-      - GRAFANA_VERSION=7.5.5
+      - GRAFANA_VERSION=${GRAFANA_VERSION:-7.5.5}
       - GRAFANA_PORT=3000
     networks:
       - observability
+
+  postgres:
+    image: postgres:16
+    container_name: postgres
+    ports:
+      - ${POSTGRES_PORT:-5432}:5432
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=chimera_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - key_clock
+
 
   api-gateway:
     extends:
       file: api-gateway/api-gateway.yml
       service: kong-gateway
     environment:
-      - POSTGRES_VERSION=13
       - POSTGRES_PORT=5432
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=chimera_db
     networks:
       - kong-net
     depends_on:
@@ -58,43 +75,58 @@ services:
     command: kong migrations bootstrap
     networks:
       - kong-net
-  taskmanager:
-    extends:
-      file: flink/env-compose.yml
-      service: taskmanager
-    environment:
-      - FLINK_VERSION=1.13.2
-    networks:
-      - engine
-    depends_on:
-      - jobmanager
 
-  jobmanager:
+  keycloak:
     extends:
-      file: flink/env-compose.yml
-      service: jobmanager
+      file: keycloak/keycloak-docker-compose.yml
+      service: keycloak
     environment:
-      - FLINK_VERSION=1.13.2
-    networks:
-      - engine
+      - KC_DB=${KC_DB:-postgres}
+      - KC_DB_URL=${KC_DB_URL:-jdbc:postgresql://postgres:5432/chimera_db}
+      - KC_DB_USERNAME=${KC_DB_USERNAME:-admin}
+      - KC_DB_PASSWORD=${KC_DB_PASSWORD:-password}
+      - KC_HOSTNAME=${KC_HOSTNAME:-localhost}
+      - KC_BOOTSTRAP_ADMIN_USERNAME=${KC_BOOTSTRAP_ADMIN_USERNAME:-admin}
+      - KC_BOOTSTRAP_ADMIN_PASSWORD=${KC_BOOTSTRAP_ADMIN_PASSWORD:-keyclock}
 
-  zookeeper:
-    extends:
-      file: flink/env-compose.yml
-      service: zookeeper
-    environment:
-      - FLINK_VERSION=1.13.2
-    networks:
-      - engine
 
-  kafka:
-    extends:
-        file: flink/env-compose.yml
-        service: kafka
-    environment:
-      - FLINK_VERSION=1.13.2
-    networks:
-        - engine
+#  taskmanager:
+#    extends:
+#      file: flink/env-compose.yml
+#      service: taskmanager
+#    environment:
+#      - FLINK_VERSION=1.13.2
+#    networks:
+#      - engine
+#    depends_on:
+#      - jobmanager
+#
+#  jobmanager:
+#    extends:
+#      file: flink/env-compose.yml
+#      service: jobmanager
+#    environment:
+#      - FLINK_VERSION=1.13.2
+#    networks:
+#      - engine
+#
+#  zookeeper:
+#    extends:
+#      file: flink/env-compose.yml
+#      service: zookeeper
+#    environment:
+#      - FLINK_VERSION=1.13.2
+#    networks:
+#      - engine
+#
+#  kafka:
+#    extends:
+#        file: flink/env-compose.yml
+#        service: kafka
+#    environment:
+#      - FLINK_VERSION=1.13.2
+#    networks:
+#        - engine
 
 networks:
   observability:
@@ -103,3 +135,8 @@ networks:
     driver: bridge
   engine:
     driver: bridge
+  key_clock:
+    driver: bridge
+
+volumes:
+  postgres_data:
