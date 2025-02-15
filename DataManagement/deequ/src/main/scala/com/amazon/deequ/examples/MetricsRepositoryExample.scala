@@ -17,14 +17,17 @@
 package com.amazon.deequ.examples
 
 import java.io.File
-
 import com.amazon.deequ.VerificationSuite
 import com.amazon.deequ.analyzers.Completeness
 import com.amazon.deequ.checks.{Check, CheckLevel}
 import com.amazon.deequ.examples.ExampleUtils.{itemsAsDataframe, withSpark}
 import com.amazon.deequ.repository.fs.FileSystemMetricsRepository
 import com.amazon.deequ.repository.{MetricsRepository, ResultKey}
-import com.google.common.io.Files
+// import com.amazon.deequ.utils.TempFileUtils
+// import com.google.common.io.Files
+
+import java.nio.file.Files
+
 
 object MetricsRepositoryExample extends App {
 
@@ -39,8 +42,8 @@ object MetricsRepositoryExample extends App {
       Item(5, "Thingy E", null, "high", 12))
 
     // A json file in which the computed metrics will be stored
-    val metricsFile = new File(Files.createTempDir(), "metrics.json")
-
+    // val metricsFile = new File(Files.createTempDir(), "metrics.json")
+    val metricsFile = new File(Files.createTempDirectory("metrics").toFile, "metrics.json")
     // The repository which we will use to stored and load computed metrics; we use the local disk,
     // but it also supports HDFS and S3
     val repository: MetricsRepository =

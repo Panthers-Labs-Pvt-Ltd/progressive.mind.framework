@@ -18,7 +18,7 @@
         <chimera.project.version>${project.version}</chimera.project.version>
         <open.lineage.version>1.25.0</open.lineage.version>
         <open.lineage.dataplex.version>1.23.0</open.lineage.dataplex.version>
-        <kafka.client.version>3.5.0</kafka.client.version>
+        <kafka.client.version>3.7.1</kafka.client.version>
         <sql.formatter.version>2.0.5</sql.formatter.version>
         <corbix.version>2.6.9</corbix.version>
     </properties>

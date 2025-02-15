@@ -61,11 +61,10 @@ trait FullColumn {
 
 /** Common trait for all data quality metrics where the value is double */
 case class DoubleMetric(
-                         entity: Entity.Value,
-                         name: String,
-                         instance: String,
-                         value: Try[Double],
-                         override val fullColumn: Option[Column] = None)
+    entity: Entity.Value, name: String,
+    instance: String,
+    value: Try[Double],
+    override val fullColumn: Option[Column] = None)
   extends Metric[Double] with FullColumn {
 
   override def flatten(): Seq[DoubleMetric] = Seq(this)
@@ -91,10 +90,10 @@ case class KeyedDoubleMetric(
 }
 
 case class AttributeDoubleMetric(
-                                  entity: Entity.Value,
-                                  name: String,
-                                  instance: String,
-                                  value: Try[Map[String, Double]])
+    entity: Entity.Value,
+    name: String,
+    instance: String,
+    value: Try[Map[String, Double]])
   extends Metric[Map[String, Double]] {
 
   override def flatten(): Seq[DoubleMetric] = {

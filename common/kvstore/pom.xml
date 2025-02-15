@@ -23,7 +23,7 @@
         <dependency>
             <groupId>com.progressive.minds.chimera</groupId>
             <artifactId>common.tags</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>${chimera.project.version}</version>
         </dependency>
     </dependencies>
     

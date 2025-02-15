@@ -23,15 +23,15 @@ import java.nio.file.{Files, Path}
 import scala.collection.convert.ImplicitConversions.`iterator asScala`
 
 /**
-  * To be mixed with Tests so they can use a default spark context suitable for testing
-  */
+ * To be mixed with Tests so they can use a default spark context suitable for testing
+ */
 trait SparkContextSpec {
 
   val tmpWareHouseDir: Path = Files.createTempDirectory("deequ_tmp")
 
   /**
-    * @param testFun thunk to run with SparkSession as an argument
-    */
+   * @param testFun thunk to run with SparkSession as an argument
+   */
   def withSparkSession(testFun: SparkSession => Any): Unit = {
     val session = setupSparkSession()
     try {
@@ -66,10 +66,10 @@ trait SparkContextSpec {
   }
 
   /**
-    * @param testFun thunk to run with SparkSession and SparkMonitor as an argument for the tests
-    *                that would like to get details on spark jobs submitted
-    *
-    */
+   * @param testFun thunk to run with SparkSession and SparkMonitor as an argument for the tests
+   *                that would like to get details on spark jobs submitted
+   *
+   */
   def withMonitorableSparkSession(testFun: (SparkSession, SparkMonitor) => Any): Unit = {
     val monitor = new SparkMonitor
     val session = setupSparkSession()
@@ -82,24 +82,24 @@ trait SparkContextSpec {
   }
 
   /**
-    * @param testFun thunk to run with SparkContext as an argument
-    */
-  def withSparkContext(testFun: SparkContext => Any) {
+   * @param testFun thunk to run with SparkContext as an argument
+   */
+  def withSparkContext(testFun: SparkContext => Any): Unit = {
     withSparkSession(session => testFun(session.sparkContext))
   }
 
   /**
-    * @param testFun thunk to run with SQLContext as an argument
-    */
-  def withSparkSqlContext(testFun: SQLContext => Any) {
+   * @param testFun thunk to run with SQLContext as an argument
+   */
+  def withSparkSqlContext(testFun: SQLContext => Any): Unit = {
     withSparkSession(session => testFun(session.sqlContext))
   }
 
   /**
-    * Setups a local sparkSession
-    *
-    * @return sparkSession to be used
-    */
+   * Setups a local sparkSession
+   *
+   * @return sparkSession to be used
+   */
   private def setupSparkSession(wareHouseDir: Option[String] = None) = {
     val sessionBuilder = SparkSession.builder()
       .master("local")
@@ -117,8 +117,8 @@ trait SparkContextSpec {
   }
 
   /**
-   * to cleanup temp directory used in test
-   * @param path - path to cleanup
+   * to clean up temp directory used in test
+   * @param path - path to clean up
    */
   private def deleteDirectory(path: Path): Unit = {
     if (Files.exists(path)) {
@@ -127,16 +127,14 @@ trait SparkContextSpec {
   }
 
   /**
-    * Tears down the sparkSession
-    *
-    * @param session Session to be stopped
-    * @return
-    */
-  private def tearDownSparkSession(session: SparkSession) = {
+   * Tears down the sparkSession
+   *
+   * @param session Session to be stopped
+   * @return
+   */
+  private def tearDownSparkSession(session: SparkSession): Unit = {
     session.stop()
     System.clearProperty("spark.driver.port")
     deleteDirectory(tmpWareHouseDir)
-
   }
-
 }

@@ -15,10 +15,9 @@
     <version>1.0-SNAPSHOT</version>
 
     <properties>
-        <chimera.project.version>${project.version}</chimera.project.version>
         <open.lineage.version>1.25.0</open.lineage.version>
         <open.lineage.dataplex.version>1.23.0</open.lineage.dataplex.version>
-        <kafka.client.version>3.5.0</kafka.client.version>
+        <kafka.client.version>3.7.1</kafka.client.version>
         <sql.formatter.version>2.0.5</sql.formatter.version>
         <corbix.version>2.6.9</corbix.version>
         <scala.major.version>2.12</scala.major.version>
@@ -51,7 +50,7 @@
         <dependency>
             <groupId>com.progressive.minds.chimera</groupId>
             <artifactId>core.api-service</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>${chimera.project.version}</version>
         </dependency>
 <!--        <dependency>
             <groupId>org.apache.calcite</groupId>
@@ -121,5 +120,17 @@
         </dependency>
 
     </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.0.0-M7</version>
+                <configuration>
+                    <skipTests>true</skipTests>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>

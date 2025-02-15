@@ -1,4 +1,4 @@
-package com.progressive.minds.chimera.common.workflows;
+package com.progressive.minds.chimera.core.workflows;
 
 import io.temporal.workflow.WorkflowInterface;
 import io.temporal.workflow.WorkflowMethod;
@@ -10,7 +10,7 @@ import com.progressive.minds.chimera.dto.ExtractMetadata;
 public interface ExtractDataWorkflow {
 
     @WorkflowMethod
-    public void extractData(ExtractMetadata config);
+    public void extractData(ExtractMetadata config) throws Exception;
 
 }
 

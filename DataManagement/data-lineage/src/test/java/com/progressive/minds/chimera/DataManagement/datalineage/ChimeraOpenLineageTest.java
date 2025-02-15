@@ -21,6 +21,7 @@ import io.openlineage.client.OpenLineage;
 import org.apache.spark.sql.types.DataTypes;
 import org.apache.spark.sql.types.StructField;
 import org.apache.spark.sql.types.StructType;
+import org.checkerframework.checker.signature.qual.DotSeparatedIdentifiersOrPrimitiveType;
 import org.junit.jupiter.api.Test;
 import java.util.Map;
 

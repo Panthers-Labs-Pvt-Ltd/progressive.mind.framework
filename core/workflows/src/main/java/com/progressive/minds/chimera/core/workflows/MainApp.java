@@ -1,10 +1,14 @@
-package com.progressive.minds.chimera.common.workflows;
+package com.progressive.minds.chimera.core.workflows;
 
-import com.progressive.minds.chimera.common.workflows.activities.activityImplementations.FetchPipelineMetadataActivityImpl;
-import com.progressive.minds.chimera.common.workflows.activities.activityImplementations.ExtractDataActivityImpl;
-import com.progressive.minds.chimera.common.workflows.workflowImplementations.FetchPipelineMetadataWorkflowImpl;
-import com.progressive.minds.chimera.common.workflows.workflowImplementations.MainWorkflowImpl;
-import com.progressive.minds.chimera.common.workflows.workflowImplementations.ExtractDataWorkflowImpl;
+import com.progressive.minds.chimera.core.workflows.activities.activityImplementations.FetchPipelineMetadataActivityImpl;
+import com.progressive.minds.chimera.core.workflows.activities.activityImplementations.ExtractDataActivityImpl;
+import com.progressive.minds.chimera.core.workflows.activities.activityImplementations.PersistDataActivityImpl;
+import com.progressive.minds.chimera.core.workflows.activities.activityImplementations.TransformDataActivityImpl;
+import com.progressive.minds.chimera.core.workflows.workflowImplementations.*;
+import com.progressive.minds.chimera.pipelineutils.TransformDataUtils;
+import com.progressive.minds.chimera.foundational.logging.ChimeraLogger;
+import com.progressive.minds.chimera.foundational.logging.ChimeraLoggerFactory;
+
 // import io.temporal.api.enums.v1.WorkflowIdReusePolicy;
 import io.temporal.client.WorkflowClient;
 import io.temporal.client.WorkflowOptions;
@@ -15,8 +19,10 @@ import io.temporal.worker.WorkerFactory;
 import java.io.IOException;
 
 public class MainApp {
+    private static final ChimeraLogger logger = ChimeraLoggerFactory.getLogger(TransformDataUtils.class);
 
     public static void main(String[] args) throws IOException, InterruptedException{
+        logger.logInfo("******* Main Workflow Started *******");
         WorkflowServiceStubs service = WorkflowServiceStubs.newLocalServiceStubs();
         WorkflowClient client = WorkflowClient.newInstance(service);
 
@@ -27,11 +33,15 @@ public class MainApp {
         worker.registerWorkflowImplementationTypes(
             MainWorkflowImpl.class,
             FetchPipelineMetadataWorkflowImpl.class,
-            ExtractDataWorkflowImpl.class
+            ExtractDataWorkflowImpl.class,
+                TransformDataWorkflowImpl.class,
+                PersistDataWorkflowImpl.class
     );
 
         worker.registerActivitiesImplementations(new FetchPipelineMetadataActivityImpl(),
-                                                new ExtractDataActivityImpl());
+                                                new ExtractDataActivityImpl(),
+                                                new TransformDataActivityImpl(),
+                                                new PersistDataActivityImpl());
 
         factory.start();
     
@@ -43,7 +53,7 @@ public class MainApp {
                 .build();
      MainWorkflow workflow = client.newWorkflowStub(MainWorkflow.class, options);
 
-    workflow.executeMainWorkflow("DataIngestion","Test_Pipeline");
+    workflow.executeMainWorkflow("DataIngestion","Test_Pipeline_Postgres");
     
     }
 }

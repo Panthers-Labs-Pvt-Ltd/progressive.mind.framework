@@ -19,29 +19,31 @@ import scala.jdk.CollectionConverters.asJavaIterableConverter
 
 object ColumnLineageUtils {
   var loggerTag = "Column Lineage Utils"
-//val outputTableList = ""
-//    val rawSQLLineage: Seq[ColumnLineageRecord] = extractColumnLineage(analyzedLogicalPlan, targetTable = outputTableList)
+// val outputTableList = ""
+// val rawSQLLineage: Seq[ColumnLineageRecord] = extractColumnLineage(
+  // analyzedLogicalPlan, targetTable = outputTableList)
 
   case class Normalized(TableName: String, ColumnName: String, ColumnId: String, parentColumns: List[String])
 
-  case class NormalizedHire(LookupTable: String, LookUpColumn: String, LookupKey: String, LookupTransform: String) extends Serializable
+  private case class NormalizedHire(LookupTable: String, LookUpColumn: String, LookupKey: String,
+      LookupTransform: String) extends Serializable
 
-  case class NormalizedHireDetails(parentDetails: NormalizedHire, childInfo: List[NormalizedHire])
+  private case class NormalizedHireDetails(parentDetails: NormalizedHire, childInfo: List[NormalizedHire])
 
-  case class finalOutput(inputTable: List[String], outputTable: List[String], descendent: List[NormalizedHireDetails])
+  private case class finalOutput(inputTable: List[String], outputTable: List[String],
+      descendant: List[NormalizedHireDetails])
 
-  case class Columns(name: String, parentColumns: List[String])
+  private case class Columns(name: String, parentColumns: List[String])
 
-  case class MappingList(child: String, parent: String)
+  private case class MappingList(child: String, parent: String)
 
-  case class TransformMapping(inFinalOutput: List[NormalizedHire],appendList: ListBuffer[(String, String, String)],
-inMap: List[MappingList])
+  private case class TransformMapping(inFinalOutput: List[NormalizedHire],
+      appendList: ListBuffer[(String, String, String)], inMap: List[MappingList])
 
   case class ColumnLineageRecord(targetTableName: String,derivedColumnId: String,derivedColumnName: String,
-      sourceTable: String, inputColumns: Seq[String], transformation: String,parentColumnId: String                                )
+      sourceTable: String, inputColumns: Seq[String], transformation: String,parentColumnId: String)
 
-
-  def getTableColumnMapping(analyzedPlan: LogicalPlan, pattern: String = "View"): List[NormalizedHire] = {
+  private def getTableColumnMapping(analyzedPlan: LogicalPlan, pattern: String = "View"): List[NormalizedHire] = {
     var parentRecords: List[NormalizedHire] = List()
 
     val patFilter = analyzedPlan.toString().split("\n")
@@ -63,13 +65,13 @@ inMap: List[MappingList])
     parentRecords
   }
 
-  def resolvedNumberValue(inExpression: String): String = {
+  private def resolvedNumberValue(inExpression: String): String = {
     import scala.util.matching.Regex
     val numberPattern: Regex = "#(\\d+)".r
     numberPattern.findAllIn(inExpression).mkString(",").replaceAll("#", "")
   }
 
-  def removeElement(list: List[ColumnLineageRecord],element: String): List[ColumnLineageRecord] = {
+  private def removeElement(list: List[ColumnLineageRecord], element: String): List[ColumnLineageRecord] = {
     val firstList = list.filterNot(p => p.derivedColumnId == element && p.parentColumnId == p.derivedColumnId)
     val processedList = firstList.map { fl =>
       if (fl.parentColumnId.contains(element)) {
@@ -82,7 +84,7 @@ inMap: List[MappingList])
     processedList
   }
 
-  def removeAllOccurrences[A](list: List[A], element: A): List[A] = {
+  private def removeAllOccurrences[A](list: List[A], element: A): List[A] = {
     list.filterNot(_ == element)
   }
 
@@ -90,13 +92,13 @@ inMap: List[MappingList])
     inExpression.replaceAll("", ";").split("[();]").filter(f => f.contains("#")).distinct
   }
 
-  def removeHash(input: String): String = {
+  private def removeHash(input: String): String = {
     val pattern = "#\\d+$".r
     val output = pattern.replaceAllIn(input, "")
     output
   }
 
-  def createLineage(finalList: finalOutput): String = {
+  private def createLineage(finalList: finalOutput): String = {
     val mapper = new ObjectMapper()
     mapper.registerModule(DefaultScalaModule)
     // Create the root node
@@ -108,7 +110,7 @@ inMap: List[MappingList])
     // Create columnLineage array
     val columnLineageArray: ArrayNode = mapper.createArrayNode()
 
-    finalList.descendent.foreach { des =>
+    finalList.descendant.foreach { des =>
 
       val maps: List[Map[String, String]] = des.childInfo.map { child =>
         Map(
@@ -133,17 +135,15 @@ inMap: List[MappingList])
   }
 
   // =
-  def extractColumnLineage(plan: LogicalPlan,aliasMap: Map[String, String] = Map(),targetTable: String = ""):
+  private def extractColumnLineage(plan: LogicalPlan, aliasMap: Map[String, String] = Map(), targetTable: String = ""):
     Seq[ColumnLineageRecord] = {
     plan match {
-
       case Project(projectList, child) =>
         val projectLineage = projectList.map { expr =>
           val derivedColumn = expr match {
             case Alias(_, name) => name
             case _ => expr.name.concat("#").concat(expr.exprId.id.toString)
           }
-
           val inputColumns = expr.references.map(_.name).toSeq
           val sourceTables = expr.references.collect {
             case attr: AttributeReference =>
@@ -192,7 +192,6 @@ inMap: List[MappingList])
         val updatedAliasMap = child.output.map(attr => attr.name -> alias.name).toMap
         extractColumnLineage(child, aliasMap ++ updatedAliasMap, alias.name)
 
-
       case other : Any => other.children.flatMap(child => extractColumnLineage(child, aliasMap, targetTable))
     }
   }
@@ -203,7 +202,7 @@ inMap: List[MappingList])
     seq1.filterNot(record => set2.contains(record.parentColumnId))
   }
 
-  def buildHierarchy(inColumns: List[Columns]): Map[String, List[String]] = {
+  private def buildHierarchy(inColumns: List[Columns]): Map[String, List[String]] = {
     // Create a map from column name to parent columns
     val parentMap = inColumns.map(col => col.name -> col.parentColumns).toMap
     // Reverse the parent map to get child columns for each parent
@@ -214,7 +213,7 @@ inMap: List[MappingList])
     childMap
   }
 
-  def printHierarchy(columnName: String, hierarchy: Map[String, List[String]], level: Int = 0): Unit = {
+  private def printHierarchy(columnName: String, hierarchy: Map[String, List[String]], level: Int = 0): Unit = {
     val indent = "   " * level
     println(s"$indent$columnName")
     hierarchy.getOrElse(columnName, List()).foreach { childColumn =>
@@ -222,14 +221,14 @@ inMap: List[MappingList])
     }
   }
 
-  def printAllHierarchies(hierarchy: Map[String, List[String]]): Unit = {
+  private def printAllHierarchies(hierarchy: Map[String, List[String]]): Unit = {
     // Find root columns (those not listed as children)
     val allChildren = hierarchy.values.flatten.toSet
     val rootColumns = hierarchy.keySet.diff(allChildren)
     rootColumns.foreach { column => printHierarchy(column, hierarchy) }
   }
 
-  def manageMapping(child: String, parent: String): List[MappingList] = {
+  private def manageMapping(child: String, parent: String): List[MappingList] = {
     var columnTemp: List[MappingList] = List()
     val isChildContainsComma = child.contains(",")
     val isParentContainsComma = parent.contains(",")
@@ -246,7 +245,6 @@ inMap: List[MappingList])
         columnTemp = columnTemp ++ formattedList
         columnTemp
 
-
       case _ =>
         val formattedList = parent.map(v => MappingList(parent, child))
         columnTemp = columnTemp ++ formattedList
@@ -254,13 +252,13 @@ inMap: List[MappingList])
     }
   }
 
-  def columnJson(dataframe: DataFrame, spark: SparkSession): String = {
+  private def columnJson(dataframe: DataFrame, spark: SparkSession): String = {
     val analyzedLogicalPlan = dataframe.queryExecution.analyzed
     val unresolvedLogicalPlan = dataframe.queryExecution.logical
     val inputTableList = unresolvedLogicalPlan.collect { case r: UnresolvedRelation => r.tableName }.toSet
     val outputTableList = ""
-    val rawSQLLineage: Seq[ColumnLineageRecord] = extractColumnLineage(analyzedLogicalPlan, targetTable = outputTableList)
-
+    val rawSQLLineage: Seq[ColumnLineageRecord] =
+      extractColumnLineage(analyzedLogicalPlan, targetTable = outputTableList)
 
     var parentRecords: List[NormalizedHire] = List()
     var parentList: List[String] = List()
@@ -276,37 +274,42 @@ inMap: List[MappingList])
 
     baseTableColumns.foreach(column => {
       val derievedColumnId = column.derivedColumnId
-      val parentRecAdd = NormalizedHire(column.targetTableName, column.derivedColumnName, column.derivedColumnId, column.transformation)
+      val parentRecAdd = NormalizedHire(column.targetTableName, column.derivedColumnName,
+        column.derivedColumnId, column.transformation)
 
       val isRoot = parentRecords.filter(p => p.LookupKey.equalsIgnoreCase(derievedColumnId))
-      //edlLogger.logInfo("Search For Output", s"Searching For ${column.targetTableName} & " + s"Column ${column.derivedColumnName}")
+      // edlLogger.logInfo("Search For Output", s"Searching For ${column.targetTableName} & "
+      // + s"Column ${column.derivedColumnName}")
 
       isRoot.size match {
         case 0 =>
-          val basetosearch = rawSQLLineage.filter(base => base.derivedColumnId.contains(derievedColumnId) &&
+          val baseToSearch = rawSQLLineage.filter(base => base.derivedColumnId.contains(derievedColumnId) &&
             !base.parentColumnId.equalsIgnoreCase(derievedColumnId))
 
-          val filtered_Rec = removeElement(basetosearch.toList, derievedColumnId)
+          val filtered_Rec = removeElement(baseToSearch.toList, derievedColumnId)
           parentList = filtered_Rec.map(_.parentColumnId).mkString.split(",").distinct.toList
-          val retVal = CallFromParent(column.parentColumnId, parentList, column, rawSQLLineage, parentRecords)
+          val retVal = callFromParent(column.parentColumnId, parentList, column, rawSQLLineage, parentRecords)
 
           returnedRecords = retVal.inFinalOutput
 
           transformationMappingList = transformationMappingList ++ retVal.appendList
           columnTemp = columnTemp ++ retVal.inMap
-          //edlLogger.logInfo("Completed ", s"Searching For ${column.targetTableName} & " + s"Column ${column.derivedColumnName}\n")
-          //edlLogger.logInfo("", "FINISHED\n")
+          // edlLogger.logInfo("Completed ", s"Searching For ${column.targetTableName} & "
+          // + s"Column ${column.derivedColumnName}\n")
+          // edlLogger.logInfo("", "FINISHED\n")
 
         case _ =>
           parentList = List(derievedColumnId)
           isParent = "Y"
-          returnedRecords = List(NormalizedHire(column.targetTableName, column.derivedColumnName, column.derivedColumnId, column.transformation))
+          returnedRecords = List(NormalizedHire(column.targetTableName, column.derivedColumnName,
+            column.derivedColumnId, column.transformation))
           transformationMappingList += (("0", column.parentColumnId, null))
           val parentListMap: List[MappingList] = List(MappingList("", derievedColumnId))
           columnTemp = columnTemp ++ parentListMap
 
-          //edlLogger.logInfo("Completed", s"Searching For ${column.targetTableName} & Column ${column.derivedColumnName}\n")
-          //edlLogger.logInfo("", "FINISHED\n")
+          // edlLogger.logInfo("Completed",
+          // s"Searching For ${column.targetTableName} & Column ${column.derivedColumnName}\n")
+          // edlLogger.logInfo("", "FINISHED\n")
       }
       finalRecords = finalRecords :+ NormalizedHireDetails.apply(parentRecAdd, returnedRecords)
     })
@@ -332,9 +335,8 @@ inMap: List[MappingList])
     columnLineage
   }
 
-  def CallFromParent(parentId: String, parentLists: List[String], column: ColumnLineageRecord,
+  private def callFromParent(parentId: String, parentLists: List[String], column: ColumnLineageRecord,
     rawSQLLineage: Seq[ColumnLineageRecord], parentRec: List[NormalizedHire]): TransformMapping = {
-
 
     var NormalizedHierRecordsTemp: List[NormalizedHire] = List()
     val retVal = recursive(parentId, parentLists, column, rawSQLLineage, parentRec, column.derivedColumnId)
@@ -349,9 +351,8 @@ inMap: List[MappingList])
     TransformMapping(NormalizedHierRecordsTemp, inTransformListMap, columnTemp)
 
   }
-  def recursive(parentId: String, parentLists: List[String], column: ColumnLineageRecord,
-    rawSQLLineage: Seq[ColumnLineageRecord], parentRec: List[NormalizedHire],
-    childId: String): TransformMapping = {
+  private def recursive(parentId: String, parentLists: List[String], column: ColumnLineageRecord,
+    rawSQLLineage: Seq[ColumnLineageRecord], parentRec: List[NormalizedHire], childId: String): TransformMapping = {
 
     var parentRecTemp: List[NormalizedHire] = List()
     var columnTemp: List[MappingList] = List()
@@ -393,7 +394,7 @@ inMap: List[MappingList])
   def nvl2[T](value: T, whenNotNull: T, whenNull: T): T = {
     if (value != null) whenNotNull else whenNull
   }
-  case class ColumnLineageMap(var TargetColumn: String = "NA",var SourceColumn: String = "NA",
+  private case class ColumnLineageMap(var TargetColumn: String = "NA", var SourceColumn: String = "NA",
       var SourceTable: String = "NA")
 
   def generateColumnLineage(sqlQuery: String, dataframe: DataFrame, inSpark: SparkSession): Unit = {

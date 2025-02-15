@@ -102,7 +102,7 @@ Sure thing! Let's dive deeper into the key concepts and address your scalability
 
 By carefully designing your Temporal setup and addressing scalability challenges, you can efficiently manage large-scale data pipelines and meet both real-time and batch processing requirements.
 
-Great point. In scenarios where workflows and activities are inherently similar and only the data varies, here’s how you can design your Temporal workflows efficiently:
+In scenarios where workflows and activities are inherently similar and only the data varies, here’s how you can design your Temporal workflows efficiently:
 
 ### Designing Unified Workflows with Customizations
 
