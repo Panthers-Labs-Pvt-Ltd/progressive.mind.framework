@@ -134,19 +134,19 @@
         </executions>
       </plugin>
       <plugin>
+        <groupId>org.flywaydb</groupId>
         <artifactId>flyway-maven-plugin</artifactId>
+        <version>${flyway-maven-plugin-version}</version>
         <configuration>
           <!-- Update the URL to point to your actual database, this config is as per my DB -->
+          <url>jdbc:postgresql://127.0.0.1:5432/postgres</url>
+          <user>postgres</user>
           <defaultSchema>data_pipeline</defaultSchema>
           <password>password</password>
           <schemas>
             <schema>data_pipeline</schema>
           </schemas>
-          <url>jdbc:postgresql://127.0.0.1:5432/postgres</url>
-          <user>postgres</user>
         </configuration>
-        <groupId>org.flywaydb</groupId>
-        <version>10.0.0</version>
       </plugin>
     </plugins>
   </build>

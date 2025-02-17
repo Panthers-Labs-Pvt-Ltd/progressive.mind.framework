@@ -5,10 +5,10 @@ spring:
   application:
     name: chimera_dq_service
   datasource:
-    url: jdbc:postgresql://127.0.0.1:5432/postgres?currentSchema=data_quality # PostgreSQL for default environment
+    url: jdbc:postgresql://127.0.0.1:5432/data_management?currentSchema=public # PostgreSQL for default environment
     driverClassName: org.postgresql.Driver
-    username: postgres
-    password: password
+    username: owner_data_management
+    password: owner_data_management
     hikari:
       poolName: PostgresqlHikariCP
       maxLifetime: 1200000 # 20 minutes
@@ -16,7 +16,7 @@ spring:
       minimumIdle: 1 # Minimum idle connections in the pool
   flyway:
     enabled: true
-    schemas: data_quality
+    schemas: public
     cleanDisabled: true
   security:
     oauth2:

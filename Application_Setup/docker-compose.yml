@@ -7,7 +7,7 @@ services:
       - OTEL_VERSION=0.38.0
       - OTEL_GRPC_PORT=4317
       - OTEL_HTTP_PORT=4318
-      - ZIPKIN_PORT=55681
+      - ZIPKIN_PORT=5q5681
       - PROMETHEUS_PORT=8888
 
   jaeger:
@@ -42,18 +42,13 @@ services:
       - observability
 
   postgres:
-    image: postgres:16
-    container_name: postgres
-    ports:
-      - ${POSTGRES_PORT:-5432}:5432
-    environment:
-      - POSTGRES_USER=admin
-      - POSTGRES_PASSWORD=password
-      - POSTGRES_DB=chimera_db
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    networks:
-      - key_clock
+    extends:
+      file: postgresql/postgres.yml
+      service: postgres
+#    environment:
+#      - POSTGRES_USER=admin
+#      - POSTGRES_PASSWORD=password
+#      - POSTGRES_DB=chimera_db
 
 
   api-gateway:
@@ -134,6 +129,8 @@ networks:
   kong-net:
     driver: bridge
   engine:
+    driver: bridge
+  postgresql:
     driver: bridge
   key_clock:
     driver: bridge
