@@ -162,7 +162,7 @@
             <artifactId>flyway-database-postgresql</artifactId>
             <groupId>org.flywaydb</groupId>
             <scope>runtime</scope>
-            <version>11.1.1</version>
+            <version>${flyway-database-postgresql-version}</version>
         </dependency>
 
         <dependency>

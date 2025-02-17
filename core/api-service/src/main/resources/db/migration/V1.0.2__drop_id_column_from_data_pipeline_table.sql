@@ -1,1 +1,0 @@
-ALTER TABLE data_pipelines DROP COLUMN ID;

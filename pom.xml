@@ -160,6 +160,7 @@
 
         <!-- Flyway version -->
         <flyway-maven-plugin-version>11.3.2</flyway-maven-plugin-version>
+        <flyway-database-postgresql-version>11.3.2</flyway-database-postgresql-version>
     </properties>
     <!--<repositories><repository><id>gitlab-maven</id><url>https://gitlab.com/manishkumargupta/TestScala.git</url></repository></repositories><distributionManagement><repository><id>gitlab-maven</id><url>https://gitlab.com/manishkumargupta/TestScala.git</url></repository><snapshotRepository><id>gitlab-maven</id><url>https://gitlab.com/manishkumargupta/TestScala.git</url></snapshotRepository></distributionManagement>-->
 

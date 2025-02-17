@@ -107,10 +107,10 @@
     <!-- Flyway dependency -->
     <!-- https://mvnrepository.com/artifact/org.flywaydb/flyway-core -->
     <dependency>
-      <artifactId>flyway-database-postgresql</artifactId>
       <groupId>org.flywaydb</groupId>
+      <artifactId>flyway-database-postgresql</artifactId>
+      <version>${flyway-database-postgresql-version}</version>
       <scope>runtime</scope>
-      <version>11.1.1</version>
     </dependency>
 
   </dependencies>
@@ -137,15 +137,26 @@
         <groupId>org.flywaydb</groupId>
         <artifactId>flyway-maven-plugin</artifactId>
         <version>${flyway-maven-plugin-version}</version>
+        <executions>
+          <execution>
+            <phase>install</phase>
+            <goals>
+              <goal>migrate</goal>
+            </goals>
+          </execution>
+        </executions>
         <configuration>
+          <url>jdbc:postgresql://127.0.0.1:5432/business_value</url>
+          <user>owner_business_value</user>
+          <password>owner_business_value</password>
           <!-- Update the URL to point to your actual database, this config is as per my DB -->
-          <url>jdbc:postgresql://127.0.0.1:5432/postgres</url>
-          <user>postgres</user>
-          <defaultSchema>data_pipeline</defaultSchema>
-          <password>password</password>
+          <defaultSchema>public</defaultSchema>
           <schemas>
-            <schema>data_pipeline</schema>
+            <schema>public</schema>
           </schemas>
+          <locations>
+            <location>filesystem:src/main/resources/migration</location>
+          </locations>
         </configuration>
       </plugin>
     </plugins>
