@@ -1,5 +1,5 @@
-DROP VIEW extract_view;
-create view extract_view as
+DROP VIEW if exists extract_view;
+create or replace view extract_view as
 select
     dp.pipeline_name,
     dp.pipeline_description,
@@ -53,7 +53,6 @@ select
     oh.org_desc,
     oh.org_email,
     oh.org_ci
-
 from data_pipelines dp
 join extract_metadata_config emc on emc.pipeline_name = dp.pipeline_name
 left join data_sources ds on emc.extract_source_type = ds.data_source_type and emc.extract_source_sub_type = ds.data_source_sub_type
