@@ -2,15 +2,26 @@ version: '3.8'
 
 services:
   vault:
-    image: hashicorp/vault:latest
+    image: hashicorp/vault:1.18.4
     container_name: vault
-    restart: always
+    # restart: always
+    command: "vault server -config=/vault/config/vault-config.hcl"
     ports:
       - "8200:8200"
+    volumes:
+      - vault-data:/vault/data
+      - ./vault-config.hcl:/vault/config/vault-config.hcl
+      # - /path/to/vault/logs:/var/log
     environment:
-      VAULT_DEV_ROOT_TOKEN_ID: "root"
-      VAULT_DEV_LISTEN_ADDRESS: "0.0.0.0:8200"
+      # VAULT_DEV_ROOT_TOKEN_ID: "root"
+      # VAULT_DEV_LISTEN_ADDRESS: "0.0.0.0:8200"
       VAULT_ADDR: "http://0.0.0.0:8200"
     cap_add:
       - IPC_LOCK
-    command: "server -dev"
+    networks:
+        - chimera
+    depends_on:
+      - postgres
+
+volumes:
+    vault-data:
