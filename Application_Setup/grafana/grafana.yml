@@ -11,4 +11,4 @@ services:
       - ./grafana/provisioning:/grafana/provisioning
       - ./grafana/dashboards:/grafana/dashboards
     networks:
-      - observability
+      - chimera

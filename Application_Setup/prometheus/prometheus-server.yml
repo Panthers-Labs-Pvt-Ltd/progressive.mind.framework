@@ -8,4 +8,4 @@ services:
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
     networks:
-      - observability
+      - chimera
