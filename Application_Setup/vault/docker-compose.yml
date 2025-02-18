@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   vault:
-    image: hashicorp/vault:1.18.4
+    image: hashicorp/vault:${VAULT_VERSION:-1.9.3}
     container_name: vault
     # restart: always
     command: "vault server -config=/vault/config/vault-config.hcl"
