@@ -1,23 +1,23 @@
 services:
-#  postgres:
-#    extends:
-#      file: postgresql/postgres.yml
-#      service: postgres
-#
-#  api-gateway:
-#    extends:
-#      file: api-gateway/api-gateway.yml
-#      service: kong-gateway
-#
-#  kong-migrations:
-#    extends:
-#      file: api-gateway/api-gateway.yml
-#      service: kong-migrations
-#
-#  keycloak:
-#    extends:
-#      file: keycloak/keycloak-docker-compose.yml
-#      service: keycloak
+  postgres:
+    extends:
+      file: postgresql/postgres.yml
+      service: postgres
+
+  api-gateway:
+    extends:
+      file: api-gateway/api-gateway.yml
+      service: kong-gateway
+
+  kong-migrations:
+    extends:
+      file: api-gateway/api-gateway.yml
+      service: kong-migrations
+
+  keycloak:
+    extends:
+      file: keycloak/keycloak-docker-compose.yml
+      service: keycloak
 
   otel-collector:
     extends:
