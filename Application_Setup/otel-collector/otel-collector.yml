@@ -10,12 +10,10 @@ services:
       - "${OTEL_GRPC_PORT:-4317}:4317"
       - "${OTEL_HTTP_PORT:-4318}:4318"
       - "${ZIPKIN_PORT:-55681}:55681" # Mohit, does it take care of zPages. zPages are an in-process diagnostic tool used in OpenTelemetry to provide live, in-memory diagnostics for tracing and metrics data
-      - "${PROMETHEUS_PORT:-8888}:8888" # Prometheus metrics exposed by the Collector
-      - "${PROMETHEUS_EXPORTER_METRICS_PORT:-8889}:8889" # Prometheus exporter metrics
       - "${OTEL_COL_HEALTH_CHECK_EXTENSION:-13133}:13133"
     volumes:
-      - ./otel-collector-config.yaml:/etc/otelcol-contrib/config.yaml
+      - ./otel-collector-config.yaml:/prometheus/otel-collector-config.yaml
     command:
-      - "--config=/etc/otelcol-contrib/config.yaml"
+      - "--config=/prometheus/otel-collector-config.yaml"
     networks:
         - chimera

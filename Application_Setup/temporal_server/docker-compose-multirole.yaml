@@ -309,7 +309,7 @@ services:
     volumes:
       - type: bind
         source: ./deployment/otel/otel-config.yaml
-        target: /etc/otel-collector-config.yaml
+        target: /prometheus/otel-collector-config.yaml
     ports:
       - published: 1888
         target: 1888

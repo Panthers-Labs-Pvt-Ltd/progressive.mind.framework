@@ -41,7 +41,7 @@ for DIR in "${DIRECTORIES[@]}"; do
   echo "  External IP: $SERVICE_EXTERNAL_IP"
   echo "  NodePort: $SERVICE_PORT"
   if [ "$SERVICE_PORT" != "Not a NodePort service" ]; then
-    echo "  URL: http://$(minikube ip):$SERVICE_PORT/"
+    echo "  URL: http://$SERVICE_CLUSTER_IP:$SERVICE_PORT/"
   fi
   echo
 done
@@ -52,6 +52,10 @@ done
 echo "Applying Ingress resources..."
 kubectl apply -f ingress.yaml -n $NAMESPACE
 echo "Ingress resources applied successfully."
+
+# Call the metrics collector daemon JAR
+echo "Starting metrics collector daemon..."
+java -jar metrics-collector-daemon-1.0-SNAPSHOT.jar &
 
 echo "Deployment complete. Resources are being created in the '$NAMESPACE' namespace."
 
