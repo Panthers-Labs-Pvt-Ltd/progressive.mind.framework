@@ -23,43 +23,21 @@ services:
     extends:
       file: otel-collector/otel-collector.yml
       service: otel-collector
-    environment:
-      - OTEL_VERSION=0.38.0
-      - OTEL_GRPC_PORT=4317
-      - OTEL_HTTP_PORT=4318
-      - ZIPKIN_PORT=5681
-      - PROMETHEUS_PORT=8888
 
   jaeger:
     extends:
       file: jaeger/jaeger.yml
       service: jaeger
-    environment:
-      - JAEGER_VERSION=1.29.0
-      - JAEGER_UI_PORT=16686
-      - JAEGER_HTTP_PORT=14268
-      - JAEGER_GRPC_PORT=14250
-      - ZIPKIN_API_PORT=9411
 
   prometheus:
     extends:
       file: prometheus/prometheus-server.yml
       service: prometheus
-    environment:
-      - PROMETHEUS_VERSION=${PROMETHEUS_VESION:-3.1.0}
-      - PROMETHEUS_UI_PORT=9090
-    networks:
-      - observability
 
   grafana:
     extends:
       file: grafana/grafana.yml
       service: grafana
-    environment:
-      - GRAFANA_VERSION=${GRAFANA_VERSION:-7.5.5}
-      - GRAFANA_PORT=3000
-    networks:
-      - observability
 
 # Below To be fixed
 #  taskmanager:
@@ -101,16 +79,6 @@ services:
 #        - engine
 
 networks:
-#  observability:
-#    driver: bridge
-#  kong-net:
-#    driver: bridge
-#  engine:
-#    driver: bridge
-#  postgresql:
-#    driver: bridge
-#  key_clock:
-#    driver: bridge
   chimera:
     driver: bridge
 

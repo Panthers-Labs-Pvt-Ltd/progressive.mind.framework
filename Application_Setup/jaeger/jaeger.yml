@@ -9,4 +9,4 @@ services:
       - "${JAEGER_GRPC_PORT:-14250}:14250"
       - "${ZIPKIN_API_PORT:-9411}:9411"
     networks:
-        - observability
+        - chimera
