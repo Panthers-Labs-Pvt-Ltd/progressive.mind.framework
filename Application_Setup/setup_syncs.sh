@@ -3,7 +3,7 @@
 # Created Date: Wednesday, January 15th 2025
 
 # set -x: Prints each command before executing it, useful for debugging.
-# set -x: fAILS THE script on the first error
+# set -e: fAILS THE script on the first error
 # set -u: Treats unset variables as an error and exits immediately.
 # set -o pipefail: Ensures that the script exits if any command in a pipeline fails.
 set -xeuo pipefail

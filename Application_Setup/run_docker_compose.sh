@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -xeuo pipefail
+
 # Export environment variables
 # Export the versions of the observability tools
 # Initalize Vault first to fetch the secrets
@@ -8,14 +10,14 @@ export JAEGER_VERSION=1.29.0
 export PROMETHEUS_VERSION=v3.1.0
 export POSTGRES_VERSION=16.7
 export GRAFANA_VERSION=7.5.5
-export VAULT_VERSION=1.9.3
+export VAULT_VERSION=1.18.4
 
 # Fetch credentials from Vault
-KC_DB_USERNAME=$(vault kv get -field=KC_DB_USERNAME secret/keycloak)
-KC_DB_PASSWORD=$(vault kv get -field=KC_DB_PASSWORD secret/keycloak)
+# KC_DB_USERNAME=$(vault kv get -field=KC_DB_USERNAME secret/keycloak)
+# KC_DB_PASSWORD=$(vault kv get -field=KC_DB_PASSWORD secret/keycloak)
 # Export environment variables
-export KC_DB_USERNAME
-export KC_DB_PASSWORD
+export KC_DB_USERNAME=owner_chimera_application
+export KC_DB_PASSWORD=owner_chimera_application
 
 # Export the ports
 export OTEL_GRPC_PORT=4317

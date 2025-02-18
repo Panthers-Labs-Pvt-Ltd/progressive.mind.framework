@@ -1,6 +1,10 @@
 storage "postgresql" {
-  connection_url = "jdbc:postgresql://owner_chimera_application:owner_chimera_application@localhost:5432/chimera_db"
+  connection_url = "postgresql://owner_chimera_application:owner_chimera_application@postgres/chimera_db?sslmode=disable"
   table = "vault_kv_store"
+  max_parallel = "128"
+  max_idle_connections = 16
+  ha_enabled = "true"
+  ha_table = "vault_ha_locks"
 }
 
 listener "tcp" {
@@ -22,4 +26,5 @@ audit "file" {
 ui = true
 default_lease_ttl = "168h"
 max_lease_ttl = "720h"
-
+cluster_addr  = "http://0.0.0.0:8201"
+api_addr      = "http://0.0.0.0:8200"
