@@ -56,9 +56,21 @@ When designing API services for a self-serve data platform, it's essential to co
 
 - [Data Contract Specification - OpenAPI](https://swagger.io/specification/)
 
-### Implementing API Gateway
+## Implementing API Gateway
 
 I would to use Kong API Gateway to manage API traffic, enforce security policies, and monitor API usage effectively.
+
+### Set up
+
+Kong can be installed using Docker, Kubernetes, or as a standalone service. For this example, I will use Docker to set up Kong.
+
+Please see [setup](../../Application_Setup/api-gateway/api-gateway.yml) for more details.
+
+* Kong depends on postgres to manage its configuration and state. You can use the official postgres Docker image to set up a postgres database for Kong.
+* `kong-migration` container's sole purpose is to perform the database migrations required for Kong to operate. Once these migrations are completed, the container will exit because its job is done.
+* `kong-gateway` is the main output expected. It is important to verify that Kong UI is up and healthy - it indicates that the migrations were successful and Kong Gateway is functioning as expected.
+
+### More Java based API Gateway configurations
 
 ```java
 

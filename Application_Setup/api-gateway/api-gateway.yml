@@ -4,28 +4,33 @@ services:
   kong-migrations:
     build: .  # Use the Dockerfile in the current directory
     container_name: kong-migrations
-    networks:
-      - kong-net
-    environment:
-      KONG_DATABASE: postgres
-      KONG_PG_HOST: jdbc:postgresql://postgres:5432/chimera_db
-      KONG_PG_USER: admin
-      KONG_PG_PASSWORD: password
     command: kong migrations bootstrap
+    networks:
+        - chimera
     depends_on:
       postgres:
         condition: service_healthy
+    environment:
+      KONG_DATABASE: postgres
+      KONG_PG_HOST: postgres
+      KONG_PG_USER: owner_chimera_application
+      KONG_PG_PASSWORD: owner_chimera_application
+      KONG_PG_DATABASE: chimera_db
 
   kong-gateway:
     build: .  # Use the Dockerfile in the current directory
     container_name: kong-gateway
     networks:
-      - kong-net
+      - chimera
+    depends_on:
+      kong-migrations:
+        condition: service_completed_successfully
     environment:
       KONG_DATABASE: postgres
-      KONG_PG_HOST: kong-database
-      KONG_PG_USER: kong
-      KONG_PG_PASSWORD: kongpass
+      KONG_PG_HOST: postgres
+      KONG_PG_USER: owner_chimera_application
+      KONG_PG_PASSWORD: owner_chimera_application
+      KONG_PG_DATABASE: chimera_db
       KONG_PROXY_ACCESS_LOG: /dev/stdout
       KONG_ADMIN_ACCESS_LOG: /dev/stdout
       KONG_PROXY_ERROR_LOG: /dev/stderr
@@ -39,10 +44,3 @@ services:
       - "127.0.0.1:8001:8001"
       - "127.0.0.1:8002:8002"
       - "127.0.0.1:8444:8444"
-    depends_on:
-      kong-migrations:
-        condition: service_completed_successfully
-
-networks:
-  kong-net:
-    driver: bridge

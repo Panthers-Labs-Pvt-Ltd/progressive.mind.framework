@@ -9,14 +9,20 @@ services:
     environment:
       - POSTGRES_USER=init_user
       - POSTGRES_PASSWORD=init_password
-      # - POSTGRES_DB=chimera_db
-      # - POSTGRES_USER=admin
-      # - POSTGRES_PASSWORD=password
-      # - POSTGRES_DB=chimera_db
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-U", "init_user" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./init-scripts:/docker-entrypoint-initdb.d
       # - ./entrypoint.sh:/usr/local/bin/entrypoint.sh
     # entrypoint: /usr/local/bin/entrypoint.sh
     networks:
-      - postgresql
+      - chimera
+networks:
+    chimera:
+        driver: bridge
+volumes:
+    postgres_data:
