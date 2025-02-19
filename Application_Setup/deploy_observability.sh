@@ -23,7 +23,7 @@ echo "Namespace '$NAMESPACE' is ready."
 echo "Applying common resources..."
 kubectl apply -f common/configmap.yaml -n $NAMESPACE
 kubectl apply -f common/secret.yaml -n $NAMESPACE
-kubectl apply -f prometheus/prometheus-configmap.yaml -n $NAMESPACE
+kubectl apply -f prometheus/prometheus-config.yaml -n $NAMESPACE
 echo "Common resources applied successfully."
 
 # Apply Grafana dashboard
@@ -64,12 +64,12 @@ echo "Ingress resources applied successfully."
 
 # Call the metrics collector daemon JAR
 echo "Starting metrics collector daemon..."
-if java -jar metrics-collector-daemon-1.0-SNAPSHOT.jar $METRICS_COLLECTOR_HOST $METRICS_COLLECTOR_PORT & then
+if java -jar metrics-collector-daemon-1.0-SNAPSHOT.jar $METRICS_COLLECTOR_HOST $METRICS_COLLECTOR_PORT &> /dev/null; then
   echo "Metrics collector daemon started successfully."
 else
   echo "Failed to start metrics collector daemon." >&2
 fi
 echo "Deployment complete. Resources are being created in the '$NAMESPACE' namespace."
 
-kubectl get service -n "observability" -l app=$DIR -o jsonpath='{.items[0].metadata.name}'
-kubectl get service $SERVICE_NAME -n "observability" -o jsonpath='{.spec.clusterIP}' 2>/dev/null || echo "No ClusterIP assigned"
+kubectl get service -n $NAMESPACE -l app=$DIR -o jsonpath='{.items[0].metadata.name}'
+kubectl get service $SERVICE_NAME -n $NAMESPACE -o jsonpath='{.spec.clusterIP}' 2>/dev/null || echo "No ClusterIP assigned"
