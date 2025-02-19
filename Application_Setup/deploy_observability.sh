@@ -64,10 +64,14 @@ echo "Ingress resources applied successfully."
 
 # Call the metrics collector daemon JAR
 echo "Starting metrics collector daemon..."
-if java -jar metrics-collector-daemon-1.0-SNAPSHOT.jar $METRICS_COLLECTOR_HOST $METRICS_COLLECTOR_PORT &> /dev/null; then
-  echo "Metrics collector daemon started successfully."
+if pgrep -f "metrics-collector-daemon-1.0-SNAPSHOT.jar" > /dev/null; then
+  echo "Metrics collector daemon is already running."
 else
-  echo "Failed to start metrics collector daemon." >&2
+  if java -jar metrics-collector-daemon-1.0-SNAPSHOT.jar $METRICS_COLLECTOR_HOST $METRICS_COLLECTOR_PORT &> /dev/null; then
+    echo "Metrics collector daemon started successfully."
+  else
+    echo "Failed to start metrics collector daemon." >&2
+  fi
 fi
 echo "Deployment complete. Resources are being created in the '$NAMESPACE' namespace."
 
