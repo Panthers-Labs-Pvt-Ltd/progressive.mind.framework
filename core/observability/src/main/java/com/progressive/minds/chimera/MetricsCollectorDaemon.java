@@ -62,10 +62,13 @@ public class MetricsCollectorDaemon {
             DefaultExports.initialize();
 
             // Start HTTP server and bind to IPv4 localhost
-            System.out.println("Starting Prometheus HTTP Server on 0.0.0.0:8083...");
-            HTTPServer prometheusServer = new HTTPServer("0.0.0.0", 8083);
+            String host = args.length > 0 ? args[0] : "0.0.0.0";
+            int port = args.length > 1 ? Integer.parseInt(args[1]) : 8083;
 
-            System.out.println("Prometheus HTTP Server started successfully. Listening on 127.0.0.1:8083...");
+            System.out.printf("Starting Prometheus HTTP Server on %s:%d...%n", host, port);
+            HTTPServer prometheusServer = new HTTPServer(host, port);
+
+            System.out.printf("Prometheus HTTP Server started successfully. Listening on %s:%d...%n", host, port);
         } catch (IOException e) {
             System.err.println("Error starting Prometheus HTTP Server: " + e.getMessage());
             e.printStackTrace();

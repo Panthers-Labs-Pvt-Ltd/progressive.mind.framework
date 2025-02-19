@@ -8,4 +8,4 @@ WORKDIR /app
 COPY target/metrics-collector-daemon-1.0-SNAPSHOT.jar /app/metrics-collector-daemon.jar
 
 # Run the JAR file
-ENTRYPOINT ["java", "-jar", "metrics-collector-daemon.jar"]
+ENTRYPOINT ["java", "-jar", "metrics-collector-daemon.jar", "0.0.0.0", "8083"]

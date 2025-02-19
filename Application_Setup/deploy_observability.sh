@@ -1,7 +1,18 @@
 #!/bin/bash
 
+# Log file
+LOG_FILE="deploy_observability.log"
+exec > >(tee -i $LOG_FILE)
+exec 2>&1
+
 # Set namespace
 NAMESPACE="observability"
+
+# Export host and port for the metrics collector daemon
+export METRICS_COLLECTOR_HOST="0.0.0.0"
+export METRICS_COLLECTOR_PORT="8083"
+
+echo "Metrics collector daemon host: $METRICS_COLLECTOR_HOST and port: $METRICS_COLLECTOR_PORT"
 
 # Create the namespace if it doesn't exist
 echo "Checking if namespace '$NAMESPACE' exists..."
@@ -45,8 +56,6 @@ for DIR in "${DIRECTORIES[@]}"; do
   fi
   echo
 done
-# Apply the prometheus service monitor
-# kubectl apply -f prometheus/prometheus-service-monitor.yaml -n $NAMESPACE
 
 # Apply Ingress resources
 echo "Applying Ingress resources..."
@@ -55,8 +64,11 @@ echo "Ingress resources applied successfully."
 
 # Call the metrics collector daemon JAR
 echo "Starting metrics collector daemon..."
-java -jar metrics-collector-daemon-1.0-SNAPSHOT.jar &
-
+if java -jar metrics-collector-daemon-1.0-SNAPSHOT.jar $METRICS_COLLECTOR_HOST $METRICS_COLLECTOR_PORT & then
+  echo "Metrics collector daemon started successfully."
+else
+  echo "Failed to start metrics collector daemon." >&2
+fi
 echo "Deployment complete. Resources are being created in the '$NAMESPACE' namespace."
 
 kubectl get service -n "observability" -l app=$DIR -o jsonpath='{.items[0].metadata.name}'
