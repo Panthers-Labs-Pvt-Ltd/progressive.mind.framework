@@ -26,6 +26,7 @@ import org.apache.spark.sql.types.StructType;
 import org.jetbrains.annotations.NotNull;
 import za.co.absa.cobrix.spark.cobol.utils.SparkUtils;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -62,17 +63,24 @@ public class DatasetFacets {
 
         OpenLineage.DocumentationDatasetFacetBuilder docInputFacet =
                 openLineageProducer.newDocumentationDatasetFacetBuilder();
-        extraInfo.forEach(docInputFacet::put);
-        docInputFacet.description(Description);
+                docInputFacet.description(Description);
+        if(extraInfo != null)
+        {
+            extraInfo.forEach(docInputFacet::put);
+        }
         return docInputFacet.build();
     }
 
     public static OpenLineage.DatasourceDatasetFacet
     getDatasourceDatasetFacet(OpenLineage openLineageProducer,
-                              String dataSourceName, String dataSourceURI,
+                              @Nonnull  String dataSourceName,
+                              @Nonnull  String dataSourceURI,
                               @Nullable Map<String, String> extraInfo) throws URISyntaxException {
         OpenLineage.DatasourceDatasetFacetBuilder dataSourceFacet = openLineageProducer.newDatasourceDatasetFacetBuilder();
-        extraInfo.forEach(dataSourceFacet::put);
+        if (extraInfo != null && !extraInfo.isEmpty())
+        {
+            extraInfo.forEach(dataSourceFacet::put);
+        }
         dataSourceFacet.name(dataSourceName).uri(new URI(dataSourceURI));
         return dataSourceFacet.build();
     }
@@ -145,7 +153,7 @@ public class DatasetFacets {
         List<OpenLineage.SymlinksDatasetFacetIdentifiers> symlinkIdentifiers = new ArrayList<>();
         for (Map<String, String> symlink : symlinkUris) {
             OpenLineage.SymlinksDatasetFacetIdentifiers identifier = openLineageProducer.newSymlinksDatasetFacetIdentifiersBuilder()
-                    .name(symlink.getOrDefault("name", "unknown")) // Fallback to "unknown" if missing
+                    .name(symlink.getOrDefault("name", "unknown"))
                     .type(symlink.getOrDefault("type", "unknown"))
                     .namespace(symlink.getOrDefault("namespace", "unknown"))
                     .build();
@@ -533,7 +541,7 @@ public class DatasetFacets {
                 .facets(datasetFacets).build();
     }
 
-    private static String[] getDataPlatform(String inFullPath) {
+    public static String[] getDataPlatform(String inFullPath) {
         String dataPlatform;
         String filePath;
 

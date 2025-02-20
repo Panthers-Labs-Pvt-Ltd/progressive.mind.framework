@@ -1,6 +1,7 @@
 package com.progressive.minds.chimera.DataManagement.datalineage;
 
 import com.progressive.minds.chimera.core.dataSource.sourceTypes.FileReader;
+
 import org.apache.spark.sql.*;
 import org.apache.spark.sql.catalyst.plans.logical.LogicalPlan;
 import org.apache.spark.sql.types.*;
@@ -40,11 +41,11 @@ class ChimeraOpenLineageTest {
         System.setProperty("API_CLIENT", "chimera_api_client");
         System.setProperty("API_SECRET", "yhKj2HkNBpyv9ZgV9oqPxHcZOPEb3uBg");
         DBAPIClient dbClient = new DBAPIClient();
-        PipelineMetadata inPipelineMetadata = dbClient.get("http://localhost:8080/api/v1/pipelineMetadata/Test_Pipeline",
+        PipelineMetadata inPipelineMetadata = dbClient.get("http://localhost:8888/api/v1/pipelineMetadata/Test_Pipeline",
                 new TypeReference<PipelineMetadata>() {});
         Map<String, String> lineageMap = new HashMap<>();
         lineageMap.putIfAbsent("FileName" , "/home/manish/lineage.json");
-       OpenLineageWrapper(eventType,inPipelineMetadata,  spark, "file",lineageMap);
+        Lineage.OpenLineageWrapper(eventType,inPipelineMetadata,  spark, "file",lineageMap);
     }
 
     @Test

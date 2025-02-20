@@ -22,7 +22,7 @@ public class JobFacets {
                 .build();
     }
 
-    public OpenLineage.Job JobEndFacet(OpenLineage openLineageProducer,String name,String Namespace) {
+    public static OpenLineage.Job JobEndFacet(OpenLineage openLineageProducer, String name, String Namespace) {
         return openLineageProducer.newJobBuilder()
                 .namespace(Namespace)
                 .name(name)
@@ -120,7 +120,7 @@ public class JobFacets {
 
         else if (DataSourceType.equalsIgnoreCase(String.valueOf(DataSourcesTypes.RDBMS))) {
             OpenLineage.SQLJobFacet SQLFacet = openLineageProducer.newSQLJobFacetBuilder()
-                    //.query(SQLQuery)
+                    ///.query(SQLQuery)
                     .build();
             jobFacets.sql(SQLFacet);
         }

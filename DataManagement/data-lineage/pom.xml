@@ -119,6 +119,18 @@
             <artifactId>sql-formatter</artifactId>
             <version>${sql.formatter.version}</version>
         </dependency>
+        <dependency>
+            <groupId>io.acryl</groupId>
+            <artifactId>datahub-client-java8</artifactId>
+            <version>0.15.0-2rc7</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.acryl</groupId>
+            <artifactId>datahub-client-java8</artifactId>
+            <version>0.15.0-2rc7</version>
+            <scope>compile</scope>
+        </dependency>
 
     </dependencies>
 
