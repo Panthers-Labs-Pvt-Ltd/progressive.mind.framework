@@ -44,6 +44,26 @@ services:
       service: vault
       file: vault/docker-compose.yml
 
+  opensearch:
+    extends:
+      file: opensearch/docker-compose.yml
+      service: opensearch
+
+  temporal:
+    extends:
+      service: temporal
+      file: temporal_server/docker-compose-postgres-opensearch.yml
+
+  temporal-admin-tools:
+    extends:
+      service: temporal-admin-tools
+      file: temporal_server/docker-compose-postgres-opensearch.yml
+
+  temporal-ui:
+    extends:
+      service: temporal-ui
+      file: temporal_server/docker-compose-postgres-opensearch.yml
+
 # Below To be fixed
 #  taskmanager:
 #    extends:
@@ -90,3 +110,4 @@ networks:
 volumes:
     postgres_data:
     vault-data:
+    opensearch_data:

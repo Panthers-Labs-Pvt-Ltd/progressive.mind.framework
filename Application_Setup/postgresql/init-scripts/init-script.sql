@@ -7,7 +7,7 @@ LOGIN
 CREATEDB
 BYPASSRLS
 REPLICATION
-connection limit 10
+-- connection limit 10
 password 'chimera123';
 
 -- /* Business Value Service */
@@ -16,7 +16,7 @@ password 'chimera123';
 create role owner_business_value
 WITH
 LOGIN
-connection limit 10
+-- connection limit 10
 password 'owner_business_value';
 
 -- /* tablespaces */
@@ -33,7 +33,7 @@ owner = owner_business_value
 encoding = 'UTF8'
 strategy = 'WAL_LOG'
 --tablespace = ts_data_management
-allow_connections = true
+-- allow_connections = true
 connection_limit = 10;
 
 -- Grant privileges to superuser role, chimera

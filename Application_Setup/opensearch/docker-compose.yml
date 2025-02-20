@@ -1,0 +1,34 @@
+services:
+  opensearch:
+    container_name: opensearch
+    environment:
+      - discovery.type=single-node
+      - OPENSEARCH_JAVA_OPTS=-Xms256m -Xmx256m
+      - cluster.routing.allocation.disk.threshold_enabled=true
+      - cluster.routing.allocation.disk.watermark.low=512mb
+      - cluster.routing.allocation.disk.watermark.high=256mb
+      - cluster.routing.allocation.disk.watermark.flood_stage=128mb
+      - plugins.security.disabled=true
+    image: opensearchproject/opensearch:${OPENSEARCH_VERSION}
+    ulimits:
+      #      memlock:
+      #        soft: -1 # Set memlock to unlimited (no soft or hard limit)
+      #        hard: -1
+      nofile:
+        soft: 65536 # Maximum number of open files for the opensearch user - set to at least 65536
+        hard: 65536
+    networks:
+      - chimera
+    ports:
+      - 9200:9200
+      - 9600:9600
+    volumes:
+      - opensearch_data:/usr/share/opensearch/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9200"]
+      interval: 30s
+      timeout: 30s
+      retries: 3
+
+volumes:
+    opensearch_data:

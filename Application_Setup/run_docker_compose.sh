@@ -31,6 +31,11 @@ export ZIPKIN_API_PORT=9411
 export PROMETHEUS_UI_PORT=9090
 export GRAFANA_PORT=6000
 export POSTGRES_PORT=5432
+export OPENSEARCH_VERSION=1.3.20
+export TEMPORAL_VERSION=1.26.2
+export TEMPORAL_ADMINTOOLS_VERSION=1.26.2
+export TEMPORAL_UI_VERSION=2.35.0
+
 
 # Get Docker version
 docker_version=$(docker --version | awk '{print $3}' | sed 's/,//')

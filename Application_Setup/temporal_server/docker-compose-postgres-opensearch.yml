@@ -1,63 +1,37 @@
-version: "3.5"
 services:
-  opensearch:
-    container_name: temporal-opensearch
-    environment:
-      - discovery.type=single-node
-      - OPENSEARCH_JAVA_OPTS=-Xms256m -Xmx256m
-      - cluster.routing.allocation.disk.threshold_enabled=true
-      - cluster.routing.allocation.disk.watermark.low=512mb
-      - cluster.routing.allocation.disk.watermark.high=256mb
-      - cluster.routing.allocation.disk.watermark.flood_stage=128mb
-      - plugins.security.disabled=true
-    image: opensearchproject/opensearch:${OPENSEARCH_VERSION}
-    ulimits:
-#      memlock:
-#        soft: -1 # Set memlock to unlimited (no soft or hard limit)
-#        hard: -1
-      nofile:
-        soft: 65536 # Maximum number of open files for the opensearch user - set to at least 65536
-        hard: 65536
-    networks:
-      - temporal-network
-    expose:
-      - 9200
-    volumes:
-      - /usr/share/opensearch/data
-  postgresql:
-    container_name: temporal-postgresql
-    environment:
-      POSTGRES_PASSWORD: temporal
-      POSTGRES_USER: temporal
-    image: postgres:${POSTGRESQL_VERSION}
-    networks:
-      - temporal-network
-    expose:
-      - 5432
-    volumes:
-      - /var/lib/postgresql/data
   temporal:
+    image: temporalio/auto-setup:${TEMPORAL_VERSION}
     container_name: temporal
-    depends_on:
-      - postgresql
-      - opensearch
     environment:
-      - DB=postgres12
+      - TEMPORAL_CLI_ADDRESS=temporal:7233
+      - DB=postgres12_pgx
       - DB_PORT=5432
-      - POSTGRES_USER=temporal
-      - POSTGRES_PWD=temporal
-      - POSTGRES_SEEDS=postgresql
-      - DYNAMIC_CONFIG_FILE_PATH=config/dynamicconfig/development-sql.yaml
+      - POSTGRES_USER=chimera
+      - POSTGRES_PWD=chimera123
+      - POSTGRES_SEEDS=postgres
+      - POSTGRES_DB=chimera_db
+      - DYNAMIC_CONFIG_FILE_PATH=/etc/temporal/config/dynamicconfig/development-sql.yaml
       - ENABLE_ES=true
       - ES_SEEDS=opensearch
       - ES_VERSION=v7
-    image: temporalio/auto-setup:${TEMPORAL_VERSION}
-    networks:
-      - temporal-network
-    ports:
-      - 7233:7233
+      - LOG_LEVEL=info
     volumes:
       - ./dynamicconfig:/etc/temporal/config/dynamicconfig
+#    healthcheck: the health return HTTP/0.9 response, and hence commented out for now
+#      test: [ "CMD", "curl", "-f", "http://localhost:7233/health" ]
+#      interval: 30s
+#      timeout: 30s
+#      retries: 3
+    ports:
+      - 7233:7233
+    depends_on:
+      postgres:
+        condition: service_healthy
+      opensearch:
+        condition: service_healthy
+    networks:
+      - chimera
+
   temporal-admin-tools:
     container_name: temporal-admin-tools
     depends_on:
@@ -67,7 +41,7 @@ services:
       - TEMPORAL_CLI_ADDRESS=temporal:7233
     image: temporalio/admin-tools:${TEMPORAL_ADMINTOOLS_VERSION}
     networks:
-      - temporal-network
+      - chimera
     stdin_open: true
     tty: true
   temporal-ui:
@@ -79,10 +53,6 @@ services:
       - TEMPORAL_CORS_ORIGINS=http://localhost:3000
     image: temporalio/ui:${TEMPORAL_UI_VERSION}
     networks:
-      - temporal-network
+      - chimera
     ports:
       - 8080:8080
-networks:
-  temporal-network:
-    driver: bridge
-    name: temporal-network
