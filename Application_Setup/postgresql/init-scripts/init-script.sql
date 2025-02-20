@@ -33,8 +33,8 @@ owner = owner_business_value
 encoding = 'UTF8'
 strategy = 'WAL_LOG'
 --tablespace = ts_data_management
--- allow_connections = true
-connection_limit = 10;
+ allow_connections = true;
+-- connection_limit = 10;
 
 -- Grant privileges to superuser role, chimera
 GRANT ALL PRIVILEGES ON DATABASE business_value TO chimera;
@@ -55,7 +55,7 @@ ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT ON TABLES TO business_val
 create role owner_data_management
 WITH
 LOGIN
-connection limit 10
+-- connection limit 10
 password 'owner_data_management';
 
 -- tablespace for data management
@@ -70,8 +70,8 @@ owner = owner_data_management
 encoding = 'UTF8'
 strategy = 'WAL_LOG'
 --tablespace = ts_data_management
-allow_connections = true
-connection_limit = 10;
+allow_connections = true;
+-- connection_limit = 10;
 
 -- Grant privileges to superuser role, chimera
 GRANT ALL PRIVILEGES ON DATABASE data_management TO chimera;
@@ -93,7 +93,7 @@ ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT ON TABLES TO data_managem
 create role owner_chimera_application
 WITH
 LOGIN
-connection limit 100
+-- connection limit 100
 password 'owner_chimera_application';
 
 -- tablespace for Chimera Application management
@@ -108,8 +108,8 @@ owner = owner_chimera_application
 encoding = 'UTF8'
 strategy = 'WAL_LOG'
 --tablespace = ts_data_management
-allow_connections = true
-connection_limit = 10;
+allow_connections = true;
+-- connection_limit = 10;
 
 -- Grant privileges to superuser role, chimera
 GRANT ALL PRIVILEGES ON DATABASE chimera_db TO chimera;
