@@ -21,7 +21,6 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.*;
 
-import static com.progressive.minds.chimera.DataManagement.datalineage.ChimeraOpenLineage.buildEvent;
 import static com.progressive.minds.chimera.DataManagement.datalineage.facets.DatasetFacets.*;
 import static com.progressive.minds.chimera.DataManagement.datalineage.facets.JobFacets.JobStartFacet;
 import static com.progressive.minds.chimera.DataManagement.datalineage.facets.JobFacets.getJobFacet;

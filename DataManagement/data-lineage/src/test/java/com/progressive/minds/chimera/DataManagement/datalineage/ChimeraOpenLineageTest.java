@@ -25,7 +25,6 @@ import org.apache.spark.sql.types.StructType;
 import org.junit.jupiter.api.Test;
 import java.util.Map;
 
-import static com.progressive.minds.chimera.DataManagement.datalineage.ChimeraOpenLineage.OpenLineageWrapper;
 import static com.progressive.minds.chimera.DataManagement.datalineage.FieldWiseLogicalPlanAnalyzer.extractFieldWiseTransformations;
 import static com.progressive.minds.chimera.DataManagement.datalineage.facets.DatasetFacets.getColumnLevelLineage;
 

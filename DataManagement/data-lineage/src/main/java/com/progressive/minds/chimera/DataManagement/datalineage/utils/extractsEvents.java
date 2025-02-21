@@ -10,7 +10,6 @@ import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
 import org.apache.spark.sql.types.StructType;
 
-import java.net.URISyntaxException;
 import java.util.*;
 
 import static com.progressive.minds.chimera.DataManagement.datalineage.facets.DatasetFacets.*;
@@ -20,8 +19,8 @@ import static com.progressive.minds.chimera.DataManagement.datalineage.utils.Uti
 import static com.progressive.minds.chimera.DataManagement.datalineage.utils.Utility.nvl;
 
 public class extractsEvents {
-    private static String STRING_DEFAULTS = "-";
-    private static String DATASET_URN = "-";
+    private static final String STRING_DEFAULTS = "-";
+    private static String DATASET_URN ;
 
     public static OpenLineage.RunEvent buildExtractEvents(OpenLineage.RunEvent.EventType eventType,
                                                           OpenLineage openLineage,
@@ -39,13 +38,12 @@ public class extractsEvents {
                 OpenLineage.Job JobStartFacet =JobStartFacet(openLineage, inPipelineUrn, inPipelineMetadata.getPipelineName(), jobFacets);
                 extractMetadataList.forEach(extract ->
                 {
-                    String extractNamespace = String.format("urn:li:dataJob:(%s,extract_%s)", inPipelineUrn, extract.getSequenceNumber());
-                    String datasetUrn = String.format("urn:li:dataset:(urn:li:dataPlatform:s3,project/root/events/logging_events_bckp,PROD)", inPipelineUrn, extract.getSequenceNumber());
+                    String datasetUrn = String.format("urn:li:dataset:(urn:li:dataPlatform:%s,%s,PROD)",
+                            extract.getDataSource().getDataSourceSubType(), extract.getSequenceNumber());
                     Map<String, String> extractInformation = new HashMap<>();
                     extractInformation.put("Source Type", extract.getExtractSourceType());
                     extractInformation.put("Sub Source Type", extract.getExtractSourceSubType());
                     extractInformation.put("JobType", "Ingestion");
-                    OpenLineage.JobFacets extractFacets = getJobFacet(openLineage, extractInformation);
                     Dataset<Row> dataframe = inSparkSession.sql("SELECT * from " + extract.getDataframeName()).limit(1);
                     try {
                         dataframe.createTempView(extract.getDataframeName());
@@ -122,7 +120,7 @@ public class extractsEvents {
                                 }
                             }
                             datasetFacets.dataSource(getDatasourceDatasetFacet(openLineage,extract.getDataSourceConnectionName(),
-                                    extract.getDataSource().getDataSourceType(),extractInformation));
+                                    extract.getDataSource().getDataSourceType(),dataSourceMap));
                         }
                         // Adding Storage layer Information
                         if (extract.getDataSourceConnection() != null &&
@@ -179,8 +177,6 @@ public class extractsEvents {
                                 .facets(datasetFacets.build()).build());
 
 
-                    } catch (URISyntaxException e) {
-                        throw new RuntimeException(e);
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }
