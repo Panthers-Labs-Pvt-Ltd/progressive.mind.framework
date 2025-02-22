@@ -31,6 +31,7 @@ export ZIPKIN_API_PORT=9411
 export PROMETHEUS_UI_PORT=9090
 export GRAFANA_PORT=6000
 export POSTGRES_PORT=5432
+export TRINO_PORT=10100
 export OPENSEARCH_VERSION=1.3.20
 export TEMPORAL_VERSION=1.26.2
 export TEMPORAL_ADMINTOOLS_VERSION=1.26.2
@@ -47,6 +48,7 @@ IFS='.' read -r major minor patch <<< "$docker_version"
 if (( major > 20 || (major == 20 && minor >= 10) )); then
   # Run docker-compose
   echo "Running docker compose"
+  docker compose build --no-cache
   docker compose -f docker-compose.yml up -d
 
   # Check the status of the containers
@@ -55,6 +57,7 @@ if (( major > 20 || (major == 20 && minor >= 10) )); then
 else
   # Run docker-compose
   echo "Running docker-compose"
+  docker compose build --no-cache
   docker-compose -f docker-compose.yml up -d
 
   # Check the status of the containers
