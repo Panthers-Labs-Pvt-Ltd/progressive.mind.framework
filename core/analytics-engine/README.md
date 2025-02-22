@@ -6,6 +6,9 @@ Trino is a distributed SQL query engine that is designed to be fast, scalable, a
 
 Trino can also be used to run queries on data stored in other data sources, such as relational databases, NoSQL databases, and cloud storage services. Trino supports a wide range of data formats and data sources, making it a versatile tool for data analytics and data science workflows.
 
+## SQL Editor
+
+Uses Superset as the SQL Editor. Superset is a modern, enterprise-ready business intelligence web application.
 
 ## Text to SQL Assistant for Trino
 
@@ -85,8 +88,96 @@ Allow users to specify:
 * Continuous improvement: Use user feedbacks and content addition to improve the assistant
 * Making the bot interactions frictionless: Use rich-chat-elements, and human-in-the-loop to make the interaction more engaging
 
+## LLM Models
+
+OpenAPI O
+
 ## Unleashing potential through LLM Agents
 
+LLM Agents have an intrinsic to themselves with their access to different tools for updating their knowledge.
+
+LLM Agents based on **Intent Classifier** -
+* **Data Finder Agent**: Retrieve relevant tables, columns, and functions
+* **Query Write Agent**: Generate SQL queries based on user input
+* **Query Fixing Agent**: Fix errors in the query. 
+  * Uses "Trino Explain" to detect errors and hallucinations
+  * Fetched additional metadata from DataHub and updates context
+  * Searches table/schema info and suggests corrections
+* **General QA Agent**: Check the query for errors and suggest improvements
+* **Ranking Agent**: Rank the suggestions based on relevance and accuracy
+* **Benchmarking Agent**: Benchmark the assistant against a curated set of queries
+* **Privacy and Security Agent**: Ensure that the assistant is secure and respects user privacy
+
+```mermaid
+graph LR
+    A[User] --Question--> B[Intent Classifier]
+    B --> C[Data Finder Agent]
+    B --> D[Query Write Agent]
+    B --> E[Query Fixing Agent]
+    B --> F[General QA Agent]
+    B --> G[Ranking Agent]
+    B --> H[Benchmarking Agent]
+    B --> I[Privacy and Security Agent]
+    C --response--> A
+    D --response--> A
+    E --response--> A
+    F --response--> A
+    G --response--> A
+    H --response--> A
+    I --response--> A
+    subgraph bot
+        B
+        subgraph LLM Agents
+            C
+            D
+            E
+            F
+            G
+            H
+            I
+        end
+    end
+```
+
+### Deep dive into General QA Agent
+
+* For "meeting users where they are", the General QA Agent can be used to provide feedback on the query and suggest improvements.
+* Helps answer questions about the metadata stored across the vector stores and Knowledge Graph.
+* This helps support questions ranging from optimizing code to updating existing code snippets to answering any general questions
+* This also improves the interactivity with the user for follow-up questions and feedback.
+* Uses LLM LangChain
+
+```mermaid
+graph TD
+    A[Situation] --> B((General QA Agent))
+    
+    B --answer,context--> G((Self-correction Agent))
+    G --give feedback--> B
+    G --accept answer--> H((End))
+    H --> I[Answer, Context]
+    
+    subgraph QA Agent
+        B
+        subgraph Tools
+            C[Clean API results]
+            D[Trino Validation Tool]
+            E[Fetch Metadata Tool]
+            F[Search Table/Schema Info Tool]
+        end
+        G
+        H
+    end
+    B --call tool--> Tools
+    Tools --tool response--> B
+```
+
+You are seeing four tools but there can be more tools that can be used by the General QA Agent to provide feedback on the query and suggest improvements.
+
+## Question
+
+How frequently should we refresh the metadata in Knowledge Graph?
+
+Can users see the query that gets created?
 
 ## References
 
