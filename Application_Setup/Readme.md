@@ -48,29 +48,36 @@ This directory contains manifests for deploying and exposing Jaeger.
 - **`deployment.yaml`**: Defines the Jaeger Deployment, specifying the container image, environment variables, and ports.
 - **`service.yaml`**: Defines a Kubernetes Service for Jaeger, exposing it internally or externally based on the configuration.
 
----
-
-
-
 ## Configuration Management
 
 ## Version Support
 
-| Framework or Tool | Version | Support |
-|-------------------|---------|---------|
-| Postgres          | 16      |         |
-| Spark             | 3.5.4   |         |
-| Python            | 3.10    |         |
-| Java              | 17      |         |
-| Linux             |         |         |
-| Kong              |         |         |
-| Prometheus        |         |         |
-| Jaeger            |         |         |
-| Temporal          |         |         |
-| Vault             |         |         |
-| keycloack         |         |         |
-| grafana           |         |         |
-| flink             |         |         |
+| Framework or Tool        | Version     | Support |
+|--------------------------|-------------|---------|
+| OS Architecture          | amd64       |         |
+| OS - Linux               | Alpine:3.21 |         |
+| Postgres                 | 16.7        |         |
+| Spark                    | 3.5.4       |         |
+| Python                   | 3.10        |         |
+| Java                     | 17.0.12     |         |
+| Redis                    | 7.4.2       |         |
+| Kong                     | 3.9.0       |         |
+| Prometheus               | 3.1.0       |         |
+| Jaeger                   | 1.29.0      |         |
+| Temporal server and tool | 1.26.2      |         |
+| Temporal UI              | 2.35.0      |         |
+| Vault                    | 1.18.4      |         |
+| keycloack                | 26.0        |         |
+| grafana                  | 7.5.5       |         |
+| flink                    | 1.20.1      |         |
+| Flink Kafka connector    | 3.4.0       |         |
+| Flink CDC                | 3.3.0       |         |
+| OpenSearch               | 1.3.20      |         |
+| Superset                 | 1.3.2       |         |
+| Otel-collector           | 0.38        |         |
+| Trino                    | 471         |         |
+| Datahub                  | ??          |         |
+| Kafka                    | 3.7.2       |         |
 
 ### ConfigMap (`common/configmap.yaml`)
 Stores shared, non-sensitive configuration values. Example:
@@ -154,8 +161,6 @@ echo -n 'your-password' | base64
 - Update `common/configmap.yaml` to change shared configuration values such as ports.
 - Update `common/secret.yaml` for sensitive data such as passwords.
 - Modify the `deployment.yaml` and `service.yaml` files in each component's directory to adjust replicas, resource limits, or Service types.
-
----
 
 ## Future Enhancements
 
