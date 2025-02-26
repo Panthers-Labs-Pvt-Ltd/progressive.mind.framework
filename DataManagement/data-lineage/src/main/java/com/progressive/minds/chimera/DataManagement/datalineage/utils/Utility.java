@@ -58,7 +58,6 @@ public class Utility {
         try {
             // Check if the DataFrame exists using Spark catalog
             Dataset<Row> TempSQL= sparkSession.sql("SELECT * from " + dataframeName).limit(1);
-            TempSQL.createTempView(dataframeName);
             if (sparkSession.catalog().listTables().filter("name = '" + dataframeName + "'").count() > 0) {
                 Dataset<Row> dataset = sparkSession.table(dataframeName);
                 return dataset.schema();

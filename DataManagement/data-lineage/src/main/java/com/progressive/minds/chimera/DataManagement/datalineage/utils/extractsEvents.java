@@ -15,8 +15,10 @@ import java.util.*;
 import static com.progressive.minds.chimera.DataManagement.datalineage.facets.DatasetFacets.*;
 import static com.progressive.minds.chimera.DataManagement.datalineage.facets.DatasetFacets.getDocumentationDatasetFacet;
 import static com.progressive.minds.chimera.DataManagement.datalineage.facets.JobFacets.*;
+import static com.progressive.minds.chimera.DataManagement.datalineage.facets.RunFacets.getRun;
 import static com.progressive.minds.chimera.DataManagement.datalineage.utils.Utility.getDataFrameSchema;
 import static com.progressive.minds.chimera.DataManagement.datalineage.utils.Utility.nvl;
+import static java.time.ZonedDateTime.now;
 
 public class extractsEvents {
     private static final String STRING_DEFAULTS = "-";
@@ -38,6 +40,9 @@ public class extractsEvents {
                 OpenLineage.Job JobStartFacet =JobStartFacet(openLineage, inPipelineUrn, inPipelineMetadata.getPipelineName(), jobFacets);
                 extractMetadataList.forEach(extract ->
                 {
+
+                    OpenLineage.Run runStart = getRun(openLineage, UUID.randomUUID());
+
                     String datasetUrn = String.format("urn:li:dataset:(urn:li:dataPlatform:%s,%s,PROD)",
                             extract.getDataSource().getDataSourceSubType(), extract.getSequenceNumber());
                     Map<String, String> extractInformation = new HashMap<>();
@@ -45,11 +50,11 @@ public class extractsEvents {
                     extractInformation.put("Sub Source Type", extract.getExtractSourceSubType());
                     extractInformation.put("JobType", "Ingestion");
                     Dataset<Row> dataframe = inSparkSession.sql("SELECT * from " + extract.getDataframeName()).limit(1);
-                    try {
+           /*         try {
                         dataframe.createTempView(extract.getDataframeName());
                     } catch (AnalysisException e) {
                         throw new RuntimeException(e);
-                    }
+                    }*/
                     try {
 
                         OpenLineage.DatasetFacetsBuilder datasetFacets = openLineage.newDatasetFacetsBuilder();
@@ -59,8 +64,8 @@ public class extractsEvents {
                                 extractInformation));
 
                         // Adding Data Sources Information
-                        if (extract.getDataSourceConnectionName() != null &&
-                                !extract.getDataSourceConnectionName().isEmpty())
+                        if (extract.getExtractSourceType() != null &&
+                                !extract.getExtractSourceType().isEmpty())
                         {
                             Map<String, String> dataSourceMap = new HashMap<>();
                             switch (extract.getExtractSourceType().toLowerCase(Locale.ROOT)) {

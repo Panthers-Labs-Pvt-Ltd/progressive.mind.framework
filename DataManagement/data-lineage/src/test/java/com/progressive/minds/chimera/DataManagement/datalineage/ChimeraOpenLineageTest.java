@@ -1,5 +1,6 @@
 package com.progressive.minds.chimera.DataManagement.datalineage;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.progressive.minds.chimera.core.dataSource.sourceTypes.FileReader;
 
 import org.apache.spark.sql.*;
@@ -45,6 +46,7 @@ class ChimeraOpenLineageTest {
         Map<String, String> lineageMap = new HashMap<>();
         lineageMap.putIfAbsent("FileName" , "/home/manish/lineage.json");
         Lineage.OpenLineageWrapper(eventType,inPipelineMetadata,  spark, "file",lineageMap);
+
     }
 
     @Test
@@ -190,5 +192,17 @@ class ChimeraOpenLineageTest {
             System.out.println("-----------------------------");
         }
 
+    }
+
+
+    @Test
+    void loadData()
+    {
+        Dataset<Row> HRA_DF = spark.read()
+                .format("csv")
+                .option("header", "true")
+                .option("inferSchema", "true")
+                .load("/mnt/f/Data/HRA/");
+        HRA_DF.show(10);
     }
 }

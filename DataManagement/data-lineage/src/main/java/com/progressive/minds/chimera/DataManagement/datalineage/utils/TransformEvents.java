@@ -43,11 +43,11 @@ public class TransformEvents {
                     transformInformation.put("Source Type", "DataFrames");
                     transformInformation.put("JobType", "Transformation");
                     Dataset<Row> dataframe = inSparkSession.sql("SELECT * from " + transform.getTransformDataframeName()).limit(1);
-                    try {
+                   /* try {
                         dataframe.createTempView(transform.getTransformDataframeName());
                     } catch (AnalysisException e) {
                         throw new RuntimeException(e);
-                    }
+                    }*/
                     try {
                         OpenLineage.DatasetFacetsBuilder datasetFacets = openLineage.newDatasetFacetsBuilder();
                         // Adding Documentations

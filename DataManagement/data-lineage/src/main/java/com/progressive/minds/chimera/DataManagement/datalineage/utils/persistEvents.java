@@ -46,11 +46,11 @@ public class persistEvents {
                     persistInformation.put("Target Sub Source Type", persist.getDataSourceConnection().getDataSourceSubType());
                     persistInformation.put("JobType", "Ingestion");
                     Dataset<Row> dataframe = inSparkSession.sql(persist.getTargetSql()).limit(1);
-                    try {
+            /*        try {
                         dataframe.createTempView(persist.getTableName());
                     } catch (AnalysisException e) {
                         throw new RuntimeException(e);
-                    }
+                    }*/
                     try {
 
                         OpenLineage.DatasetFacetsBuilder datasetFacets = openLineage.newDatasetFacetsBuilder();
@@ -150,7 +150,7 @@ public class persistEvents {
                         OpenLineage.ColumnLineageDatasetFacet columnLineage =ColumnLevelLineage.get(persist.getTargetSql(), dataframe);
                         outputDataset.columnLineage(columnLineage);
 
-                        StructType inSchema = getDataFrameSchema(inSparkSession, TABLE_DB_NAME);
+                        StructType inSchema = dataframe.schema();
                         OpenLineage.SchemaDatasetFacet schema = getDatasourceSchema(openLineage, inSchema);
                         outputDataset.schema(schema);
 

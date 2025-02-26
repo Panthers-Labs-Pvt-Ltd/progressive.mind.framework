@@ -55,6 +55,7 @@ public class ChimeraOpenLineage {
         UUID runId = UUIDUtils.generateNewUUID();
         String JobNamespace = inPipelineMetadata.getOrgHierName() + "_" + inPipelineMetadata.getPipelineName();
         ObjectMapper mapper = new ObjectMapper();
+        StringBuilder lineageData = new StringBuilder("[");
 
         Map<String, String> JobInformation = new HashMap<>();
         JobInformation.put("ProcessingType", Optional.ofNullable(inPipelineMetadata.getProcessMode()).orElse("Batch"));
@@ -69,31 +70,38 @@ public class ChimeraOpenLineage {
 
         OpenLineage.Job JobStartFacet = JobStartFacet(openLineageProducer, JobNamespace, inPipelineMetadata.getPipelineName(), jobFacets);
         JsonNode JobStartFacetNode = mapper.readTree(SparkUtils.prettyJSON(OpenLineageClientUtils.toJson(JobStartFacet)));
+        lineageData.append(SparkUtils.prettyJSON(OpenLineageClientUtils.toJson(JobStartFacet))).append(",\n");
 
         RunEvent extractStartEvent = extractsEvents.buildExtractEvents(RunEvent.EventType.START,
                 openLineageProducer, inPipelineMetadata.getPipelineName(), inPipelineMetadata, inSparkSession, jobFacets);
         JsonNode extractStartEventNode = mapper.readTree(SparkUtils.prettyJSON(OpenLineageClientUtils.toJson(extractStartEvent)));
+        lineageData.append(SparkUtils.prettyJSON(OpenLineageClientUtils.toJson(extractStartEvent))).append(",\n");
 
         RunEvent extractStopEvent = extractsEvents.buildExtractEvents(RunEvent.EventType.COMPLETE,
                 openLineageProducer, inPipelineMetadata.getPipelineName(), inPipelineMetadata, inSparkSession, jobFacets);
         JsonNode extractStopEventNode = mapper.readTree(SparkUtils.prettyJSON(OpenLineageClientUtils.toJson(extractStopEvent)));
+        lineageData.append(SparkUtils.prettyJSON(OpenLineageClientUtils.toJson(extractStopEvent))).append(",\n");
 
 
         RunEvent transformStartEvent = TransformEvents.buildExtractEvents(RunEvent.EventType.START,
                 openLineageProducer, inPipelineMetadata.getPipelineName(), inPipelineMetadata, inSparkSession, jobFacets);
         JsonNode transformStartEventNode = mapper.readTree(SparkUtils.prettyJSON(OpenLineageClientUtils.toJson(transformStartEvent)));
+        lineageData.append(SparkUtils.prettyJSON(OpenLineageClientUtils.toJson(transformStartEvent))).append(",\n");
 
         RunEvent transformStopEvent = TransformEvents.buildExtractEvents(RunEvent.EventType.COMPLETE,
                 openLineageProducer, inPipelineMetadata.getPipelineName(), inPipelineMetadata, inSparkSession, jobFacets);
         JsonNode transformStopEventNode = mapper.readTree(SparkUtils.prettyJSON(OpenLineageClientUtils.toJson(transformStopEvent)));
+        lineageData.append(SparkUtils.prettyJSON(OpenLineageClientUtils.toJson(transformStopEvent))).append(",\n");
 
         RunEvent persistStartEvent = persistEvents.buildExtractEvents(RunEvent.EventType.START,
                 openLineageProducer, inPipelineMetadata.getPipelineName(), inPipelineMetadata, inSparkSession, jobFacets);
         JsonNode persistStartEventNode = mapper.readTree(SparkUtils.prettyJSON(OpenLineageClientUtils.toJson(persistStartEvent)));
+        lineageData.append(SparkUtils.prettyJSON(OpenLineageClientUtils.toJson(persistStartEvent))).append(",\n");
 
         RunEvent persistStopEvent = persistEvents.buildExtractEvents(RunEvent.EventType.COMPLETE,
                 openLineageProducer, inPipelineMetadata.getPipelineName(), inPipelineMetadata, inSparkSession, jobFacets);
         JsonNode persistStopEventNode = mapper.readTree(SparkUtils.prettyJSON(OpenLineageClientUtils.toJson(persistStopEvent)));
+        lineageData.append(SparkUtils.prettyJSON(OpenLineageClientUtils.toJson(persistStopEvent))).append(",\n");
 
         ObjectNode mergedJson = mapper.createObjectNode();
 
@@ -107,8 +115,12 @@ public class ChimeraOpenLineage {
         mergeJsonNodes(mergedJson, persistStartEventNode);
         mergeJsonNodes(mergedJson, persistStopEventNode);
         // Print the final merged JSON
-        System.out.println(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(mergedJson));
-        return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(mergedJson);
+       // System.out.println(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(lineageData));
+        //return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(mergedJson);
+        lineageData.deleteCharAt(lineageData.length() - 2);
+        lineageData.append("]");
+
+        return String.valueOf(lineageData);
     }
 }
 
