@@ -1,10 +1,16 @@
 package com.progressive.minds.chimera.DataManagement.openLineage;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.progressive.minds.chimera.DataManagement.datalineage.facets.RunFacets;
+import com.progressive.minds.chimera.DataManagement.datalineage.utils.extractsEvents;
 import com.progressive.minds.chimera.dto.ExtractMetadata;
 import com.progressive.minds.chimera.dto.PipelineMetadata;
 import io.openlineage.client.OpenLineage;
+import io.openlineage.client.OpenLineageClientUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.spark.sql.SparkSession;
+import za.co.absa.cobrix.spark.cobol.utils.SparkUtils;
 
 import java.net.URI;
 import java.time.ZoneId;
@@ -12,6 +18,8 @@ import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
+import static com.progressive.minds.chimera.DataManagement.datalineage.facets.JobFacets.getJobFacet;
+import static com.progressive.minds.chimera.DataManagement.datalineage.facets.RunFacets.getRun;
 import static java.time.ZonedDateTime.now;
 
 
@@ -22,67 +30,44 @@ public class Lineage {
     static URI producer = URI.create(PRODUCER_NAME);
     static OpenLineage openLineageProducer = new OpenLineage(producer);
 
-    public String getLineage(PipelineMetadata inPipelineMetadata,SparkSession inSparkSession)
-    {
+    public String getLineage(PipelineMetadata inPipelineMetadata, SparkSession inSparkSession) throws Exception {
         UUID parentRunId = UUID.randomUUID();
         StringBuilder lineageJson = new StringBuilder("[");
 
-/*        OpenLineage.ParentRunFacet parentRunFacet = openLineageProducer.newParentRunFacetBuilder()
-                .run(openLineageProducer.newParentRunFacetRun(parentRunId))
-                .job(openLineageProducer.newParentRunFacetJob(inPipelineMetadata.getPipelineName(),
-                        inPipelineMetadata.getPipelineName())).put("processingMode", inPipelineMetadata.getProcessMode())
-                .put("owningDomain", inPipelineMetadata.getOrgHierName()).put("executionEngine", "spark")
-                .put("appName", inSparkSession.sparkContext().appName())
-                .put("applicationId", inSparkSession.sparkContext().applicationId())
-                .put("deployMode", inSparkSession.sparkContext().deployMode())
-                .put("driverHost", inSparkSession.conf().get("spark.driver.host", "Not Available"))
-                .put("userName", System.getProperty("user.name"))
-                .put("userName", System.getProperty("user.name"))
-                .build();
+        Map<String, String>  JobMap = new HashMap<>();
+        JobMap.put("processingType" , Optional.ofNullable(inPipelineMetadata.getProcessMode()).orElse("Batch"));
+        JobMap.put("jobType" , "ETL");
+        JobMap.put("pipelineName" , inPipelineMetadata.getPipelineName());
+        JobMap.put("domain" , inPipelineMetadata.getOrgHierName());
+        JobMap.put("integrationType" , "Spark");
+        JobMap.put("jobDocumentation" , inPipelineMetadata.getPipelineDescription());
+        JobMap.put("processingMode", inPipelineMetadata.getProcessMode());
+        JobMap.put("owningDomain", inPipelineMetadata.getOrgHierName());
+        JobMap.put("executionEngine", "spark");
+        JobMap.put("appName", inSparkSession.sparkContext().appName());
+        JobMap.put("applicationId", inSparkSession.sparkContext().applicationId());
+        JobMap.put("deployMode", inSparkSession.sparkContext().deployMode());
+        JobMap.put("driverHost", inSparkSession.conf().get("spark.driver.host", "Not Available"));
+        JobMap.put("userName", System.getProperty("user.name"));
 
-        OpenLineage.ParentRunFacetJobBuilder parentRunFacetJobBuilder = openLineageProducer.newParentRunFacetJobBuilder();
-        parentRunFacetJobBuilder.name(inPipelineMetadata.getPipelineName()).namespace(inPipelineMetadata.getPipelineName())
-                .build();*/
+        List<OpenLineage.InputDataset> Inputs;
+        List<OpenLineage.OutputDataset> Outputs;
 
-       // lineageJson.append(SparkUtils.prettyJSON(OpenLineageClientUtils.toJson(parentRunFacet))).append(",\n");
-
-//        lineageJson.append(SparkUtils.prettyJSON(OpenLineageClientUtils.toJson(parentRunFacetJobBuilder))).append(",\n");
-
-
-        List<ExtractMetadata> extracts= inPipelineMetadata.getExtractMetadata();
-
-        Map<String, String> JobInformation = new HashMap<>();
-        JobInformation.put("processingType", Optional.ofNullable(inPipelineMetadata.getProcessMode()).orElse("Batch"));
-        JobInformation.put("jobType", "ETL");
-        JobInformation.put("pipelineName", inPipelineMetadata.getPipelineName());
-        JobInformation.put("domain", inPipelineMetadata.getOrgHierName());
-        JobInformation.put("integrationType", "Spark");
-        JobInformation.put("jobDocumentation", inPipelineMetadata.getPipelineDescription());
-        AtomicReference<List<OpenLineage.InputDataset>> Inputs = new AtomicReference<>(new ArrayList<>());
-        AtomicReference<List<OpenLineage.OutputDataset>> Outputs = new AtomicReference<>(new ArrayList<>());
         Pair<List<OpenLineage.InputDataset>, List<OpenLineage.OutputDataset>> extractLineageMap =
-                Pair.of(new ArrayList<>(), new ArrayList<>());
+                DataLineageExtracts.get(OpenLineage.RunEvent.EventType.START, inPipelineMetadata,inSparkSession,
+                        openLineageProducer);
+        Inputs = extractLineageMap.getLeft();
+        Outputs = extractLineageMap.getRight();
 
-        extracts.forEach(extractMetadata ->
-        {
-            try {
-
-                Inputs.set(DataLineageExtracts.get(OpenLineage.RunEvent.EventType.START, extractMetadata, JobInformation, inSparkSession, openLineageProducer).getLeft());
-                Outputs.set(DataLineageExtracts.get(OpenLineage.RunEvent.EventType.START, extractMetadata, JobInformation, inSparkSession, openLineageProducer).getRight());;
-
-                // lineageJson.append(SparkUtils.prettyJSON(OpenLineageClientUtils.toJson(StartEvent))).append(",\n");
-/*
-                extractMap= DataLineageExtracts.get(OpenLineage.RunEvent.EventType.COMPLETE,
-                        runUUID,extractMetadata, JobInformation,inSparkSession, openLineageProducer);
-                lineageJson.append(SparkUtils.prettyJSON(OpenLineageClientUtils.toJson(CompleteEvent))).append(",\n");*/
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-         });
-        System.out.print("Extract " + extracts.size());
-//        lineageJson.delete(lineageJson.length() - 2, lineageJson.length());
-  //      lineageJson.append("]");
-    //    return lineageJson.toString();
+        OpenLineage.JobFacets jobFacets = getJobFacet(openLineageProducer, null, JobMap);
+        OpenLineage.Job job = openLineageProducer.newJob(inPipelineMetadata.getPipelineName(),
+                inPipelineMetadata.getPipelineName(), jobFacets);
+        OpenLineage.RunEvent runStateUpdate = RunFacets.getRunEvent(openLineageProducer,  parentRunId,job,
+                Inputs,  Outputs);
+        String json = SparkUtils.prettyJSON(OpenLineageClientUtils.toJson(runStateUpdate));
+        System.out.print(json.toString());
         return "";
     }
 }
+
+

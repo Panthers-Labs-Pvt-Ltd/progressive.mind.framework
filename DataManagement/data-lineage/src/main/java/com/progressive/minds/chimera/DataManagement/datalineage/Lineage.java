@@ -77,7 +77,7 @@ public class Lineage {
         JobInformation.put("JobDocumentation", inPipelineMetadata.getPipelineDescription());
         List<InputDataset> inputs = new ArrayList<>();
         List<OutputDataset> outputs = new ArrayList<>();
-        JobFacets jobFacets = getJobFacet(openLineageProducer, JobInformation);
+        JobFacets jobFacets = getJobFacet(openLineageProducer, null,JobInformation);
         //String pipelineNamespace = String.format("urn:li:dataflow:(%s,extract_%s)", PipelineNamespace, "PROD");
         String pipelineNamespace = UrnUtility.createUrn("pipeline","Spark", inPipelineMetadata.getPipelineName(), "PROD", "PROD" );
         OpenLineage.Job JobStartFacet =JobStartFacet(openLineageProducer, pipelineNamespace, inPipelineMetadata.getPipelineName(), jobFacets);
@@ -90,7 +90,7 @@ public class Lineage {
             extractInformation.put("Source Type", extract.getExtractSourceType());
             extractInformation.put("Sub Source Type", extract.getExtractSourceSubType());
             extractInformation.put("JobType", "Ingestion");
-            JobFacets extractFacets = getJobFacet(openLineageProducer, extractInformation);
+            JobFacets extractFacets = getJobFacet(openLineageProducer, null, extractInformation);
             //OpenLineage.Job JobStartFacet = JobStartFacet(openLineageProducer, JobNamespace, inPipelineMetadata.getPipelineName(), extractFacets);
             try {
                 inputs.addAll(InputDatasetFacet(openLineageProducer, extract, inPipelineMetadata, inSparkSession));

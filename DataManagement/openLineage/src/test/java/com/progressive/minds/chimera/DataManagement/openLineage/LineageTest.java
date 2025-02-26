@@ -37,7 +37,7 @@ class LineageTest {
 
 
     @Test
-    void getLineage() throws IOException, InterruptedException {
+    void getLineage() throws Exception {
             java. util. Map<String, Object> environmentDetails= new HashMap<>();
 
             EnvironmentFacet EV = new EnvironmentFacet(environmentDetails);

@@ -46,7 +46,7 @@ class extractsEventsTest {
         JobInformation.put("IntegrationType" , "Spark");
         JobInformation.put("JobDocumentation" , inPipelineMetadata.getPipelineDescription());
 
-        OpenLineage.JobFacets jobFacets = getJobFacet(openLineageProducer, JobInformation);
+        OpenLineage.JobFacets jobFacets = getJobFacet(openLineageProducer, null,JobInformation);
 
 
         OpenLineage.RunEvent event = extractsEvents.buildExtractEvents(eventType, openLineageProducer, "Test_Pipeline",

@@ -209,7 +209,7 @@ public class ColumnLevelLineage {
                         String sourceColumn = entry.get("source_column");
 
                         inputFields.add(new OpenLineage.InputFieldBuilder()
-                                .namespace(sourceTable + "_namespace")
+                                .namespace("{NAMESPACE_" + sourceTable + "}")
                                 .name(sourceTable)
                                 .field(sourceColumn)
                                 .transformations(Collections.singletonList(inputFieldTransformations))
@@ -221,7 +221,7 @@ public class ColumnLevelLineage {
                             openLineageProducer.newColumnLineageDatasetFacetFieldsAdditionalBuilder()
                                     .inputFields(inputFields)
                                     .transformationType(transformationType)
-                                    .transformationDescription("Derived from SQL query")
+                                    .transformationDescription("")
                                     .build();
 
                     fieldAdditionalMap.put(field.name(), fieldAdditional);

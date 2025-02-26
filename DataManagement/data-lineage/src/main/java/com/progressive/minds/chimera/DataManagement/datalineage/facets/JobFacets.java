@@ -73,31 +73,36 @@ public class JobFacets {
         owners.add(openLineageProducer.newOwnershipJobFacetOwners(name, type));
         return openLineageProducer.newOwnershipJobFacetBuilder().owners(owners).build();
     }
+/*
+
+        JobMap.put("processingType" , Optional.ofNullable(inPipelineMetadata.getProcessMode()).orElse("Batch"));
+        JobMap.put("jobType" , "ETL");
+        JobMap.put("pipelineName" , inPipelineMetadata.getPipelineName());
+        JobMap.put("domain" , inPipelineMetadata.getOrgHierName());
+        JobMap.put("integrationType" , "Spark");
+        JobMap.put("jobDocumentation" , inPipelineMetadata.getPipelineDescription());
+        JobMap.put("processingMode", inPipelineMetadata.getProcessMode());
+        JobMap.put("owningDomain", inPipelineMetadata.getOrgHierName());
+        JobMap.put("executionEngine", "spark");
+        JobMap.put("appName", inSparkSession.sparkContext().appName());
+        JobMap.put("applicationId", inSparkSession.sparkContext().applicationId());
+        JobMap.put("deployMode", inSparkSession.sparkContext().deployMode());
+        JobMap.put("driverHost", inSparkSession.conf().get("spark.driver.host", "Not Available"));
+        JobMap.put("userName", System.getProperty("user.name"));
+
+ */
 
 
-    public static OpenLineage.JobFacets getJobFacet(OpenLineage openLineageProducer,
+    public static OpenLineage.JobFacets getJobFacet(OpenLineage openLineageProducer,String SQL,
                                                  Map<String, String> JobInformation
                                                 ) {
-        String processingType = JobInformation.getOrDefault("ProcessingType", "Batch");
-        String jobType = JobInformation.getOrDefault("JobType", "Ingestion");
-        String integrationType = JobInformation.getOrDefault("IntegrationType", "spark");
-        String owningDomain = JobInformation.getOrDefault("Domain", "-");
-        String processingEngine = JobInformation.getOrDefault("ProcessingEngine", "spark");
-        String DataSourceType = JobInformation.getOrDefault("DataSourceType", "Unknown");
-        String DataSourceSubType = JobInformation.getOrDefault("DataSourceSubType", "Unknown");
-        String JobDocumentation = JobInformation.getOrDefault("JobDocumentation", "NA");
-        String Key = JobInformation.getOrDefault("Key", "NA");
-        String Value = JobInformation.getOrDefault("Value", "NA");
-
-
-//        String FileName = JobInformation.getOrDefault("FileName", "Unknown");
-//        String Delimiter = JobInformation.getOrDefault("Delimiter", ",");
-//        String Qualifier = JobInformation.getOrDefault("Qualifier", "\"");
-//        String Size = JobInformation.getOrDefault("Size", "Unknown");
-//        String Compression = JobInformation.getOrDefault("Compression", "Unknown");
-//        String SQLQuery = JobInformation.getOrDefault("SQLQuery", "NA");
-//        String SourceCodeLanguage = JobInformation.getOrDefault("SourceCodeLanguage", "Java");
-//        String SourceCode = JobInformation.getOrDefault("SourceCode", "NA");
+        String processingType = JobInformation.getOrDefault("processingType", "Batch");
+        String jobType = JobInformation.getOrDefault("jobType", "Ingestion");
+        String integrationType = JobInformation.getOrDefault("integrationType", "spark");
+        String owningDomain = JobInformation.getOrDefault("domain", "-");
+        String processingEngine = JobInformation.getOrDefault("processingEngine", "spark");
+        String DataSourceType = JobInformation.getOrDefault("dataSourceType", "Unknown");
+        String JobDocumentation = JobInformation.getOrDefault("jobDocumentation", "NA");
 
         String Branch= JobInformation.getOrDefault("Branch", "main");
         String Type= JobInformation.getOrDefault("Type", "Gitlab");
@@ -108,7 +113,7 @@ public class JobFacets {
 
         // Job Definition Initialization
         OpenLineage.JobFacetsBuilder  jobFacets = openLineageProducer.newJobFacetsBuilder();
-        jobFacets.jobType(JobTypeFacets(openLineageProducer, processingType, jobType,processingEngine, Key, Value));
+        jobFacets.jobType(JobTypeFacets(openLineageProducer, processingType, jobType,processingEngine, "domain", owningDomain));
 
         if (DataSourceType.equalsIgnoreCase(String.valueOf(DataSourcesTypes.FILE))) {
             jobFacets.put("File", openLineageProducer.newJobFacet());
@@ -125,22 +130,25 @@ public class JobFacets {
             jobFacets.sql(SQLFacet);
         }
 
-        //TODO Define Custom Facet similar to FileJobFacet and use
         else if (DataSourceType.equalsIgnoreCase(String.valueOf(DataSourcesTypes.NOSQL))) {
             jobFacets.put("NOSQL", openLineageProducer.newJobFacet());
         }
-        //TODO Define Custom Facet similar to FileJobFacet and use
         else if (DataSourceType.equalsIgnoreCase(String.valueOf(DataSourcesTypes.API))) {
             jobFacets.put("API", openLineageProducer.newJobFacet());
 
         }
-        //TODO Define Custom Facet similar to FileJobFacet and use
         else if (DataSourceType.equalsIgnoreCase(String.valueOf(DataSourcesTypes.OpenTableFormat))) {
             jobFacets.put("OTF", openLineageProducer.newJobFacet());
 
         }
         //jobFacets.sourceCode(SourceCodeJobFacet(openLineageProducer, SourceCodeLanguage, SourceCode));
+        if (SQL != null && !SQL.isEmpty())
+            jobFacets.sql(openLineageProducer.newSQLJobFacet(SQL));
+        else
+            jobFacets.sql(openLineageProducer.newSQLJobFacet("Select * from " + DataSourceType));
+
         jobFacets.documentation(DocumentationJobFacet(openLineageProducer, JobDocumentation));
+
         jobFacets.ownership(OwnershipJobFacet(openLineageProducer, JobInformation)); //TODO Put Correct Job Owner
         jobFacets.sourceCodeLocation(SourceCodeLocationJobFacet(openLineageProducer,
                 Branch, Type, Version, RepositoryURL,Tag, Path));

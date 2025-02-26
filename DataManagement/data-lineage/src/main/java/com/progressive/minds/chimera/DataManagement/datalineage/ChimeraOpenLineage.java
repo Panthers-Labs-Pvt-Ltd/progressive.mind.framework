@@ -65,7 +65,7 @@ public class ChimeraOpenLineage {
         JobInformation.put("IntegrationType", "Spark");
         JobInformation.put("JobDocumentation", inPipelineMetadata.getPipelineDescription());
 
-        JobFacets jobFacets = getJobFacet(openLineageProducer, JobInformation);
+        JobFacets jobFacets = getJobFacet(openLineageProducer, null, JobInformation);
         JsonNode jobFacetsNode = mapper.readTree(SparkUtils.prettyJSON(OpenLineageClientUtils.toJson(jobFacets)));
 
         OpenLineage.Job JobStartFacet = JobStartFacet(openLineageProducer, JobNamespace, inPipelineMetadata.getPipelineName(), jobFacets);
