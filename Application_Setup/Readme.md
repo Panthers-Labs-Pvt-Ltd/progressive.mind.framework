@@ -60,7 +60,8 @@ This directory contains manifests for deploying and exposing Jaeger.
 | Spark                    | 3.5.4       |         |
 | Python                   | 3.10        |         |
 | Java                     | 17.0.12     |         |
-| Redis                    | 7.4.2       |         |
+| Redis                    | 7.4.0-v3    |         |
+| Redis-Insight            | 2.66.0      |         |
 | Kong                     | 3.9.0       |         |
 | Prometheus               | 3.1.0       |         |
 | Jaeger                   | 1.29.0      |         |

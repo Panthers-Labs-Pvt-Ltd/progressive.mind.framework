@@ -16,25 +16,25 @@ x-common-build: &common-build
     - apache/superset-cache:3.10-slim-bookworm
 
 services:
-  redis:
-    image: redis:7
-    container_name: superset_cache
-    restart: unless-stopped
-    volumes:
-      - redis:/data
+#  redis:
+#    image: redis:7
+#    container_name: superset_cache
+#    restart: unless-stopped
+#    volumes:
+#      - redis:/data
 
-  db:
-    env_file:
-      - path: docker/.env # default
-        required: true
-      - path: docker/.env-local # optional override
-        required: false
-    image: postgres:15
-    container_name: superset_db
-    restart: unless-stopped
-    volumes:
-      - db_home:/var/lib/postgresql/data
-      - ./docker/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+#  db:
+#    env_file:
+#      - path: docker/.env # default
+#        required: true
+#      - path: docker/.env-local # optional override
+#        required: false
+#    image: postgres:15
+#    container_name: superset_db
+#    restart: unless-stopped
+#    volumes:
+#      - db_home:/var/lib/postgresql/data
+#      - ./docker/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
 
   superset:
     env_file:
@@ -68,14 +68,15 @@ services:
       - path: docker/.env-local # optional override
         required: false
     depends_on:
-      db:
+      postgres:
         condition: service_started
-      redis:
+      redis-stack-server:
         condition: service_started
     user: "root"
     volumes: *superset-volumes
     healthcheck:
       disable: true
+      test: ["CMD-SHELL", "pg_isready -h db -U superset"]
     environment:
       SUPERSET_LOAD_EXAMPLES: "${SUPERSET_LOAD_EXAMPLES:-yes}"
       SUPERSET_LOG_LEVEL: "${SUPERSET_LOG_LEVEL:-info}"
@@ -123,13 +124,10 @@ services:
     volumes: *superset-volumes
     healthcheck:
       disable: true
+      test:
+        [
+          "CMD-SHELL",
+          "celery -A superset.tasks.celery_app:app inspect ping -d celery@$$HOSTNAME",
+        ]
     environment:
       SUPERSET_LOG_LEVEL: "${SUPERSET_LOG_LEVEL:-info}"
-
-volumes:
-  superset_home:
-    external: false
-  db_home:
-    external: false
-  redis:
-    external: false

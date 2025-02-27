@@ -3,71 +3,101 @@ services:
     extends:
       file: postgresql/postgres.yml
       service: postgres
+#
+#  api-gateway:
+#    extends:
+#      file: api-gateway/api-gateway.yml
+#      service: kong-gateway
+#
+#  kong-migrations:
+#    extends:
+#      file: api-gateway/api-gateway.yml
+#      service: kong-migrations
+#
+#  keycloak:
+#    extends:
+#      file: keycloak/keycloak-docker-compose.yml
+#      service: keycloak
+#
+#  otel-collector:
+#    extends:
+#      file: otel-collector/otel-collector.yml
+#      service: otel-collector
+#
+#  jaeger:
+#    extends:
+#      file: jaeger/jaeger.yml
+#      service: jaeger
+#
+#  prometheus:
+#    extends:
+#      file: prometheus/prometheus-server.yml
+#      service: prometheus
+#
+#  grafana:
+#    extends:
+#      file: grafana/grafana.yml
+#      service: grafana
+#
+#  vault:
+#    extends:
+#      service: vault
+#      file: vault/docker-compose.yml
+#
+#  opensearch:
+#    extends:
+#      file: opensearch/docker-compose.yml
+#      service: opensearch
+#
+#  temporal:
+#    extends:
+#      service: temporal
+#      file: temporal_server/docker-compose-postgres-opensearch.yml
+#
+#  temporal-admin-tools:
+#    extends:
+#      service: temporal-admin-tools
+#      file: temporal_server/docker-compose-postgres-opensearch.yml
+#
+#  temporal-ui:
+#    extends:
+#      service: temporal-ui
+#      file: temporal_server/docker-compose-postgres-opensearch.yml
+#
+#  trino:
+#      extends:
+#        file: trino/docker-compose.yml
+#        service: trino
 
-  api-gateway:
+  redis-stack-server:
     extends:
-      file: api-gateway/api-gateway.yml
-      service: kong-gateway
+      file: redis/docker-compose.yml
+      service: redis-stack-server
 
-  kong-migrations:
+#  redis-insight:
+#    extends:
+#      file: redis/docker-compose.yml
+#      service: redis-insight
+
+  superset-init:
     extends:
-      file: api-gateway/api-gateway.yml
-      service: kong-migrations
+      file: superset/docker-compose-image-tag.yml
+      service: superset-init
 
-  keycloak:
+  superset:
     extends:
-      file: keycloak/keycloak-docker-compose.yml
-      service: keycloak
+      file: superset/docker-compose-image-tag.yml
+      service: superset
 
-  otel-collector:
+  superset-worker:
     extends:
-      file: otel-collector/otel-collector.yml
-      service: otel-collector
+      file: superset/docker-compose-image-tag.yml
+      service: superset-worker
 
-  jaeger:
+  superset-worker-beat:
     extends:
-      file: jaeger/jaeger.yml
-      service: jaeger
-
-  prometheus:
-    extends:
-      file: prometheus/prometheus-server.yml
-      service: prometheus
-
-  grafana:
-    extends:
-      file: grafana/grafana.yml
-      service: grafana
-
-  vault:
-    extends:
-      service: vault
-      file: vault/docker-compose.yml
-
-  opensearch:
-    extends:
-      file: opensearch/docker-compose.yml
-      service: opensearch
-
-  temporal:
-    extends:
-      service: temporal
-      file: temporal_server/docker-compose-postgres-opensearch.yml
-
-  temporal-admin-tools:
-    extends:
-      service: temporal-admin-tools
-      file: temporal_server/docker-compose-postgres-opensearch.yml
-
-  temporal-ui:
-    extends:
-      service: temporal-ui
-      file: temporal_server/docker-compose-postgres-opensearch.yml
-
-  trino:
-      extends:
-        file: trino/docker-compose.yml
-        service: trino
+      file: superset/docker-compose-image-tag.yml
+      service: superset-worker-beat
 
 # Below To be fixed
 #  taskmanager:
@@ -116,3 +146,6 @@ volumes:
     postgres_data:
     vault-data:
     opensearch_data:
+    redis-data:
+    redisinsights-data:
+    superset_home:

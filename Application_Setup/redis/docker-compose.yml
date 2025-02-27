@@ -1,0 +1,56 @@
+services:
+  redis-stack-server:
+    image: redis/redis-stack-server:${REDIS_VERSION:-7.4.0}
+    container_name: redis-stack-server
+    restart: unless-stopped
+    ports:
+      - "${REDIS_PORT:-6379}:${REDIS_PORT:-6379}"
+      - "8001:8001"
+    networks:
+        - chimera
+    volumes:
+      - redis-data:/data/redis
+      - ./logs:/var/log/redis
+      - ./aof:/var/lib/redis/aof
+      - ./redis.conf:/usr/local/etc/redis/redis.conf
+    command: [ "redis-server", "/usr/local/etc/redis/redis.conf" ]
+#    environment:
+#        - REDIS_PASSWORD=${REDIS_PASSWORD:-redis_password}
+#        - REDIS_ARGS="--requirepass ${REDIS_PASSWORD:-redis_password}"
+#        - REDIS_REPLICATION_MODE=${REDIS_REPLICATION_MODE:-master}
+#        - REDIS_REPLICATION_MASTER_HOST=${REDIS_REPLICATION_MASTER_HOST:-redis}
+#        - REDIS_REPLICATION_MASTER_PORT=${REDIS_REPLICATION_MASTER_PORT:-6379}
+#        - REDIS_REPLICATION_MASTER_PASSWORD=${REDIS_REPLICATION_MASTER_PASSWORD:-password}
+#        - REDIS_REPLICATION_MASTER_USER=${REDIS_REPLICATION_MASTER_USER:-replication}
+#        - REDIS_REPLICATION_MASTER_AUTH_PASS=${REDIS_REPLICATION_MASTER_AUTH_PASS:-password}
+#        - REDIS_REPLICATION_MASTER_AUTH_USER=${REDIS_REPLICATION_MASTER_AUTH_USER:-replication}
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  redis-insight:
+    image: redis/redisinsight:${REDIS_INSIGHT_VERSION:-1.8.3}
+    container_name: redis-insight
+    restart: unless-stopped
+    depends_on:
+      redis-stack-server:
+        condition: service_healthy
+    ports:
+      - "${REDIS_INSIGHT_PORT:-5540}:${REDIS_INSIGHT_PORT:-5540}"
+    networks:
+        - chimera
+    environment:
+        - REDIS_URI=redis://${REDIS_PASSWORD:-redis_password}@redis:${REDIS_PORT:-6379}
+        - RI_AGREEEMENTS_EULA=accept
+        - RI_AGREEEMENTS_ANALYTICS=false
+        - RI_AGREEEMENTS_NOTIFICATIONS=false
+        - RI_AGREEEMENTS_ENCRYPTION=false
+    volumes:
+      - redisinsights-data:/data/redisinsights
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -f http://localhost:5540/api/health/ || exit 1" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
