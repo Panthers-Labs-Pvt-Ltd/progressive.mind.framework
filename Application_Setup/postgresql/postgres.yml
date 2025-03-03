@@ -21,6 +21,17 @@ services:
     # entrypoint: /usr/local/bin/entrypoint.sh
     networks:
       - chimera
+  postgres_exporter:
+    image: prometheuscommunity/postgres-exporter
+    container_name: postgres_exporter
+    environment:
+      - DATA_SOURCE_NAME=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/postgres?sslmode=disable
+    ports:
+      - ${POSTGRES_EXPORTER_PORT:-9187}:9187
+    depends_on:
+      - postgres
+    networks:
+      - chimera
 networks:
     chimera:
         driver: bridge
