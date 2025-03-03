@@ -29,15 +29,15 @@ services:
 #      file: jaeger/jaeger.yml
 #      service: jaeger
 #
-#  prometheus:
-#    extends:
-#      file: prometheus/prometheus-server.yml
-#      service: prometheus
-#
-#  grafana:
-#    extends:
-#      file: grafana/grafana.yml
-#      service: grafana
+  prometheus:
+    extends:
+      file: prometheus/prometheus-server.yml
+      service: prometheus
+
+  grafana:
+    extends:
+      file: grafana/grafana.yml
+      service: grafana
 #
 #  vault:
 #    extends:
@@ -68,36 +68,36 @@ services:
 #      extends:
 #        file: trino/docker-compose.yml
 #        service: trino
-
-  redis-stack-server:
-    extends:
-      file: redis/docker-compose.yml
-      service: redis-stack-server
+#
+#  redis-stack-server:
+#    extends:
+#      file: redis/docker-compose.yml
+#      service: redis-stack-server
 
 #  redis-insight:
 #    extends:
 #      file: redis/docker-compose.yml
 #      service: redis-insight
 
-  superset-init:
-    extends:
-      file: superset/docker-compose-image-tag.yml
-      service: superset-init
-
-  superset:
-    extends:
-      file: superset/docker-compose-image-tag.yml
-      service: superset
-
-  superset-worker:
-    extends:
-      file: superset/docker-compose-image-tag.yml
-      service: superset-worker
-
-  superset-worker-beat:
-    extends:
-      file: superset/docker-compose-image-tag.yml
-      service: superset-worker-beat
+#  superset-init:
+#    extends:
+#      file: superset/docker-compose-image-tag.yml
+#      service: superset-init
+#
+#  superset:
+#    extends:
+#      file: superset/docker-compose-image-tag.yml
+#      service: superset
+#
+#  superset-worker:
+#    extends:
+#      file: superset/docker-compose-image-tag.yml
+#      service: superset-worker
+#
+#  superset-worker-beat:
+#    extends:
+#      file: superset/docker-compose-image-tag.yml
+#      service: superset-worker-beat
 
 # Below To be fixed
 #  taskmanager:
