@@ -3,6 +3,8 @@ services:
   prometheus:
     image: prom/prometheus:${PROMETHEUS_VERSION}
     container_name: prometheus
+    depends_on:
+      - postgres-exporter
     ports:
       - "${PROMETHEUS_UI_PORT:-9090}:9090"
     volumes:

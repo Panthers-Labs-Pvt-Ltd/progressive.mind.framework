@@ -1,28 +1,58 @@
 version: '3.8'
 services:
   postgres:
-    image: postgres:16.7
+    image: postgres:${POSTGRES_VERSION:-16.7}
     container_name: postgres
-    # restart: always
+    restart: unless-stopped
+    stop_signal: SIGTERM # we can choose SIGINT if we really want that way
+#    Control the resources that the container can use. More is available at ../Readme.md
+#    deploy:
+#      resources:
+#        limits:
+#          cpus: '0.5'
+#          memory: 512M
+#        reservations:
+#          cpus: '0.25'
+#          memory: 256M
     ports:
-      - ${POSTGRES_PORT:-5432}:5432
+      - ${POSTGRES_PORT}:${POSTGRES_PORT}
     environment:
       - POSTGRES_USER=init_user
       - POSTGRES_PASSWORD=init_password
+      - JAEGER_AGENT_HOST=jaeger
+      - JAEGER_AGENT_PORT=${JAEGER_AGENT_PORT}
     healthcheck:
       test: [ "CMD", "pg_isready", "-U", "init_user" ]
-      interval: 5s
+      interval: 30s
       timeout: 5s
-      retries: 5
+      retries: 3
+      start_period: 60s
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - chimera_tablespace:/var/lib/postgresql/tablespaces/chimera
+      - keycloak_tablespace:/var/lib/postgresql/tablespaces/keycloak
+      - vault_tablespace:/var/lib/postgresql/tablespaces/vault
+      - datahub_tablespace:/var/lib/postgresql/tablespaces/datahub
       - ./init-scripts:/docker-entrypoint-initdb.d
-      # - ./entrypoint.sh:/usr/local/bin/entrypoint.sh
-    # entrypoint: /usr/local/bin/entrypoint.sh
     networks:
       - chimera
-networks:
-    chimera:
-        driver: bridge
-volumes:
-    postgres_data:
+
+  postgres-exporter:
+    image: bitnami/postgres-exporter:${PROMETHEUS_POSTGRES_EXPORTER_VERSION:-v0.10.0}
+    container_name: postgres-exporter
+    restart: unless-stopped
+    depends_on:
+      - postgres
+    ports:
+      - ${POSTGRES_EXPORTER_PORT}:${POSTGRES_EXPORTER_PORT}
+    environment:
+      - DATA_SOURCE_NAME=postgresql://init_user:init_password@postgres:${POSTGRES_PORT}/postgres?sslmode=disable
+    networks:
+      - chimera
+
+#volumes:
+#    postgres_data:
+#    chimera_tablespace:
+#    keycloak_tablespace:
+#    vault_tablespace:
+#    datahub_tablespace:

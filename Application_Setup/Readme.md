@@ -168,3 +168,257 @@ echo -n 'your-password' | base64
 - Add Ingress resources for external access with custom domain names.
 - Use Helm charts to parameterize and simplify the deployment process.
 - Implement monitoring alerts and dashboards for Prometheus and Grafana.
+
+## Key learning for docker compose
+
+### restart
+
+The restart policy in a docker-compose.yml file defines the restart behavior of a container when it exits. It determines under what conditions Docker will automatically restart a stopped container. Here are the available options for the restart policy:
+
+* **no**: The container will not be restarted automatically if it stops. 
+* **always**: The container will always be restarted regardless of the exit status. This is useful for long-running services. 
+* **on-failure**: The container will only be restarted if it exits with a non-zero exit status, indicating an error or failure. 
+* **unless-stopped**: The container will always be restarted except when it is explicitly stopped by the user. This is similar to always, but it won't restart the container after it is manually stopped.
+* Example
+```yaml
+version: '3.8'
+
+services:
+  web:
+    image: nginx:latest
+    restart: always
+    ports:
+      - "80:80"
+```
+
+Using the unless-stopped restart policy in Docker Compose means that the container will always be restarted except when it is explicitly stopped by the user. This policy is similar to always, but it won't restart the container after it is manually stopped.
+
+However, in the case of a software bug causing the container to fail, this policy can have certain consequences:
+* Infinite Restart Loop: If the container fails due to a bug, it will keep restarting indefinitely, potentially leading to resource exhaustion (e.g., CPU, memory) and affecting other services running on the same host. 
+* Log Flooding: Continuous restarts can flood the logs with repetitive error messages, making it harder to diagnose the root cause of the issue. 
+* Potential Data Corruption: Frequent restarts can lead to inconsistent states and potential data corruption, especially if the container writes to a database or file system. 
+* Delayed Resolution: Automated restarts may give the false impression that the service is running correctly, delaying the detection and resolution of the underlying issue.
+
+To mitigate these risks, consider using additional strategies such as:
+* Health Checks: Implement health checks to monitor the application's health and restart it only when necessary. 
+* Retry Logic: Incorporate retry logic in your application to handle transient errors gracefully. 
+* Alerting: Set up monitoring and alerting (Prometheus and AlertManager) to notify you of frequent container restarts.
+
+```yaml
+version: '3.8'
+
+services:
+  web:
+    image: nginx:latest
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    ports:
+      - "80:80"
+```
+
+### stop_signal
+
+The stop_signal parameter in a docker-compose.yml file specifies which system signal to send to a container to stop it. This is useful if your application needs a specific signal to perform a clean shutdown or to handle any cleanup tasks before the container stops.
+
+By default, Docker sends the SIGTERM signal to stop a container, followed by SIGKILL if the container doesn't stop within a grace period. However, you can customize this behavior with the stop_signal parameter.
+
+### ipc
+
+* **Purpose**: Sets the IPC namespace mode for the container.
+* **Use Case**: Useful to control how processes in the container share memory and other IPC resources.
+* Options:
+  * **ipc: "host"**: The container uses the host's IPC namespace.
+  * **ipc: "container:<name_or_id>"**: Shares the IPC namespace with another container, allowing processes in both containers to communicate using shared memory.
+  * **ipc: "shareable"**: The container shares the host's IPC namespace.
+* Example:
+
+```yaml
+services:
+  web:
+    image: nginx:latest
+    ipc: "host"
+```
+
+### isolation
+
+* **Purpose**: Sets the container's isolation level for **Windows containers**.
+* **Use Case**: Useful for specifying the container's isolation level for Windows containers to ensure security and resource management, such as hyperv, process, or default.
+* Options:
+  * **isolation: "hyperv"**: Uses Hyper-V isolation (each container has its own instance of Windows kernel).
+  * **isolation: "process"**: Uses process isolation (containers share the kernel with the host).
+  * **isolation: "default"**: Uses the default isolation technology configured in Docker daemon.
+
+> Please note In Unix and Linux systems, container isolation is achieved through namespaces and control groups (cgroups). These mechanisms provide process isolation, resource limitation, and security for containers. Here are some key components:
+> * Namespaces: Provide isolated instances of global system resources, such as process IDs, network interfaces, and filesystem mounts. Each container gets its own set of namespaces, ensuring it operates independently of other containers.
+> * Cgroups: Manage and limit the resources (CPU, memory, disk I/O, etc.) that a container can use. Cgroups ensure that containers do not interfere with each other's resource usage. 
+> * Seccomp: Provides system call filtering to enhance security by restricting the system calls a container can make.
+> * AppArmor/SELinux: Enforce security policies to further isolate containers and control their access to system resources.
+
+### cgroup
+
+Control Groups, commonly known as cgroups, are a Linux kernel feature used to manage, limit, and prioritize resources such as CPU, memory, disk I/O, and network for a group of processes. They are particularly useful in containerized environments like Docker for the following purposes:
+
+* **Resource Isolation**: Cgroups isolate resource usage between different groups of processes, ensuring that one group doesn't consume all available resources and affect other processes.
+* **Resource Limitation**: Cgroups allow you to set limits on resources for processes. For example, you can limit the amount of CPU time, memory usage, or disk I/O a container can use.
+* **Resource Allocation**: Cgroups enable you to allocate specific resources to different groups of processes based on their requirements and priorities.
+* **Resource Monitoring**: Cgroups provide mechanisms to monitor the resource usage of processes, helping in identifying and managing resource bottlenecks.
+* **Improved Performance and Stability**: By managing and controlling resource usage, cgroups ensure better performance and stability for applications running on the same host.
+* Example Usage in Docker
+
+```yaml
+version: '3.8'
+
+services:
+  web:
+    image: nginx:latest
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: "512M"
+        reservations:
+          cpus: "0.25"
+          memory: "256M"
+    ports:
+    - "80:80"
+```
+### cgroup_parent
+
+* **Purpose**: Specifies the parent cgroup for a container, allowing you to organize and manage resources hierarchically.
+* **Use Case**: Useful when you want to group containers under a specific cgroup to manage their resources together.
+* Example:
+
+```yaml
+services:
+  web:
+  image: nginx:latest
+  cgroup_parent: /docker/my_custom_group
+```
+
+### cap_add and cap_drop
+
+* **Purpose**: Add or drop Linux capabilities to or from a container.
+* **Use Case**: Fine-tune the permissions and capabilities a container has, enhancing security by granting only the necessary capabilities.
+* Example (cap_add):
+
+```yaml
+services:
+  web:
+    image: nginx:latest
+  cap_add:
+    - NET_ADMIN
+```
+* Example (cap_drop):
+
+```yaml
+services:
+web:
+image: nginx:latest
+cap_drop:
+- MKNOD
+```
+
+### dns
+
+* **Purpose**: Set custom DNS servers for a container.
+* **Use Case**: Override the default DNS servers used by a container provided by the Docker daemon, useful for custom network configurations or resolving internal domain names.
+* Example:
+
+```yaml
+services:
+  web:
+    image: nginx:latest
+    dns: # Google's public DNS servers
+      - 8.8.8.8 
+      - 8.8.4.4
+```
+
+### dns_search
+
+* **Purpose**: Set custom DNS search domains for a container.
+* **Use Case**: Specify search domains to be used for DNS resolution within the container, useful for resolving short hostnames or internal domain names to fully qualified domain names (FQDNs).
+* Example:
+
+```yaml
+services:
+  web:
+    image: nginx:latest
+    dns_search:
+      - example.com
+      - subdomain.example.com
+```
+
+### dns_opt
+
+* **Purpose**: Set additional DNS options for the container's /etc/resolv.conf file.
+* **Use Case**: Customize DNS resolution behavior, such as setting the timeout, or attempts, or enabling DNSSEC validation.
+* Example:
+
+```yaml
+services:
+  web:
+    image: nginx:latest
+    dns_opt:
+      - timeout:2
+      - attempts:3
+```
+
+### domainname
+
+* **Purpose**: Set the domain name for a container.
+* **Use Case**: Useful when you want to specify the domain name for a container, which can be used for internal DNS resolution, particularly in multi-container applications.
+* Example:
+
+```yaml
+services:
+  web:
+    image: nginx:latest
+    domainname: example.com
+```
+
+### hostname
+
+* **Purpose**: Set the hostname for a container.
+* **Use Case**: Useful when you want to specify a custom hostname for the container.
+* Example:
+
+```yaml
+services:
+  web:
+    image: nginx:latest
+    hostname: my-nginx-container
+```
+
+### extra_hosts
+
+* **Purpose**: Add custom hostnames to the container's /etc/hosts file.
+* **Use Case**: Map custom hostnames to IP addresses that are not in DNS, useful for testing or accessing internal services.
+* Example:
+
+```yaml
+services:
+  web:
+    image: nginx:latest
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+```
+
+### cpu_count
+
+* **Purpose**: Limits the number of CPUs available to a container.
+* **Use Case**: Control the CPU resources a container can use, improving performance and resource allocation.
+* Example:
+
+```yaml
+services:
+  web:
+    image: nginx:latest
+    deploy:
+      resources:
+        limits:
+          cpus: "2"
+```
