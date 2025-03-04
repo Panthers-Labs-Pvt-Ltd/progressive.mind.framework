@@ -151,10 +151,6 @@ networks:
 
 volumes:
     postgres_data:
-    chimera_tablespace:
-    keycloak_tablespace:
-    vault_tablespace:
-    datahub_tablespace:
     vault-data:
     opensearch_data:
     redis-data:
