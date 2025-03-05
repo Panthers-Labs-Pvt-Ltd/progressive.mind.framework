@@ -1,0 +1,24 @@
+{
+  "id": "home/Getting_Started",
+  "title": "User Journey",
+  "description": "Client Onboarding",
+  "source": "@site/docs/home/Getting_Started.md",
+  "sourceDirName": "home",
+  "slug": "/home/Getting_Started",
+  "permalink": "/docs/home/Getting_Started",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/docs/home/Getting_Started.md",
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Architecture",
+    "permalink": "/docs/home/Architecture"
+  },
+  "next": {
+    "title": "Chimera Data and AI Platform",
+    "permalink": "/docs/home/Introduction"
+  }
+}

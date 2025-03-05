@@ -1,0 +1,24 @@
+{
+  "id": "UI/test",
+  "title": "test",
+  "description": "",
+  "source": "@site/docs/UI/test.md",
+  "sourceDirName": "UI",
+  "slug": "/UI/test",
+  "permalink": "/docs/UI/test",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/docs/UI/test.md",
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Orchestration Service",
+    "permalink": "/docs/Orchestration_Service"
+  },
+  "next": {
+    "title": "User Interactions - Please DO NOT UPDATE HERE. Maintained in UI git",
+    "permalink": "/docs/UI"
+  }
+}

@@ -1,0 +1,123 @@
+{
+  "docusaurus-plugin-content-docs": {
+    "default": {
+      "path": "/docs",
+      "versions": [
+        {
+          "name": "current",
+          "label": "Next",
+          "isLast": true,
+          "path": "/docs",
+          "mainDocId": "API_Service",
+          "docs": [
+            {
+              "id": "API_Service",
+              "path": "/docs/API_Service",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "blog/index",
+              "path": "/docs/blog/",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "Data_Access_and_Analysis",
+              "path": "/docs/Data_Access_and_Analysis",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "Data_Governance",
+              "path": "/docs/Data_Governance",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "Data_Ingestion",
+              "path": "/docs/Data_Ingestion",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "Data_Processing",
+              "path": "/docs/Data_Processing",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "Data_Science_and_Machine_Learning",
+              "path": "/docs/Data_Science_and_Machine_Learning",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "Data_Sharing_and_Distribution",
+              "path": "/docs/Data_Sharing_and_Distribution",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "Data_Source_Management",
+              "path": "/docs/Data_Source_Management",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "Data_Storage",
+              "path": "/docs/Data_Storage",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "Data_Visualization",
+              "path": "/docs/Data_Visualization",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "home/Architecture",
+              "path": "/docs/home/Architecture",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "home/Getting_Started",
+              "path": "/docs/home/Getting_Started",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "home/Introduction",
+              "path": "/docs/home/Introduction",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "home/Key_Concepts",
+              "path": "/docs/home/Key_Concepts",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "Observability",
+              "path": "/docs/Observability",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "Orchestration_Service",
+              "path": "/docs/Orchestration_Service",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "UI",
+              "path": "/docs/UI",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "UI/test",
+              "path": "/docs/UI/test",
+              "sidebar": "tutorialSidebar"
+            }
+          ],
+          "draftIds": [],
+          "sidebars": {
+            "tutorialSidebar": {
+              "link": {
+                "path": "/docs/API_Service",
+                "label": "API_Service"
+              }
+            }
+          }
+        }
+      ],
+      "breadcrumbs": true
+    }
+  }
+}

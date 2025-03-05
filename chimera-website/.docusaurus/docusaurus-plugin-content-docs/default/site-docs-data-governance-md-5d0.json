@@ -1,0 +1,24 @@
+{
+  "id": "Data_Governance",
+  "title": "Data Governance",
+  "description": "* Data Governance",
+  "source": "@site/docs/Data_Governance.md",
+  "sourceDirName": ".",
+  "slug": "/Data_Governance",
+  "permalink": "/docs/Data_Governance",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/docs/Data_Governance.md",
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Data Access and Analysis",
+    "permalink": "/docs/Data_Access_and_Analysis"
+  },
+  "next": {
+    "title": "Data Ingestion",
+    "permalink": "/docs/Data_Ingestion"
+  }
+}

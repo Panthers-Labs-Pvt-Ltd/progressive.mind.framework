@@ -1,0 +1,24 @@
+{
+  "id": "home/Introduction",
+  "title": "Chimera Data and AI Platform",
+  "description": "Introduction",
+  "source": "@site/docs/home/Introduction.md",
+  "sourceDirName": "home",
+  "slug": "/home/Introduction",
+  "permalink": "/docs/home/Introduction",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/docs/home/Introduction.md",
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "User Journey",
+    "permalink": "/docs/home/Getting_Started"
+  },
+  "next": {
+    "title": "Key Concepts",
+    "permalink": "/docs/home/Key_Concepts"
+  }
+}

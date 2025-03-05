@@ -1,0 +1,24 @@
+{
+  "id": "Data_Source_Management",
+  "title": "Data Source Management",
+  "description": "Data Sources or External Data Sources are the sources from which data is ingested into the platform and are typically not managed by Chimera. These sources can be databases, files, APIs, or other systems that contain data to be processed and analyzed.",
+  "source": "@site/docs/Data_Source_Management.md",
+  "sourceDirName": ".",
+  "slug": "/Data_Source_Management",
+  "permalink": "/docs/Data_Source_Management",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/docs/Data_Source_Management.md",
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Data Sharing and Distribution",
+    "permalink": "/docs/Data_Sharing_and_Distribution"
+  },
+  "next": {
+    "title": "Data Storage",
+    "permalink": "/docs/Data_Storage"
+  }
+}

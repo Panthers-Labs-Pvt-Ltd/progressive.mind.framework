@@ -1,0 +1,24 @@
+{
+  "id": "Observability",
+  "title": "Observability",
+  "description": "* Observability",
+  "source": "@site/docs/Observability.md",
+  "sourceDirName": ".",
+  "slug": "/Observability",
+  "permalink": "/docs/Observability",
+  "draft": false,
+  "unlisted": false,
+  "editUrl": "https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/docs/Observability.md",
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Data Visualization",
+    "permalink": "/docs/Data_Visualization"
+  },
+  "next": {
+    "title": "Orchestration Service",
+    "permalink": "/docs/Orchestration_Service"
+  }
+}
