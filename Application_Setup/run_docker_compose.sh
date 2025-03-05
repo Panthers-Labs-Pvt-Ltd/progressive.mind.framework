@@ -4,7 +4,7 @@ set -xeuo pipefail
 
 # Export environment variables
 # Export the versions of the observability tools
-# Initalize Vault first to fetch the secrets
+# Initialize Vault first to fetch the secrets
 
 # Version management
 export OTEL_VERSION=0.38.0
