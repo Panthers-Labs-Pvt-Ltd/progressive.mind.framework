@@ -80,6 +80,54 @@ This directory contains manifests for deploying and exposing Jaeger.
 | Datahub                  | ??          |         |
 | Kafka                    | 3.7.2       |         |
 
+## Ownership
+
+* API Ecosystem - **Vivek Tiwari**
+  - APISIX / Kong
+  - Keycloak
+  - Vault
+  - GRPC
+  - GraphQL
+  - REST
+* Observability - **Mohit Ranjan**
+  - Prometheus and its ecosystem (End to end)
+  - Grafana and its ecosystem (End to end)
+  - Jaeger and Fluentd (End to end)
+  - Otel-collector (End to end)
+  - Infra, Application, and Data Actionable Insights (End to end)
+  - Notification and Alerts (End to end)
+* Data Management - **Manish Kumar**
+  - Datahub (End to end)
+  - Trino (End to end)
+  - OpenSearch (End to end)
+  - Great Expectations (Usage) and AWS Deeque (End to end)
+  - Redis and Redis Insight (Usage)
+  - Postgres (Usage)
+  - Druid/Pinot (Usage)
+  - neo4j (Usage)
+  - DuckDB (Usage)
+  - Superset (End to end)
+  - CI-CD and DataOps (End to end)
+* Data Processing - **Prashant Kumar**
+  - Spark (End to end)
+  - Temporal (End to end)
+  - Iceberg (End to end) && Apache Amoro
+  - Fugue (End to end)
+  - Parquet (End to end)
+  - XTable (End to end)
+  - Hive and REST catalog (Polaris) Metastore (End to end)
+  - Kafka (Usage)
+  - Flink (End to end)
+  - Debezium and Flink CDC (End to end)
+* AI / ML Platform - **Rahul Ranjan**
+  - Ray
+  - MLLib
+  - SLM / LLM
+  - Agentic AI
+  - neo4J
+  - Python ecosystem
+  - AIOps
+
 ### ConfigMap (`common/configmap.yaml`)
 Stores shared, non-sensitive configuration values. Example:
 
@@ -121,7 +169,7 @@ echo -n 'your-password' | base64
 ## To deploy on server
 - **Prerequisites**:
     - A Kubernetes cluster with `kubectl` configured.
-    - Deploy the deploy_observability.sh script in the root directory of the project.
+    - Deploy the `deploy_observability.sh` script in the root directory of the project.
     - Run the script using the following command:
     ```bash
     ./deploy_observability.sh
@@ -138,7 +186,7 @@ echo -n 'your-password' | base64
    
     - A Kubernetes cluster with `kubectl` configured.
     - Minikube installed for local testing.
-    - Deploy the deploy_observability_local.sh script in the root directory of the project.
+    - Deploy the `deploy_observability_local.sh` script in the root directory of the project.
     - Run the script using the following command:
     ```bash
     ./deploy_observability_local.sh
@@ -422,3 +470,19 @@ services:
         limits:
           cpus: "2"
 ```
+
+
+100GB
+
+**When we prioritize performance**
+* Fetch from metadata of the block size used - 128MB / 256MB
+* Best possible scenario is - if we are able to read all the dataset in a single go
+  * 100GB*1028MB = 102800MB
+  * 102800MB/128MB = 803.125 cores
+* Ideal configure for an executor - 4 cores.
+* So, number of executors - 803.125/4 = 200.78 executors
+* 100GB/compression factor. Assume 25% compressed, then 100/.25 = 400GB
+* Per executor - 400GB/200 = 2GB
+* Using unified memory - 2GB*2 = 4GB
+
+**When we prioritize cost**
