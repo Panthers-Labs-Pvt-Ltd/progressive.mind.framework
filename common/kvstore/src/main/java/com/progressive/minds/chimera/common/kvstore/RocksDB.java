@@ -1,11 +1,5 @@
 package com.progressive.minds.chimera.common.kvstore;
 
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Preconditions;
-import com.google.common.base.Throwables;
-import com.progressive.minds.chimera.common.tags.annotation.Private;
-import org.rocksdb.*;
-
 import java.io.File;
 import java.io.IOException;
 import java.lang.ref.Reference;
@@ -18,6 +12,13 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
+
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Preconditions;
+import com.google.common.base.Throwables;
+import org.rocksdb.*;
+
+import org.apache.spark.annotation.Private;
 
 /**
  * Implementation of KVStore that uses RocksDB as the underlying data store.
@@ -43,7 +44,7 @@ public class RocksDB implements KVStore {
 
     /**
      * Use full filter.
-     * https://github.com/facebook/rocksdb/wiki/RocksDB-Bloom-Filter#full-filters-new-format
+     * <a href="https://github.com/facebook/rocksdb/wiki/RocksDB-Bloom-Filter#full-filters-new-format">...</a>
      */
     private static final BloomFilter fullFilter =
             new BloomFilter(10.0D /* BloomFilter.DEFAULT_BITS_PER_KEY */, false);
@@ -58,8 +59,7 @@ public class RocksDB implements KVStore {
     /**
      * - Use ZSTD at the bottom most level to reduce the disk space
      * - Use LZ4 at the other levels because it's better than Snappy in general.
-     *
-     * https://github.com/facebook/rocksdb/wiki/Compression#configuration
+     * <a href="https://github.com/facebook/rocksdb/wiki/Compression#configuration">...</a>
      */
     private static final Options dbOptions = new Options()
             .setCreateIfMissing(true)
@@ -69,8 +69,7 @@ public class RocksDB implements KVStore {
 
     /**
      * - Use explicitly 'sync = false' like LevelDB KVStore implementation.
-     *
-     * https://github.com/google/leveldb/blob/1.23/include/leveldb/options.h#L182
+     * <a href="https://github.com/google/leveldb/blob/1.23/include/leveldb/options.h#L182">...</a>
      */
     private static final WriteOptions writeOptions = new WriteOptions().setSync(false);
 
@@ -115,7 +114,7 @@ public class RocksDB implements KVStore {
 
         Map<String, byte[]> aliases;
         try {
-            aliases = get(TYPE_ALIASES_KEY, RocksDB.TypeAliases.class).aliases;
+            aliases = get(TYPE_ALIASES_KEY, TypeAliases.class).aliases;
         } catch (NoSuchElementException e) {
             aliases = new HashMap<>();
         }
@@ -190,7 +189,7 @@ public class RocksDB implements KVStore {
 
             // Deserialize outside synchronized block
             List<byte[]> list = new ArrayList<>(entry.getValue().size());
-            for (Object value : values) {
+            for (Object value : entry.getValue()) {
                 list.add(serializer.serialize(value));
             }
             serializedValueIter = list.iterator();
@@ -204,6 +203,7 @@ public class RocksDB implements KVStore {
 
                 try (WriteBatch writeBatch = new WriteBatch()) {
                     while (valueIter.hasNext()) {
+                        assert serializedValueIter.hasNext();
                         updateBatch(writeBatch, valueIter.next(), serializedValueIter.next(), klass,
                                 naturalIndex, indices);
                     }
@@ -227,7 +227,7 @@ public class RocksDB implements KVStore {
             existing = null;
         }
 
-        RocksDB.PrefixCache cache = new RocksDB.PrefixCache(value);
+        PrefixCache cache = new PrefixCache(value);
         byte[] naturalKey = naturalIndex.toKey(naturalIndex.getValue(value));
         for (RocksDBTypeInfo.Index idx : indices) {
             byte[] prefix = cache.getPrefix(idx);
@@ -245,7 +245,7 @@ public class RocksDB implements KVStore {
                 byte[] data = db().get(key);
                 if (data != null) {
                     Object existing = serializer.deserialize(data, type);
-                    RocksDB.PrefixCache cache = new RocksDB.PrefixCache(existing);
+                    PrefixCache cache = new PrefixCache(existing);
                     byte[] keyBytes = ti.naturalIndex().toKey(ti.naturalIndex().getValue(existing));
                     for (RocksDBTypeInfo.Index idx : ti.indices()) {
                         idx.remove(writeBatch, existing, keyBytes, cache.getPrefix(idx));
@@ -396,7 +396,7 @@ public class RocksDB implements KVStore {
                 alias = typeAliases.putIfAbsent(klass.getName(), tmp);
                 if (alias == null) {
                     alias = tmp;
-                    put(TYPE_ALIASES_KEY, new RocksDB.TypeAliases(typeAliases));
+                    put(TYPE_ALIASES_KEY, new TypeAliases(typeAliases));
                 }
             }
         }
