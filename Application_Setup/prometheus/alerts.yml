@@ -1,0 +1,27 @@
+groups:
+  - name: postgres-alerts
+    rules:
+      - alert: HighPostgresConnections
+        expr: postgresql_max_connections - postgresql_current_connections > 100
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: High number of PostgreSQL connections
+          description: '{{ $labels.instance }} has high number of connections'
+      - alert: HighPostgresLocks
+        expr: postgresql_locks - postgresql_deadlocks > 10
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: High number of PostgreSQL locks
+          description: '{{ $labels.instance }} has high number of locks'
+      - alert: PostgresHighCPUUsage
+        expr: avg(rate(container_cpu_usage_seconds_total{container_label_com_docker_compose_service="postgres"}[1m])) by (instance, datname) > 0.8
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High CPU usage for PostgreSQL instance {{ $labels.instance }} database {{ $labels.datname }}"
+          description: "CPU usage for PostgreSQL instance {{ $labels.instance }} database {{ $labels.datname }} has exceeded 80% for more than 5 minutes."

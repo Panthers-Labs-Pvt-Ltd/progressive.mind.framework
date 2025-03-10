@@ -4,36 +4,36 @@
 # create you own docker environment file (docker/.env) with your own
 # unique random secure passwords and SECRET_KEY.
 # -----------------------------------------------------------------------
-x-superset-image: &superset-image apachesuperset.docker.scarf.sh/apache/superset:${TAG:-latest-dev}
+x-superset-image: &superset-image apachesuperset.docker.scarf.sh/apache/superset:${SUPERSET_VERSION:-latest-dev}
 x-superset-volumes:
   &superset-volumes # /app/pythonpath_docker will be appended to the PYTHONPATH in the final container
   - ./docker:/app/docker
   - superset_home:/app/superset_home
 
 services:
-  redis:
-    image: redis:7
-    container_name: superset_cache
-    restart: unless-stopped
-    volumes:
-      - redis:/data
-
-  db:
-    env_file:
-      - path: docker/.env # default
-        required: true
-      - path: docker/.env-local # optional override
-        required: false
-    image: postgres:15
-    container_name: superset_db
-    restart: unless-stopped
-    volumes:
-      - db_home:/var/lib/postgresql/data
-      - ./docker/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+#  redis:
+#    image: redis:7
+#    container_name: superset_cache
+#    restart: unless-stopped
+#    volumes:
+#      - redis:/data
+#
+#  db:
+#    env_file:
+#      - path: docker/.env # default
+#        required: true
+#      - path: docker/.env-local # optional override
+#        required: false
+#    image: postgres:15
+#    container_name: superset_db
+#    restart: unless-stopped
+#    volumes:
+#      - db_home:/var/lib/postgresql/data
+#      - ./docker/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
 
   superset:
     env_file:
-      - path: docker/.env # default
+      - path: docker/.env
         required: true
       - path: docker/.env-local # optional override
         required: false
@@ -61,14 +61,15 @@ services:
       - path: docker/.env-local # optional override
         required: false
     depends_on:
-      db:
+      postgres:
         condition: service_started
-      redis:
+      redis-stack-server:
         condition: service_started
     user: "root"
     volumes: *superset-volumes
     healthcheck:
       disable: true
+      test: ["CMD-SHELL", "curl -f http://localhost:8088/health || exit 1"]
     environment:
       SUPERSET_LOAD_EXAMPLES: "${SUPERSET_LOAD_EXAMPLES:-yes}"
       SUPERSET_LOG_LEVEL: "${SUPERSET_LOG_LEVEL:-info}"
@@ -114,13 +115,18 @@ services:
     volumes: *superset-volumes
     healthcheck:
       disable: true
+      test:
+        [
+          "CMD-SHELL",
+          "celery -A superset.tasks.celery_app:app inspect ping -d celery@$$HOSTNAME",
+        ]
     environment:
       SUPERSET_LOG_LEVEL: "${SUPERSET_LOG_LEVEL:-info}"
 
-volumes:
-  superset_home:
-    external: false
-  db_home:
-    external: false
-  redis:
-    external: false
+#volumes:
+#  superset_home:
+#    external: false
+#  db_home:
+#    external: false
+#  redis:
+#    external: false

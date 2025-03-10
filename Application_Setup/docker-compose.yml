@@ -4,20 +4,11 @@ services:
       file: postgresql/postgres.yml
       service: postgres
 
-  api-gateway:
+  postgres-exporter:
     extends:
-      file: api-gateway/api-gateway.yml
-      service: kong-gateway
+      file: postgresql/postgres.yml
+      service: postgres-exporter
 
-  kong-migrations:
-    extends:
-      file: api-gateway/api-gateway.yml
-      service: kong-migrations
-
-  keycloak:
-    extends:
-      file: keycloak/keycloak-docker-compose.yml
-      service: keycloak
 
   otel-collector:
     extends:
@@ -39,35 +30,81 @@ services:
       file: grafana/grafana.yml
       service: grafana
 
-  vault:
-    extends:
-      service: vault
-      file: vault/docker-compose.yml
+#
+#  api-gateway:
+#    extends:
+#      file: api-gateway/api-gateway.yml
+#      service: kong-gateway
+#
+#  kong-migrations:
+#    extends:
+#      file: api-gateway/api-gateway.yml
+#      service: kong-migrations
+#
+#  keycloak:
+#    extends:
+#      file: keycloak/keycloak-docker-compose.yml
+#      service: keycloak
 
-  opensearch:
-    extends:
-      file: opensearch/docker-compose.yml
-      service: opensearch
+#  vault:
+#    extends:
+#      service: vault
+#      file: vault/docker-compose.yml
+#
+#  opensearch:
+#    extends:
+#      file: opensearch/docker-compose.yml
+#      service: opensearch
+#
+#  temporal:
+#    extends:
+#      service: temporal
+#      file: temporal_server/docker-compose-postgres-opensearch.yml
+#
+#  temporal-admin-tools:
+#    extends:
+#      service: temporal-admin-tools
+#      file: temporal_server/docker-compose-postgres-opensearch.yml
+#
+#  temporal-ui:
+#    extends:
+#      service: temporal-ui
+#      file: temporal_server/docker-compose-postgres-opensearch.yml
+#
+#  trino:
+#      extends:
+#        file: trino/docker-compose.yml
+#        service: trino
 
-  temporal:
-    extends:
-      service: temporal
-      file: temporal_server/docker-compose-postgres-opensearch.yml
+#  redis-stack-server:
+#    extends:
+#      file: redis/docker-compose.yml
+#      service: redis-stack-server
 
-  temporal-admin-tools:
-    extends:
-      service: temporal-admin-tools
-      file: temporal_server/docker-compose-postgres-opensearch.yml
+#  redis-insight:
+#    extends:
+#      file: redis/docker-compose.yml
+#      service: redis-insight
 
-  temporal-ui:
-    extends:
-      service: temporal-ui
-      file: temporal_server/docker-compose-postgres-opensearch.yml
-
-  trino:
-      extends:
-        file: trino/docker-compose.yml
-        service: trino
+#  superset-init:
+#    extends:
+#      file: superset/docker-compose-image-tag.yml
+#      service: superset-init
+#
+#  superset:
+#    extends:
+#      file: superset/docker-compose-image-tag.yml
+#      service: superset
+#
+#  superset-worker:
+#    extends:
+#      file: superset/docker-compose-image-tag.yml
+#      service: superset-worker
+#
+#  superset-worker-beat:
+#    extends:
+#      file: superset/docker-compose-image-tag.yml
+#      service: superset-worker-beat
 
 # Below To be fixed
 #  taskmanager:
@@ -116,3 +153,6 @@ volumes:
     postgres_data:
     vault-data:
     opensearch_data:
+    redis-data:
+    redisinsights-data:
+    superset_home:

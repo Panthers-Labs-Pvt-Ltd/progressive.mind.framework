@@ -1,4 +1,4 @@
-FROM quay.io/keycloak/keycloak:latest as builder
+FROM quay.io/keycloak/keycloak:26.0 as builder
 
 # Enable health and metrics support
 ENV KC_HEALTH_ENABLED=true
@@ -23,7 +23,7 @@ RUN keytool -genkeypair \
 # Build Keycloak for production
 RUN /opt/keycloak/bin/kc.sh build
 
-FROM quay.io/keycloak/keycloak:latest
+# FROM quay.io/keycloak/keycloak:latest
 
 # Copy built Keycloak from the builder stage
 COPY --from=builder /opt/keycloak/ /opt/keycloak/

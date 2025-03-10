@@ -1,21 +1,21 @@
 package com.progressive.minds.chimera.common.kvstore;
 
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Preconditions;
-import com.google.common.base.Throwables;
-import org.rocksdb.RocksIterator;
-
 import java.io.IOException;
 import java.lang.ref.Cleaner;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Preconditions;
+import com.google.common.base.Throwables;
+import org.rocksdb.RocksIterator;
 
 class RocksDBIterator<T> implements KVStoreIterator<T> {
 
     private static final Cleaner CLEANER = Cleaner.create();
     private final RocksDB db;
     private final boolean ascending;
-    private final RocksIterator it;
+    private final RocksIterator rocksIterator;
     private final Class<T> type;
     private final RocksDBTypeInfo ti;
     private final RocksDBTypeInfo.Index index;
@@ -33,12 +33,12 @@ class RocksDBIterator<T> implements KVStoreIterator<T> {
     RocksDBIterator(Class<T> type, RocksDB db, KVStoreView<T> params) throws Exception {
         this.db = db;
         this.ascending = params.ascending;
-        this.it = db.db().newIterator();
+        this.rocksIterator = db.db().newIterator();
         this.type = type;
         this.ti = db.getTypeInfo(type);
         this.index = ti.index(params.index);
         this.max = params.max;
-        this.resourceCleaner = new RocksDBIterator.ResourceCleaner(it, db);
+        this.resourceCleaner = new RocksDBIterator.ResourceCleaner(rocksIterator, db);
         this.cleanable = CLEANER.register(this, resourceCleaner);
 
         Preconditions.checkArgument(!index.isChild() || params.parent != null,
@@ -46,43 +46,37 @@ class RocksDBIterator<T> implements KVStoreIterator<T> {
         byte[] parent = index.isChild() ? index.parent().childPrefix(params.parent) : null;
 
         this.indexKeyPrefix = index.keyPrefix(parent);
+        rocksIterator.seek(getFirstKey(params, parent));
+        this.end = getEndKey(params, parent);
 
-        byte[] firstKey;
-        if (params.first != null) {
-            if (ascending) {
-                firstKey = index.start(parent, params.first);
-            } else {
-                firstKey = index.end(parent, params.first);
-            }
-        } else if (ascending) {
-            firstKey = index.keyPrefix(parent);
-        } else {
-            firstKey = index.end(parent);
+        if (params.skip > 0) {
+            skip(params.skip);
         }
-        it.seek(firstKey);
+    }
 
+    private byte[] getEndKey(KVStoreView<T> params, byte[] parent) {
         byte[] end = null;
         if (ascending) {
-            if (params.last != null) {
-                end = index.end(parent, params.last);
-            } else {
-                end = index.end(parent);
-            }
+            end = params.last != null ? index.end(parent, params.last) : index.end(parent);
         } else {
             if (params.last != null) {
                 end = index.start(parent, params.last);
             }
-            if(!it.isValid()) {
+            if (!rocksIterator.isValid()) {
                 throw new NoSuchElementException();
             }
-            if (compare(it.key(), indexKeyPrefix) > 0) {
-                it.prev();
+            if (compare(rocksIterator.key(), indexKeyPrefix) > 0) {
+                rocksIterator.prev();
             }
         }
-        this.end = end;
+        return end;
+    }
 
-        if (params.skip > 0) {
-            skip(params.skip);
+    private byte[] getFirstKey(KVStoreView<T> params, byte[] parent) {
+        if (params.first != null) {
+            return ascending ? index.start(parent, params.first) : index.end(parent, params.first);
+        } else {
+            return ascending ? index.keyPrefix(parent) : index.end(parent);
         }
     }
 
@@ -136,7 +130,7 @@ class RocksDBIterator<T> implements KVStoreIterator<T> {
 
     @Override
     public boolean skip(long n) {
-        if(closed) return false;
+        if (closed) return false;
 
         long skipped = 0;
         while (skipped < n) {
@@ -147,18 +141,18 @@ class RocksDBIterator<T> implements KVStoreIterator<T> {
                 continue;
             }
 
-            if (!it.isValid()) {
+            if (!rocksIterator.isValid()) {
                 checkedNext = true;
                 return false;
             }
 
-            if (!isEndMarker(it.key())) {
+            if (!isEndMarker(rocksIterator.key())) {
                 skipped++;
             }
             if (ascending) {
-                it.next();
+                rocksIterator.next();
             } else {
-                it.prev();
+                rocksIterator.prev();
             }
         }
 
@@ -167,10 +161,10 @@ class RocksDBIterator<T> implements KVStoreIterator<T> {
 
     @Override
     public synchronized void close() throws IOException {
-        db.notifyIteratorClosed(it);
+        db.notifyIteratorClosed(rocksIterator);
         if (!closed) {
             try {
-                it.close();
+                rocksIterator.close();
             } finally {
                 closed = true;
                 next = null;
@@ -193,7 +187,7 @@ class RocksDBIterator<T> implements KVStoreIterator<T> {
     }
 
     RocksIterator internalIterator() {
-        return it;
+        return rocksIterator;
     }
 
     private byte[] loadNext() {
@@ -201,8 +195,8 @@ class RocksDBIterator<T> implements KVStoreIterator<T> {
             return null;
         }
 
-        while (it.isValid()) {
-            Map.Entry<byte[], byte[]> nextEntry = new AbstractMap.SimpleEntry<>(it.key(), it.value());
+        while (rocksIterator.isValid()) {
+            Map.Entry<byte[], byte[]> nextEntry = new AbstractMap.SimpleEntry<>(rocksIterator.key(), rocksIterator.value());
 
             byte[] nextKey = nextEntry.getKey();
             // Next key is not part of the index, stop.
@@ -212,11 +206,7 @@ class RocksDBIterator<T> implements KVStoreIterator<T> {
 
             // If the next key is an end marker, then skip it.
             if (isEndMarker(nextKey)) {
-                if (ascending) {
-                    it.next();
-                } else {
-                    it.prev();
-                }
+                moveIterator();
                 continue;
             }
 
@@ -229,15 +219,20 @@ class RocksDBIterator<T> implements KVStoreIterator<T> {
             }
 
             count++;
-            if (ascending) {
-                it.next();
-            } else {
-                it.prev();
-            }
+            moveIterator();
+
             // Next element is part of the iteration, return it.
             return nextEntry.getValue();
         }
         return null;
+    }
+
+    private void moveIterator() {
+        if (ascending) {
+            rocksIterator.next();
+        } else {
+            rocksIterator.prev();
+        }
     }
 
     @VisibleForTesting
@@ -302,4 +297,3 @@ class RocksDBIterator<T> implements KVStoreIterator<T> {
         }
     }
 }
-
