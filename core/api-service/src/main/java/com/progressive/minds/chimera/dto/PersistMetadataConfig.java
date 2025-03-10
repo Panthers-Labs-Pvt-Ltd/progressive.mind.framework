@@ -27,22 +27,26 @@ public class PersistMetadataConfig {
   private String sinkType;
 
   private String sinkSubType;
+
+  private String predecessorSequences;
+
+  private String successorSequences;
   
   private String dataSourceConnectionName;
 
-  private String databaseName;
+  // private String databaseName;
 
-  private String tableName;
+  // private String tableName;
 
-  private String schemaName;
+  // private String schemaName;
 
   private String partitionKeys;
 
   private String targetSql;
 
-  private String targetPath;
+  // private String targetPath;
 
-  private String writeMode;
+  // private String writeMode;
 
   private String sinkConfiguration;
 
@@ -50,11 +54,11 @@ public class PersistMetadataConfig {
 
   private String dedupColumns;
 
-  private String kafkaTopic;
+  // private String kafkaTopic;
 
-  private String kafkaKey;
+  // private String kafkaKey;
 
-  private String kafkaMessage;
+  // private String kafkaMessage;
 
   private Timestamp createdTimestamp;
 

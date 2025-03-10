@@ -27,34 +27,22 @@ public class PersistMetadata {
   private String sinkType;
 
   private String sinkSubType;
+
+  private String predecessorSequences;
+
+  private String successorSequences;
   
   private String dataSourceConnectionName;
-
-  private String databaseName;
-
-  private String tableName;
-
-  private String schemaName;
 
   private String partitionKeys;
 
   private String targetSql;
-
-  private String targetPath;
-
-  private String writeMode;
 
   private String sinkConfiguration;
 
   private String sortColumns;
 
   private String dedupColumns;
-
-  private String kafkaTopic;
-
-  private String kafkaKey;
-
-  private String kafkaMessage;
 
   private Timestamp createdTimestamp;
 
@@ -65,6 +53,14 @@ public class PersistMetadata {
   private String updatedBy;
 
   private String activeFlag; // Default value 'Y'
+
+  FilePersistMetadataTable filePersistMetadataTable;
+
+  NoSqlPersistMetadataTable noSqlPersistMetadataTable;
+
+  RelationalPersistMetadataTable relationalPersistMetadataTable;
+
+  StreamPersistMetadataTable streamPersistMetadataTable;
 
   DataSources dataSource;
 
