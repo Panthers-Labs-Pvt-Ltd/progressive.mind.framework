@@ -1,6 +1,6 @@
 package com.progressive.minds.chimera.pipelineutils;
 
-import com.progressive.minds.chimera.dto.TransformMetadataConfig;
+import com.progressive.minds.chimera.core.api_service.dto.TransformMetadataConfig;
 import com.progressive.minds.chimera.foundational.logging.ChimeraLogger;
 import com.progressive.minds.chimera.foundational.logging.ChimeraLoggerFactory;
 import org.apache.spark.sql.Dataset;

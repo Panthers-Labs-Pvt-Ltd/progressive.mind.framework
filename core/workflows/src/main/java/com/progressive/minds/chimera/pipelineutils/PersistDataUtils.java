@@ -3,7 +3,7 @@ package com.progressive.minds.chimera.pipelineutils;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.progressive.minds.chimera.core.dataSource.sourceTypes.JDBCWriter;
-import com.progressive.minds.chimera.dto.PersistMetadata;
+import com.progressive.minds.chimera.core.api_service.dto.PersistMetadata;
 import com.progressive.minds.chimera.foundational.logging.ChimeraLogger;
 import com.progressive.minds.chimera.foundational.logging.ChimeraLoggerFactory;
 import org.apache.spark.sql.Dataset;

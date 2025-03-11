@@ -4,31 +4,31 @@ services:
       file: postgresql/postgres.yml
       service: postgres
 
-  postgres-exporter:
-    extends:
-      file: postgresql/postgres.yml
-      service: postgres-exporter
+#  postgres-exporter:
+#    extends:
+#      file: postgresql/postgres.yml
+#      service: postgres-exporter
 
 
-  otel-collector:
-    extends:
-      file: otel-collector/otel-collector.yml
-      service: otel-collector
+# otel-collector:
+#    extends:
+#      file: otel-collector/otel-collector.yml
+#      service: otel-collector
 
-  jaeger:
-    extends:
-      file: jaeger/jaeger.yml
-      service: jaeger
+#  jaeger:
+#    extends:
+#      file: jaeger/jaeger.yml
+#      service: jaeger
 
-  prometheus:
-    extends:
-      file: prometheus/prometheus-server.yml
-      service: prometheus
+# prometheus:
+#    extends:
+#      file: prometheus/prometheus-server.yml
+#      service: prometheus
 
-  grafana:
-    extends:
-      file: grafana/grafana.yml
-      service: grafana
+# grafana:
+#    extends:
+#      file: grafana/grafana.yml
+#      service: grafana
 
 #
 #  api-gateway:
@@ -156,3 +156,7 @@ volumes:
     redis-data:
     redisinsights-data:
     superset_home:
+    chimera_tablespace:
+    keycloak_tablespace:
+    vault_tablespace:
+    datahub_tablespace:

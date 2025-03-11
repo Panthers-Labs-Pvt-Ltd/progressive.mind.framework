@@ -22,7 +22,7 @@ spring:
     cleanDisabled: true
 
 mybatis:
-  type-aliases-package: com.progressive.minds.chimera.entity
+  type-aliases-package: com.progressive.minds.chimera.core.api_service.entity
   type-handlers-package: com.progressive.minds.chimera.configuration.handler
   configuration:
     map-underscore-to-camel-case: true

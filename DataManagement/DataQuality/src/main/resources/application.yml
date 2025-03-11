@@ -26,7 +26,7 @@ spring:
           issuer-uri: http://localhost:3000/realms/chimera-api-service-realm
           jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/certs
 mybatis:
-  type-aliases-package: com.progressive.minds.chimera.entity
+  type-aliases-package: com.progressive.minds.chimera.core.api_service.entity
   type-handlers-package: com.progressive.minds.chimera.configuration.handler
   configuration:
     map-underscore-to-camel-case: true

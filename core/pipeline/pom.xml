@@ -27,7 +27,7 @@
             </dependency>
         <dependency>
             <groupId>com.progressive.minds.chimera</groupId>
-            <artifactId>core.api-service</artifactId>
+            <artifactId>core.api_service</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>

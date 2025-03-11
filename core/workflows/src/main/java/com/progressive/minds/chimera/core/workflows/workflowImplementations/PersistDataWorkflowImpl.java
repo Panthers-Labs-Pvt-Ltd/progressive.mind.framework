@@ -2,7 +2,7 @@ package com.progressive.minds.chimera.core.workflows.workflowImplementations;
 
 import com.progressive.minds.chimera.core.workflows.PersistDataWorkflow;
 import com.progressive.minds.chimera.core.workflows.activities.PersistDataActivity;
-import com.progressive.minds.chimera.dto.PersistMetadata;
+import com.progressive.minds.chimera.core.api_service.dto.PersistMetadata;
 import io.temporal.activity.ActivityOptions;
 import io.temporal.workflow.Workflow;
 

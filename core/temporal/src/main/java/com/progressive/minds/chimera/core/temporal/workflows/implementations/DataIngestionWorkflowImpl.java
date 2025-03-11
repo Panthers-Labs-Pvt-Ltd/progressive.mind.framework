@@ -8,10 +8,9 @@ import org.apache.spark.sql.SparkSession;
 import com.progressive.minds.chimera.core.temporal.activities.DataIngestionActivities;
 import com.progressive.minds.chimera.core.temporal.workflows.DataIngestionWorkflow;
 
-import com.progressive.minds.chimera.dto.ExtractView;
+import com.progressive.minds.chimera.core.api_service.dto.ExtractView;
 
 import io.temporal.activity.ActivityOptions;
-import io.temporal.common.RetryOptions;
 import io.temporal.workflow.Workflow;
 
 public class DataIngestionWorkflowImpl implements DataIngestionWorkflow {

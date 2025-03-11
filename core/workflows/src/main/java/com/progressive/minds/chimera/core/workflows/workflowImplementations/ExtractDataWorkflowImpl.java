@@ -4,7 +4,7 @@ import java.time.Duration;
 
 import com.progressive.minds.chimera.core.workflows.ExtractDataWorkflow;
 import com.progressive.minds.chimera.core.workflows.activities.ExtractDataActivity;
-import com.progressive.minds.chimera.dto.ExtractMetadata;
+import com.progressive.minds.chimera.core.api_service.dto.ExtractMetadata;
 
 import io.temporal.activity.ActivityOptions;
 import io.temporal.workflow.Workflow;

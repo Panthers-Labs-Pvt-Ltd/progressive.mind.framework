@@ -1,10 +1,10 @@
 package com.progressive.minds.chimera.core.workflows.workflowImplementations;
 
 import com.progressive.minds.chimera.core.workflows.*;
-import com.progressive.minds.chimera.dto.ExtractMetadata;
-import com.progressive.minds.chimera.dto.PersistMetadata;
-import com.progressive.minds.chimera.dto.PipelineMetadata;
-import com.progressive.minds.chimera.dto.TransformMetadataConfig;
+import com.progressive.minds.chimera.core.api_service.dto.ExtractMetadata;
+import com.progressive.minds.chimera.core.api_service.dto.PersistMetadata;
+import com.progressive.minds.chimera.core.api_service.dto.PipelineMetadata;
+import com.progressive.minds.chimera.core.api_service.dto.TransformMetadataConfig;
 import io.temporal.workflow.ChildWorkflowOptions;
 import io.temporal.workflow.Workflow;
 

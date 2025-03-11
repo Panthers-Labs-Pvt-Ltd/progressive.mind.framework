@@ -15,13 +15,12 @@ import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.progressive.minds.chimera.consumer.DBAPIClient;
-import com.progressive.minds.chimera.dto.PipelineMetadata;
+import com.progressive.minds.chimera.core.api_service.consumer.DBAPIClient;
+import com.progressive.minds.chimera.core.api_service.dto.PipelineMetadata;
 import io.openlineage.client.OpenLineage;
 import org.apache.spark.sql.types.DataTypes;
 import org.apache.spark.sql.types.StructField;
 import org.apache.spark.sql.types.StructType;
-import org.checkerframework.checker.signature.qual.DotSeparatedIdentifiersOrPrimitiveType;
 import org.junit.jupiter.api.Test;
 import java.util.Map;
 

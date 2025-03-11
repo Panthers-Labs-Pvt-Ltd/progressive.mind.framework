@@ -5,6 +5,8 @@ import static com.progressive.minds.chimera.core.dataSource.utility.commonFuncti
 import com.progressive.minds.chimera.foundational.logging.ChimeraLogger;
 import com.progressive.minds.chimera.foundational.logging.ChimeraLoggerFactory;
 import org.apache.spark.sql.*;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Arrays;
 import java.util.Locale;
 
@@ -14,7 +16,6 @@ public class parquet {
     private static final String DEFAULT_COMPRESSION_FORMAT = "snappy";
 
     /**
-     *
      * @param inSparkSession
      * @param inPipelineName
      * @param inSourcePath
@@ -24,7 +25,7 @@ public class parquet {
      * @param Limit
      * @return
      */
-    public  static Dataset<Row> read(SparkSession inSparkSession, String inPipelineName,
+    public static Dataset<Row> read(SparkSession inSparkSession, String inPipelineName,
                                     String inSourcePath, String inColumnFilter, String inRowFilter,
                                     String inCustomConfig, Integer Limit) {
 
@@ -61,7 +62,6 @@ public class parquet {
     }
 
     /**
-     *
      * @param inSparkSession
      * @param inPipelineName
      * @param inDatabaseName
@@ -96,83 +96,24 @@ public class parquet {
             String inCustomConfig
     ) throws Exception {
 
-        String COMPRESSION_FORMAT = (inCompressionFormat != null && !inCompressionFormat.isBlank())
-                ? inCompressionFormat.toLowerCase(Locale.ROOT)
-                : DEFAULT_COMPRESSION_FORMAT;
-
-        logger.logInfo(String.format(
-                "Pipeline Name: %s, Compression format: %s, Write mode: %s",
-                inPipelineName, inCompressionFormat, inSavingMode
-        ));
+        String COMPRESSION_FORMAT = getCompressionFormat(inCompressionFormat);
+        logger.logInfo(String.format("Pipeline Name: %s, Compression format: %s, Write mode: %s",
+                inPipelineName, inCompressionFormat, inSavingMode));
 
         Dataset<Row> tableDataFrame = inSourceDataFrame;
         boolean status = false;
         String tableAndSchemaName = inDatabaseName + "." + inTableName;
 
         try {
-            if (inExtraColumns != null && !inExtraColumns.isEmpty()) {
-                logger.logInfo("Appending Extra Columns and Values to DataFrame");
-                tableDataFrame = mergeColumnsToDataFrame(tableDataFrame, inExtraColumns, inExtraColumnsValues);
-                logger.logInfo("Extra Columns and Values have been mapped to DataFrame");
-            }
-
-            if (inSortingKeys != null && !inSortingKeys.isBlank()) {
-                logger.logInfo("Executing Sorting Process on DataFrame");
-                tableDataFrame = sortDataFrame(tableDataFrame, inSortingKeys,true);
-                logger.logInfo("Sorting on DataFrame Executed Successfully");
-            }
-
-            if (inDuplicationKeys != null && !inDuplicationKeys.isBlank()) {
-                logger.logInfo("Executing Deduplication Process on DataFrame");
-                logger.logInfo("Source records count (Before Deduplication): " + tableDataFrame.count());
-                tableDataFrame = DropDuplicatesOnKey(inDuplicationKeys, tableDataFrame);
-                logger.logInfo("Target records count (After Deduplication): " + tableDataFrame.count());
-                logger.logInfo("Deduplication on DataFrame Executed Successfully");
-            }
+            tableDataFrame = processExtraColumns(tableDataFrame, inExtraColumns, inExtraColumnsValues);
+            tableDataFrame = processSorting(tableDataFrame, inSortingKeys);
+            tableDataFrame = processDeduplication(tableDataFrame, inDuplicationKeys);
 
             if (inPartitioningKeys == null || inPartitioningKeys.isEmpty()) {
-                logger.logInfo("Saving data into Non-Partitioned Table " + tableAndSchemaName);
-
-                if (!inSparkSession.catalog().tableExists(tableAndSchemaName)) {
-                    logger.logInfo("Creating table " + tableAndSchemaName + " and writing data");
-                    tableDataFrame.write()
-                            .format("parquet")
-                            .option("path", inOutputPath)
-                            .mode(SaveMode.Append)
-                            .saveAsTable(tableAndSchemaName);
-                } else {
-                    logger.logInfo("Writing data into existing Table " + tableAndSchemaName);
-                    tableDataFrame.write()
-                            .mode(SaveMode.valueOf(inSavingMode))
-                            .option("compression", COMPRESSION_FORMAT)
-                            .parquet(inOutputPath);
-                }
-                status = true;
+                status = saveNonPartitionedTable(inSparkSession, inOutputPath, inSavingMode, tableAndSchemaName, tableDataFrame, COMPRESSION_FORMAT);
             } else {
-                String[] partitioningKeys = inPartitioningKeys.replace("\"", "").split(",");
-                tableDataFrame = renamePartitionKeysCase(tableDataFrame, inPartitioningKeys);
-                String nonNullBlankColumns = Arrays.toString(isPartitionKeysNull(tableDataFrame, partitioningKeys));
-                 if (!nonNullBlankColumns.isEmpty()) {
-                    throw new Exception("EDLDataQualityException.PARTITION_NULL_CHECK");
-                }
-
-                if (!inSparkSession.catalog().tableExists(tableAndSchemaName)) {
-                    logger.logInfo("Creating table " + tableAndSchemaName + " and writing data");
-                    tableDataFrame.write()
-                            .format("parquet")
-                            .option("path", inOutputPath)
-                            .mode(SaveMode.Append)
-                            .partitionBy(partitioningKeys)
-                            .saveAsTable(tableAndSchemaName);
-                } else {
-                    logger.logInfo("Writing data into existing Table " + tableAndSchemaName);
-                    tableDataFrame.write()
-                            .mode(SaveMode.valueOf(inSavingMode))
-                            .partitionBy(partitioningKeys)
-                            .parquet(inOutputPath);
-                }
+                tableDataFrame = savePartitionedTable(inSparkSession, inOutputPath, inSavingMode, inPartitioningKeys, tableDataFrame, tableAndSchemaName);
             }
-
             logger.logInfo("Data Writing Process Completed for " + tableAndSchemaName + " with Status: " + status);
 
         } catch (Exception e) {
@@ -183,4 +124,87 @@ public class parquet {
         return tableDataFrame;
     }
 
+    private static @NotNull Dataset<Row> savePartitionedTable(SparkSession inSparkSession, String inOutputPath, String inSavingMode, String inPartitioningKeys, Dataset<Row> tableDataFrame, String tableAndSchemaName) throws Exception {
+        String[] partitioningKeys = inPartitioningKeys.replace("\"", "").split(",");
+        tableDataFrame = renamePartitionKeysCase(tableDataFrame, inPartitioningKeys);
+        String nonNullBlankColumns = Arrays.toString(isPartitionKeysNull(tableDataFrame, partitioningKeys));
+        if (!nonNullBlankColumns.isEmpty()) {
+            throw new Exception("EDLDataQualityException.PARTITION_NULL_CHECK");
+        }
+
+        if (!inSparkSession.catalog().tableExists(tableAndSchemaName)) {
+            logger.logInfo("Creating table " + tableAndSchemaName + " and writing data");
+            tableDataFrame.write()
+                    .format("parquet")
+                    .option("path", inOutputPath)
+                    .mode(SaveMode.Append)
+                    .partitionBy(partitioningKeys)
+                    .saveAsTable(tableAndSchemaName);
+        } else {
+            logger.logInfo("Writing data into existing Table " + tableAndSchemaName);
+            tableDataFrame.write()
+                    .mode(SaveMode.valueOf(inSavingMode))
+                    .partitionBy(partitioningKeys)
+                    .parquet(inOutputPath);
+        }
+        return tableDataFrame;
     }
+
+    private static boolean saveNonPartitionedTable(SparkSession inSparkSession, String inOutputPath, String inSavingMode, String tableAndSchemaName, Dataset<Row> tableDataFrame, String COMPRESSION_FORMAT) {
+        boolean status;
+        logger.logInfo("Saving data into Non-Partitioned Table " + tableAndSchemaName);
+
+        if (!inSparkSession.catalog().tableExists(tableAndSchemaName)) {
+            logger.logInfo("Creating table " + tableAndSchemaName + " and writing data");
+            tableDataFrame.write()
+                    .format("parquet")
+                    .option("path", inOutputPath)
+                    .mode(SaveMode.Append)
+                    .saveAsTable(tableAndSchemaName);
+        } else {
+            logger.logInfo("Writing data into existing Table " + tableAndSchemaName);
+            tableDataFrame.write()
+                    .mode(SaveMode.valueOf(inSavingMode))
+                    .option("compression", COMPRESSION_FORMAT)
+                    .parquet(inOutputPath);
+        }
+        status = true;
+        return status;
+    }
+
+    private static Dataset<Row> processDeduplication(Dataset<Row> tableDataFrame, String inDuplicationKeys) {
+        if (inDuplicationKeys != null && !inDuplicationKeys.isBlank()) {
+            logger.logInfo("Executing Deduplication Process on DataFrame");
+            logger.logInfo("Source records count (Before Deduplication): " + tableDataFrame.count());
+            tableDataFrame = DropDuplicatesOnKey(inDuplicationKeys, tableDataFrame);
+            logger.logInfo("Target records count (After Deduplication): " + tableDataFrame.count());
+            logger.logInfo("Deduplication on DataFrame Executed Successfully");
+        }
+        return tableDataFrame;
+    }
+
+    private static Dataset<Row> processSorting(Dataset<Row> tableDataFrame, String inSortingKeys) {
+        if (inSortingKeys != null && !inSortingKeys.isBlank()) {
+            logger.logInfo("Executing Sorting Process on DataFrame");
+            tableDataFrame = sortDataFrame(tableDataFrame, inSortingKeys, true);
+            logger.logInfo("Sorting on DataFrame Executed Successfully");
+        }
+        return tableDataFrame;
+    }
+
+    private static Dataset<Row> processExtraColumns(Dataset<Row> tableDataFrame, String inExtraColumns, String inExtraColumnsValues) {
+        if (inExtraColumns != null && !inExtraColumns.isEmpty()) {
+            logger.logInfo("Appending Extra Columns and Values to DataFrame");
+            tableDataFrame = mergeColumnsToDataFrame(tableDataFrame, inExtraColumns, inExtraColumnsValues);
+            logger.logInfo("Extra Columns and Values have been mapped to DataFrame");
+        }
+        return tableDataFrame;
+    }
+
+    private static String getCompressionFormat(String inCompressionFormat) {
+        return (inCompressionFormat != null && !inCompressionFormat.isBlank())
+                ? inCompressionFormat.toLowerCase(Locale.ROOT)
+                : DEFAULT_COMPRESSION_FORMAT;
+    }
+
+}

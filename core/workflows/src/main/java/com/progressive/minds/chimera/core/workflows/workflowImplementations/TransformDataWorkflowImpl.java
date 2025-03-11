@@ -2,7 +2,7 @@ package com.progressive.minds.chimera.core.workflows.workflowImplementations;
 
 import com.progressive.minds.chimera.core.workflows.TransformDataWorkflow;
 import com.progressive.minds.chimera.core.workflows.activities.TransformDataActivity;
-import com.progressive.minds.chimera.dto.TransformMetadataConfig;
+import com.progressive.minds.chimera.core.api_service.dto.TransformMetadataConfig;
 import io.temporal.activity.ActivityOptions;
 import io.temporal.workflow.Workflow;
 

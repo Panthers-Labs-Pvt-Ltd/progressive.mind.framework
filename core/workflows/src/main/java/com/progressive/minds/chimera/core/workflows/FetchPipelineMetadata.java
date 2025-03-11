@@ -5,7 +5,7 @@ import io.temporal.workflow.WorkflowMethod;
 
 import java.io.IOException;
 
-import com.progressive.minds.chimera.dto.PipelineMetadata;
+import com.progressive.minds.chimera.core.api_service.dto.PipelineMetadata;
 
 
 @WorkflowInterface

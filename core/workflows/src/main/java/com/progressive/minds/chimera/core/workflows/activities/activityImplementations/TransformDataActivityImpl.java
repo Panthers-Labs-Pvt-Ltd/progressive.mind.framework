@@ -1,7 +1,7 @@
 package com.progressive.minds.chimera.core.workflows.activities.activityImplementations;
 
 import com.progressive.minds.chimera.core.workflows.activities.TransformDataActivity;
-import com.progressive.minds.chimera.dto.TransformMetadataConfig;
+import com.progressive.minds.chimera.core.api_service.dto.TransformMetadataConfig;
 import com.progressive.minds.chimera.foundational.logging.ChimeraLogger;
 import com.progressive.minds.chimera.foundational.logging.ChimeraLoggerFactory;
 import com.progressive.minds.chimera.pipelineutils.TransformDataUtils;

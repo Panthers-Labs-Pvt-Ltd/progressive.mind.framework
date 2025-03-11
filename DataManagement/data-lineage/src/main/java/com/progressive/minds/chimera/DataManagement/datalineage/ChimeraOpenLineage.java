@@ -2,7 +2,7 @@ package com.progressive.minds.chimera.DataManagement.datalineage;
 
 import com.progressive.minds.chimera.DataManagement.datalineage.transports.TransportType;
 import com.progressive.minds.chimera.DataManagement.datalineage.facets.RunFacets;
-import com.progressive.minds.chimera.dto.PipelineMetadata;
+import com.progressive.minds.chimera.core.api_service.dto.PipelineMetadata;
 import io.openlineage.client.OpenLineage;
 import io.openlineage.client.OpenLineageClient;
 import io.openlineage.client.OpenLineage.RunEvent;

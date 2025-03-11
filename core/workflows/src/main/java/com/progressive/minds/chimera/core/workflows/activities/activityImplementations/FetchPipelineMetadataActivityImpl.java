@@ -1,7 +1,7 @@
 package com.progressive.minds.chimera.core.workflows.activities.activityImplementations;
 
 import com.progressive.minds.chimera.core.workflows.activities.FetchPipelineMetadataActivity;
-import com.progressive.minds.chimera.dto.PipelineMetadata;
+import com.progressive.minds.chimera.core.api_service.dto.PipelineMetadata;
 import com.progressive.minds.chimera.pipelineutils.PipelineMetadataFetcher;
 import com.progressive.minds.chimera.foundational.logging.ChimeraLogger;
 import com.progressive.minds.chimera.foundational.logging.ChimeraLoggerFactory;

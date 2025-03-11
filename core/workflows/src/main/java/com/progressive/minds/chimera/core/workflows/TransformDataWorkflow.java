@@ -1,6 +1,6 @@
 package com.progressive.minds.chimera.core.workflows;
 
-import com.progressive.minds.chimera.dto.TransformMetadataConfig;
+import com.progressive.minds.chimera.core.api_service.dto.TransformMetadataConfig;
 import io.temporal.workflow.WorkflowInterface;
 import io.temporal.workflow.WorkflowMethod;
 

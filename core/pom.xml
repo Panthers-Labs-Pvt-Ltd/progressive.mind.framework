@@ -15,11 +15,11 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>databaseOps</module>
+<!--        <module>databaseOps</module>-->
         <module>dataSource</module>
         <module>observability</module>
         <module>orchestration-service</module>
-        <module>api-service</module>
+        <module>api_service</module>
         <module>temporal</module>
         <module>decision-engine</module>
         <module>apacheComet</module>

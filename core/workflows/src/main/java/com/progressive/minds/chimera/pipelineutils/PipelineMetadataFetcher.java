@@ -1,7 +1,7 @@
 package com.progressive.minds.chimera.pipelineutils;
 
-import com.progressive.minds.chimera.consumer.DBAPIClient;
-import com.progressive.minds.chimera.dto.PipelineMetadata;
+import com.progressive.minds.chimera.core.api_service.consumer.DBAPIClient;
+import com.progressive.minds.chimera.core.api_service.dto.PipelineMetadata;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 import java.io.IOException;

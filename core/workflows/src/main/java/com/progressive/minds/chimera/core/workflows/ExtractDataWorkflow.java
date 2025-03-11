@@ -3,7 +3,7 @@ package com.progressive.minds.chimera.core.workflows;
 import io.temporal.workflow.WorkflowInterface;
 import io.temporal.workflow.WorkflowMethod;
 
-import com.progressive.minds.chimera.dto.ExtractMetadata;
+import com.progressive.minds.chimera.core.api_service.dto.ExtractMetadata;
 
 
 @WorkflowInterface

@@ -1,7 +1,7 @@
 package com.progressive.minds.chimera.core.workflows.activities.activityImplementations;
 
 import com.progressive.minds.chimera.core.workflows.activities.ExtractDataActivity;
-import com.progressive.minds.chimera.dto.ExtractMetadata;
+import com.progressive.minds.chimera.core.api_service.dto.ExtractMetadata;
 import com.progressive.minds.chimera.foundational.logging.ChimeraLogger;
 import com.progressive.minds.chimera.foundational.logging.ChimeraLoggerFactory;
 import com.progressive.minds.chimera.pipelineutils.ExtractDataUtils;

@@ -16,14 +16,13 @@ import com.fasterxml.jackson.core.json.JsonReadFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
-import com.progressive.minds.chimera.dto.*;
+import com.progressive.minds.chimera.core.api_service.dto.*;
 import io.openlineage.client.OpenLineageClientUtils;
 import io.openlineage.sql.OpenLineageSql;
 import io.openlineage.sql.SqlMeta;
 import org.apache.spark.sql.SparkSession;
 import org.apache.spark.sql.types.StructField;
 import org.apache.spark.sql.types.StructType;
-import org.jetbrains.annotations.NotNull;
 import za.co.absa.cobrix.spark.cobol.utils.SparkUtils;
 
 import javax.annotation.Nullable;

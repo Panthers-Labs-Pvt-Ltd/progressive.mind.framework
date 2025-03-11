@@ -4,11 +4,17 @@
 * [Data Sharing and Distribution](#data-sharing-and-distribution)
   * [API-Based Sharing](#api-based-sharing)
     * [REST Based](#rest-based)
+      * [Benefits of REST](#benefits-of-rest)
+      * [Drawbacks of REST](#drawbacks-of-rest)
+      * [Best practices](#best-practices)
     * [GraphQL Based](#graphql-based)
       * [Benefits of GraphQL-Based Sharing](#benefits-of-graphql-based-sharing)
+      * [Drawbacks of GraphQL](#drawbacks-of-graphql)
       * [Best Practices for GraphQL-Based Sharing](#best-practices-for-graphql-based-sharing)
       * [Example Implementation](#example-implementation)
+    * [Which One Should You Pick?](#which-one-should-you-pick)
   * [Table-Based Sharing](#table-based-sharing)
+  * [Roadmap](#roadmap)
 <!-- TOC -->
 
 - Overview of Data Sharing
@@ -20,6 +26,12 @@
 
 ## API-Based Sharing
 
+APIs are the backbone of modern applications, acting as the bridge between client applications and backend servers.
+
+Among the many API design choices, REST and GraphQL have emerged as two dominant approaches.
+
+Both offer powerful ways to retrieve and manipulate data, but they are built on fundamentally different philosophies.
+
 - **Authentication and Authorization**: Use OAuth2 or similar protocols to secure API access. Implement role-based access control (RBAC) to restrict data access based on user roles.
 - **Rate Limiting and Throttling**: Implement rate limiting and throttling to prevent abuse and ensure fair usage of APIs.
 - **Data Transformation**: Provide options for data transformation (e.g., filtering, aggregation) to deliver only the necessary data to consumers.
@@ -28,6 +40,27 @@
 - **Error Handling**: Define clear error messages and status codes to help consumers troubleshoot issues effectively.
 
 ### REST Based
+
+REST, a time-tested architectural style, structures APIs around fixed endpoints and HTTP methods, making it intuitive and widely adopted. REST emerged in the early 2000s as a set of architectural principles for designing networked applications. REST is not a protocol or standard but rather a set of guiding principles that leverage the existing HTTP protocol to enable communication between clients and servers. At its core, REST is built around resources. Each resource (such as a user, order, or product) is uniquely identified by a URL (Uniform Resource Locator), and clients interact with these resources using a fixed set of HTTP methods.
+* GET → Retrieve a resource (e.g., GET /api/users/123 to fetch user data). 
+* POST → Create a new resource (e.g., POST /api/users to add a new user). 
+* PUT/PATCH → Update an existing resource (e.g., PUT /api/users/123 to update user details). 
+* DELETE → Remove a resource (e.g., DELETE /api/users/123 to delete a user).
+
+#### Benefits of REST
+* Simplicity and Intuitive Design: The resource-based model aligns well with most business domains, making REST intuitive for developers. 
+* Statelessness: Each request contains all the information needed to complete it, making REST scalable across distributed systems. 
+* Cacheability: HTTP's caching mechanisms can be leveraged to improve performance. 
+* Scalability: REST APIs can be easily scaled using load balancers and CDNs.
+* Mature Ecosystem: With nearly two decades of widespread use, REST enjoys robust tooling, documentation, and developer familiarity.
+
+#### Drawbacks of REST
+* Over-fetching: REST endpoints often return more data than needed, leading to inefficient network usage. For example, if a mobile app only needs a user’s name and email, but the API response includes additional fields like address, phone number, and metadata, it results in wasted bandwidth.
+* Under-fetching: If an API doesn’t return related data, the client may need to make multiple requests to retrieve all required information.
+* Versioning issues: When APIs evolve, maintaining backward compatibility becomes difficult. REST APIs often require versioned URLs (/v1/users, /v2/users), adding maintenance overhead.
+* Rigid Response Structure: The server defines how data is returned, and clients must adapt to it—even if they only need a subset of the data.
+
+#### Best practices
 - **RESTful APIs**: Implement RESTful APIs to provide standardized access to data. Ensure APIs are well-documented and follow industry standards such as OpenAPI.
 - **Resource-Oriented Design**: Design APIs around resources and use HTTP methods (GET, POST, PUT, DELETE) to interact with them.
 - **HATEOAS**: Implement HATEOAS (Hypermedia as the Engine of Application State) to provide links to related resources in API responses.
@@ -45,15 +78,33 @@
 
 ### GraphQL Based
 
-GraphQL offers several advantages over traditional RESTful APIs, such as more efficient data retrieval and greater flexibility in querying. Here are some benefits of using GraphQL for data sharing:
+GraphQL offers several advantages over traditional RESTful APIs, such as more efficient data retrieval and greater flexibility in querying. With GraphQL, the client decides what to fetch. This makes GraphQL more flexible but also introduces challenges in caching and performance optimization. Both GraphQL and REST rely on HTTP requests and responses, but they differ in how they structure and deliver data.
+
+|                   | REST                                                                       | GraphQL                                                                   |
+|-------------------|----------------------------------------------------------------------------|---------------------------------------------------------------------------|
+| Data Fetch        | Fixed endpoints                                                            | Flexible queries                                                          |
+| Data focus        | REST centers around resources (each identified by a URL).                  | GraphQL centers around a schema that defines the types of data available. |
+| Responsibility    | In REST, the API implementer decides which data is included in a response. | In GraphQL, the client specifies exactly what data it needs.              |
+| Queries           | GET                                                                        | Queries (fetch data)                                                      |
+| Updates           | POST, PUT, PATCH, DELETE                                                   | Mutations (modify data)                                                   |
+| Real-time updates | WebSockets, polling                                                        | Subscriptions (real-time updates)                                         |
+
 
 #### Benefits of GraphQL-Based Sharing
 
 - **Efficient Data Retrieval**: Clients can request exactly the data they need, reducing over-fetching and under-fetching of data.
-- **Single Endpoint**: All data queries and mutations are handled through a single endpoint, simplifying API management.
+- **Single Endpoint**: All data queries and mutations are handled through a single endpoint, simplifying API management, solving REST's n+1 query problem.
 - **Strongly Typed Schema**: GraphQL uses a strongly typed schema to define the structure of the API, making it easier to understand and use.
-- **Real-Time Data**: GraphQL supports subscriptions, allowing clients to receive real-time updates.
-- **Introspection**: Clients can query the schema to understand the available data and operations, improving discoverability.
+- **Real-Time Data with subscription**: GraphQL supports subscriptions, allowing clients to receive real-time updates.
+- **Introspection**: Clients can query the schema to understand the available data and operations, improving discoverability. 
+- **API Evolution Without Versioning**: New fields can be added without breaking existing queries, avoiding REST-style /v1, /v2 versioning issues.
+
+#### Drawbacks of GraphQL
+- **Complex Setup & Tooling**: Unlike REST, which can be used with basic HTTP clients (cURL, browsers), GraphQL requires a GraphQL server, schema, and resolvers. 
+- **Caching challenges**: REST APIs leverage HTTP caching (e.g., browser caching, CDNs), but GraphQL queries use POST requests, making caching trickier. 
+- **Increased Server Load**: Since clients can request arbitrary amounts of data, GraphQL APIs must be carefully optimized to prevent performance issues. 
+- **Security Risks**: Unoptimized queries (e.g., deeply nested requests) can lead to costly database scans, increasing the risk of denial-of-service (DoS) attacks. 
+- **Performance Risks with GraphQL**: Imagine a mobile app introduces a new feature that unexpectedly triggers a full table scan on a critical database table. With REST, this scenario is less likely because API endpoints are predefined, and developers control how data is exposed. With GraphQL, the client constructs the query, which could inadvertently request massive amounts of data. If a poorly designed query is executed on a high-traffic service, it could bring down the entire database. To mitigate this, GraphQL APIs require strict query rate limiting, depth restrictions, and cost analysis mechanisms—adding additional complexity to the implementation.
 
 #### Best Practices for GraphQL-Based Sharing
 
@@ -78,8 +129,7 @@ GraphQL offers several advantages over traditional RESTful APIs, such as more ef
 
 Here is an example of how you can implement GraphQL-based data sharing:
 
-1. **Define the Schema**: Create a schema that defines the types, queries, and mutations.
-
+* **Define the Schema**: Create a schema that defines the types, queries, and mutations.
 ```graphql
 # schema.graphql
 type User {
@@ -96,8 +146,7 @@ type Mutation {
   createUser(name: String!, email: String!): User
 }
 ```
-
-2. **Implement Resolvers**: Write resolvers to handle the queries and mutations.
+* **Implement Resolvers**: Write resolvers to handle the queries and mutations.
 
 ```javascript
 // resolvers.js
@@ -120,7 +169,7 @@ const resolvers = {
 module.exports = resolvers;
 ```
 
-3. **Set Up the Server**: Use a GraphQL server library (e.g., Apollo Server) to set up the server.
+* **Set Up the Server**: Use a GraphQL server library (e.g., Apollo Server) to set up the server.
 
 ```javascript
 // server.js
@@ -136,6 +185,29 @@ server.listen().then(({ url }) => {
 ```
 
 By using GraphQL, you can provide a flexible and efficient way for clients to access and manipulate data, enhancing the overall data sharing experience.
+
+### Which One Should You Pick?
+There is no one-size-fits-all answer. REST remains a great choice for simple APIs, while GraphQL is powerful for complex applications with varying data needs.
+
+**Use REST if:**
+* Your API is simple and doesn’t require flexible queries.
+* You need caching benefits from HTTP.
+* You need a standardized, well-established API approach.
+* You’re integrating with third-party services.
+* Your team is already familiar with REST and need faster implementation.
+
+**Use GraphQL if:**
+* You need flexible and efficient data fetching.
+* Your API serves multiple clients (mobile, web, IoT) with different data needs.
+* Real-time updates are required (GraphQL subscriptions).
+* You want to avoid API versioning issues. 
+* Your application requires deeply nested data.
+* If you know how to keep GraphQL secured and optimized.
+
+> Please note: REST and GraphQL are not mutually exclusive, and many organizations implement a hybrid approach to get the best of both worlds:
+> * GraphQL for client-facing applications where flexibility, performance, and dynamic querying are essential. 
+> * REST for admin interfaces, third-party integrations, and internal microservices where statelessness, caching, and simplicity are beneficial.
+
 
 ## Table-Based Sharing
 

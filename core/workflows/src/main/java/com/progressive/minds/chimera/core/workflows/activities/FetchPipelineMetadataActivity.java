@@ -1,6 +1,6 @@
 package com.progressive.minds.chimera.core.workflows.activities;
 
-import com.progressive.minds.chimera.dto.PipelineMetadata;
+import com.progressive.minds.chimera.core.api_service.dto.PipelineMetadata;
 import io.temporal.activity.ActivityInterface;
 import io.temporal.activity.ActivityMethod;
 

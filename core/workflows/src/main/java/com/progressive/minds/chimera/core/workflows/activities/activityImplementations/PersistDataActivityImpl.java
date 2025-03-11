@@ -2,7 +2,7 @@ package com.progressive.minds.chimera.core.workflows.activities.activityImplemen
 
 import com.progressive.minds.chimera.core.dataSource.formats.jdbc.jdbc;
 import com.progressive.minds.chimera.core.workflows.activities.PersistDataActivity;
-import com.progressive.minds.chimera.dto.PersistMetadata;
+import com.progressive.minds.chimera.core.api_service.dto.PersistMetadata;
 import com.progressive.minds.chimera.foundational.logging.ChimeraLogger;
 import com.progressive.minds.chimera.foundational.logging.ChimeraLoggerFactory;
 import com.progressive.minds.chimera.pipelineutils.PersistDataUtils;
