@@ -1,11 +1,9 @@
 package com.progressive.minds.chimera.core.api_service.controller;
 
 import com.progressive.minds.chimera.core.api_service.common.dto.GenericResponse;
-import com.progressive.minds.chimera.core.api_service.dto.ChildDTO;
 import com.progressive.minds.chimera.core.api_service.dto.DataPipeline;
 import com.progressive.minds.chimera.foundational.logging.ChimeraLogger;
 import com.progressive.minds.chimera.foundational.logging.ChimeraLoggerFactory;
-import com.progressive.minds.chimera.core.api_service.service.ParentChildInheritanceService;
 import com.progressive.minds.chimera.core.api_service.service.PipelineService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -35,15 +33,13 @@ public class PipelineController {
   private static final ChimeraLogger logger = ChimeraLoggerFactory.getLogger(PipelineController.class);
 
   private final PipelineService pipelineService;
-  private final ParentChildInheritanceService parentChildInheritanceService;
-
+ 
   @Autowired
-  public PipelineController(PipelineService pipelineService, ParentChildInheritanceService parentChildInheritanceService) {
+  public PipelineController(PipelineService pipelineService) {
     this.pipelineService = pipelineService;
-    this.parentChildInheritanceService = parentChildInheritanceService;
-  }
+     }
 
-  @Operation(summary = "Get a pipeline by name", description = "Retrieve an existing pipeline by its name")
+     @Operation(summary = "Get a pipeline by name", description = "Retrieve an existing pipeline by its name")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Pipeline retrieved successfully",
           content = @Content(mediaType = "application/json", schema = @Schema(implementation = DataPipeline.class))),
@@ -163,17 +159,17 @@ public class PipelineController {
     return ResponseEntity.status(HttpStatus.OK).body(genericResponse);
   }
 
-  @Operation(summary = "Create a parent-child record", description = "Test the parent-child creation")
-  @ApiResponse(responseCode = "200", description = "Parent-child record created successfully",
-      content = @Content(mediaType = "application/json", schema = @Schema(implementation = GenericResponse.class)))
-  @PostMapping("/create/parent-child")
-  public ResponseEntity<GenericResponse> createParentChild(
-      @Parameter(description = "Child DTO object", required = true) @RequestBody ChildDTO childDTO) {
-    int numberOfRecordsCreated = parentChildInheritanceService.insertChildRecord(childDTO);
-    GenericResponse genericResponse = GenericResponse.builder()
-        .message("Number of Parent child " + numberOfRecordsCreated)
-        .statusCode(HttpStatus.OK.name())
-        .build();
-    return ResponseEntity.status(HttpStatus.OK).body(genericResponse);
-  }
+  // @Operation(summary = "Create a parent-child record", description = "Test the parent-child creation")
+  // @ApiResponse(responseCode = "200", description = "Parent-child record created successfully",
+  //     content = @Content(mediaType = "application/json", schema = @Schema(implementation = GenericResponse.class)))
+  // @PostMapping("/create/parent-child")
+  // public ResponseEntity<GenericResponse> createParentChild(
+  //     @Parameter(description = "Child DTO object", required = true) @RequestBody ChildDTO childDTO) {
+  //   int numberOfRecordsCreated = parentChildInheritanceService.insertChildRecord(childDTO);
+  //   GenericResponse genericResponse = GenericResponse.builder()
+  //       .message("Number of Parent child " + numberOfRecordsCreated)
+  //       .statusCode(HttpStatus.OK.name())
+  //       .build();
+  //   return ResponseEntity.status(HttpStatus.OK).body(genericResponse);
+  // }
 }
