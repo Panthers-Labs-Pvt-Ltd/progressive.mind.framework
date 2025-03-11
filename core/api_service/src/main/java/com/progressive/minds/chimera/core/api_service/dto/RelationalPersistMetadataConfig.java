@@ -3,12 +3,22 @@ package com.progressive.minds.chimera.core.api_service.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class ChildDTO extends ParentDTO {
-  private String additionalColumn;
+@Setter
+@Getter
+public class RelationalPersistMetadataConfig extends PersistMetadataConfig {
+
+  private String databaseName;
+
+  private String tableName;
+
+  private String schemaName;
+
 }
