@@ -2,7 +2,6 @@ package com.progressive.minds.chimera.core.api_service.controller;
 
 import com.progressive.minds.chimera.core.api_service.common.dto.GenericResponse;
 import com.progressive.minds.chimera.core.api_service.dto.PersistMetadata;
-import com.progressive.minds.chimera.core.api_service.dto.PersistMetadataConfig;
 import com.progressive.minds.chimera.foundational.logging.ChimeraLogger;
 import com.progressive.minds.chimera.foundational.logging.ChimeraLoggerFactory;
 import com.progressive.minds.chimera.core.api_service.service.persistMetadataConfigService;
@@ -32,23 +31,29 @@ public class PersistMetadataConfigController {
         this.persistMetadataConfigService = persistMetadataConfigService;
     }
 
+     // GET request - Retrieve all pipelines
+     @GetMapping
+     public ResponseEntity<List<PersistMetadata>> getAllPersistMetadataConfig() {
+         return ResponseEntity.ok(persistMetadataConfigService.getAllPersistMetadataConfig());
+     }
+
     // GET request - Retrieve an existing config by pipeline name
     @GetMapping("/{name}")
-    public ResponseEntity<List<PersistMetadataConfig>> getPersistMetadataConfigByName(@PathVariable("name") String name) {
+    public ResponseEntity<List<PersistMetadata>> getPersistMetadataConfigByName(@PathVariable("name") String name) {
         logger.logInfo("Fetching persist Metadata for pipeline: " + name + " from the database.");
-        return ResponseEntity.ok(persistMetadataConfigService.getPersistMetadataByPipelineName(name));
+        return ResponseEntity.ok(persistMetadataConfigService.getPersistMetadata(name));
     }
 
     // GET request - Retrieve an existing config by pipeline name and id
     @GetMapping("/{name}/{sequence}")
-    public ResponseEntity<PersistMetadataConfig> getPersistMetadataConfigByName(@PathVariable("name") String name, @PathVariable("sequence") int sequence) {
+    public ResponseEntity<PersistMetadata> getPersistMetadataConfigByName(@PathVariable("name") String name, @PathVariable("sequence") int sequence) {
         logger.logInfo("Fetching persist Metadata for pipeline: " + name + " and sequence: " + sequence + " from the database.");
         return ResponseEntity.ok(persistMetadataConfigService.getPersistMetadataByPipelineName(name, sequence));
     }
 
     // POST request - Add a new pipeline
     @PostMapping("/create")
-    public ResponseEntity<GenericResponse> createPipeline(@RequestBody PersistMetadataConfig persistMetadataConfig) {
+    public ResponseEntity<GenericResponse> createPipeline(@RequestBody PersistMetadata persistMetadataConfig) {
         int numberOfRecordsCreated = persistMetadataConfigService.insertConfig(persistMetadataConfig);
         if (numberOfRecordsCreated == 0) {
             GenericResponse genericResponse = GenericResponse.builder()
@@ -65,15 +70,9 @@ public class PersistMetadataConfigController {
         return ResponseEntity.status(HttpStatus.CREATED).body(genericResponse);
     }
 
-    // GET request - Retrieve all pipelines
-    @GetMapping
-    public ResponseEntity<List<PersistMetadataConfig>> getAllPersistMetadataConfig() {
-        return ResponseEntity.ok(persistMetadataConfigService.getAllPersistMetadataConfig());
-    }
-
     // PUT request - Update an existing pipeline by name
     @PutMapping("/update")
-    public ResponseEntity<GenericResponse> updatePipeline(@RequestBody PersistMetadataConfig updatedConfig) {
+    public ResponseEntity<GenericResponse> updatePipeline(@RequestBody PersistMetadata updatedConfig) {
         String pipelineName = updatedConfig.getPipelineName();
         int sequenceNumber = updatedConfig.getSequenceNumber();
 
