@@ -27,6 +27,6 @@
         <module>executionEngine</module>
         <module>workflows</module>
         <module>pipeline</module>
-        <module>analytics-engine</module>
+        <module>analytics_engine</module>
     </modules>
 </project>

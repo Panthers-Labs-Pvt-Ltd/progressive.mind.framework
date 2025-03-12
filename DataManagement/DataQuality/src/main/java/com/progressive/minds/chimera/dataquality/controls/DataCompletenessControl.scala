@@ -1,11 +1,10 @@
 package com.progressive.minds.chimera.dataquality.controls
 
-import org.apache.spark.sql.functions._
-import org.apache.spark.sql.types._
-import org.apache.spark.sql.{DataFrame, SparkSession}
-
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+
+import org.apache.spark.sql.DataFrame
+import org.apache.spark.sql.types.StructType
 
 // class DataCompletenessControl() extends DataControls {
 //  final private val edlLogger = new EDLLogger(this.getClass)

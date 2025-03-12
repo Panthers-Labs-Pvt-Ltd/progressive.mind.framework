@@ -1,11 +1,10 @@
 package com.progressive.minds.chimera.dataquality.controls
 
-import org.apache.spark.sql.types.{StructField, StructType}
-import org.apache.spark.sql.{DataFrame, SparkSession}
-
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import java.util.Locale
+
+import org.apache.spark.sql.DataFrame
+import org.apache.spark.sql.types.StructType
 
 // class DataConformityControl() extends DataControls {
 //  final private val edlLogger = new EDLLogger(this.getClass)

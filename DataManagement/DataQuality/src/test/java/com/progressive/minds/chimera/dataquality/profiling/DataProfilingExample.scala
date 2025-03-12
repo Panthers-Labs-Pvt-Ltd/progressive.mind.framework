@@ -1,7 +1,8 @@
 package com.progressive.minds.chimera.dataquality.profiling
 
+import com.amazon.deequ.profiles.ColumnProfilerRunner
+import com.amazon.deequ.profiles.NumericColumnProfile
 import com.progressive.minds.chimera.dataquality.testutils.ExampleUtils.withSpark
-import com.amazon.deequ.profiles.{ColumnProfilerRunner, NumericColumnProfile}
 
 case class RawData(productName: String, totalNumber: String, status: String, valuable: String)
 
@@ -13,11 +14,11 @@ object DataProfilingExample extends App {
     val rows = session.sparkContext.parallelize(Seq(
       RawData("thingA", "13.0", "IN_TRANSIT", "true"),
       RawData("thingA", "5", "DELAYED", "false"),
-      RawData("thingB", null, "DELAYED", null),
-      RawData("thingC", null, "IN_TRANSIT", "false"),
+      RawData("thingB", "", "DELAYED", ""),
+      RawData("thingC", "", "IN_TRANSIT", "false"),
       RawData("thingD", "1.0", "DELAYED", "true"),
-      RawData("thingC", "7.0", "UNKNOWN", null),
-      RawData("thingC", "20", "UNKNOWN", null),
+      RawData("thingC", "7.0", "UNKNOWN", ""),
+      RawData("thingC", "20", "UNKNOWN", ""),
       RawData("thingE", "20", "DELAYED", "false")
     ))
 

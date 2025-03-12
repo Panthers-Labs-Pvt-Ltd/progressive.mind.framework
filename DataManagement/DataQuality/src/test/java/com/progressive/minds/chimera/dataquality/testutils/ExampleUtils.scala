@@ -1,6 +1,7 @@
 package com.progressive.minds.chimera.dataquality.testutils
 
-import org.apache.spark.sql.{DataFrame, SparkSession}
+import org.apache.spark.sql.DataFrame
+import org.apache.spark.sql.SparkSession
 
 case class Item(id: Long,productName: String,description: String,priority: String,numViews: Long)
 

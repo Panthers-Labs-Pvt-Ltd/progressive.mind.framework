@@ -1,21 +1,23 @@
 package com.progressive.minds.chimera.DataManagement.datalineage
 
 import com.fasterxml.jackson.core.json.JsonReadFeature
+import com.fasterxml.jackson.databind.JsonNode
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.json.JsonMapper
-import com.fasterxml.jackson.databind.{JsonNode, ObjectMapper}
-import play.api.libs.json._
-
-import scala.collection.mutable.ListBuffer
+import com.fasterxml.jackson.databind.node.ArrayNode
+import com.fasterxml.jackson.databind.node.ObjectNode
+import com.fasterxml.jackson.module.scala.DefaultScalaModule
+import io.openlineage.client.OpenLineage.ColumnLineageDatasetFacetFieldsAdditional
 import org.apache.spark.sql.DataFrame
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.catalyst.analysis.UnresolvedRelation
+import org.apache.spark.sql.catalyst.expressions.Alias
+import org.apache.spark.sql.catalyst.expressions.AttributeReference
 import org.apache.spark.sql.catalyst.plans.logical._
-import com.fasterxml.jackson.module.scala.DefaultScalaModule
-import com.fasterxml.jackson.databind.node.{ArrayNode, ObjectNode}
-import io.openlineage.client.OpenLineage.{ColumnLineageDatasetFacet, ColumnLineageDatasetFacetFieldsAdditional}
-import org.apache.spark.sql.catalyst.expressions.{Alias, AttributeReference}
-
+import play.api.libs.json._
+import scala.collection.mutable.ListBuffer
 import scala.jdk.CollectionConverters.asJavaIterableConverter
+import scala.util.matching.Regex
 
 object ColumnLineageUtils {
   var loggerTag = "Column Lineage Utils"
@@ -66,7 +68,7 @@ object ColumnLineageUtils {
   }
 
   private def resolvedNumberValue(inExpression: String): String = {
-    import scala.util.matching.Regex
+    // import scala.util.matching.Regex
     val numberPattern: Regex = "#(\\d+)".r
     numberPattern.findAllIn(inExpression).mkString(",").replaceAll("#", "")
   }
@@ -303,7 +305,8 @@ object ColumnLineageUtils {
           isParent = "Y"
           returnedRecords = List(NormalizedHire(column.targetTableName, column.derivedColumnName,
             column.derivedColumnId, column.transformation))
-          transformationMappingList += (("0", column.parentColumnId, null))
+          // TODO: Manish, I have replaced third option null with "". null should be avoided in scala.
+          transformationMappingList += (("0", column.parentColumnId, ""))
           val parentListMap: List[MappingList] = List(MappingList("", derievedColumnId))
           columnTemp = columnTemp ++ parentListMap
 
@@ -314,8 +317,7 @@ object ColumnLineageUtils {
       finalRecords = finalRecords :+ NormalizedHireDetails.apply(parentRecAdd, returnedRecords)
     })
     println("FINAL")
-    var finalRes: finalOutput = null
-    finalRes = finalOutput(inputTableList.toList, List(outputTableList), finalRecords)
+    var finalRes: finalOutput = finalOutput(inputTableList.toList, List(outputTableList), finalRecords)
     columnTemp = columnTemp.distinct
     val groupedByChild = columnTemp.groupBy(_.child)
     val HierInput = groupedByChild.map { case (child, items) =>
@@ -383,7 +385,8 @@ object ColumnLineageUtils {
           appendList += ((parentLists.indexOf(pcol).toString, pcol, column.parentColumnId))
           columnTemp = columnTemp ++ manageMapping(pcol, childId)
           isRoot.map(p => {
-            val normalizedLineageRecords = NormalizedHire(p.LookupTable, p.LookUpColumn, pcol, null)
+            // TODO: Manish, I have replaced third option null with "". null should be avoided in scala.
+            val normalizedLineageRecords = NormalizedHire(p.LookupTable, p.LookUpColumn, pcol, "")
             parentRecTemp = parentRecTemp :+ normalizedLineageRecords
           })
       }

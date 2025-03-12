@@ -62,7 +62,7 @@
             <parameter name="illegalImports"><![CDATA[sun._,java.awt._]]></parameter>
         </parameters>
     </check>
-    <check level="warning" class="org.scalastyle.scalariform.ImportGroupingChecker" enabled="false"/>
+    <check level="warning" class="org.scalastyle.scalariform.ImportGroupingChecker" enabled="true"/>
     <check level="warning" class="org.scalastyle.scalariform.ParameterNumberChecker" enabled="true">
         <parameters>
             <parameter name="maxParameters"><![CDATA[20]]></parameter>
@@ -76,8 +76,8 @@
     <check level="error" class="org.scalastyle.scalariform.LowercasePatternMatchChecker" enabled="true"/>
     <check level="error" class="org.scalastyle.scalariform.NoWhitespaceBeforeLeftBracketChecker" enabled="true"/>
     <check level="error" class="org.scalastyle.scalariform.NoWhitespaceAfterLeftBracketChecker" enabled="true"/>
-    <check level="error" class="org.scalastyle.scalariform.ReturnChecker" enabled="false"/>
-    <check level="warn" class="org.scalastyle.scalariform.NullChecker" enabled="false"/>
+    <check level="error" class="org.scalastyle.scalariform.ReturnChecker" enabled="true"/>
+    <check level="warn" class="org.scalastyle.scalariform.NullChecker" enabled="true"/>
     <check level="warn" class="org.scalastyle.scalariform.NoCloneChecker" enabled="true"/>
     <check level="warn" class="org.scalastyle.scalariform.NoFinalizeChecker" enabled="true"/>
     <check level="error" class="org.scalastyle.scalariform.CovariantEqualsChecker" enabled="true"/>
@@ -130,12 +130,12 @@
     <check level="error" class="org.scalastyle.scalariform.PublicMethodsHaveTypeChecker" enabled="true"/>
     <check level="error" class="org.scalastyle.file.NewLineAtEofChecker" enabled="true"/>
     <check level="warning" class="org.scalastyle.file.NoNewLineAtEofChecker" enabled="false"/>
-    <check level="warning" class="org.scalastyle.scalariform.BlockImportChecker" enabled="false"/>
+    <check level="warning" class="org.scalastyle.scalariform.BlockImportChecker" enabled="true"/>
     <check level="error" class="org.scalastyle.scalariform.DeprecatedJavaChecker" enabled="true"/>
     <check level="error" class="org.scalastyle.scalariform.EmptyClassChecker" enabled="true"/>
     <check level="error" class="org.scalastyle.scalariform.ForBraceChecker" enabled="true"/>
     <!-- does not work for collected imports -->
-    <check level="error" class="org.scalastyle.scalariform.ImportOrderChecker" enabled="false">
+    <check level="error" class="org.scalastyle.scalariform.ImportOrderChecker" enabled="true">
         <parameters>
             <parameter name="groups">java,scala,others</parameter>
             <parameter name="group.java">javax?\..+</parameter>
@@ -160,5 +160,5 @@
     <check level="warning" class="org.scalastyle.scalariform.UnderscoreImportChecker" enabled="false"/>
     <check enabled="false" class="org.scalastyle.scalariform.VarFieldChecker" level="warning"/>
     <check enabled="false" class="org.scalastyle.scalariform.VarLocalChecker" level="warning"/>
-    <check enabled="false" class="org.scalastyle.scalariform.WhileChecker" level="warning"/>
+    <check enabled="true" class="org.scalastyle.scalariform.WhileChecker" level="warning"/>
 </scalastyle>

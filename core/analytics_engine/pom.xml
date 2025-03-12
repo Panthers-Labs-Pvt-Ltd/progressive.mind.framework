@@ -10,7 +10,7 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>analytics-engine</artifactId>
+    <artifactId>analytics_engine</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>

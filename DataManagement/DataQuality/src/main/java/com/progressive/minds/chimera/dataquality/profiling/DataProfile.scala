@@ -1,12 +1,14 @@
 package com.progressive.minds.chimera.dataquality.profiling
 
+import com.amazon.deequ.suggestions.ConstraintSuggestionRunner
+import com.amazon.deequ.suggestions.Rules
 import com.amazon.deequ.suggestions.rules.UniqueIfApproximatelyUniqueRule
-import com.amazon.deequ.suggestions.{ConstraintSuggestionRunner, Rules}
 import com.progressive.minds.chimera.foundational.logging.ChimeraLoggerFactory
-import org.apache.spark.sql.functions.{col, lit}
-import org.apache.spark.sql.{AnalysisException, DataFrame, SparkSession}
-
 import java.util.Locale
+import org.apache.spark.sql.AnalysisException
+import org.apache.spark.sql.DataFrame
+import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.functions.col
 
 object DataProfile {
 
@@ -20,23 +22,25 @@ object DataProfile {
     .appName("DeequRunner Test Example")
     .getOrCreate()
 
-  def deequProfiling(df: Option[DataFrame],databaseNane: String,tableName: String, ediBusinessDay : String): Unit = {
+  def deequProfiling(df: Option[DataFrame], databaseName: String, tableName: String, ediBusinessDay : String): Unit = {
     if (!df.isEmpty) {
       try {
-        val suggestionDf = runProfiler(df.getOrElse(null), databaseNane, tableName)
+        // scalastyle:off null
+        val suggestionDf = runProfiler(df.getOrElse(null), databaseName, tableName)
+        // scalastyle:on null
         persistConstraints(suggestionDf)
       }
       catch {
         case e: AnalysisException => e.printStackTrace()
       }
     }
-    else if (databaseNane.nonEmpty & tableName.isEmpty) {
+    else if (databaseName.nonEmpty & tableName.isEmpty) {
       //perform an iterative run on each table in db
     }
     else {
-      val sql_str = s"select * from $databaseNane.$tableName where edi_business_day ='$ediBusinessDay'"
+      val sql_str = s"select * from $databaseName.$tableName where edi_business_day ='$ediBusinessDay'"
       val df = spark.sql(sql_str)
-      val suggestionsDf = runProfiler(df, databaseNane, tableName)
+      val suggestionsDf = runProfiler(df, databaseName, tableName)
       persistConstraints(suggestionsDf)
     }
   }

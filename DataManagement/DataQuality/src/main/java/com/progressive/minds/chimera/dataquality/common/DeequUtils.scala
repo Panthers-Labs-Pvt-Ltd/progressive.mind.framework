@@ -1,16 +1,16 @@
 package com.progressive.minds.chimera.dataquality.common
 
 import com.amazon.deequ.VerificationResult
-import com.amazon.deequ.repository.{MetricsRepository, ResultKey}
+// import com.amazon.deequ.repository.MetricsRepository
+// import com.amazon.deequ.repository.ResultKey
 import org.apache.spark.sql.DataFrame
-
 import scala.reflect.runtime.currentMirror
 import scala.tools.reflect.ToolBox
 import scala.util.Try
 
 object DeequUtils {
-  type Verifier = (DataFrame, MetricsRepository, ResultKey) => VerificationResult
-  type VerifierNoRepo = DataFrame => VerificationResult
+  // type Verifier = (DataFrame, MetricsRepository, ResultKey) => VerificationResult
+  private type VerifierNoRepo = DataFrame => VerificationResult
 
   def executeRulesNoRepo(rulesDf: DataFrame, deequTargetDf: DataFrame): VerificationResult = {
     val verificationResult: VerifierNoRepo = getVerifierNoRepo(rulesDf).get
@@ -26,7 +26,7 @@ object DeequUtils {
     }).toList
   }
 
-  def getVerifierNoRepo(rulesDf: DataFrame): Try[VerifierNoRepo] = {
+  private def getVerifierNoRepo(rulesDf: DataFrame): Try[VerifierNoRepo] = {
     val constraintWarningCheckCodes = getRuleForVerifier(rulesDf, "Warning")
     val constraintErrorCheckCodes = getRuleForVerifier(rulesDf, "Error")
 
@@ -70,7 +70,7 @@ object DeequUtils {
 
 }
 
-  def compile[T](source:String):Try[T]=
+  private def compile[T](source:String):Try[T]=
     Try {
     val toolBox = currentMirror.mkToolBox()
     val tree = toolBox.parse(source)

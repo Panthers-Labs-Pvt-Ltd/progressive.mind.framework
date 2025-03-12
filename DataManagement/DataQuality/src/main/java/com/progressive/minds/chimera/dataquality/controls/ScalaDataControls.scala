@@ -1,12 +1,10 @@
 package com.progressive.minds.chimera.dataquality.controls
 
-import com.progressive.minds.chimera.dataquality.entities.{DQRulesEntity, DataControlsLogEntity}
-import com.progressive.minds.chimera.dataquality.repository.DQRepository
+import com.progressive.minds.chimera.dataquality.entities.DataControlsLogEntity
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import org.apache.spark.sql.DataFrame
 import org.apache.spark.sql.types.StructType
-import org.apache.spark.sql.{DataFrame, SparkSession}
-import org.mybatis.dynamic.sql.SqlBuilder
-import org.mybatis.dynamic.sql.insert.render.InsertStatementProvider
-import org.mybatis.dynamic.sql.render.RenderingStrategies
 
 trait ScalaDataControls {
 

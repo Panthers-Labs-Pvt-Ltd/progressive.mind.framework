@@ -2,12 +2,17 @@ package com.progressive.minds.chimera.dataquality
 
 import com.amazon.deequ.VerificationResult
 import com.progressive.minds.chimera.dataquality.common.DeequUtils
-import com.progressive.minds.chimera.dataquality.entities.{DQProcessStatus, DQRunnerMetricsEntity}
+import com.progressive.minds.chimera.dataquality.entities.DQProcessStatus
+import com.progressive.minds.chimera.dataquality.entities.DQRunnerMetricsEntity
 import com.progressive.minds.chimera.foundational.logging.ChimeraLoggerFactory
+import org.apache.spark.sql.DataFrame
+import org.apache.spark.sql.Row
+import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.functions.lit
-import org.apache.spark.sql.types.{DoubleType, StringType, StructField, StructType}
-import org.apache.spark.sql.{DataFrame, Row, SparkSession}
-
+import org.apache.spark.sql.types.DoubleType
+import org.apache.spark.sql.types.StringType
+import org.apache.spark.sql.types.StructField
+import org.apache.spark.sql.types.StructType
 import scala.collection.mutable
 
 object DeequRunner {
@@ -44,7 +49,6 @@ object DeequRunner {
     val metrics = new DQRunnerMetricsEntity
     if (dataFrame.limit(1).count() == 0) {
       logger.logError(loggerTag + " There is no records in DataFrame for which DQ check is requested")
-      return null
     }
     try {
       val dataFrameTmp = dataFrame.cache
@@ -108,7 +112,6 @@ object DeequRunner {
       if (metrics.deequRules == 0) {
         logger.logError(loggerTag + metrics.deequRules + "rules returned for table: %s "
           .format(tableName))
-        return null
       } else {
         rulesDf.collect().foreach(row => {
           val ruleControlNm = row.getAs[String](fieldName = "controlNm")
@@ -287,7 +290,9 @@ object DeequRunner {
       .withColumn("target_count", lit(actual_count.toLong))
       .withColumn("blank_row", lit(blank_row.toLong))
       .withColumn("source_duplicate_count", lit(sourceRecordDuplicateCount))
+      // scalastyle:off null
       .withColumn("id", lit(null).cast("long"))
+      // scalastyle:on null
       .withColumn("pipeline_version", lit(pipelineVersion))
 
     metricsDf.createOrReplaceTempView("dqMetrics")

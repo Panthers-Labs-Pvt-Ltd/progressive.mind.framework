@@ -1,19 +1,22 @@
 package com.progressive.minds.chimera.dataquality
 
+import com.fasterxml.jackson.core.JsonEncoding
+import com.fasterxml.jackson.core.JsonGenerator
+import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.databind.JsonNode
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.scala.DefaultScalaModule
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import java.util.{HashMap, List}
-import scala.jdk.CollectionConverters._
-import com.fasterxml.jackson.core.{JsonEncoding, JsonGenerator}
-import com.fasterxml.jackson.databind.{DeserializationFeature, JsonNode, ObjectMapper}
-import com.fasterxml.jackson.module.scala.DefaultScalaModule
 import com.progressive.minds.chimera.foundational.logging.ChimeraLoggerFactory
-
 import java.io.ByteArrayOutputStream
 import java.nio.charset.StandardCharsets
 import java.text.SimpleDateFormat
-import java.util.{Calendar, TimeZone}
-
+import java.util.Calendar
+import java.util.HashMap
+import java.util.List
+import java.util.TimeZone
+import scala.jdk.CollectionConverters._
 import scala.util.matching.Regex
 
 object EDLUtils {
@@ -44,10 +47,9 @@ object EDLUtils {
     returnValue
   }
 
-  def isNullOrBlank(i: String): Boolean = i match {
-    case null => true
-    case "" => true
-    case _ => false
+  def isNullOrBlank(i: String): Boolean = Option(i) match {
+    case Some(_) => false
+    case None => true
   }
 
   def toJsonString(block: JsonGenerator => Unit): String = {
@@ -68,24 +70,25 @@ object EDLUtils {
     }
   }
 
-  def getContextOrSparkClassLoader: ClassLoader =
+  private def getContextOrSparkClassLoader: ClassLoader =
     Option(Thread.currentThread().getContextClassLoader).getOrElse(getSparkClassLoader)
 
-  def getSparkClassLoader: ClassLoader = getClass.getClassLoader
+  private def getSparkClassLoader: ClassLoader = getClass.getClassLoader
 
   def merge(obj: Any, update: Any): Any = {
-    if (!obj.getClass.isAssignableFrom(update.getClass)) return obj
-    val methods = obj.getClass.getMethods
-    for {fromMethod <- methods} {
-      if (fromMethod.getDeclaringClass == obj.getClass && fromMethod.getName.startsWith("get")) {
-        val fromName = fromMethod.getName
-        val toName = fromName.replaceFirst("get", "set")
-        try {
-          val toMethod = obj.getClass.getMethod(toName, fromMethod.getReturnType)
-          val value = fromMethod.invoke((update))
-          if (value != null) toMethod.invoke(obj, value)
-        } catch {
-          case e: Exception =>
+    if (obj.getClass.isAssignableFrom(update.getClass)) {
+      val methods = obj.getClass.getMethods
+      for {fromMethod <- methods} {
+        if (fromMethod.getDeclaringClass == obj.getClass && fromMethod.getName.startsWith("get")) {
+          val fromName = fromMethod.getName
+          val toName = fromName.replaceFirst("get", "set")
+          try {
+            val toMethod = obj.getClass.getMethod(toName, fromMethod.getReturnType)
+            val value = fromMethod.invoke((update))
+            if (value != null) toMethod.invoke(obj, value)
+          } catch {
+            case _: Exception =>
+          }
         }
       }
     }

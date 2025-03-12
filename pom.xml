@@ -626,6 +626,9 @@
                 </dependencies>
                 <executions>
                     <execution>
+                        <phase>
+                            verify
+                        </phase>
                         <goals>
                             <goal>check</goal>
                         </goals>

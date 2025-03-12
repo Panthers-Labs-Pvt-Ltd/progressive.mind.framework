@@ -5,9 +5,9 @@ import com.amazon.deequ.profiles.ColumnProfilerRunner
 import com.progressive.minds.chimera.dataquality.entities
 import com.progressive.minds.chimera.dataquality.entities.StandardDataProfilerEntity
 import com.progressive.minds.chimera.dataquality.repository.DQRepository
-import org.apache.spark.sql.{DataFrame, SparkSession}
-
 import java.math.BigInteger
+import org.apache.spark.sql.DataFrame
+import org.apache.spark.sql.SparkSession
 
 class ColumnProfiler {
   //private val stdDataProfilerRepository = DQRepository[StandardDataProfiler]

@@ -1,9 +1,16 @@
 package com.progressive.minds.chimera.dataquality.profiling
 
 import com.progressive.minds.chimera.foundational.logging.ChimeraLoggerFactory
-import org.apache.spark.sql.functions.{col, expr, lit}
-import org.apache.spark.sql.types.{LongType, StringType, StructField, StructType}
-import org.apache.spark.sql.{DataFrame, Row, SparkSession}
+import org.apache.spark.sql.DataFrame
+import org.apache.spark.sql.Row
+import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.functions.col
+import org.apache.spark.sql.functions.expr
+import org.apache.spark.sql.functions.lit
+import org.apache.spark.sql.types.LongType
+import org.apache.spark.sql.types.StringType
+import org.apache.spark.sql.types.StructField
+import org.apache.spark.sql.types.StructType
 
 object ProcessConstraints {
   val edlLogger = ChimeraLoggerFactory.getLogger(this.getClass)
@@ -90,7 +97,9 @@ object ProcessConstraints {
     .withColumn("checkLevel", lit("Warning"))
     .withColumn("statusCd", lit("N"))
     .withColumn("controlNm", lit("Default"))
+      // scalastyle:off null
     .withColumn("ruleId", lit(null).cast("long"))
+      // scalastyle:on null
 
       val processedRulesDF = formattedDf.withColumnRenamed("scalaCode", "ruleValue")
       processedRulesDF.show()

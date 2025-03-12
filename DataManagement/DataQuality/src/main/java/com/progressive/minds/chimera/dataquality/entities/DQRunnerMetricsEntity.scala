@@ -1,10 +1,11 @@
 package com.progressive.minds.chimera.dataquality.entities
 
-import org.apache.spark.rdd.RDD
-import org.apache.spark.sql.{DataFrame, SparkSession}
-
 import java.sql.Timestamp
 import java.util.Calendar
+
+import org.apache.spark.rdd.RDD
+import org.apache.spark.sql.DataFrame
+import org.apache.spark.sql.SparkSession
 
 case class DQRunnerMetricsEntity() {
   var runnerStartTime: Calendar = _
@@ -75,6 +76,8 @@ case class DQRunnerMetricsEntity() {
   }
 
   private def checkForNullOrReturnTimestamp(value: Calendar): Timestamp ={
-    if(value != null) {new Timestamp(value.getTime.getTime)} else null
+    Option(value) match {
+      case Some(value) => new Timestamp(value.getTime.getTime)
+    }
   }
 }
