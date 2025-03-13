@@ -2,7 +2,6 @@ package com.progressive.minds.chimera.core.api_service.controller;
 
 import com.progressive.minds.chimera.core.api_service.common.dto.GenericResponse;
 import com.progressive.minds.chimera.core.api_service.dto.ExtractMetadata;
-import com.progressive.minds.chimera.core.api_service.dto.ExtractMetadataResponse;
 import com.progressive.minds.chimera.foundational.logging.ChimeraLogger;
 import com.progressive.minds.chimera.foundational.logging.ChimeraLoggerFactory;
 import com.progressive.minds.chimera.core.api_service.service.ExtractMetadataConfigService;
@@ -30,7 +29,7 @@ public class ExtractMetadataConfigController {
 
     // GET request - Retrieve all data source connections
     @GetMapping
-    public ResponseEntity<List<ExtractMetadataResponse>> getAllExtractConfig() {
+    public ResponseEntity<List<ExtractMetadata>> getAllExtractConfig() {
         logger.logInfo("Fetching all extract metadata.");
         return ResponseEntity.ok(extractMetadataConfigService.getExtractMetadata());
     }
@@ -38,22 +37,22 @@ public class ExtractMetadataConfigController {
     // GET request - Retrieve Extract Metadata Config By Pipeline Name
     @CheckForNull
     @GetMapping("/{pipelineName}")
-    public ResponseEntity<List<ExtractMetadataResponse>> getExtractConfigByName(@PathVariable("pipelineName") String name) {
+    public ResponseEntity<List<ExtractMetadata>> getExtractConfigByName(@PathVariable("pipelineName") String name) {
         logger.logInfo("Fetching Extract Config for pipeline: " + name);
-        return ResponseEntity.ok(extractMetadataConfigService.getExtractMetadataByPipelineName(name));
+        return ResponseEntity.ok(extractMetadataConfigService.getExtractMetadata(name));
     }
 
      // GET request - Retrieve Extract Metadata Config By Pipeline Name And Sequence Number
      @CheckForNull
      @GetMapping("/{pipelineName}/{sequenceNumber}")
-     public ResponseEntity<List<ExtractMetadataResponse>> getExtractConfigByName(@PathVariable("pipelineName") String name, @PathVariable("sequenceNumber") Integer sequence) {
+     public ResponseEntity<ExtractMetadata> getExtractConfigByName(@PathVariable("pipelineName") String name, @PathVariable("sequenceNumber") Integer sequence) {
          logger.logInfo("Fetching Extract Config for pipeline: " + name);
          return ResponseEntity.ok(extractMetadataConfigService.getExtractMetadataByPipelineNameAndSequenceNumber(name,sequence));
      }
 
     // POST request - Add a new data source connection
     @PostMapping("/create")
-    public ResponseEntity<GenericResponse> createConnection(@RequestBody ExtractMetadataResponse extractMetadata) {
+    public ResponseEntity<GenericResponse> createConnection(@RequestBody ExtractMetadata extractMetadata) {
         int createdRecords = extractMetadataConfigService.insertExtractMetadata(extractMetadata);
         if (createdRecords == 0) {
             GenericResponse response = GenericResponse.builder()
@@ -96,36 +95,55 @@ public class ExtractMetadataConfigController {
 
     }
 
+    // PUT request - Update an existing pipeline by name
+    @PutMapping("/update")
+    public ResponseEntity<GenericResponse> updateExtractConfig(@RequestBody ExtractMetadata updatedConfig) {
+        String pipelineName = updatedConfig.getPipelineName();
+        int sequenceNumber = updatedConfig.getSequenceNumber();
 
-    
+        if (extractMetadataConfigService.getExtractMetadataByPipelineNameAndSequenceNumber(pipelineName, sequenceNumber) == null) {
+        // Pipeline does not exist
+        GenericResponse genericResponse = GenericResponse.builder()
+            .message("Extract Config doesn't exist for pipeline: " + pipelineName + " and sequence: " + sequenceNumber)
+            .statusCode(HttpStatus.NOT_FOUND.name())
+            .build();
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(genericResponse);
+        }
 
-    // // PUT request - Update an existing data source connection
-    // @PutMapping("/update")
-    // public ResponseEntity<GenericResponse> updateConnection(@RequestBody DataSourceConnections updatedConnection) {
-    //     String connectionId = updatedConnection.getDataSourceConnectionName();
-    //     if (dataSourceConnectionsService.getConnectionByName(connectionId).isEmpty()) {
-    //         GenericResponse response = GenericResponse.builder()
-    //                 .message("Connection doesn't exist with the given ID: " + connectionId)
-    //                 .statusCode(HttpStatus.NOT_FOUND.name())
-    //                 .build();
-    //         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
-    //     }
+        int updatedRows = extractMetadataConfigService.updateExtractMetadata(updatedConfig);
+        if (updatedRows == 0) {
+        // Update operation didn't affect any rows
+        GenericResponse genericResponse = GenericResponse.builder()
+            .message("Extract Config update failed for pipeline: " + pipelineName + " and sequence: " + sequenceNumber)
+            .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.name())
+            .build();
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(genericResponse);
+        }
 
-    //     int updatedRows = dataSourceConnectionsService.updateConnection(updatedConnection);
-    //     if (updatedRows == 0) {
-    //         GenericResponse response = GenericResponse.builder()
-    //                 .message("Failed to update the connection with ID: " + connectionId)
-    //                 .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.name())
-    //                 .build();
-    //         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
-    //     }
+        // Update operation succeeded
+        GenericResponse genericResponse = GenericResponse.builder()
+            .message("Extract Config updated successfully for pipeline: " + pipelineName + " and sequence: " + sequenceNumber)
+            .statusCode(HttpStatus.OK.name())
+            .build();
+        return ResponseEntity.status(HttpStatus.OK).body(genericResponse);
+    }
 
-    //     GenericResponse response = GenericResponse.builder()
-    //             .message("Connection updated successfully with ID: " + connectionId)
-    //             .statusCode(HttpStatus.OK.name())
-    //             .build();
-    //     return ResponseEntity.status(HttpStatus.OK).body(response);
-    // }
+    @DeleteMapping("/delete/{pipeLineName}/{sequence}")
+    public ResponseEntity<GenericResponse> deletePipeline(@PathVariable("pipeLineName") String pipelineName, @PathVariable("sequence") int sequence) {
+        if (extractMetadataConfigService.deleteExtractMetadata(pipelineName, sequence) == 0) {
+        GenericResponse genericResponse = GenericResponse.builder()
+            .message("Extract Config doesn't exist with the given pipeline name: " + pipelineName + " and sequence: " + sequence)
+            .statusCode(HttpStatus.NOT_FOUND.name())
+            .build();
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(genericResponse);
+        } else {
+        GenericResponse genericResponse = GenericResponse.builder()
+            .message("Extract Config deleted successfully: " + pipelineName + " and sequence: " + sequence)
+            .statusCode(HttpStatus.OK.name())
+            .build();
+        return ResponseEntity.status(HttpStatus.OK).body(genericResponse);
+        }
+    }
 
     
 
