@@ -1,6 +1,7 @@
 package com.progressive.minds.chimera.core.api_service.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.SelectProvider;
@@ -12,7 +13,6 @@ import org.mybatis.dynamic.sql.util.mybatis3.CommonInsertMapper;
 import org.mybatis.dynamic.sql.util.mybatis3.CommonSelectMapper;
 import org.mybatis.dynamic.sql.util.mybatis3.CommonUpdateMapper;
 
-import com.google.common.base.Optional;
 import com.progressive.minds.chimera.core.api_service.dto.ExtractMetadataConfig;
 
 @Mapper

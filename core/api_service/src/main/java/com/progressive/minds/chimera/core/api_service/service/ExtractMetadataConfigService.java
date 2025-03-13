@@ -1,6 +1,5 @@
 package com.progressive.minds.chimera.core.api_service.service;
 
-import com.progressive.minds.chimera.core.api_service.dto.ExtractMetadataResponse;
 import com.progressive.minds.chimera.core.api_service.dto.ExtractMetadata;
 import com.progressive.minds.chimera.core.api_service.dto.ExtractMetadataConfig;
 import com.progressive.minds.chimera.core.api_service.dto.FileExtractMetadataConfig;
@@ -39,12 +38,14 @@ import com.progressive.minds.chimera.core.api_service.repository.StreamsExtractM
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.annotation.CheckForNull;
+
 import java.math.BigInteger;
 
 import org.mybatis.dynamic.sql.SqlBuilder;
 import org.mybatis.dynamic.sql.delete.render.DeleteStatementProvider;
 
-import static org.mybatis.dynamic.sql.SqlBuilder.equalTo;
 import static org.mybatis.dynamic.sql.SqlBuilder.select;
 import static org.mybatis.dynamic.sql.SqlBuilder.isEqualTo;
 import org.mybatis.dynamic.sql.insert.render.InsertStatementProvider;
@@ -61,7 +62,7 @@ public class ExtractMetadataConfigService {
 
    private static final Logger logger = LoggerFactory.getLogger(ExtractMetadataConfigService.class);
 
-    private final ExtractMetadataConfigDBMapper ExtractDBMapper;
+    private final ExtractMetadataConfigDBMapper extractDBMapper;
     private final FileExtractMetadataConfigDBMapper FileDBMapper;
     private final NoSqlExtractMetadataConfigDBMapper NoSqlDBMapper;
     private final RelationalExtractMetadataConfigDBMapper RelationalDBMapper;
@@ -74,7 +75,7 @@ public class ExtractMetadataConfigService {
     private final dataSourcesService dataSourcesService;
     private final DataSourceConnectionsService dataSourcesConnService;
     
-    public ExtractMetadataConfigService(ExtractMetadataConfigDBMapper ExtractDBMapper,
+    public ExtractMetadataConfigService(ExtractMetadataConfigDBMapper extractDBMapper,
                                         FileExtractMetadataConfigDBMapper FileDBMapper,
                                         NoSqlExtractMetadataConfigDBMapper NoSqlDBMapper,
                                         RelationalExtractMetadataConfigDBMapper RelationalDBMapper,
@@ -86,7 +87,7 @@ public class ExtractMetadataConfigService {
                                         StreamsExtractMetadataTableDBMapper streamEXDBMapper,
                                         dataSourcesService dataSourcesService,
                                         DataSourceConnectionsService dataSourcesConnService) {
-        this.ExtractDBMapper = ExtractDBMapper;
+        this.extractDBMapper = extractDBMapper;
         this.FileDBMapper = FileDBMapper;
         this.NoSqlDBMapper = NoSqlDBMapper;
         this.RelationalDBMapper = RelationalDBMapper;
@@ -100,204 +101,117 @@ public class ExtractMetadataConfigService {
         this.dataSourcesConnService = dataSourcesConnService;
     }
 
-    public List<ExtractMetadataResponse> getExtractMetadata() {
-      logger.info("Fetching All Extract Metadata Config.");
-      SelectStatementProvider selectStatement = select(
-                extractMetadataConfig.pipelineName,
-                extractMetadataConfig.sequenceNumber,
-                extractMetadataConfig.extractSourceType,
-                extractMetadataConfig.extractSourceSubType,
-                extractMetadataConfig.dataSourceConnectionName,
-                extractMetadataConfig.sourceConfiguration,
-                extractMetadataConfig.dataframeName,
-                extractMetadataConfig.predecessorSequences,
-                extractMetadataConfig.successorSequences,
-                extractMetadataConfig.rowFilter,
-                extractMetadataConfig.columnFilter,
-                extractMetadataConfig.createdTimestamp,
-                extractMetadataConfig.createdBy,
-                extractMetadataConfig.updatedTimestamp,
-                extractMetadataConfig.updatedBy,
-                extractMetadataConfig.activeFlag,
-                fileExtractConfig.fileName,
-                fileExtractConfig.filePath,
-                fileExtractConfig.schemaPath,
-                fileExtractConfig.sizeInByte,
-                fileExtractConfig.compressionType,
-                relationalExtractConfig.databaseName,
-                relationalExtractConfig.tableName,
-                relationalExtractConfig.schemaName,
-                relationalExtractConfig.sqlText,
-                noSqlExtractConfig.collection,
-                noSqlExtractConfig.partitioner,
-                streamsExtractConfig.kafkaConsumerTopic,
-                streamsExtractConfig.kafkaConsumerGroup,
-                streamsExtractConfig.kafkaMaxOffset,
-                streamsExtractConfig.kafkaPollTimeout,
-                streamsExtractConfig.kafkaStrtOffset,
-                streamsExtractConfig.tranctnlCnsumrFlg,
-                streamsExtractConfig.watrmrkDuration,
-                streamsExtractConfig.stgFormt,
-                streamsExtractConfig.stgPath,
-                streamsExtractConfig.stgPartitions
-          )
-          .from(extractMetadataConfig, "extract")
-          .leftJoin(fileExtractConfig, "file")
-            .on(extractMetadataConfig.pipelineName, equalTo(fileExtractConfig.pipelineName))
-             .and(extractMetadataConfig.sequenceNumber, equalTo(fileExtractConfig.sequenceNumber))
-          .leftJoin(relationalExtractConfig, "relational")
-            .on(extractMetadataConfig.pipelineName, equalTo(relationalExtractConfig.pipelineName))
-            .and(extractMetadataConfig.sequenceNumber, equalTo(relationalExtractConfig.sequenceNumber))
-          .leftJoin(noSqlExtractConfig, "nosql")
-            .on(extractMetadataConfig.pipelineName, equalTo(noSqlExtractConfig.pipelineName))
-            .and(extractMetadataConfig.sequenceNumber, equalTo(noSqlExtractConfig.sequenceNumber))
-            .leftJoin(streamsExtractConfig, "stream")
-            .on(extractMetadataConfig.pipelineName, equalTo(streamsExtractConfig.pipelineName))
-            .and(extractMetadataConfig.sequenceNumber, equalTo(streamsExtractConfig.sequenceNumber))
-          .orderBy(extractMetadataConfig.pipelineName, extractMetadataConfig.sequenceNumber)
-          .build()
-          .render(RenderingStrategies.MYBATIS3);
-  
-      return ExtractDBMapper.selectMany(selectStatement);
+    public List<ExtractMetadata> getExtractMetadata() {
+        SelectStatementProvider selectStatement = select(extractMetadataConfig.allColumns())
+        .from(extractMetadataConfig)
+        .orderBy(extractMetadataConfig.pipelineName, extractMetadataConfig.sequenceNumber)
+        .build()
+        .render(RenderingStrategies.MYBATIS3);
+
+        List<ExtractMetadataConfig> extractMetadataList = extractConfigDBMapper.selectMany(selectStatement);
+        List<ExtractMetadata> extractMetadata = new ArrayList<ExtractMetadata>();
+        extractMetadataList.forEach(config -> {
+            ExtractMetadata extract = new ExtractMetadata();
+            extract.setPipelineName(config.getPipelineName());
+            extract.setSequenceNumber(config.getSequenceNumber());
+            extract.setExtractSourceType(config.getExtractSourceType());
+            extract.setExtractSourceSubType(config.getExtractSourceSubType());
+            extract.setDataframeName(config.getDataframeName());
+            extract.setSourceConfiguration(config.getSourceConfiguration());
+            extract.setPredecessorSequences(config.getPredecessorSequences());
+            extract.setSuccessorSequences(config.getSuccessorSequences());
+            extract.setRowFilter(config.getRowFilter());
+            extract.setColumnFilter(config.getColumnFilter());
+            extract.setDataSourceConnectionName(config.getDataSourceConnectionName());
+            extract.setCreatedBy(config.getCreatedBy());
+            extract.setCreatedTimestamp(config.getCreatedTimestamp());
+            extract.setUpdatedBy(config.getUpdatedBy());
+            extract.setUpdatedTimestamp(config.getUpdatedTimestamp());
+            extract.setActiveFlag(config.getActiveFlag());
+    
+            switch (config.getExtractSourceType()) {
+                case "Relational" -> {
+                    extract.setRelationalMetadata(getRelationalConfigByPipelineName(config.getPipelineName(), config.getSequenceNumber()));
+                }
+                case "Files" -> {
+                    extract.setFileMetadata(getFileConfigByPipelineName(config.getPipelineName(), config.getSequenceNumber()));
+                }
+                case "Stream" -> {
+                    extract.setStreamMetadata(getStreamConfigByPipelineName(config.getPipelineName(),config.getSequenceNumber()));
+                }
+                case "NoSql" -> {
+                    extract.setNoSqlMetadata(getNoSqlConfigByPipelineName(config.getPipelineName(), config.getSequenceNumber()));
+                }
+            }
+            extract.setDataSource(dataSourcesService.getDataSourceByTypeAndSubtype(config.getExtractSourceType(), config.getExtractSourceSubType()));
+            extract.setDataSourceConnection(dataSourcesConnService.getConnectionByName(config.getDataSourceConnectionName()).orElse(null));
+            extractMetadata.add(extract);
+        });
+        return extractMetadata; 
   }
 
-  public List<ExtractMetadataResponse> getExtractMetadataByPipelineName(String pipelineName) {
-    logger.info("Fetching Extract Metadata Config for pipeline : " + pipelineName);
-    SelectStatementProvider selectStatement = select(
-              extractMetadataConfig.pipelineName,
-              extractMetadataConfig.sequenceNumber,
-              extractMetadataConfig.extractSourceType,
-              extractMetadataConfig.extractSourceSubType,
-              extractMetadataConfig.dataSourceConnectionName,
-              extractMetadataConfig.sourceConfiguration,
-              extractMetadataConfig.dataframeName,
-              extractMetadataConfig.predecessorSequences,
-              extractMetadataConfig.successorSequences,
-              extractMetadataConfig.rowFilter,
-              extractMetadataConfig.columnFilter,
-              extractMetadataConfig.createdTimestamp,
-              extractMetadataConfig.createdBy,
-              extractMetadataConfig.updatedTimestamp,
-              extractMetadataConfig.updatedBy,
-              extractMetadataConfig.activeFlag,
-              fileExtractConfig.fileName,
-              fileExtractConfig.filePath,
-              fileExtractConfig.schemaPath,
-              fileExtractConfig.sizeInByte,
-              fileExtractConfig.compressionType,
-              relationalExtractConfig.databaseName,
-              relationalExtractConfig.tableName,
-              relationalExtractConfig.schemaName,
-              relationalExtractConfig.sqlText,
-              noSqlExtractConfig.collection,
-              noSqlExtractConfig.partitioner,
-              streamsExtractConfig.kafkaConsumerTopic,
-              streamsExtractConfig.kafkaConsumerGroup,
-              streamsExtractConfig.kafkaMaxOffset,
-              streamsExtractConfig.kafkaPollTimeout,
-              streamsExtractConfig.kafkaStrtOffset,
-              streamsExtractConfig.tranctnlCnsumrFlg,
-              streamsExtractConfig.watrmrkDuration,
-              streamsExtractConfig.stgFormt,
-              streamsExtractConfig.stgPath,
-              streamsExtractConfig.stgPartitions
-        )
-        .from(extractMetadataConfig, "extract")
-        .leftJoin(fileExtractConfig, "file")
-          .on(extractMetadataConfig.pipelineName, equalTo(fileExtractConfig.pipelineName))
-           .and(extractMetadataConfig.sequenceNumber, equalTo(fileExtractConfig.sequenceNumber))
-        .leftJoin(relationalExtractConfig, "relational")
-          .on(extractMetadataConfig.pipelineName, equalTo(relationalExtractConfig.pipelineName))
-          .and(extractMetadataConfig.sequenceNumber, equalTo(relationalExtractConfig.sequenceNumber))
-        .leftJoin(noSqlExtractConfig, "nosql")
-          .on(extractMetadataConfig.pipelineName, equalTo(noSqlExtractConfig.pipelineName))
-          .and(extractMetadataConfig.sequenceNumber, equalTo(noSqlExtractConfig.sequenceNumber))
-          .leftJoin(streamsExtractConfig, "stream")
-          .on(extractMetadataConfig.pipelineName, equalTo(streamsExtractConfig.pipelineName))
-          .and(extractMetadataConfig.sequenceNumber, equalTo(streamsExtractConfig.sequenceNumber))
-        .where(extractMetadataConfig.pipelineName, isEqualTo(pipelineName))
-        .orderBy(extractMetadataConfig.pipelineName, extractMetadataConfig.sequenceNumber)
+  
+@CheckForNull
+public ExtractMetadata getExtractMetadataByPipelineNameAndSequenceNumber(String name, int sequence) {
+
+    logger.info("Fetching Extract Metadata Config for pipeline : " + name);
+    SelectStatementProvider selectStatement = select(extractMetadataConfig.allColumns())
+        .from(extractMetadataConfig)
+        .where(extractMetadataConfig.pipelineName, isEqualTo(name))
+        .and(extractMetadataConfig.sequenceNumber, isEqualTo(sequence))
         .build()
         .render(RenderingStrategies.MYBATIS3);
 
-    return ExtractDBMapper.selectMany(selectStatement);
+    ExtractMetadataConfig config = extractConfigDBMapper.selectOne(selectStatement).orElse(null);
+    ExtractMetadata extract = new ExtractMetadata();
+    extract.setPipelineName(config.getPipelineName());
+    extract.setSequenceNumber(config.getSequenceNumber());
+    extract.setExtractSourceType(config.getExtractSourceType());
+    extract.setExtractSourceSubType(config.getExtractSourceSubType());
+    extract.setDataframeName(config.getDataframeName());
+    extract.setSourceConfiguration(config.getSourceConfiguration());
+    extract.setPredecessorSequences(config.getPredecessorSequences());
+    extract.setSuccessorSequences(config.getSuccessorSequences());
+    extract.setRowFilter(config.getRowFilter());
+    extract.setColumnFilter(config.getColumnFilter());
+    extract.setDataSourceConnectionName(config.getDataSourceConnectionName());
+    extract.setCreatedBy(config.getCreatedBy());
+    extract.setCreatedTimestamp(config.getCreatedTimestamp());
+    extract.setUpdatedBy(config.getUpdatedBy());
+    extract.setUpdatedTimestamp(config.getUpdatedTimestamp());
+    extract.setActiveFlag(config.getActiveFlag());
+    
+    switch (config.getExtractSourceType()) {
+        case "Relational" -> {
+            extract.setRelationalMetadata(getRelationalConfigByPipelineName(config.getPipelineName(), config.getSequenceNumber()));
+        }
+        case "Files" -> {
+            extract.setFileMetadata(getFileConfigByPipelineName(config.getPipelineName(), config.getSequenceNumber()));
+        }
+        case "Stream" -> {
+            extract.setStreamMetadata(getStreamConfigByPipelineName(config.getPipelineName(),config.getSequenceNumber()));
+        }
+        case "NoSql" -> {
+            extract.setNoSqlMetadata(getNoSqlConfigByPipelineName(config.getPipelineName(), config.getSequenceNumber()));
+        }
+    }
+    extract.setDataSource(dataSourcesService.getDataSourceByTypeAndSubtype(config.getExtractSourceType(), config.getExtractSourceSubType()));
+    extract.setDataSourceConnection(dataSourcesConnService.getConnectionByName(config.getDataSourceConnectionName()).orElse(null));
+    return extract; 
 }
 
-public List<ExtractMetadataResponse> getExtractMetadataByPipelineNameAndSequenceNumber(String pipelineName, int sequenceNumber) {
-    logger.info("Fetching Extract Metadata Config for pipeline : " + pipelineName);
-    SelectStatementProvider selectStatement = select(
-              extractMetadataConfig.pipelineName,
-              extractMetadataConfig.sequenceNumber,
-              extractMetadataConfig.extractSourceType,
-              extractMetadataConfig.extractSourceSubType,
-              extractMetadataConfig.dataSourceConnectionName,
-              extractMetadataConfig.sourceConfiguration,
-              extractMetadataConfig.dataframeName,
-              extractMetadataConfig.predecessorSequences,
-              extractMetadataConfig.successorSequences,
-              extractMetadataConfig.rowFilter,
-              extractMetadataConfig.columnFilter,
-              extractMetadataConfig.createdTimestamp,
-              extractMetadataConfig.createdBy,
-              extractMetadataConfig.updatedTimestamp,
-              extractMetadataConfig.updatedBy,
-              extractMetadataConfig.activeFlag,
-              fileExtractConfig.fileName,
-              fileExtractConfig.filePath,
-              fileExtractConfig.schemaPath,
-              fileExtractConfig.sizeInByte,
-              fileExtractConfig.compressionType,
-              relationalExtractConfig.databaseName,
-              relationalExtractConfig.tableName,
-              relationalExtractConfig.schemaName,
-              relationalExtractConfig.sqlText,
-              noSqlExtractConfig.collection,
-              noSqlExtractConfig.partitioner,
-              streamsExtractConfig.kafkaConsumerTopic,
-              streamsExtractConfig.kafkaConsumerGroup,
-              streamsExtractConfig.kafkaMaxOffset,
-              streamsExtractConfig.kafkaPollTimeout,
-              streamsExtractConfig.kafkaStrtOffset,
-              streamsExtractConfig.tranctnlCnsumrFlg,
-              streamsExtractConfig.watrmrkDuration,
-              streamsExtractConfig.stgFormt,
-              streamsExtractConfig.stgPath,
-              streamsExtractConfig.stgPartitions
-        )
-        .from(extractMetadataConfig, "extract")
-        .leftJoin(fileExtractConfig, "file")
-          .on(extractMetadataConfig.pipelineName, equalTo(fileExtractConfig.pipelineName))
-           .and(extractMetadataConfig.sequenceNumber, equalTo(fileExtractConfig.sequenceNumber))
-        .leftJoin(relationalExtractConfig, "relational")
-          .on(extractMetadataConfig.pipelineName, equalTo(relationalExtractConfig.pipelineName))
-          .and(extractMetadataConfig.sequenceNumber, equalTo(relationalExtractConfig.sequenceNumber))
-        .leftJoin(noSqlExtractConfig, "nosql")
-          .on(extractMetadataConfig.pipelineName, equalTo(noSqlExtractConfig.pipelineName))
-          .and(extractMetadataConfig.sequenceNumber, equalTo(noSqlExtractConfig.sequenceNumber))
-          .leftJoin(streamsExtractConfig, "stream")
-          .on(extractMetadataConfig.pipelineName, equalTo(streamsExtractConfig.pipelineName))
-          .and(extractMetadataConfig.sequenceNumber, equalTo(streamsExtractConfig.sequenceNumber))
-        .where(extractMetadataConfig.pipelineName, isEqualTo(pipelineName))
-        .and(extractMetadataConfig.sequenceNumber, isEqualTo(sequenceNumber))
-        .orderBy(extractMetadataConfig.pipelineName, extractMetadataConfig.sequenceNumber)
-        .build()
-        .render(RenderingStrategies.MYBATIS3);
 
-    return ExtractDBMapper.selectMany(selectStatement);
-}
-
-public int insertExtractMetadata(ExtractMetadataResponse extractMetadata) {
+public int insertExtractMetadata(ExtractMetadata extractMetadata) {
     logger.info("Inserting Extract Metadata for pipeline : " + extractMetadata.getPipelineName());
-    System.out.println("Inserting Extract Metadata for pipeline : " + extractMetadata.getPipelineName());
     return switch (extractMetadata.getExtractSourceType()) {
         case "Files" -> {
             FileExtractMetadataConfig fileExtractConfigData = new FileExtractMetadataConfig();
             mapCommonFields(extractMetadata, fileExtractConfigData);
-            fileExtractConfigData.setFileName(extractMetadata.getFileName());
-            fileExtractConfigData.setFilePath(extractMetadata.getFilePath());
-            fileExtractConfigData.setSchemaPath(extractMetadata.getSchemaPath());
-            fileExtractConfigData.setSizeInByte(extractMetadata.getSizeInByte());
-            fileExtractConfigData.setCompressionType(extractMetadata.getCompressionType());
+            fileExtractConfigData.setFileName(extractMetadata.getFileMetadata().getFileName());
+            fileExtractConfigData.setFilePath(extractMetadata.getFileMetadata().getFilePath());
+            fileExtractConfigData.setSchemaPath(extractMetadata.getFileMetadata().getSchemaPath());
+            fileExtractConfigData.setSizeInByte(extractMetadata.getFileMetadata().getSizeInByte());
+            fileExtractConfigData.setCompressionType(extractMetadata.getFileMetadata().getCompressionType());
             InsertStatementProvider<FileExtractMetadataConfig> insertStatement = SqlBuilder.insert(fileExtractConfigData)
                 .into(fileExtractConfig)
                 .map(fileExtractConfig.pipelineName).toProperty("pipelineName")
@@ -328,10 +242,10 @@ public int insertExtractMetadata(ExtractMetadataResponse extractMetadata) {
         case "Relational" -> {
             RelationalExtractMetadataConfig relationalExtractConfigData = new RelationalExtractMetadataConfig();
             mapCommonFields(extractMetadata, relationalExtractConfigData);
-            relationalExtractConfigData.setDatabaseName(extractMetadata.getDatabaseName());
-            relationalExtractConfigData.setTableName(extractMetadata.getTableName());
-            relationalExtractConfigData.setSchemaName(extractMetadata.getSchemaName());
-            relationalExtractConfigData.setSqlText(extractMetadata.getSqlText());
+            relationalExtractConfigData.setDatabaseName(extractMetadata.getRelationalMetadata().getDatabaseName());
+            relationalExtractConfigData.setTableName(extractMetadata.getRelationalMetadata().getTableName());
+            relationalExtractConfigData.setSchemaName(extractMetadata.getRelationalMetadata().getSchemaName());
+            relationalExtractConfigData.setSqlText(extractMetadata.getRelationalMetadata().getSqlText());
             
             InsertStatementProvider<RelationalExtractMetadataConfig> insertStatement = SqlBuilder.insert(relationalExtractConfigData)
                 .into(relationalExtractConfig)
@@ -362,8 +276,8 @@ public int insertExtractMetadata(ExtractMetadataResponse extractMetadata) {
         case "NoSql" -> {
             NoSqlExtractMetadataConfig noSqlExtractConfigData = new NoSqlExtractMetadataConfig();
             mapCommonFields(extractMetadata, noSqlExtractConfigData);
-            noSqlExtractConfigData.setCollection(extractMetadata.getCollection());
-            noSqlExtractConfigData.setPartitioner(extractMetadata.getPartitioner());
+            noSqlExtractConfigData.setCollection(extractMetadata.getNoSqlMetadata().getCollection());
+            noSqlExtractConfigData.setPartitioner(extractMetadata.getNoSqlMetadata().getPartitioner());
 
             InsertStatementProvider<NoSqlExtractMetadataConfig> insertStatement = SqlBuilder.insert(noSqlExtractConfigData)
                 .into(noSqlExtractConfig)
@@ -393,16 +307,16 @@ public int insertExtractMetadata(ExtractMetadataResponse extractMetadata) {
         case "Stream" -> {
             StreamExtractMetadataConfig streamExtractConfigData = new StreamExtractMetadataConfig();
             mapCommonFields(extractMetadata, streamExtractConfigData);
-            streamExtractConfigData.setKafkaConsumerTopic(extractMetadata.getKafkaConsumerTopic());
-            streamExtractConfigData.setKafkaConsumerGroup(extractMetadata.getKafkaConsumerGroup());
-            streamExtractConfigData.setKafkaMaxOffset(extractMetadata.getKafkaMaxOffset());
-            streamExtractConfigData.setKafkaPollTimeout(extractMetadata.getKafkaPollTimeout());
-            streamExtractConfigData.setKafkaStrtOffset(extractMetadata.getKafkaStrtOffset());
-            streamExtractConfigData.setTranctnlCnsumrFlg(extractMetadata.getTranctnlCnsumrFlg());
-            streamExtractConfigData.setWatrmrkDuration(extractMetadata.getWatrmrkDuration());
-            streamExtractConfigData.setStgFormt(extractMetadata.getStgFormt());
-            streamExtractConfigData.setStgPath(extractMetadata.getStgPath());
-            streamExtractConfigData.setStgPartitions(extractMetadata.getStgPartitions());
+            streamExtractConfigData.setKafkaConsumerTopic(extractMetadata.getStreamMetadata().getKafkaConsumerTopic());
+            streamExtractConfigData.setKafkaConsumerGroup(extractMetadata.getStreamMetadata().getKafkaConsumerGroup());
+            streamExtractConfigData.setKafkaMaxOffset(extractMetadata.getStreamMetadata().getKafkaMaxOffset());
+            streamExtractConfigData.setKafkaPollTimeout(extractMetadata.getStreamMetadata().getKafkaPollTimeout());
+            streamExtractConfigData.setKafkaStrtOffset(extractMetadata.getStreamMetadata().getKafkaStrtOffset());
+            streamExtractConfigData.setTranctnlCnsumrFlg(extractMetadata.getStreamMetadata().getTranctnlCnsumrFlg());
+            streamExtractConfigData.setWatrmrkDuration(extractMetadata.getStreamMetadata().getWatrmrkDuration());
+            streamExtractConfigData.setStgFormt(extractMetadata.getStreamMetadata().getStgFormt());
+            streamExtractConfigData.setStgPath(extractMetadata.getStreamMetadata().getStgPath());
+            streamExtractConfigData.setStgPartitions(extractMetadata.getStreamMetadata().getStgPartitions());
 
             InsertStatementProvider<StreamExtractMetadataConfig> insertStatement = SqlBuilder.insert(streamExtractConfigData)
                 .into(streamsExtractConfig)
@@ -447,12 +361,21 @@ public int deleteExtractMetadata(String pipelineName) {
         .where(extractMetadataConfig.pipelineName, isEqualTo(pipelineName))
         .build()
         .render(RenderingStrategies.MYBATIS3);
-    return ExtractDBMapper.delete(deleteStatement);
+    return extractDBMapper.delete(deleteStatement);
 }
 
-public int updateExtractMetadata(ExtractMetadataResponse extractMetadata) {
+public int deleteExtractMetadata(String pipelineName, int sequence) {
+    logger.info("Deleting Extract Metadata for pipeline : " + pipelineName);
+    DeleteStatementProvider deleteStatement = SqlBuilder.deleteFrom(extractMetadataConfig)
+        .where(extractMetadataConfig.pipelineName, isEqualTo(pipelineName))
+        .and(extractMetadataConfig.sequenceNumber, isEqualTo(sequence))
+        .build()
+        .render(RenderingStrategies.MYBATIS3);
+    return extractDBMapper.delete(deleteStatement);
+}
+
+public int updateExtractMetadata(ExtractMetadata extractMetadata) {
     logger.info("Updating Extract Metadata for pipeline : " + extractMetadata.getPipelineName());
-    System.out.println("Updating Extract Metadata for pipeline : " + extractMetadata.getPipelineName());
     return switch (extractMetadata.getExtractSourceType()) {
         case "Files" -> {
             UpdateStatementProvider updateStatement = SqlBuilder.update(fileExtractConfig)
@@ -468,11 +391,11 @@ public int updateExtractMetadata(ExtractMetadataResponse extractMetadata) {
                 .set(fileExtractConfig.updatedTimestamp).equalTo(new Timestamp(System.currentTimeMillis()))
                 .set(fileExtractConfig.updatedBy).equalToWhenPresent(extractMetadata.getUpdatedBy())
                 .set(fileExtractConfig.activeFlag).equalToWhenPresent(extractMetadata.getActiveFlag())
-                .set(fileExtractConfig.fileName).equalToWhenPresent(extractMetadata.getFileName())
-                .set(fileExtractConfig.filePath).equalToWhenPresent(extractMetadata.getFilePath())
-                .set(fileExtractConfig.schemaPath).equalToWhenPresent(extractMetadata.getSchemaPath())
-                .set(fileExtractConfig.sizeInByte).equalToWhenPresent(extractMetadata.getSizeInByte() != null ? BigInteger.valueOf(extractMetadata.getSizeInByte()) : null)
-                .set(fileExtractConfig.compressionType).equalToWhenPresent(extractMetadata.getCompressionType())
+                .set(fileExtractConfig.fileName).equalToWhenPresent(extractMetadata.getFileMetadata().getFileName())
+                .set(fileExtractConfig.filePath).equalToWhenPresent(extractMetadata.getFileMetadata().getFilePath())
+                .set(fileExtractConfig.schemaPath).equalToWhenPresent(extractMetadata.getFileMetadata().getSchemaPath())
+                .set(fileExtractConfig.sizeInByte).equalToWhenPresent(extractMetadata.getFileMetadata().getSizeInByte() != null ? BigInteger.valueOf(extractMetadata.getFileMetadata().getSizeInByte()) : null)
+                .set(fileExtractConfig.compressionType).equalToWhenPresent(extractMetadata.getFileMetadata().getCompressionType())
                 .where(fileExtractConfig.pipelineName, isEqualTo(extractMetadata.getPipelineName()))
                 .and(fileExtractConfig.sequenceNumber, isEqualTo(extractMetadata.getSequenceNumber()))
                 .build()
@@ -493,10 +416,10 @@ public int updateExtractMetadata(ExtractMetadataResponse extractMetadata) {
                 .set(relationalExtractConfig.updatedTimestamp).equalTo(new Timestamp(System.currentTimeMillis()))
                 .set(relationalExtractConfig.updatedBy).equalToWhenPresent(extractMetadata.getUpdatedBy())
                 .set(relationalExtractConfig.activeFlag).equalToWhenPresent(extractMetadata.getActiveFlag())
-                .set(relationalExtractConfig.databaseName).equalToWhenPresent(extractMetadata.getDatabaseName())
-                .set(relationalExtractConfig.tableName).equalToWhenPresent(extractMetadata.getTableName())
-                .set(relationalExtractConfig.schemaName).equalToWhenPresent(extractMetadata.getSchemaName())
-                .set(relationalExtractConfig.sqlText).equalToWhenPresent(extractMetadata.getSqlText())
+                .set(relationalExtractConfig.databaseName).equalToWhenPresent(extractMetadata.getRelationalMetadata().getDatabaseName())
+                .set(relationalExtractConfig.tableName).equalToWhenPresent(extractMetadata.getRelationalMetadata().getTableName())
+                .set(relationalExtractConfig.schemaName).equalToWhenPresent(extractMetadata.getRelationalMetadata().getSchemaName())
+                .set(relationalExtractConfig.sqlText).equalToWhenPresent(extractMetadata.getRelationalMetadata().getSqlText())
                 .where(relationalExtractConfig.pipelineName, isEqualTo(extractMetadata.getPipelineName()))
                 .and(relationalExtractConfig.sequenceNumber, isEqualTo(extractMetadata.getSequenceNumber()))
                 .build()
@@ -517,8 +440,8 @@ public int updateExtractMetadata(ExtractMetadataResponse extractMetadata) {
                 .set(noSqlExtractConfig.updatedTimestamp).equalTo(new Timestamp(System.currentTimeMillis()))
                 .set(noSqlExtractConfig.updatedBy).equalToWhenPresent(extractMetadata.getUpdatedBy())
                 .set(noSqlExtractConfig.activeFlag).equalToWhenPresent(extractMetadata.getActiveFlag())
-                .set(noSqlExtractConfig.collection).equalToWhenPresent(extractMetadata.getCollection())
-                .set(noSqlExtractConfig.partitioner).equalToWhenPresent(extractMetadata.getPartitioner())
+                .set(noSqlExtractConfig.collection).equalToWhenPresent(extractMetadata.getNoSqlMetadata().getCollection())
+                .set(noSqlExtractConfig.partitioner).equalToWhenPresent(extractMetadata.getNoSqlMetadata().getPartitioner())
                 .where(noSqlExtractConfig.pipelineName, isEqualTo(extractMetadata.getPipelineName()))
                 .and(noSqlExtractConfig.sequenceNumber, isEqualTo(extractMetadata.getSequenceNumber()))
                 .build()
@@ -539,16 +462,16 @@ public int updateExtractMetadata(ExtractMetadataResponse extractMetadata) {
                 .set(streamsExtractConfig.updatedTimestamp).equalTo(new Timestamp(System.currentTimeMillis()))
                 .set(streamsExtractConfig.updatedBy).equalToWhenPresent(extractMetadata.getUpdatedBy())
                 .set(streamsExtractConfig.activeFlag).equalToWhenPresent(extractMetadata.getActiveFlag())
-                .set(streamsExtractConfig.kafkaConsumerTopic).equalToWhenPresent(extractMetadata.getKafkaConsumerTopic())
-                .set(streamsExtractConfig.kafkaConsumerGroup).equalToWhenPresent(extractMetadata.getKafkaConsumerGroup())
-                .set(streamsExtractConfig.kafkaMaxOffset).equalToWhenPresent(extractMetadata.getKafkaMaxOffset())
-                .set(streamsExtractConfig.kafkaPollTimeout).equalToWhenPresent(extractMetadata.getKafkaPollTimeout())
-                .set(streamsExtractConfig.kafkaStrtOffset).equalToWhenPresent(extractMetadata.getKafkaStrtOffset())
-                .set(streamsExtractConfig.tranctnlCnsumrFlg).equalToWhenPresent(extractMetadata.getTranctnlCnsumrFlg())
-                .set(streamsExtractConfig.watrmrkDuration).equalToWhenPresent(extractMetadata.getWatrmrkDuration())
-                .set(streamsExtractConfig.stgFormt).equalToWhenPresent(extractMetadata.getStgFormt())
-                .set(streamsExtractConfig.stgPath).equalToWhenPresent(extractMetadata.getStgPath())
-                .set(streamsExtractConfig.stgPartitions).equalToWhenPresent(extractMetadata.getStgPartitions())
+                .set(streamsExtractConfig.kafkaConsumerTopic).equalToWhenPresent(extractMetadata.getStreamMetadata().getKafkaConsumerTopic())
+                .set(streamsExtractConfig.kafkaConsumerGroup).equalToWhenPresent(extractMetadata.getStreamMetadata().getKafkaConsumerGroup())
+                .set(streamsExtractConfig.kafkaMaxOffset).equalToWhenPresent(extractMetadata.getStreamMetadata().getKafkaMaxOffset())
+                .set(streamsExtractConfig.kafkaPollTimeout).equalToWhenPresent(extractMetadata.getStreamMetadata().getKafkaPollTimeout())
+                .set(streamsExtractConfig.kafkaStrtOffset).equalToWhenPresent(extractMetadata.getStreamMetadata().getKafkaStrtOffset())
+                .set(streamsExtractConfig.tranctnlCnsumrFlg).equalToWhenPresent(extractMetadata.getStreamMetadata().getTranctnlCnsumrFlg())
+                .set(streamsExtractConfig.watrmrkDuration).equalToWhenPresent(extractMetadata.getStreamMetadata().getWatrmrkDuration())
+                .set(streamsExtractConfig.stgFormt).equalToWhenPresent(extractMetadata.getStreamMetadata().getStgFormt())
+                .set(streamsExtractConfig.stgPath).equalToWhenPresent(extractMetadata.getStreamMetadata().getStgPath())
+                .set(streamsExtractConfig.stgPartitions).equalToWhenPresent(extractMetadata.getStreamMetadata().getStgPartitions())
                 .where(streamsExtractConfig.pipelineName, isEqualTo(extractMetadata.getPipelineName()))
                 .and(streamsExtractConfig.sequenceNumber, isEqualTo(extractMetadata.getSequenceNumber()))
                 .build()
@@ -560,7 +483,7 @@ public int updateExtractMetadata(ExtractMetadataResponse extractMetadata) {
     }
          
 
-private <T extends ExtractMetadataConfig> void mapCommonFields(ExtractMetadataResponse source, T target) {
+private <T extends ExtractMetadataConfig> void mapCommonFields(ExtractMetadata source, T target) {
   target.setPipelineName(source.getPipelineName());
   target.setSequenceNumber(source.getSequenceNumber());
   target.setExtractSourceType(source.getExtractSourceType());
