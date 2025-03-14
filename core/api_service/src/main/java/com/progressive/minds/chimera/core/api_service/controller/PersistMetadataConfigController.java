@@ -142,7 +142,7 @@ public class PersistMetadataConfigController {
     // Delete request -delete pipeline
     @GetMapping("/count")
     public ResponseEntity<GenericResponse> countNumberOfDataPipeline() {
-        long totalNumberOfPipeline = persistMetadataConfigService.getTotalNumberOfDataSources();
+        long totalNumberOfPipeline = persistMetadataConfigService.getTotalNumberOfDataSinks();
         GenericResponse genericResponse = GenericResponse.builder()
             .message("Number of PersistConfigs " + totalNumberOfPipeline)
             .statusCode(HttpStatus.OK.name())

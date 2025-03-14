@@ -2,6 +2,7 @@ package com.progressive.minds.chimera.core.api_service.controller;
 
 import com.progressive.minds.chimera.core.api_service.common.dto.GenericResponse;
 import com.progressive.minds.chimera.core.api_service.dto.DataPipeline;
+import com.progressive.minds.chimera.core.api_service.dto.PipelineMetadata;
 import com.progressive.minds.chimera.foundational.logging.ChimeraLogger;
 import com.progressive.minds.chimera.foundational.logging.ChimeraLoggerFactory;
 import com.progressive.minds.chimera.core.api_service.service.PipelineService;
@@ -37,14 +38,23 @@ public class PipelineController {
   @Autowired
   public PipelineController(PipelineService pipelineService) {
     this.pipelineService = pipelineService;
-     }
+  }
 
-     @Operation(summary = "Get a pipeline by name", description = "Retrieve an existing pipeline by its name")
+  @Operation(summary = "Get a pipeline by name", description = "Retrieve an existing pipeline by its name")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Pipeline retrieved successfully",
-          content = @Content(mediaType = "application/json", schema = @Schema(implementation = DataPipeline.class))),
-      @ApiResponse(responseCode = "404", description = "Pipeline not found")
+    @ApiResponse(responseCode = "200", description = "Pipeline retrieved successfully",
+      content = @Content(mediaType = "application/json", schema = @Schema(implementation = DataPipeline.class))),
+    @ApiResponse(responseCode = "404", description = "Pipeline not found")
   })
+
+  @GetMapping("/getDetails/{name}")
+  public ResponseEntity<PipelineMetadata> getPipelineMetadata(
+                                               @Parameter(description = "Name of the pipeline to retrieve", required = true)
+                                               @PathVariable("name") String name) {
+    logger.logInfo("Fetching Pipeline Metadata for pipeline: " + name + " from the database.");
+    return ResponseEntity.ok(pipelineService.getPipelineMetadata(name));
+  }
+
   @GetMapping("/{name}")
   public ResponseEntity<DataPipeline> getPipelineByName(
       @Parameter(description = "Name of the pipeline to retrieve", required = true) @PathVariable("name") String name) {
