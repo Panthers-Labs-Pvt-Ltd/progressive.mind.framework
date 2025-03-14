@@ -7,6 +7,7 @@ import static org.mybatis.dynamic.sql.SqlBuilder.isEqualTo;
 import static org.mybatis.dynamic.sql.SqlBuilder.select;
 
 import com.progressive.minds.chimera.core.api_service.dto.DataPipeline;
+import com.progressive.minds.chimera.core.api_service.dto.PipelineMetadata;
 import com.progressive.minds.chimera.core.api_service.entity.DataPipelineDynamicSqlEntity;
 import com.progressive.minds.chimera.core.api_service.repository.DataPipeLineDBMapper;
 import java.sql.Timestamp;
@@ -26,6 +27,21 @@ public class PipelineService {
 
   @Autowired
   private DataPipeLineDBMapper dataPipeLineDBMapper;
+  private OrganizationHierarchyService orgHierService;
+  private ExtractMetadataConfigService extractMetadataService;
+  private TransformMetadataConfigService transformMetadataService;
+  private persistMetadataConfigService persistMetadataConfigService;
+
+  public PipelineService(OrganizationHierarchyService orgHierService,
+                  ExtractMetadataConfigService extractMetadataService,
+                  TransformMetadataConfigService transformMetadataService,
+                  persistMetadataConfigService persistMetadataConfigService
+                  ) {
+    this.orgHierService = orgHierService;
+    this.extractMetadataService = extractMetadataService;
+    this.transformMetadataService = transformMetadataService;
+    this.persistMetadataConfigService = persistMetadataConfigService;
+  }
 
   public long getTotalNumberOfPipeline() {
       SelectStatementProvider countStatementProvider =
@@ -102,5 +118,25 @@ public class PipelineService {
 
     // Execute the delete operation and return the number of rows affected
     return dataPipeLineDBMapper.delete(deleteStatementProvider);
+  }
+
+  public PipelineMetadata getPipelineMetadata(String pipelineName) {
+    DataPipeline dataPipeline = getDataPipeLineByName(pipelineName);
+    PipelineMetadata pipelineMetadata = new PipelineMetadata();
+    pipelineMetadata.setPipelineName(dataPipeline.getPipelineName());
+    pipelineMetadata.setPipelineDescription(dataPipeline.getPipelineDescription());
+    pipelineMetadata.setProcessMode(dataPipeline.getProcessMode());
+    pipelineMetadata.setTags(dataPipeline.getTags());
+    pipelineMetadata.setOrgHierName(dataPipeline.getOrgHierName());
+    pipelineMetadata.setCreatedBy(dataPipeline.getCreatedBy());
+    pipelineMetadata.setCreatedTimestamp(dataPipeline.getCreatedTimestamp());
+    pipelineMetadata.setUpdatedBy(dataPipeline.getUpdatedBy());
+    pipelineMetadata.setUpdatedTimestamp(dataPipeline.getUpdatedTimestamp());
+    pipelineMetadata.setActiveFlag(dataPipeline.getActiveFlag());
+    pipelineMetadata.setOrg(orgHierService.getOrgHierarchyByName(dataPipeline.getOrgHierName()).orElse(null));
+    pipelineMetadata.setExtractMetadata(extractMetadataService.getExtractMetadata(pipelineName));
+    pipelineMetadata.setTransformMetadata(transformMetadataService.getTransformMetadataByPipelineName(pipelineName));
+    pipelineMetadata.setPersistMetadata(persistMetadataConfigService.getPersistMetadata(pipelineName));
+    return pipelineMetadata;
   }
 }
