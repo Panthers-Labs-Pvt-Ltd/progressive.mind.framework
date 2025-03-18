@@ -43,12 +43,24 @@ public class NamespaceManagement {
     public static void main(String[] args) {
         // Create a WorkflowServiceStubs instance to communicate with the Temporal service
         WorkflowServiceStubs service = WorkflowServiceStubs.newInstance();
-        CreateNamespace nm = new CreateNamespace();
-        String[] environments = {"dev"};
-        nm.createNamespacesForTeam(service, "my-namespace", environments);
+        // CreateNamespace nm = new CreateNamespace();
+        // String[] environments = {"dev", "test"};
+        // nm.createNamespacesForTeam(service, "my-namespace", environments);
 
-        UpdateNamespace un = new UpdateNamespace(service, "my-namespace");
-        un.updateNamespace("Updated description", "test@gmail.com");
+        // ListNamespaces ln = new ListNamespaces();
+        // ln.listNamespaces(service);
+        DescribeNamespace dn = new DescribeNamespace();
+        dn.describeNamespace(service, "my-namespace-dev");
+
+
+        // UpdateNamespace un = new UpdateNamespace(service, "my-namespace-dev");
+        // un.updateNamespace("Updated description", "test@gmail.com");
+
+        // DeprecateNamespace dn = new DeprecateNamespace();
+        // dn.deprecateNamespace(service, "my-namespace-dev");
+
+        // DeleteNamespace del = new DeleteNamespace();
+        // del.deleteNamespace(service, "my-namespace-dev");
 
         // Deprecation and Deletion Not allowed via programmatic API. It must be done via CLI.
     }
