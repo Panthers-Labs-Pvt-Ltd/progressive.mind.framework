@@ -4,11 +4,11 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.progressive.minds.chimera.foundational.logging.ChimeraLogger;
 import com.progressive.minds.chimera.foundational.logging.ChimeraLoggerFactory;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.iceberg.catalog.Catalog;
 import org.apache.iceberg.catalog.TableIdentifier;
 import org.apache.iceberg.spark.SparkCatalog;
-import org.apache.spark.sql.Dataset;
-import org.apache.spark.sql.Row;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -90,27 +90,60 @@ public class commonFunctions {
      *         the original DataFrame is returned.
      */
 
+    // public static Dataset<Row> DropDuplicatesOnKey(String dedupColumns, Dataset<Row> sourceDataframe) {
+    //     Dataset<Row> targetDataframe = sourceDataframe;
+    //     if (dedupColumns != null && !dedupColumns.isEmpty()) {
+    //         if (dedupColumns.trim().equals("*")) {
+    //             targetDataframe = sourceDataframe.dropDuplicates();
+    //         } else {
+    //             boolean existFlag = true;
+    //             String[] columns = dedupColumns.split(",");
+    //             for (String e : columns) {
+    //                 if (sourceDataframe.columns().toString().contains(e)) {
+    //                     existFlag = false;
+    //                     // Assuming logger is a logger instance
+    //                     logger.logInfo("[Deduplication]- De Duplication Column Not Exist in DataFrame");
+    //                 }
+    //             }
+    //             if (existFlag) {
+    //                 targetDataframe = sourceDataframe.dropDuplicates(columns);
+    //             }
+    //         }
+    //     }
+    //     return targetDataframe;
+    // }
+
     public static Dataset<Row> DropDuplicatesOnKey(String dedupColumns, Dataset<Row> sourceDataframe) {
-        Dataset<Row> targetDataframe = sourceDataframe;
-        if (dedupColumns != null && !dedupColumns.isEmpty()) {
-            if (dedupColumns.trim().equals("*")) {
-                targetDataframe = sourceDataframe.dropDuplicates();
-            } else {
-                boolean existFlag = true;
-                String[] columns = dedupColumns.split(",");
-                for (String e : columns) {
-                    if (sourceDataframe.columns().toString().contains(e)) {
-                        existFlag = false;
-                        // Assuming logger is a logger instance
-                        logger.logInfo("[Deduplication]- De Duplication Column Not Exist in DataFrame");
-                    }
-                }
-                if (existFlag) {
-                    targetDataframe = sourceDataframe.dropDuplicates(columns);
-                }
+        if (dedupColumns == null || dedupColumns.trim().isEmpty()) {
+            return sourceDataframe; // Return original DataFrame if no deduplication columns are provided
+        }
+
+        // Trim and split the deduplication columns
+        String[] columns = dedupColumns.trim().split(",");
+        for (int i = 0; i < columns.length; i++) {
+            columns[i] = columns[i].trim(); // Trim each column name
+        }
+
+        // Check if all specified columns exist in the DataFrame
+        List<String> missingColumns = new ArrayList<>();
+        for (String column : columns) {
+            if (!Arrays.asList(sourceDataframe.columns()).contains(column)) {
+                missingColumns.add(column);
             }
         }
-        return targetDataframe;
+
+        // Log missing columns (if any)
+        if (!missingColumns.isEmpty()) {
+            logger.logInfo("[Deduplication] - Columns not found in DataFrame: " + String.join(", ", missingColumns));
+            return sourceDataframe; // Return original DataFrame if any columns are missing
+        }
+
+        // Perform deduplication
+        if (columns.length == 1 && columns[0].equals("*")) {
+            return sourceDataframe.dropDuplicates(); // Deduplicate on all columns
+        } else {
+            return sourceDataframe.dropDuplicates(columns); // Deduplicate on specified columns
+        }
     }
 
     /**
@@ -130,29 +163,58 @@ public class commonFunctions {
      * @param partitionColumns An array of column names to check for null or empty values.
      * @return An array of column names that contain null or empty values.
      */
+//    public static String[] isPartitionKeysNull(Dataset<Row> inDataFrame, String[] partitionColumns) {
+//        List<String> nullOrEmptyColumns = new ArrayList<>();
+//
+//        for (String colName : partitionColumns) {
+//            Dataset<Row> distinctValues = inDataFrame.select(new Column(colName)).distinct();
+//            String[] colValues = distinctValues.collectAsList().stream()
+//                    .map(row -> row.getString(0))
+//                    .toArray(String[]::new);
+//
+//            boolean hasNullOrEmpty = false;
+//            for (String value : colValues) {
+//                if (value == null || value.trim().isEmpty()) {
+//                    hasNullOrEmpty = true;
+//                    break;
+//                }
+//            }
+//
+//            if (hasNullOrEmpty) {
+//                nullOrEmptyColumns.add(colName);
+//            }
+//        }
+//        return nullOrEmptyColumns.toArray(new String[0]);
+//    }
+
     public static String[] isPartitionKeysNull(Dataset<Row> inDataFrame, String[] partitionColumns) {
+        // Validate inputs
+        if (inDataFrame == null || partitionColumns == null || partitionColumns.length == 0) {
+            throw new IllegalArgumentException("Input DataFrame and partition columns cannot be null or empty.");
+        }
+
         List<String> nullOrEmptyColumns = new ArrayList<>();
 
         for (String colName : partitionColumns) {
-            Dataset<Row> distinctValues = inDataFrame.select(new Column(colName)).distinct();
-            String[] colValues = distinctValues.collectAsList().stream()
-                    .map(row -> row.getString(0))
-                    .toArray(String[]::new);
-
-            boolean hasNullOrEmpty = false;
-            for (String value : colValues) {
-                if (value == null || value.trim().isEmpty()) {
-                    hasNullOrEmpty = true;
-                    break;
-                }
+            // Check if the column exists in the DataFrame
+            if (!Arrays.asList(inDataFrame.columns()).contains(colName)) {
+                throw new IllegalArgumentException("Column '" + colName + "' does not exist in the DataFrame.");
             }
 
-            if (hasNullOrEmpty) {
+            // Use Spark's built-in functions to check for null or empty values
+            long nullOrEmptyCount = inDataFrame
+                    .filter(functions.col(colName).isNull().or(functions.col(colName).equalTo("")))
+                    .count();
+
+            if (nullOrEmptyCount > 0) {
                 nullOrEmptyColumns.add(colName);
             }
         }
+
         return nullOrEmptyColumns.toArray(new String[0]);
     }
+
+
     public String getValue(String search, String inKeyValuePairs) {
         String returnString = "";
         List<HashMap<String, String>> userConfig = new Gson().fromJson(inKeyValuePairs,
@@ -249,55 +311,55 @@ public class commonFunctions {
     }
 
 
-   /* Error During Compilation - error: for-each not applicable to expression type
-   public String dynamicPartitions(String[] partitionColumnBy, Dataset<Row> tableDataFrame) {
-        Dataset<Row> dropDf = tableDataFrame.select(partitionColumnBy[0].trim(),
-                partitionColumnBy).dropDuplicates(partitionColumnBy[0], partitionColumnBy);
+    /* Error During Compilation - error: for-each not applicable to expression type
+    public String dynamicPartitions(String[] partitionColumnBy, Dataset<Row> tableDataFrame) {
+         Dataset<Row> dropDf = tableDataFrame.select(partitionColumnBy[0].trim(),
+                 partitionColumnBy).dropDuplicates(partitionColumnBy[0], partitionColumnBy);
 
-        StringBuilder queryStrBuilder = new StringBuilder();
-        for (Row row : dropDf.collect()) {
-            StringBuilder rowBuilder = new StringBuilder();
-            for (int colIndex = 0; colIndex < dropDf.columns().length; colIndex++) {
-                rowBuilder.append(dropDf.columns()[colIndex].trim())
-                        .append(" = '")
-                        .append(row.get(colIndex))
-                        .append("'");
-                if (colIndex < dropDf.columns().length - 1) {
-                    rowBuilder.append(",");
-                }
-            }
-            queryStrBuilder.append(rowBuilder.toString()).append("),PARTITION(");
-        }
-        String queryStr = queryStrBuilder.toString();
-        logger.logInfo("Dynamic Partition Query", queryStr);
-        return queryStr;
-    }
+         StringBuilder queryStrBuilder = new StringBuilder();
+         for (Row row : dropDf.collect()) {
+             StringBuilder rowBuilder = new StringBuilder();
+             for (int colIndex = 0; colIndex < dropDf.columns().length; colIndex++) {
+                 rowBuilder.append(dropDf.columns()[colIndex].trim())
+                         .append(" = '")
+                         .append(row.get(colIndex))
+                         .append("'");
+                 if (colIndex < dropDf.columns().length - 1) {
+                     rowBuilder.append(",");
+                 }
+             }
+             queryStrBuilder.append(rowBuilder.toString()).append("),PARTITION(");
+         }
+         String queryStr = queryStrBuilder.toString();
+         logger.logInfo("Dynamic Partition Query", queryStr);
+         return queryStr;
+     }
 
-    public String dynamicAddPartitions(String[] partitionColumnBy, Dataset<Row> tableDataFrame) {
-        logger.logInfo("dynamicAddPartitions", "Initiated");
-        Dataset<Row> dropDf = tableDataFrame.select(partitionColumnBy[0].trim(),
-                partitionColumnBy).dropDuplicates(partitionColumnBy[0], partitionColumnBy);
+     public String dynamicAddPartitions(String[] partitionColumnBy, Dataset<Row> tableDataFrame) {
+         logger.logInfo("dynamicAddPartitions", "Initiated");
+         Dataset<Row> dropDf = tableDataFrame.select(partitionColumnBy[0].trim(),
+                 partitionColumnBy).dropDuplicates(partitionColumnBy[0], partitionColumnBy);
 
-        StringBuilder queryStrBuilder = new StringBuilder();
-        for (Row row : dropDf.collect()) {
-            StringBuilder rowBuilder = new StringBuilder();
-            for (int colIndex = 0; colIndex < dropDf.columns().length; colIndex++) {
-                rowBuilder.append(dropDf.columns()[colIndex].trim())
-                        .append(" = '")
-                        .append(row.get(colIndex))
-                        .append("'");
-                if (colIndex < dropDf.columns().length - 1) {
-                    rowBuilder.append(",");
-                }
-            }
-            queryStrBuilder.append(rowBuilder.toString()).append("),PARTITION(");
-        }
-        String queryStr = queryStrBuilder.toString();
-        logger.logInfo("DynamicAddPartition Query", queryStr);
-        return queryStr;
-    }
+         StringBuilder queryStrBuilder = new StringBuilder();
+         for (Row row : dropDf.collect()) {
+             StringBuilder rowBuilder = new StringBuilder();
+             for (int colIndex = 0; colIndex < dropDf.columns().length; colIndex++) {
+                 rowBuilder.append(dropDf.columns()[colIndex].trim())
+                         .append(" = '")
+                         .append(row.get(colIndex))
+                         .append("'");
+                 if (colIndex < dropDf.columns().length - 1) {
+                     rowBuilder.append(",");
+                 }
+             }
+             queryStrBuilder.append(rowBuilder.toString()).append("),PARTITION(");
+         }
+         String queryStr = queryStrBuilder.toString();
+         logger.logInfo("DynamicAddPartition Query", queryStr);
+         return queryStr;
+     }
 
-    */
+     */
     public static DataType getDataTypeForSchema(String colName, String typeString) {
         DataType returnDataType = DataTypes.StringType;
         String dataType;
@@ -479,15 +541,43 @@ public class commonFunctions {
         logger.logInfo("ProcessEvent - constructStructSchema Completed");
         return structSchema;
     }
+//    public static Dataset<Row> mergeColumnsToDataFrame(Dataset<Row> tableDataFrame, String colName, String colValue) {
+//        // Split column names and values into lists
+//        List<String> colNames = Arrays.asList(colName.split(","));
+//        List<String> colValues = Arrays.asList(colValue.split(","));
+//
+//        // Add each column-value pair to the DataFrame
+//        for (int i = 0; i < colNames.size(); i++) {
+//            String columnName = colNames.get(i);
+//            String columnValue = colValues.get(i);
+//            tableDataFrame = tableDataFrame.withColumn(columnName, functions.lit(columnValue));
+//        }
+//
+//        return tableDataFrame;
+//    }
+
+
     public static Dataset<Row> mergeColumnsToDataFrame(Dataset<Row> tableDataFrame, String colName, String colValue) {
+        // Validate inputs
+        if (StringUtils.isBlank(colName) || StringUtils.isBlank(colValue)) {
+            throw new IllegalArgumentException("Column names and values cannot be null or empty.");
+        }
+
         // Split column names and values into lists
         List<String> colNames = Arrays.asList(colName.split(","));
         List<String> colValues = Arrays.asList(colValue.split(","));
 
+        // Ensure the number of column names matches the number of values
+        if (colNames.size() != colValues.size()) {
+            throw new IllegalArgumentException("The number of column names must match the number of values.");
+        }
+
         // Add each column-value pair to the DataFrame
         for (int i = 0; i < colNames.size(); i++) {
-            String columnName = colNames.get(i);
-            String columnValue = colValues.get(i);
+            String columnName = colNames.get(i).trim(); // Trim to remove extra spaces
+            String columnValue = colValues.get(i).trim(); // Trim to remove extra spaces
+
+            // Add the column with the specified value
             tableDataFrame = tableDataFrame.withColumn(columnName, functions.lit(columnValue));
         }
 
