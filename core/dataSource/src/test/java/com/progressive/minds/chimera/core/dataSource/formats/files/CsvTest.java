@@ -21,14 +21,28 @@ class CsvTest {
     }
 
     @Test
-    void testReadCsv() {
+    void testReadCsvWithSchema() {
+        String sourcePath = "src/test/resources/sample.csv";
+        String columnFilter = "name,age";
+        String rowFilter = "age > 20";
+        String customConfig = "header=true";
+        Integer limit = 2;
+        String schemaPath = "src/test/resources/schema.yml";
+        Dataset<Row> result = Csv.read(sparkSession, "TestPipeline", sourcePath, columnFilter, rowFilter, customConfig, limit, schemaPath);
+        assertNotNull(result);
+        assertEquals(2, result.columns().length);
+        assertTrue(result.count() <= 10);
+    }
+
+    @Test
+    void testReadCsvWithInferSchema() {
         String sourcePath = "src/test/resources/sample.csv";
         String columnFilter = "name,age";
         String rowFilter = "age > 30";
-        String customConfig = "header=true, inferSchema=true";
+        String customConfig = "header=true";
         Integer limit = 10;
 
-        Dataset<Row> result = Csv.read(sparkSession, "TestPipeline", sourcePath, columnFilter, rowFilter, customConfig, limit);
+        Dataset<Row> result = Csv.read(sparkSession, "TestPipeline", sourcePath, columnFilter, rowFilter, customConfig, limit, null);
 
         assertNotNull(result);
         assertEquals(2, result.columns().length);
@@ -37,23 +51,25 @@ class CsvTest {
 
     @Test
     void testWriteCsv() {
-        String sourcePath = "src/test/resources/sample.csv";
-        String outputPath = "src/test/resources/output/testOp.csv";
+        String sourcePath = "src/test/resources/organizations.csv";
+        String outputPath = "src/test/resources/output/organizations.csv";
         String compressionFormat = "gzip";
         String savingMode = "Overwrite";
-        String partitioningKeys = "name";
-        String sortingKeys = "age";
+        String partitioningKeys = "country,industry";
+        String sortingKeys = "founded";
         String duplicationKeys = "name";
-        String extraColumns = "country";
-        String extraColumnsValues = "USA";
-        String customConfig = "header=true, inferSchema=true";
+        String extraColumns = "";
+        String extraColumnsValues = "";
+        String customConfig = "header=true";
 
         sparkSession.sql("CREATE DATABASE IF NOT EXISTS testDB" );
 
-        Dataset<Row> sourceDataFrame = Csv.read(sparkSession, "TestPipeline", sourcePath, "", "", customConfig, null);
+        String schemaPath = "src/test/resources/organization.yml";
+
+        Dataset<Row> sourceDataFrame = Csv.read(sparkSession, "TestPipeline", sourcePath, "", "", customConfig, null, schemaPath);
 
         try {
-            Dataset<Row> result = Csv.write(sparkSession, "TestPipeline", "testDB", "testTable", sourceDataFrame, outputPath, compressionFormat, savingMode, partitioningKeys, sortingKeys, duplicationKeys, extraColumns, extraColumnsValues, customConfig);
+            Dataset<Row> result = Csv.write(sparkSession, "TestPipeline", "testDB", "organizations", sourceDataFrame, outputPath, compressionFormat, savingMode, partitioningKeys, sortingKeys, duplicationKeys, extraColumns, extraColumnsValues, customConfig);
 
             assertNotNull(result);
             assertTrue(result.columns().length > 0);

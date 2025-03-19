@@ -7,11 +7,20 @@ import com.progressive.minds.chimera.foundational.logging.ChimeraLoggerFactory;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.spark.sql.*;
+import org.apache.spark.sql.types.StructType;
+import org.apache.spark.sql.types.DataType;
+import org.apache.spark.sql.types.DataTypes;
+import org.apache.spark.sql.types.StructField;
 import org.jetbrains.annotations.NotNull;
+import org.yaml.snakeyaml.Yaml;
 
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Optional;
 
 public class Csv {
@@ -26,11 +35,12 @@ public class Csv {
      * @param inRowFilter
      * @param inCustomConfig
      * @param Limit
+     * @param schemaPath
      * @return
      */
     public static Dataset<Row> read(SparkSession sparkSession, String pipelineName,
                                     String sourcePath, String columnFilter, String rowFilter,
-                                    String customConfig, Integer limit) {
+                                    String customConfig, Integer limit, String schemaPath) {
 
         logger.logInfo("Initiated CSV File Reading for Pipeline: " + pipelineName);
 
@@ -44,10 +54,34 @@ public class Csv {
                 String[] options = customConfig.split(",");
                 for (String option : options) {
                     String[] keyValue = option.split("=");
-                    if (keyValue.length == 2) {
+                    if (keyValue.length == 2 && StringUtils.isNotEmpty(keyValue[0]) && StringUtils.isNotEmpty(keyValue[1])) {
                         reader.option(keyValue[0].trim(), keyValue[1].trim());
+                    } else {
+                        logger.logWarning("Invalid custom option: " + option);
                     }
                 }
+            }
+
+            // Apply schema if provided, otherwise infer schema
+            if (StringUtils.isNotEmpty(schemaPath)) {
+                Map<String, Object> schemaConfig = getSchemaConfigFromYaml(schemaPath);
+                if (schemaConfig != null && schemaConfig.containsKey("source-parameters")) {
+                    Map<String, Object> sourceParameters = (Map<String, Object>) schemaConfig.get("source-parameters");
+                    StructType schema = getSchemaFromConfig(sourceParameters);
+                    reader.schema(schema);
+                    logger.logInfo("Schema built and applied.");
+
+                    // Apply delimiter and quote options from schema config
+                    if (sourceParameters.containsKey("delimiter")) {
+                        reader.option("delimiter", sourceParameters.get("delimiter").toString());
+                    }
+                    if (sourceParameters.containsKey("quote")) {
+                        reader.option("quote", sourceParameters.get("quote").toString());
+                    }
+                }
+            } else {
+                reader.option("inferSchema", "true");
+                logger.logInfo("No schema provided. Inferring schema.");
             }
 
             dataFrame = reader.load(sourcePath);
@@ -56,7 +90,7 @@ public class Csv {
             if (StringUtils.isNotEmpty(columnFilter)) {
                 String[] columnArray = columnFilter.split(",");
                 if (columnArray.length > 0) {
-                    dataFrame = dataFrame.select(columnArray[0], Arrays.copyOfRange(columnArray, 1, columnArray.length));
+                    dataFrame = dataFrame.selectExpr(columnArray);
                 }
             }
 
@@ -72,11 +106,53 @@ public class Csv {
 
         } catch (Exception e) {
             logger.logError("CSV File Reading for Pipeline: " + pipelineName + " failed.", e);
+            throw new RuntimeException("Failed to read CSV file", e); // Rethrow or handle as needed
         }
 
         return dataFrame;
     }
 
+    private static Map<String, Object> getSchemaConfigFromYaml(String schemaPath) throws Exception {
+        Yaml yaml = new Yaml();
+        try (InputStream inputStream = Files.newInputStream(Paths.get(schemaPath))) {
+            return yaml.load(inputStream);
+        }
+    }
+
+    private static StructType getSchemaFromConfig(Map<String, Object> schemaConfig) {
+        List<Map<String, Object>> attributes = (List<Map<String, Object>>) schemaConfig.get("attributes");
+        StructField[] fields = attributes.stream()
+                .map(attr -> DataTypes.createStructField(
+                        attr.get("name").toString(),
+                        getDataType(attr.get("type").toString()),
+                        Boolean.parseBoolean(attr.get("nullable").toString())))
+                .toArray(StructField[]::new);
+        return new StructType(fields);
+    }
+
+    private static DataType getDataType(String type) {
+        switch (type.toLowerCase()) {
+            case "tinyint": return DataTypes.ByteType;
+            case "smallint": return DataTypes.ShortType;
+            case "integer": return DataTypes.IntegerType;
+            case "bigint": return DataTypes.LongType;
+            case "float": return DataTypes.FloatType;
+            case "double": return DataTypes.DoubleType;
+            case "boolean": return DataTypes.BooleanType;
+            case "long": return DataTypes.LongType;
+            case "string": return DataTypes.StringType;
+            case "char": return DataTypes.StringType;
+            case "varchar": return DataTypes.StringType;
+            case "date": return DataTypes.DateType;
+            case "timestamp": return DataTypes.TimestampType;
+            case "binary": return DataTypes.BinaryType;
+            case "decimal": return DataTypes.createDecimalType(38, 10);
+            case "datetime": return DataTypes.DateType;
+            case "null": return DataTypes.NullType;
+            case "array": return DataTypes.createArrayType(DataTypes.StringType, true);
+            default: return DataTypes.StringType;
+        }
+    }
 
     /*
      * @param inSparkSession
