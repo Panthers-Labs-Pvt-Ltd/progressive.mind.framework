@@ -68,6 +68,12 @@
             <artifactId>dqdl</artifactId>
             <version>${software.amazon.glue.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.scalatest</groupId>
+            <artifactId>scalatest_${scala.major.version}</artifactId>
+            <version>${scalatest.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
 

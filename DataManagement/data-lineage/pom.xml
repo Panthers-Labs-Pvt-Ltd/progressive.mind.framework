@@ -10,9 +10,7 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <groupId>com.progressive.minds.chimera</groupId>
     <artifactId>DataManagement.data-lineage</artifactId>
-    <version>1.0-SNAPSHOT</version>
 
     <properties>
         <open.lineage.version>1.25.0</open.lineage.version>
@@ -35,12 +33,6 @@
             <version>${spark.version}</version> <!-- Use the same version as your Spark core -->
         </dependency>
 
-        <dependency>
-            <groupId>com.progressive.minds.chimera</groupId>
-            <artifactId>core.databaseOps</artifactId>
-            <version>${chimera.project.version}</version>
-            <scope>compile</scope>
-        </dependency>
           <dependency>
             <groupId>com.progressive.minds.chimera</groupId>
             <artifactId>core.dataSource</artifactId>
@@ -62,7 +54,10 @@
             <artifactId>jsqlparser</artifactId>
             <version>4.6</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>org.apache.kafka</groupId>
@@ -118,7 +113,6 @@
             <artifactId>sql-formatter</artifactId>
             <version>${sql.formatter.version}</version>
         </dependency>
-
     </dependencies>
     <build>
         <plugins>
