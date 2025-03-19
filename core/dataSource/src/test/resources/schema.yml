@@ -1,0 +1,10 @@
+source-parameters:
+  delimiter: ","
+  quote: "\""
+  attributes:
+    - name: "name"
+      type: "string"
+      nullable: true
+    - name: "age"
+      type: "int"
+      nullable: true
