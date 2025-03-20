@@ -1,0 +1,31 @@
+source-parameters:
+  delimiter: ","
+  quote: "\""
+  attributes:
+    - name: "index"
+      type: "string"
+      nullable: true
+    - name: "organizationId"
+      type: "string"
+      nullable: true
+    - name: "name"
+      type: "string"
+      nullable: true
+    - name: "website"
+      type: "string"
+      nullable: true
+    - name: "country"
+      type: "string"
+      nullable: true
+    - name: "description"
+      type: "string"
+      nullable: true
+    - name: "founded"
+      type: "string"
+      nullable: true
+    - name: "industry"
+      type: "string"
+      nullable: true
+    - name: "noOfEmployees"
+      type: "bigint"
+      nullable: true
