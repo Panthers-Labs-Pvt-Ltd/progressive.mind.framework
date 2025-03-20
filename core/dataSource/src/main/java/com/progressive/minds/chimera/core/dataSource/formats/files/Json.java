@@ -8,31 +8,18 @@ import com.progressive.minds.chimera.foundational.logging.ChimeraLoggerFactory;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.spark.sql.*;
 
-public class Csv {
-    private static final ChimeraLogger logger = ChimeraLoggerFactory.getLogger(Csv.class);
+public class Json {
+    private static final ChimeraLogger logger = ChimeraLoggerFactory.getLogger(Json.class);
     private static final String DEFAULT_COMPRESSION_FORMAT = null;
 
-    /*
-     * @param inSparkSession
-     * @param inPipelineName
-     * @param inSourcePath
-     * @param inColumnFilter
-     * @param inRowFilter
-     * @param inCustomConfig
-     * @param Limit
-     * @param schemaPath
-     * @return
-     */
     public static Dataset<Row> read(SparkSession sparkSession, String pipelineName,
                                     String sourcePath, String columnFilter, String rowFilter,
                                     String customConfig, Integer limit, String schemaPath) {
 
-        logger.logInfo("Initiated CSV File Reading for Pipeline: " + pipelineName);
-
+        logger.logInfo("Initiated JSON File Reading for Pipeline: " + pipelineName);
         Dataset<Row> dataFrame = sparkSession.emptyDataFrame();
-
         try {
-            DataFrameReader reader = sparkSession.read().format("csv");
+            DataFrameReader reader = sparkSession.read().format("json");
             applyReaderOptions(customConfig, reader);
             applyOrInferSchema(schemaPath, reader);
             dataFrame = reader.load(sourcePath);
@@ -40,30 +27,14 @@ public class Csv {
             dataFrame = filterRows(rowFilter, dataFrame);
             dataFrame = applyLimit(limit, dataFrame);
         } catch (Exception e) {
-            logger.logError("CSV File Reading for Pipeline: " + pipelineName + " failed.", e);
-            throw new RuntimeException("Failed to read CSV file", e); // Rethrow or handle as needed
+            logger.logError("JSON File Reading for Pipeline: " + pipelineName + " failed.", e);
+            throw new RuntimeException("Failed to read JSON file", e); // Rethrow or handle as needed
         }
-
         return dataFrame;
     }
-    /*
-     * @param inSparkSession
-     * @param inPipelineName
-     * @param inDatabaseName
-     * @param inTableName
-     * @param inSourceDataFrame
-     * @param inOutputPath
-     * @param inCompressionFormat
-     * @param inSavingMode
-     * @param inPartitioningKeys
-     * @param inSortingKeys
-     * @param inDuplicationKeys
-     * @param inExtraColumns
-     * @param inExtraColumnsValues
-     * @param inCustomConfig
-     * @return
-     * @throws Exception
-     */
+
+
+
     public static Dataset<Row> write(
             SparkSession sparkSession,
             String pipelineName,
@@ -96,9 +67,9 @@ public class Csv {
             processedDataFrame = processDeduplication(processedDataFrame, duplicationKeys);
 
             if (isPartitioned) {
-                savePartitionedTable(outputPath, "csv", savingMode, partitioningKeys, processedDataFrame, fullTableName, tableExists);
+                savePartitionedTable(outputPath, "json", savingMode, partitioningKeys, processedDataFrame, fullTableName, tableExists);
             } else {
-                saveNonPartitionedTable(outputPath, "csv", savingMode, processedDataFrame, fullTableName, resolvedCompressionFormat, tableExists);
+                saveNonPartitionedTable(outputPath, "json", savingMode, processedDataFrame, fullTableName, resolvedCompressionFormat, tableExists);
             }
 
             logger.logInfo("Data successfully written to " + fullTableName);
