@@ -456,8 +456,8 @@ public class DatasetFacets {
         Map<String, String> persistInfo = new HashMap<>();
         Map<String, String> dataSourceMap = new HashMap<>();
         String datasetURN;
-        String datasetName = nvl(inPersistMetadata.getDatabaseName(), STRING_DEFAULTS) + "." +
-                nvl(inPersistMetadata.getTableName(), STRING_DEFAULTS);
+        String datasetName = null; /*nvl(inPersistMetadata.getDatabaseName(), STRING_DEFAULTS) + "." +
+                nvl(inPersistMetadata.getTableName(), STRING_DEFAULTS)*/;
         String SourceType = inPersistMetadata.getDataSourceConnection().getDataSourceType().toLowerCase(Locale.ROOT);
         StructType inSchema = getDataFrameSchema(inSparkSession, inPersistMetadata.getTargetSql());
 

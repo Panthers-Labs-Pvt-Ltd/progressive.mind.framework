@@ -38,12 +38,25 @@
             <version>${chimera.project.version}</version>
             <scope>compile</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.apache.datafusion</groupId>
+            <artifactId>comet-spark-spark3.5_${spark.scala.version}</artifactId>
+            <version>${comet-spark-spark3.5-version}</version>
+        </dependency>
         <dependency>
             <groupId>com.progressive.minds.chimera</groupId>
             <artifactId>core.temporal</artifactId>
             <version>${chimera.project.version}</version>
             <scope>compile</scope>
         </dependency>
+
+        <dependency>
+            <groupId>ch.cern.sparkmeasure</groupId>
+            <artifactId>spark-measure_${spark.scala.version}</artifactId>
+            <version>0.24</version>
+        </dependency>
+
     </dependencies>
 
 </project>

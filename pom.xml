@@ -45,35 +45,6 @@
        <module>DataManagement</module>
     </modules>
 
-    <dependencyManagement>
-        <dependencies>
-            <!-- AWS SDK for Java 2.x BOM -->
-            <dependency>
-                <groupId>software.amazon.awssdk</groupId>
-                <artifactId>bom</artifactId>
-                <version>${aws.java.sdk2.version}</version> <!-- Use the latest version -->
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-            <!-- Import Spring Boot BOM- Inheriting was wrong since it was not needed for non-spring boot modules-->
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-dependencies</artifactId>
-                <version>${spring-boot.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-            <!-- Spring Cloud Dependencies BOM -->
-            <dependency>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-dependencies</artifactId>
-                <version>${spring-cloud.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
-
 
     <properties>
         <!-- Chimera version -->
@@ -164,7 +135,33 @@
     </properties>
     <!--<repositories><repository><id>gitlab-maven</id><url>https://gitlab.com/manishkumargupta/TestScala.git</url></repository></repositories><distributionManagement><repository><id>gitlab-maven</id><url>https://gitlab.com/manishkumargupta/TestScala.git</url></repository><snapshotRepository><id>gitlab-maven</id><url>https://gitlab.com/manishkumargupta/TestScala.git</url></snapshotRepository></distributionManagement>-->
 
-    <dependencies>
+    <dependencyManagement>
+        <dependencies>
+            <!-- AWS SDK for Java 2.x BOM -->
+            <dependency>
+                <groupId>software.amazon.awssdk</groupId>
+                <artifactId>bom</artifactId>
+                <version>${aws.java.sdk2.version}</version> <!-- Use the latest version -->
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <!-- Import Spring Boot BOM- Inheriting was wrong since it was not needed for non-spring boot modules-->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring-boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <!-- Spring Cloud Dependencies BOM -->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
         <dependency>
             <groupId>org.scalatest</groupId>
             <artifactId>scalatest_${scala.major.version}</artifactId>
@@ -397,11 +394,27 @@
             <artifactId>json</artifactId>
             <version>20240303</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.progressive.minds.chimera</groupId>
+            <artifactId>common</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.17.0</version>
+            <scope>compile</scope>
+        </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>${lombok.version}</version>
-            <scope>provided</scope>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
     <build>
@@ -499,7 +512,7 @@
                     </argLine>
                 </configuration>
             </plugin>
-            <plugin>
+<!--            <plugin>
                 <groupId>org.scalatest</groupId>
                 <artifactId>scalatest-maven-plugin</artifactId>
                 <version>${scalatest.maven.plugin.version}</version>
@@ -510,22 +523,22 @@
                     <filereports>WDF TestSuite.txt</filereports>
                     <argLine>
                         -XX:+IgnoreUnrecognizedVMOptions
-                        --add-modules jdk.incubator.vector
-                        --add-opens=java.base/java.lang=ALL-UNNAMED
-                        --add-opens=java.base/java.lang.invoke=ALL-UNNAMED
-                        --add-opens=java.base/java.lang.reflect=ALL-UNNAMED
-                        --add-opens=java.base/java.io=ALL-UNNAMED
-                        --add-opens=java.base/java.net=ALL-UNNAMED
-                        --add-opens=java.base/java.nio=ALL-UNNAMED
-                        --add-opens=java.base/java.util=ALL-UNNAMED
-                        --add-opens=java.base/java.util.concurrent=ALL-UNNAMED
-                        --add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED
-                        --add-opens=java.base/jdk.internal.ref=ALL-UNNAMED
-                        --add-opens=java.base/sun.nio.ch=ALL-UNNAMED
-                        --add-opens=java.base/sun.nio.cs=ALL-UNNAMED
-                        --add-opens=java.base/sun.security.action=ALL-UNNAMED
-                        --add-opens=java.base/sun.util.calendar=ALL-UNNAMED
-                        --add-opens=java.security.jgss/sun.security.krb5=ALL-UNNAMED
+                        &#45;&#45;add-modules jdk.incubator.vector
+                        &#45;&#45;add-opens=java.base/java.lang=ALL-UNNAMED
+                        &#45;&#45;add-opens=java.base/java.lang.invoke=ALL-UNNAMED
+                        &#45;&#45;add-opens=java.base/java.lang.reflect=ALL-UNNAMED
+                        &#45;&#45;add-opens=java.base/java.io=ALL-UNNAMED
+                        &#45;&#45;add-opens=java.base/java.net=ALL-UNNAMED
+                        &#45;&#45;add-opens=java.base/java.nio=ALL-UNNAMED
+                        &#45;&#45;add-opens=java.base/java.util=ALL-UNNAMED
+                        &#45;&#45;add-opens=java.base/java.util.concurrent=ALL-UNNAMED
+                        &#45;&#45;add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED
+                        &#45;&#45;add-opens=java.base/jdk.internal.ref=ALL-UNNAMED
+                        &#45;&#45;add-opens=java.base/sun.nio.ch=ALL-UNNAMED
+                        &#45;&#45;add-opens=java.base/sun.nio.cs=ALL-UNNAMED
+                        &#45;&#45;add-opens=java.base/sun.security.action=ALL-UNNAMED
+                        &#45;&#45;add-opens=java.base/sun.util.calendar=ALL-UNNAMED
+                        &#45;&#45;add-opens=java.security.jgss/sun.security.krb5=ALL-UNNAMED
                         -Djdk.reflect.useDirectMethodHandle=false
                         -Dio.netty.tryReflectionSetAccessible=true
                         -Xmx1024m
@@ -539,7 +552,7 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
+            </plugin>-->
             <!-- enforcers -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -561,77 +574,6 @@
                                 </requireJavaVersion>
                             </rules>
                         </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.scalastyle</groupId>
-                <artifactId>scalastyle-maven-plugin</artifactId>
-                <version>1.0.0</version>
-                <configuration>
-                    <verbose>true</verbose>
-                    <failOnViolation>true</failOnViolation>
-                    <includeTestSourceDirectory>true</includeTestSourceDirectory>
-                    <failOnWarning>true</failOnWarning>
-                    <sourceDirectories>
-                        <directory>${basedir}/src/main/java</directory>
-                        <directory>${basedir}/src/main/scala</directory>
-                    </sourceDirectories>
-                    <testSourceDirectories>
-                        <directory>${basedir}/src/test/java</directory>
-                        <directory>${basedir}/src/test/scala</directory>
-                    </testSourceDirectories>
-                    <configLocation>scalastyle-config.xml</configLocation>
-                    <outputFile>${basedir}/target/scalastyle-output.xml</outputFile>
-                    <inputEncoding>${project.build.sourceEncoding}</inputEncoding>
-                    <outputEncoding>${project.reporting.outputEncoding}</outputEncoding>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>styleCheck</id>
-                        <phase> verify</phase>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>3.6.0</version>
-                <configuration>
-                    <failOnViolation>true</failOnViolation>
-                    <includeTestSourceDirectory>true</includeTestSourceDirectory>
-                    <sourceDirectories>undefined
-                        <directory>${basedir}/src/main/java</directory>
-                        <directory>${basedir}/src/main/scala</directory>
-                    </sourceDirectories>
-                    <testSourceDirectories>
-                        <directory>${basedir}/src/test/java</directory>
-                        <directory>${basedir}/src/test/scala</directory>
-                    </testSourceDirectories>
-                    <configLocation>checkstyle.xml</configLocation>
-                    <outputFile>${basedir}/target/checkstyle-output.xml</outputFile>
-                    <inputEncoding>${project.build.sourceEncoding}</inputEncoding>
-                    <outputEncoding>${project.reporting.outputEncoding}</outputEncoding>
-                </configuration>
-
-                <dependencies>
-                    <dependency>
-                        <groupId>com.puppycrawl.tools</groupId>
-                        <artifactId>checkstyle</artifactId>
-                        <version>10.21.2</version>
-                    </dependency>
-                </dependencies>
-                <executions>
-                    <execution>
-                        <phase>
-                            verify
-                        </phase>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
                     </execution>
                 </executions>
             </plugin>
