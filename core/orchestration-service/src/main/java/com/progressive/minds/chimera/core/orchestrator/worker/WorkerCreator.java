@@ -5,7 +5,7 @@ import io.temporal.serviceclient.WorkflowServiceStubs;
 import io.temporal.worker.Worker;
 import io.temporal.worker.WorkerFactory;
 import java.util.List;
-import org.apache.commons.collections4.CollectionUtils;
+
 
 public class WorkerCreator {
 
@@ -28,7 +28,7 @@ public class WorkerCreator {
     }
 
     // Register activities dynamically
-    if(CollectionUtils.isNotEmpty(activityImplementations)) {
+    if(!activityImplementations.isEmpty()) {
       for (Object activityImplementation : activityImplementations) {
         worker.registerActivitiesImplementations(activityImplementation);
       }

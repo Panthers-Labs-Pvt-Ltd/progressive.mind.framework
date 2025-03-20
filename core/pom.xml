@@ -15,7 +15,6 @@
     <packaging>pom</packaging>
 
     <modules>
-<!--        <module>databaseOps</module>-->
         <module>dataSource</module>
         <module>observability</module>
         <module>orchestration-service</module>

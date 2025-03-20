@@ -15,7 +15,6 @@ import lombok.Setter;
 @Data
 @Setter
 @Getter
-
 public class PersistMetadata {
 
   @NotBlank(message = "Pipeline Name cannot be blank")
