@@ -53,16 +53,9 @@
         </dependency>
         <dependency>
             <groupId>com.progressive.minds.chimera</groupId>
-            <artifactId>core.databaseOps</artifactId>
-            <version>${chimera.project.version}</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.progressive.minds.chimera</groupId>
             <artifactId>foundational.logging</artifactId>
             <version>${chimera.project.version}</version>
         </dependency>
-
 
         <dependency>
             <groupId>com.progressive.minds.chimera</groupId>
@@ -84,8 +77,6 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <version>3.17.0</version>
-            <scope>test</scope>
         </dependency>
 
         <dependency>
