@@ -1,0 +1,19 @@
+source-parameters:
+  delimiter: ","
+  quote: "\""
+  attributes:
+    - name: "name"
+      type: "string"
+      nullable: false
+    - name: "language"
+      type: "string"
+      nullable: true
+    - name: "id"
+      type: "string"
+      nullable: false
+    - name: "bio"
+      type: "string"
+      nullable: false
+    - name: "version"
+      type: "string"
+      nullable: false
