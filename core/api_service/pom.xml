@@ -2,6 +2,7 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns="http://maven.apache.org/POM/4.0.0"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
   <parent>
     <artifactId>core</artifactId>
     <groupId>com.progressive.minds.chimera</groupId>
@@ -9,7 +10,7 @@
   </parent>
 
   <artifactId>core.api_service</artifactId>
-  <modelVersion>4.0.0</modelVersion>
+
   <properties>
     <maven.compiler.source>17</maven.compiler.source>
     <maven.compiler.target>17</maven.compiler.target>
@@ -109,6 +110,11 @@
       <version>${flyway-database-postgresql-version}</version>
       <scope>runtime</scope>
     </dependency>
+
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+    </dependency>
   </dependencies>
 
   <build>
@@ -129,6 +135,7 @@
           </execution>
         </executions>
       </plugin>
+
 <!--      <plugin>-->
 <!--        <groupId>org.codehaus.mojo</groupId>-->
 <!--        <artifactId>exec-maven-plugin</artifactId>-->

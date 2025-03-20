@@ -1,6 +1,5 @@
 package com.progressive.minds.chimera.core.dataSource.sourceTypes;
 
-import com.progressive.minds.chimera.core.databaseOps.utility.CloudCredentials;
 import com.progressive.minds.chimera.core.dataSource.formats.jdbc.jdbc;
 import com.progressive.minds.chimera.core.dataSource.modal.DataReader;
 import com.progressive.minds.chimera.foundational.logging.ChimeraLogger;
