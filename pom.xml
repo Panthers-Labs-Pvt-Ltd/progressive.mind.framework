@@ -43,6 +43,7 @@
        <module>foundational</module>
        <module>core</module>
        <module>DataManagement</module>
+        <module>chimera-nexus</module>
     </modules>
 
 
