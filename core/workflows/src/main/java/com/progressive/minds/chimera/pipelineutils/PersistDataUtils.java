@@ -36,9 +36,6 @@ public class PersistDataUtils {
     public static Map<String, String> prepareRelationalDBWriteParameters(PersistMetadata metadata) {
         Map<String, String> param = new HashMap<>();
         param.put("sourceType", metadata.getSinkSubType());
-       /* param.put("tableName", metadata.getTableName());
-        param.put("databaseName", metadata.getDatabaseName());
-        param.put("schemaName", metadata.getSchemaName());*/
         param.put("sqlQuery", metadata.getTargetSql());
         param.put("jdbcurl", metadata.getDataSourceConnection().getConnectionMetadata());
 
