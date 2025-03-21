@@ -27,7 +27,6 @@ public class ChimeraSwaggerCustomizer implements GlobalOpenApiCustomizer {
                 pathItem
                     .readOperations()
                     .forEach(operation -> processRequestBody(operation.getRequestBody(), openApi)));
-
   }
 
   private void processRequestBody(RequestBody requestBody, OpenAPI openApi) {
