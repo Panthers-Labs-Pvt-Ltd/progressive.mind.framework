@@ -1,0 +1,126 @@
+{
+  "pipelineName": "Data_Processing_Pipeline",
+  "pipelineDescription": "Pipeline to process customer transactions",
+  "processMode": "batch",
+  "tags": "customer, transactions, processing",
+  "orgHierName": "Data Engineering",
+  "activeFlag": "Y",
+  "createdTimestamp": "2025-03-21T18:20:13.997Z",
+  "createdBy": "admin_user",
+  "updatedTimestamp": "2025-03-21T18:20:13.997Z",
+  "updatedBy": "admin_user",
+  "org": {
+    "orgHierName": "Data Engineering",
+    "orgTypeName": "Technology",
+    "parentOrgName": "Engineering",
+    "cooOwner": "John Doe",
+    "opsLead": "Jane Smith",
+    "techLead": "Alice Johnson",
+    "busOwner": "Robert Brown",
+    "orgDesc": "Handles all data pipelines and transformations",
+    "orgEmail": "data-engineering@company.com",
+    "orgCi": "DE12345",
+    "userField1": "Additional Info 1",
+    "userField2": "Additional Info 2",
+    "userField3": "Additional Info 3",
+    "userField4": "Additional Info 4",
+    "userField5": "Additional Info 5",
+    "createdTimestamp": "2025-03-21T18:20:13.997Z",
+    "createdBy": "admin_user",
+    "updatedTimestamp": "2025-03-21T18:20:13.997Z",
+    "updatedBy": "admin_user",
+    "activeFlag": "Y"
+  },
+  "extractMetadata": [
+    {
+      "pipelineName": "Data_Processing_Pipeline",
+      "sequenceNumber": 1,
+      "extractSourceType": "database",
+      "extractSourceSubType": "PostgreSQL",
+      "dataframeName": "customer_transactions",
+      "sourceConfiguration": "host=db.company.com;port=5432;database=transactions",
+      "predecessorSequences": "",
+      "successorSequences": "2",
+      "rowFilter": "amount > 1000",
+      "columnFilter": "id, name, amount, transaction_date",
+      "dataSourceConnectionName": "CustomerDBConnection",
+      "createdTimestamp": "2025-03-21T18:20:13.997Z",
+      "createdBy": "admin_user",
+      "updatedTimestamp": "2025-03-21T18:20:13.997Z",
+      "updatedBy": "admin_user",
+      "activeFlag": "Y",
+      "fileMetadata": {
+        "fileName": "",
+        "filePath": "",
+        "schemaPath": "",
+        "sizeInByte": 0,
+        "compressionType": ""
+      },
+      "relationalMetadata": {
+        "databaseName": "transactions",
+        "tableName": "customer_transactions",
+        "schemaName": "public",
+        "sqlText": "SELECT id, name, amount, transaction_date FROM customer_transactions WHERE amount > 1000"
+      },
+      "noSqlMetadata": {
+        "collection": "customer_transactions",
+        "partitioner": "hash"
+      },
+      "streamMetadata": {
+        "kafkaConsumerTopic": "customer_transactions_stream",
+        "kafkaConsumerGroup": "customer_pipeline_group",
+        "kafkaStrtOffset": "earliest",
+        "kafkaMaxOffset": "latest",
+        "kafkaPollTimeout": 5000,
+        "tranctnlCnsumrFlg": "true",
+        "watrmrkDuration": "5m",
+        "stgFormt": "json",
+        "stgPath": "/data/staging",
+        "stgPartitions": "5"
+      },
+      "dataSource": {
+        "dataSourceType": "database",
+        "dataSourceSubType": "PostgreSQL",
+        "description": "Customer Transactions Database",
+        "dataSourceTemplate": "default_template",
+        "defaultReadConfig": "readOnly:true;fetchSize=5000",
+        "defaultWriteConfig": "",
+        "createdTimestamp": "2025-03-21T18:20:13.997Z",
+        "createdBy": "admin_user",
+        "updatedTimestamp": "2025-03-21T18:20:13.997Z",
+        "updatedBy": "admin_user",
+        "activeFlag": "Y"
+      },
+      "dataSourceConnection": {
+        "dataSourceConnectionName": "CustomerDBConnection",
+        "dataSourceType": "database",
+        "dataSourceSubType": "PostgreSQL",
+        "authenticationType": "password",
+        "authenticationData": "{\"username\":\"admin\",\"password\":\"securepassword\"}",
+        "connectionMetadata": "host=db.company.com;port=5432;database=transactions",
+        "userReadConfig": "readOnly:true;fetchSize=5000",
+        "userWriteConfig": "",
+        "description": "Connection to Customer Transactions Database",
+        "createdTimestamp": "2025-03-21T18:20:13.997Z",
+        "createdBy": "admin_user",
+        "updatedTimestamp": "2025-03-21T18:20:13.997Z",
+        "updatedBy": "admin_user",
+        "activeFlag": "Y"
+      }
+    }
+  ],
+  "transformMetadata": [
+    {
+      "pipelineName": "Data_Processing_Pipeline",
+      "sequenceNumber": 2,
+      "sqlText": "SELECT id, name, amount, transaction_date FROM customer_transactions WHERE amount > 1000",
+      "transformDataframeName": "filtered_transactions",
+      "createdTimestamp": "2025-03-21T18:20:13.998Z",
+      "createdBy": "admin_user",
+      "updatedTimestamp": "2025-03-21T18:20:13.998Z",
+      "updatedBy": "admin_user",
+      "activeFlag": "Y"
+    }
+  ],
+  "persistMetadata": []
+}

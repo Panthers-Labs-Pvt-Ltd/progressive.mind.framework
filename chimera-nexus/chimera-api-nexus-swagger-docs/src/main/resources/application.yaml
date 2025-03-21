@@ -1,0 +1,8 @@
+logging:
+  level:
+    org:
+      springdoc: DEBUG
+
+springdoc:
+  cache:
+    disabled: false

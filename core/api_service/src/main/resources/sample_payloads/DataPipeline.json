@@ -1,0 +1,12 @@
+{
+  "pipelineName": "Customer Data Ingestion",
+  "pipelineDescription": "Ingests and processes customer data from multiple sources",
+  "processMode": "BATCH",
+  "tags": "ETL, Data Processing",
+  "orgHierName": "Global Data Operations",
+  "activeFlag": "Y",
+  "createdTimestamp": "2025-03-20T16:17:21.998Z",
+  "createdBy": "admin_user",
+  "updatedTimestamp": "2025-03-20T16:17:21.999Z",
+  "updatedBy": "system_user"
+}
