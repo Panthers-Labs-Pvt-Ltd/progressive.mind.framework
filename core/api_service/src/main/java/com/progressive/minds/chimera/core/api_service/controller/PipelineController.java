@@ -42,6 +42,17 @@ public class PipelineController {
     this.pipelineService = pipelineService;
   }
 
+  @Operation(
+      summary = "Get pipeline metadata by name",
+      description = "Retrieves pipeline metdata by its name")
+  @ApiResponses(
+      value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Pipeline retrieved successfully",
+            content = @Content(mediaType = APPLICATION_JSON_VALUE)),
+        @ApiResponse(responseCode = "404", description = "Pipeline not found")
+      })
   @GetMapping("/getDetails/{name}")
   public ResponseEntity<PipelineMetadata> getPipelineMetadata(
       @Parameter(description = "Name of the pipeline to retrieve", required = true)
@@ -104,10 +115,6 @@ public class PipelineController {
   }
 
   @Operation(summary = "Get all pipelines", description = "Retrieve a list of all pipelines")
-  @ApiResponse(
-      responseCode = "200",
-      description = "Pipelines retrieved successfully",
-      content = @Content(mediaType = APPLICATION_JSON_VALUE))
   @GetMapping
   public ResponseEntity<List<DataPipeline>> getAllPipelines() {
     return ResponseEntity.ok(pipelineService.getAllPipelines());
