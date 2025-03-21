@@ -1,18 +1,31 @@
 package com.progressive.minds.chimera.core.api_service.controller;
 
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+
 import com.progressive.minds.chimera.core.api_service.common.dto.GenericResponse;
 import com.progressive.minds.chimera.core.api_service.dto.DataPipeline;
 import com.progressive.minds.chimera.core.api_service.dto.PipelineMetadata;
 import com.progressive.minds.chimera.core.api_service.service.PipelineService;
 import com.progressive.minds.chimera.foundational.logging.ChimeraLogger;
 import com.progressive.minds.chimera.foundational.logging.ChimeraLoggerFactory;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "Pipeline API", description = "Endpoints for managing data pipelines")
 @RestController
@@ -30,22 +43,47 @@ public class PipelineController {
   }
 
   @GetMapping("/getDetails/{name}")
-  public ResponseEntity<PipelineMetadata> getPipelineMetadata(@PathVariable("name") String name) {
+  public ResponseEntity<PipelineMetadata> getPipelineMetadata(
+      @Parameter(description = "Name of the pipeline to retrieve", required = true)
+          @PathVariable("name")
+          String name) {
     logger.logInfo("Fetching Pipeline Metadata for pipeline: " + name + " from the database.");
     return ResponseEntity.ok(pipelineService.getPipelineMetadata(name));
   }
 
+  @Operation(
+      summary = "Get a pipeline by name",
+      description = "Retrieve an existing pipeline by its name")
+  @ApiResponses(
+      value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Pipeline retrieved successfully",
+            content = @Content(mediaType = APPLICATION_JSON_VALUE)),
+        @ApiResponse(responseCode = "404", description = "Pipeline not found")
+      })
   @GetMapping("/{name}")
-  public ResponseEntity<DataPipeline> getPipelineByName(@PathVariable("name") String name) {
+  public ResponseEntity<DataPipeline> getPipelineByName(
+      @Parameter(description = "Name of the pipeline to retrieve", required = true)
+          @PathVariable("name")
+          String name) {
     logger.logInfo("Fetching pipeline with name: " + name + " from the database.");
     return ResponseEntity.ok(pipelineService.getDataPipeLineByName(name));
   }
 
-  @PostMapping(
-      path = "/create",
-      consumes = MediaType.APPLICATION_JSON_VALUE,
-      produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<GenericResponse> createPipeline(@RequestBody DataPipeline pipeline) {
+  @Operation(summary = "Create a new pipeline", description = "Add a new pipeline")
+  @ApiResponses(
+      value = {
+        @ApiResponse(
+            responseCode = "201",
+            description = "Pipeline created successfully",
+            content = @Content(mediaType = APPLICATION_JSON_VALUE)),
+        @ApiResponse(responseCode = "500", description = "Failed to create pipeline")
+      })
+  @PostMapping("/create")
+  public ResponseEntity<GenericResponse> createPipeline(
+      @Parameter(description = "Pipeline object to be created", required = true) @RequestBody
+          DataPipeline pipeline) {
     int numberOfRecordsCreated = pipelineService.insertPipeline(pipeline);
     if (numberOfRecordsCreated == 0) {
       GenericResponse genericResponse =
@@ -58,22 +96,39 @@ public class PipelineController {
 
     GenericResponse genericResponse =
         GenericResponse.builder()
-            .message("Pipeline created successfully.")
-            .statusCode(HttpStatus.OK.name())
+            .message(
+                "Pipeline created successfully with pipeline name: " + pipeline.getPipelineName())
+            .statusCode(HttpStatus.CREATED.name())
             .build();
-    return ResponseEntity.ok(genericResponse);
+    return ResponseEntity.status(HttpStatus.CREATED).body(genericResponse);
   }
 
+  @Operation(summary = "Get all pipelines", description = "Retrieve a list of all pipelines")
+  @ApiResponse(
+      responseCode = "200",
+      description = "Pipelines retrieved successfully",
+      content = @Content(mediaType = APPLICATION_JSON_VALUE))
   @GetMapping
   public ResponseEntity<List<DataPipeline>> getAllPipelines() {
     return ResponseEntity.ok(pipelineService.getAllPipelines());
   }
 
-  @PutMapping(
-      path = "/update",
-      consumes = MediaType.APPLICATION_JSON_VALUE,
-      produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<GenericResponse> updatePipeline(@RequestBody DataPipeline updatedPipeline) {
+  @Operation(
+      summary = "Update an existing pipeline",
+      description = "Update the details of an existing pipeline by name")
+  @ApiResponses(
+      value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Pipeline updated successfully",
+            content = @Content(mediaType = APPLICATION_JSON_VALUE)),
+        @ApiResponse(responseCode = "404", description = "Pipeline not found"),
+        @ApiResponse(responseCode = "500", description = "Pipeline update failed")
+      })
+  @PutMapping("/update")
+  public ResponseEntity<GenericResponse> updatePipeline(
+      @Parameter(description = "Updated pipeline object", required = true) @RequestBody
+          DataPipeline updatedPipeline) {
     String pipelineName = updatedPipeline.getPipelineName();
 
     if (pipelineService.getDataPipeLineByName(pipelineName) == null) {
@@ -104,9 +159,20 @@ public class PipelineController {
     return ResponseEntity.status(HttpStatus.OK).body(genericResponse);
   }
 
+  @Operation(summary = "Delete a pipeline", description = "Delete an existing pipeline by name")
+  @ApiResponses(
+      value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Pipeline deleted successfully",
+            content = @Content(mediaType = APPLICATION_JSON_VALUE)),
+        @ApiResponse(responseCode = "404", description = "Pipeline not found")
+      })
   @DeleteMapping("/delete/{pipeLineName}")
   public ResponseEntity<GenericResponse> deletePipeline(
-      @PathVariable("pipeLineName") String pipelineName) {
+      @Parameter(description = "Name of the pipeline to delete", required = true)
+          @PathVariable("pipeLineName")
+          String pipelineName) {
     if (pipelineService.deletePipeline(pipelineName) == 0) {
       GenericResponse genericResponse =
           GenericResponse.builder()
@@ -124,6 +190,11 @@ public class PipelineController {
     }
   }
 
+  @Operation(summary = "Count pipelines", description = "Retrieve the total number of pipelines")
+  @ApiResponse(
+      responseCode = "200",
+      description = "Count retrieved successfully",
+      content = @Content(mediaType = APPLICATION_JSON_VALUE))
   @GetMapping("/count")
   public ResponseEntity<GenericResponse> countNumberOfDataPipeline() {
     long totalNumberOfPipeline = pipelineService.getTotalNumberOfPipeline();
