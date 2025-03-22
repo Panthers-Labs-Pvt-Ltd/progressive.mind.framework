@@ -1,0 +1,13 @@
+{
+  "echoToken": "ECHO-123456789",
+  "auditData": {
+    "processTime": "150ms",
+    "timestamp": "2025-03-20T18:30:45.567Z",
+    "requestHost": "chimera-api-client.example.com",
+    "serverId": "server-v",
+    "environment": "Dev",
+    "release": "v1.0.0"
+  },
+  "message": "Request processed successfully",
+  "statusCode": "200"
+}
