@@ -41,9 +41,9 @@
     <modules>
        <module>common</module>
        <module>foundational</module>
+        <module>chimera-nexus</module>
        <module>core</module>
        <module>DataManagement</module>
-        <module>chimera-nexus</module>
     </modules>
 
 

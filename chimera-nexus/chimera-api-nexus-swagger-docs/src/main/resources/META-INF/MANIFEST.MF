@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+Created-By: Vivek T
+Implementation-Title: chimera-api-nexus-swagger-docs
+Implementation-Version: 1.0
+Automatic-Module-Name: com.progressive.minds.swagger
