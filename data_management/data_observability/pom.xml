@@ -6,12 +6,12 @@
 
     <parent>
         <groupId>com.progressive.minds.chimera</groupId>
-        <artifactId>DataManagement</artifactId>
+        <artifactId>data_management</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
     <groupId>com.progressive.minds.chimera</groupId>
-    <artifactId>DataManagement.observability</artifactId>
+    <artifactId>data_management.data_observability</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     
