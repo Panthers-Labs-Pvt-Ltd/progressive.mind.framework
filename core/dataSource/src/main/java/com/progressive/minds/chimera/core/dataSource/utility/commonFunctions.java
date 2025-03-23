@@ -2,6 +2,7 @@ package com.progressive.minds.chimera.core.dataSource.utility;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.progressive.minds.chimera.core.dataSource.formats.files.Json;
 import com.progressive.minds.chimera.foundational.logging.ChimeraLogger;
 import com.progressive.minds.chimera.foundational.logging.ChimeraLoggerFactory;
 import org.apache.commons.lang3.StringUtils;
@@ -10,21 +11,24 @@ import org.apache.iceberg.catalog.TableIdentifier;
 import org.apache.iceberg.spark.SparkCatalog;
 
 import java.io.BufferedReader;
+import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Arrays;
-import java.util.Map;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.*;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.spark.sql.*;
 import org.apache.spark.sql.types.*;
+import org.jetbrains.annotations.NotNull;
+import org.yaml.snakeyaml.Yaml;
+
 import static org.apache.spark.sql.functions.*;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 public class commonFunctions {
     private static final ChimeraLogger logger = ChimeraLoggerFactory.getLogger(commonFunctions.class);
@@ -615,6 +619,192 @@ public class commonFunctions {
             exists = false;
         }
         return exists;
+    }
+
+    public static void applyReaderOptions(String customConfig, DataFrameReader reader) {
+        if (StringUtils.isNotEmpty(customConfig)) {
+            String[] options = customConfig.split(",");
+            for (String option : options) {
+                String[] keyValue = option.split("=");
+                if (keyValue.length == 2 && StringUtils.isNotEmpty(keyValue[0]) && StringUtils.isNotEmpty(keyValue[1])) {
+                    reader.option(keyValue[0].trim(), keyValue[1].trim());
+                } else {
+                    logger.logWarning("Invalid custom option: " + option);
+                }
+            }
+        }
+        reader.option("columnNameOfCorruptRecord", "corrupt_record");
+    }
+
+    public static void applyOrInferSchema(String schemaPath, DataFrameReader reader) throws Exception {
+        if (StringUtils.isNotEmpty(schemaPath)) {
+            Map<String, Object> schemaConfig = getSchemaConfigFromYaml(schemaPath);
+            if (schemaConfig != null && schemaConfig.containsKey("source-parameters")) {
+                Map<String, Object> sourceParameters = (Map<String, Object>) schemaConfig.get("source-parameters");
+                StructType schema = getSchemaFromConfig(sourceParameters);
+                reader.schema(schema);
+                logger.logInfo("Schema built and applied.");
+                // Apply delimiter and quote options from schema config
+                if (sourceParameters.containsKey("delimiter")) {
+                    reader.option("delimiter", sourceParameters.get("delimiter").toString());
+                }
+                if (sourceParameters.containsKey("quote")) {
+                    reader.option("quote", sourceParameters.get("quote").toString());
+                }
+            }
+        } else {
+            reader.option("inferSchema", "true");
+            logger.logInfo("No schema provided. Inferring schema.");
+        }
+    }
+
+    private static Map<String, Object> getSchemaConfigFromYaml(String schemaPath) throws Exception {
+        Yaml yaml = new Yaml();
+        try (InputStream inputStream = Files.newInputStream(Paths.get(schemaPath))) {
+            return yaml.load(inputStream);
+        }
+    }
+
+    private static StructType getSchemaFromConfig(Map<String, Object> schemaConfig) {
+        List<Map<String, Object>> attributes = (List<Map<String, Object>>) schemaConfig.get("attributes");
+
+        StructField[] fields = attributes.stream()
+                .map(attr -> DataTypes.createStructField(
+                        attr.get("name").toString(),
+                        getDataType(attr.get("type").toString()),
+                        Boolean.parseBoolean(attr.get("nullable").toString())))
+                .toArray(StructField[]::new);
+
+        // Adding the ColumnNameOfCorruptField column
+        StructField corruptField = DataTypes.createStructField(
+                "corrupt_record", DataTypes.StringType, true);
+
+        return new StructType(Stream.concat(Arrays.stream(fields), Stream.of(corruptField))
+                .toArray(StructField[]::new));
+    }
+
+    private static DataType getDataType(String type) {
+        switch (type.toLowerCase()) {
+            case "tinyint": return DataTypes.ByteType;
+            case "smallint": return DataTypes.ShortType;
+            case "integer": return DataTypes.IntegerType;
+            case "bigint": return DataTypes.LongType;
+            case "float": return DataTypes.FloatType;
+            case "double": return DataTypes.DoubleType;
+            case "boolean": return DataTypes.BooleanType;
+            case "long": return DataTypes.LongType;
+            case "string": return DataTypes.StringType;
+            case "char": return DataTypes.StringType;
+            case "varchar": return DataTypes.StringType;
+            case "date": return DataTypes.DateType;
+            case "timestamp": return DataTypes.TimestampType;
+            case "binary": return DataTypes.BinaryType;
+            case "decimal": return DataTypes.createDecimalType(38, 10);
+            case "datetime": return DataTypes.DateType;
+            case "null": return DataTypes.NullType;
+            case "array": return DataTypes.createArrayType(DataTypes.StringType, true);
+            default: return DataTypes.StringType;
+        }
+    }
+
+    public static Dataset<Row> applyLimit(Integer limit, Dataset<Row> dataFrame) {
+        if (limit != null && limit > 0) {
+            dataFrame = dataFrame.limit(limit);
+        }
+        return dataFrame;
+    }
+
+    public static Dataset<Row> filterRows(String rowFilter, Dataset<Row> dataFrame) {
+        if (StringUtils.isNotEmpty(rowFilter)) {
+            dataFrame = dataFrame.where(rowFilter);
+        }
+        return dataFrame;
+    }
+
+    public static Dataset<Row> filterColumns(String columnFilter, Dataset<Row> dataFrame) {
+        if (StringUtils.isNotEmpty(columnFilter)) {
+            String[] columnArray = columnFilter.split(",");
+            if (columnArray.length > 0) {
+                dataFrame = dataFrame.selectExpr(columnArray);
+            }
+        }
+        return dataFrame;
+    }
+
+    public static @NotNull Dataset<Row> savePartitionedTable(String outputPath, String format, String savingMode, String partitioningKeys, Dataset<Row> tableDataFrame, String fullTableName, boolean tableExists) throws Json.DataSourceWriteException {
+        List<String> partitionKeysList = Arrays.asList(partitioningKeys.replace("\"", "").split(","));
+        tableDataFrame = renamePartitionKeysCase(tableDataFrame, partitioningKeys);
+        String[] nullOrEmptyColumns = isPartitionKeysNull(tableDataFrame, partitionKeysList.toArray(new String[0]));
+        if (nullOrEmptyColumns.length > 0) {
+            String nonNullBlankColumns = Arrays.toString(nullOrEmptyColumns);
+            throw new Json.DataSourceWriteException("Partition keys contain NULL or empty values: " + nonNullBlankColumns);
+        }
+
+        logger.logInfo((tableExists ? "Appending data to" : "Creating and writing data into") + " partitioned table: " + fullTableName);
+        saveDataFrame(tableDataFrame, format, outputPath, savingMode, fullTableName, partitionKeysList, tableExists);
+        return tableDataFrame;
+    }
+
+    public static void saveNonPartitionedTable(String outputPath, String format, String savingMode, Dataset<Row> tableDataFrame, String fullTableName, String compressionFormat, boolean tableExists) {
+        logger.logInfo((tableExists ? "Appending data to" : "Creating and writing data into") + " non-partitioned table: " + fullTableName);
+        saveDataFrame(tableDataFrame, format, outputPath, savingMode, fullTableName, null, tableExists, compressionFormat);
+    }
+
+    private static void saveDataFrame(Dataset<Row> dataFrame, String format, String outputPath, String savingMode, String tableName, List<String> partitioningKeys, boolean tableExists) {
+        saveDataFrame(dataFrame, format, outputPath, savingMode, tableName, partitioningKeys, tableExists, null);
+    }
+
+    private static void saveDataFrame(Dataset<Row> dataFrame, String format, String outputPath, String savingMode, String tableName, List<String> partitioningKeys, boolean tableExists, String compressionFormat) {
+        DataFrameWriter<Row> writer = dataFrame.write()
+                .mode(SaveMode.valueOf(savingMode))
+                .option("path", outputPath);
+
+        if (compressionFormat != null) {
+            writer.option("compression", compressionFormat);
+        }
+
+        if (partitioningKeys != null) {
+            writer.partitionBy(partitioningKeys.toArray(new String[0]));
+        }
+
+        if (tableExists) {
+            writer.json(outputPath);
+        } else {
+            writer.format(format).saveAsTable(tableName);
+        }
+    }
+
+    public static Dataset<Row> processDeduplication(Dataset<Row> dataFrame, String duplicationKeys) {
+        if (StringUtils.isNotBlank(duplicationKeys)) {
+            logger.logInfo("Executing Deduplication");
+            long beforeCount = dataFrame.count();
+            dataFrame = DropDuplicatesOnKey(duplicationKeys, dataFrame);
+            logger.logInfo(String.format("Deduplication completed. Before: %d, After: %d", beforeCount, dataFrame.count()));
+        }
+        return dataFrame;
+    }
+
+    public static Dataset<Row> processSorting(Dataset<Row> dataFrame, String sortingKeys) {
+        if (StringUtils.isNotBlank(sortingKeys)) {
+            logger.logInfo("Executing Sorting");
+            return sortDataFrame(dataFrame, sortingKeys, true);
+        }
+        return dataFrame;
+    }
+
+    public static Dataset<Row> processExtraColumns(Dataset<Row> dataFrame, String extraColumns, String extraColumnsValues) {
+        if (StringUtils.isNotBlank(extraColumns)) {
+            logger.logInfo("Appending Extra Columns");
+            return mergeColumnsToDataFrame(dataFrame, extraColumns, extraColumnsValues);
+        }
+        return dataFrame;
+    }
+
+    public static String getCompressionFormat(String compressionFormat, String defaultCompressionFormat) {
+        return Optional.ofNullable(compressionFormat)
+                .filter(StringUtils::isNotBlank)
+                .map(format -> format.toLowerCase(Locale.ROOT))
+                .orElse(defaultCompressionFormat);
     }
 
 
