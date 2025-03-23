@@ -11,16 +11,14 @@
     </parent>
 
     <groupId>com.progressive.minds.chimera</groupId>
-    <artifactId>core</artifactId>
+    <artifactId>orchestration</artifactId>
     <packaging>pom</packaging>
 
     <modules>
-        <module>dataSource</module>
-        <module>api_service</module>
-        <module>decision-engine</module>
-        <module>apacheComet</module>
-        <module>api-cloud-config</module>
-        <module>executionEngine</module>
-        <module>analytics_engine</module>
+        <module>orchestration-service</module>
+        <module>workflows</module>
+        <module>temporal</module>
     </modules>
+
+    
 </project>
