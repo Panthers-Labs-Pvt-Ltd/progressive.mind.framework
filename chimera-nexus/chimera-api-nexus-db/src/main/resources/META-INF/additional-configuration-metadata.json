@@ -1,0 +1,16 @@
+{
+  "properties": [
+    {
+      "name": "mybatis.type-aliases-package",
+      "type": "java.lang.String",
+      "description": "Base package for entity classes"
+    },
+    {
+      "name": "spring.flyway.locations",
+      "type": "java.lang.String[]",
+      "defaultValue": [
+        "classpath:db/migration"
+      ]
+    }
+  ]
+}

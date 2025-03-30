@@ -1,5 +1,22 @@
 server:
   port: 9001
-  address: 0.0.0.0
 
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/chimera_db?currentSchema=test
+    username: postgres
+    password: admin123
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 10
+      connection-timeout: 5000
 
+  flyway:
+    enabled: false
+    schemas: test
+    cleanDisabled: true
+
+logging:
+  level:
+    org.springframework.boot.autoconfigure: ERROR
+    com.progressive.minds.mybatis: ERROR

@@ -1,0 +1,39 @@
+<!DOCTYPE generatorConfiguration PUBLIC
+        "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+    <context id="postgres" targetRuntime="MyBatis3DynamicSql">
+        <!-- 1. Plugins FIRST -->
+        <plugin type="com.softwareloop.mybatis.generator.plugins.LombokPlugin"/>
+        <plugin type="org.mybatis.generator.plugins.MergeJavaPlugin"/>
+        <plugin type="org.mybatis.generator.plugins.UnmergeableXmlMappersPlugin"/>
+
+        <commentGenerator>
+            <property name="suppressAllComments" value="false"/>
+        </commentGenerator>
+
+        <!-- 2. Database Connection -->
+        <jdbcConnection
+                driverClass="org.postgresql.Driver"
+                connectionURL="${database.url}"
+                userId="${database.username}"
+                password="${database.password}"/>
+
+        <!-- 3. Model/Client Generators -->
+        <javaModelGenerator
+                targetPackage="com.progressive.minds.chimera.model"
+                targetProject="src/main/java"/>
+
+        <javaClientGenerator
+                type="ANNOTATEDMAPPER"
+                targetPackage="com.progressive.minds.chimera.mapper"
+                targetProject="src/main/java"/>
+
+        <!-- 4. Tables -->
+        <table schema="test" tableName="USER_PROFILE" delimitIdentifiers="true">
+            <generatedKey column="id" sqlStatement="PostgreSQL" identity="true"/>
+        </table>
+    </context>
+</generatorConfiguration>
+
