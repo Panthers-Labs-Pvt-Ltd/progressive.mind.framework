@@ -29,13 +29,11 @@ public class ChimeraAPIExampleResolver extends ModelResolver {
     Schema<?> schema = super.resolve(type, context, chain);
     if (schema == null) return null;
 
-    // Handle ARRAY schemas separately
     if ("array".equals(schema.getType())) {
       processArraySchema(type, context, schema);
       return schema;
     }
 
-    // Handle non-container schemas
     Class<?> targetClass = resolveTargetClass(type);
     if (isCustomDto(targetClass)) {
       injectExampleIntoSchema(schema, targetClass.getSimpleName());
@@ -45,24 +43,20 @@ public class ChimeraAPIExampleResolver extends ModelResolver {
 
   private void processArraySchema(
       AnnotatedType type, ModelConverterContext context, Schema<?> arraySchema) {
-    // Resolve element type
+
     JavaType javaType = (JavaType) type.getType();
     JavaType elementType = javaType.getContentType();
 
-    // Create element annotated type
     AnnotatedType elementAnnotatedType =
         new AnnotatedType().type(elementType).ctxAnnotations(type.getCtxAnnotations());
 
-    // Resolve element schema
     Schema<?> elementSchema = context.resolve(elementAnnotatedType);
 
-    // Inject example into ELEMENT schema
     Class<?> elementClass = elementType.getRawClass();
     if (isCustomDto(elementClass)) {
       injectExampleIntoSchema(elementSchema, elementClass.getSimpleName());
     }
 
-    // Set the element schema back to the array
     arraySchema.setItems(elementSchema);
   }
 
@@ -73,8 +67,6 @@ public class ChimeraAPIExampleResolver extends ModelResolver {
       logger.info("Injected example for schema: {}", className);
     }
   }
-
-  // Keep resolveTargetClass() and isCustomDto() unchanged
 
   private Class<?> resolveTargetClass(AnnotatedType type) {
     if (type.getType() instanceof JavaType javaType) {
