@@ -15,8 +15,8 @@
         <module>chimera-api-nexus-nfr</module>
         <module>chimera-api-nexus-web</module>
         <module>chimera-api-nexus-security</module>
-        <module>chimera-api-nexus-db</module>
         <module>chimera-api-nexus-swagger-docs</module>
+        <module>chimera-api-nexus-db</module>
     </modules>
 
     <properties>
@@ -32,6 +32,7 @@
         <org.mybatis.spring.boot.version>3.0.4</org.mybatis.spring.boot.version>
         <org.mybatis.dynamic-sql.version>1.5.2</org.mybatis.dynamic-sql.version>
         <flyway.version>11.3.2</flyway.version>
+        <mybatis-generator-core.version>1.4.2</mybatis-generator-core.version>
     </properties>
 
     <dependencyManagement>
@@ -93,6 +94,14 @@
                 <artifactId>keycloak-admin-client</artifactId>
                 <version>${keycloak-admin-client.version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>org.mybatis.generator</groupId>
+                <artifactId>mybatis-generator-core</artifactId>
+                <version>${mybatis-generator-core.version}</version>
+                <optional>true</optional>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 
