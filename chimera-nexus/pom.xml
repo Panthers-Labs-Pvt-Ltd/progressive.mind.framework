@@ -28,7 +28,7 @@
 
         <springdoc-openapi-starter-webmvc-ui.version>2.8.4</springdoc-openapi-starter-webmvc-ui.version>
 
-        <keycloak-admin-client.version>26.0.0</keycloak-admin-client.version>
+        <keycloak-admin-client.version>26.0.4</keycloak-admin-client.version>
         <org.mybatis.spring.boot.version>3.0.4</org.mybatis.spring.boot.version>
         <org.mybatis.dynamic-sql.version>1.5.2</org.mybatis.dynamic-sql.version>
         <flyway.version>11.3.2</flyway.version>
