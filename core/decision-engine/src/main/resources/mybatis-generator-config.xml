@@ -6,8 +6,6 @@
     <context id="postgres" targetRuntime="MyBatis3DynamicSql">
         <!-- 1. Plugins FIRST -->
         <plugin type="com.softwareloop.mybatis.generator.plugins.LombokPlugin"/>
-        <plugin type="org.mybatis.generator.plugins.MergeJavaPlugin"/>
-        <plugin type="org.mybatis.generator.plugins.UnmergeableXmlMappersPlugin"/>
 
         <commentGenerator>
             <property name="suppressAllComments" value="false"/>
@@ -32,7 +30,7 @@
 
         <!-- 4. Tables -->
         <table schema="test" tableName="USER_PROFILE" delimitIdentifiers="true">
-            <generatedKey column="id" sqlStatement="PostgreSQL" identity="true"/>
+
         </table>
     </context>
 </generatorConfiguration>

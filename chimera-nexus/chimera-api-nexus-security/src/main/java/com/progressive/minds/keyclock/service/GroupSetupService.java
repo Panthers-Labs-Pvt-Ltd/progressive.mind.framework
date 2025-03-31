@@ -1,15 +1,14 @@
 package com.progressive.minds.keyclock.service;
 
 import com.progressive.minds.keyclock.config.KeycloakSetupProperties;
+import java.util.Collections;
+import java.util.List;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.resource.GroupsResource;
 import org.keycloak.admin.client.resource.RealmResource;
 import org.keycloak.representations.idm.GroupRepresentation;
 import org.keycloak.representations.idm.RoleRepresentation;
 import org.springframework.stereotype.Service;
-
-import java.util.Collections;
-import java.util.List;
 
 @Service
 public class GroupSetupService {
@@ -20,7 +19,7 @@ public class GroupSetupService {
         this.keycloak = keycloak;
     }
 
-    public void createGroups(String realmName, List<KeycloakSetupProperties.Group> groups) {
+  public void createGroups(String realmName, List<KeycloakSetupProperties.Setup.Group> groups) {
         RealmResource realm = keycloak.realm(realmName);
         GroupsResource groupsResource = realm.groups();
 
