@@ -1,14 +1,21 @@
 # Data Ingestion
 <!-- TOC -->
-* [Data Ingestion](#data-ingestion)
-  * [Features](#features)
-  * [Data Sources](#data-sources)
-  * [Toolsets](#toolsets)
-  * [Documentation](#documentation)
-  * [Demos](#demos)
-  * [Training](#training)
-  * [Community and Ecosystem](#community-and-ecosystem)
-  * [Roadmap](#roadmap)
+- [Data Ingestion](#data-ingestion)
+  - [Features](#features)
+  - [Data Sources](#data-sources)
+  - [Toolsets](#toolsets)
+  - [Documentation](#documentation)
+  - [Demos](#demos)
+  - [Training](#training)
+  - [Community and Ecosystem](#community-and-ecosystem)
+  - [Roadmap](#roadmap)
+- [Data Ingestion Project Plan](#data-ingestion-project-plan)
+  - [What do we demonstrate?](#what-do-we-demonstrate)
+    - [Ingestion Workflow](#ingestion-workflow)
+      - [Intent to onboard](#intent-to-onboard)
+      - [Discovery Phase (Optional) via Superset](#discovery-phase-optional-via-superset)
+      - [Ingestion Phase](#ingestion-phase)
+      - [In production phase](#in-production-phase)
 <!-- TOC -->
 
 
@@ -205,4 +212,78 @@ gantt
       Data Quality & Data Validation          : 2025-02-26, 7d
     section Documentation & Demo
       Documentation                           : 2025-03-15, 15d
-``` 
+```
+
+Ingestion happens from external sources. You insource data from Postgres, MySQL, Files (csv, json, parquet), Snowflake, MongoDB, Kafka, and PDFs. It can be done as batch or stream. This becomes your set up to demonstrate the capability.
+
+Feature to prove -
+1. Simple onboarding of structure, semi-structured, and unstructure data assets
+2. Well-governed onboarding
+3. Performant ingestion
+
+## What do we demonstrate?
+
+Pre-requisite:
+1. User is part of a team and is associated with a project / namespace.
+2. Team's details (support email) is already present.
+3. Project details are available.
+
+### Ingestion Workflow
+
+#### Intent to onboard
+
+Assumption: User has appropriate rights to insource the external source. System should capture a declaration (contract) of his privilege to insource the external source. His team becomes the data producer of these data sources. This is the only way for us, because we do not know the owner of the external data. This may be contested by some organization, so we need to have the flexibility. However, this is not the scope of phase 1.
+
+1. User opens his terminal, runs chimera cli and opts for ingestion.
+2. Shell ask user to complete a json template with the connection string (URI) to the external source. The template should have information about the connectivity, and what he wants to insource. The name of the json should be unique. This json should be version controlled and would be used to track actions. 
+3. Once the user is ready, they submit the json. The cli should validate the json, test the connectivity to the sources and responds success or failure.
+4. User has already informed via the template if we should insource all tables/topics, specific tables/topics, or specific columns/events of tables/topic.
+5. You onboard the external source (connection string) in Datahub using Datahub's API, and keep informing user. This is a synchronous call. Let the user know that we will let him know when all the metadata is insourced in our metadata store (Datahub).
+6. You put an event in Kafka's "datasource onboarding" topic with user's intent detail (intent means what he wanted to insource. Look at point 4)
+7. Datahub picks up the event and starts pulling all the metadata information (**define all the metadata information that you can capture per source type**) and once completed, sends a completion event on "datasource onboardinding completion" topic in Kafka.
+8. Superset would be listening to "datasource onboarding completion" topic. Superset datasourcing is complete. Meaning Users can now connect to these sources. Once completed, Superset sends an event in "Data Discovery Available" topic.
+9. User Notification service is listening to "Data Discovery Available" topic. It sends the information to user so they can get into Discovery Phase.
+
+#### Discovery Phase (Optional) via Superset
+
+1. User can now go to Superset, complete its discovery phase, and enter the final ingestion phase.
+
+#### Ingestion Phase
+
+1. User can pull any of their submitted json.
+2. User can modify their intent to onboard list. He can reduce the list, but not increase in this phase. If he increases, "Intent to Onboard" Phase kicks off.
+3. User can now add more details if he did not do it already. System should validate if the changes are being made to already onboaded pipeline or if it is really new.
+   1. Trigger for insourcing (Timed, Event based, Adhoc)
+   2. Frequency of insourcing (Timed)
+   3. Way to insource - Full or detail or partitioned, etc.
+   4. Where to save
+   5. Format for save (Iceberg) - Phase 1
+   6. Target can be of various types -
+      1. Master Data Management - (effective from, effectivity to)
+      2. Reference data - (effective from, effective to, valid from, valid to)
+      3. Partitioned table.
+   7. Deduplication if required.
+   8. SLA of the dataset
+   9. Data Classification - focus on PII and secret (like trade information)
+   10. Schema mandatory for non-SQL data sources (file, MongoDB, Kafka).
+4. If new,
+   1. Pipeline name: <Name of the json file>_<DS Name>_<Table Name> - Please use this consistently with Datahub naming convention (urn).
+   2. Metadata information captured - As defined by Datahub.
+      1. Schema version including the point 3.6 fixed and synced with Datahub
+      2. Ownership
+      3. etc.
+5. If changes are made to already onboarded pipeline, check what has changed.
+   1. ssdflsdfjls
+   2. asdasda
+
+#### In production phase
+
+1. In case of failure a pipeline, how do we re-run.
+2. In case of multiple failure, order in which the recovery happens. What should be the strategy? Overall catch up time.
+
+Valid testing -
+1. All the activities must be audited.
+2. All quick DQ are done - schema validation, source-target row count validation.
+3. Timeliness Checks - Timeliness Checks (Early warning list, Failed) - Side car implementation
+4. All Detailed DQ checks are done (event based) - Data Profiling, Trend breaks or Anamoly detection based on historical data trends. - This is part of Data Management, not Ingestion Pipeline.
+   
