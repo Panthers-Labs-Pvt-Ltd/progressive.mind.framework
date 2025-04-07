@@ -220,6 +220,8 @@ Feature to prove -
 1. Simple onboarding of structure, semi-structured, and unstructure data assets
 2. Well-governed onboarding
 3. Performant ingestion
+4. Fastest time to recover, Priority based recovery
+5. Contained blast radius (avoiding noisy neighbour)
 
 ## What do we demonstrate?
 
@@ -278,12 +280,23 @@ Assumption: User has appropriate rights to insource the external source. System 
 
 #### In production phase
 
-1. In case of failure a pipeline, how do we re-run.
-2. In case of multiple failure, order in which the recovery happens. What should be the strategy? Overall catch up time.
+1. As a part of user engagement, lets define pipeline priority within his group.
+2. In case of failure a pipeline, how do we re-run.
+3. In case of multiple failure, order in which the recovery happens. What should be the strategy? Overall minimun catch up time or priority list, with FAIR scheduling between all groups. - This should be part of orchestration service - Vivek.
 
 Valid testing -
 1. All the activities must be audited.
 2. All quick DQ are done - schema validation, source-target row count validation.
 3. Timeliness Checks - Timeliness Checks (Early warning list, Failed) - Side car implementation
 4. All Detailed DQ checks are done (event based) - Data Profiling, Trend breaks or Anamoly detection based on historical data trends. - This is part of Data Management, not Ingestion Pipeline.
-   
+5. All pipeline information captured -
+   1. When did it start?
+   2. When did it end?
+   3. What was the cpu/memory used?
+
+Algorithm for fast recovery -
+
+1. Total cpu of running + expected < Total CPU available for Production runs
+2. Total memory of running + expected < Total memory available for Production runs
+3. Maximize number of pipeline that can run per unit of time.
+   1. "Unit of time" is the smallest run time of all the production pipeline.
