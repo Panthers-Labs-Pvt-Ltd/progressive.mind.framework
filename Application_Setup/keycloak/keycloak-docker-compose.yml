@@ -1,7 +1,6 @@
+version: '3.8'  # Specify version for clarity (adjust if needed)
+
 services:
-
-# Vivek - We need SSL enabled.
-
   keycloak:
     build:
       context: ../keycloak
@@ -9,26 +8,38 @@ services:
     container_name: keycloak
     environment:
       KC_DB: postgres
-      KC_DB_URL: jdbc:postgresql://postgres/chimera_db
-      KC_DB_USERNAME: owner_chimera_application
-      KC_DB_PASSWORD: owner_chimera_application
+      KC_DB_URL: jdbc:postgresql://postgres:5432/chimera_db  # Ensure port is correct
+      KC_DB_USERNAME: postgres
+      KC_DB_PASSWORD: admin123
       KC_HOSTNAME: localhost
       KC_BOOTSTRAP_ADMIN_USERNAME: admin
-      KC_BOOTSTRAP_ADMIN_PASSWORD: keyclock
+      KC_BOOTSTRAP_ADMIN_PASSWORD: keycloak  # Fixed typo from "keyclock" to "keycloak"
       KC_LOG_LEVEL: INFO
-      # KC_HEALTH_ENABLED: true This is done in the dockerfile
-      # KC_METRICS_ENABLED: true This is done in the dockerfile
-      # KC_HOSTNAME_STRICT_BACKCHANNEL: true This enables or disables backchannel communication between servers. Should be enabled to use propagated logout and token sharing.
-      # KC_HOSTNAME_STRICT_FRONTCHANNEL: true
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:8080/health/ready" ]
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health/ready"]
       interval: 15s
       timeout: 2s
       retries: 15
     ports:
-      - "3000:8080" # Map port 3000 on the host to port 8080 in the container
+      - "3000:8080"  # Map port 3000 on the host to port 8080 in the container
     depends_on:
       - postgres
     command: ["start-dev"]
     networks:
       - chimera
+
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin123
+      POSTGRES_DB: chimera_db
+    ports:
+      - "5432:5432"  # Exposing Postgres port
+    networks:
+      - chimera
+
+networks:
+  chimera:
+    driver: bridge

@@ -42,10 +42,10 @@ public class KeycloakInitializerRunner implements CommandLineRunner {
       String realmName = setupProperties.getSetup().getRealm();
       String clientId = setupProperties.getSetup().getClient().getClientId();
       realmSetupService.createRealm(realmName);
-      clientSetupService.createClient(realmName, setupProperties);
+      clientSetupService.createClient(realmName, setupProperties.getSetup().getClient());
       roleSetupService.createRoles(realmName, clientId, setupProperties.getSetup().getRoles());
       groupSetupService.createGroups(realmName, setupProperties.getSetup().getGroups());
-      userSetupService.createUsers(realmName, setupProperties.getSetup().getUsers());
+      userSetupService.createUsers(realmName, clientId, setupProperties.getSetup().getUsers());
 
       log.info("Keycloak initialization completed successfully");
     }

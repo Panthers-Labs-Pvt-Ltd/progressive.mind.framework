@@ -17,6 +17,7 @@
         <module>chimera-api-nexus-security</module>
         <module>chimera-api-nexus-swagger-docs</module>
         <module>chimera-api-nexus-db</module>
+        <module>chimera-api-nexus-examples</module>
     </modules>
 
     <properties>

@@ -1,0 +1,59 @@
+keycloak:
+  admin:
+    server-url: http://localhost:3000
+    username: admin
+    password: keycloak
+  setup:
+    enabled: true
+    realm: chimera
+    client:
+      clientId: chimera_api_client
+      enabled: true
+      publicClient: false
+      standardFlowEnabled: true
+      directAccessGrantsEnabled: true
+      protocolMappers:
+        - name: audience
+          protocol: openid-connect
+          protocolMapper: oidc-audience-mapper
+          config:
+            included.client.audience: chimera_api_client
+            id.token.claim: false
+            access.token.claim: true
+      attributes:
+        client.credentials.auth: true
+        use.refresh.tokens: true
+      webOrigins:
+        - "+" # Allow all origins
+      redirectUris:
+        - "http://localhost:9091/*"
+    roles:
+      - name: chimera_user
+        description: Regular user
+      - name: chimera_admin
+        description: Administrator
+    groups:
+      - name: users
+        roles: [ chimera_user ]
+      - name: admins
+        roles: [ chimera_admin ]
+    users:
+      - username: user_test
+        email: user@example.com
+        firstName: Test
+        lastName: User
+        enabled: true
+        credentials:
+          - type: password
+            value: user_pass
+        roles: [ chimera_user ]
+        groups: [ users ]
+      - username: admin_test
+        email: admin@example.com
+        firstName: Admin
+        lastName: User
+        enabled: true
+        credentials:
+          - type: password
+            value: admin_pass
+        roles: [ chimera_admin ]
