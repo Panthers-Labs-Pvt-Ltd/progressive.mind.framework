@@ -1,0 +1,61 @@
+{
+  "groups": [
+    {
+      "name": "keycloak.admin",
+      "description": "Configuration for Keycloak Admin setup."
+    }
+  ],
+  "properties": [
+    {
+      "name": "keycloak.admin.server-url",
+      "type": "java.lang.String",
+      "description": "The Keycloak Admin Server URL.",
+      "defaultValue": "http://localhost:3000"
+    },
+    {
+      "name": "keycloak.admin.username",
+      "type": "java.lang.String",
+      "description": "Keycloak admin username.",
+      "defaultValue": "admin"
+    },
+    {
+      "name": "keycloak.admin.password",
+      "type": "java.lang.String",
+      "description": "Keycloak admin password.",
+      "defaultValue": "keyclock"
+    },
+    {
+      "name": "keycloak.admin.setup.enabled",
+      "type": "java.lang.Boolean",
+      "description": "Enable or disable Keycloak setup.",
+      "defaultValue": true
+    },
+    {
+      "name": "keycloak.admin.setup.realm",
+      "type": "java.lang.String",
+      "description": "The Keycloak realm name.",
+      "defaultValue": "chimera"
+    },
+    {
+      "name": "keycloak.admin.setup.client.clientId",
+      "type": "java.lang.String",
+      "description": "Keycloak client ID.",
+      "defaultValue": "chimera_api_client"
+    },
+    {
+      "name": "keycloak.admin.setup.roles",
+      "type": "java.util.List<com.example.mystarter.KeycloakAdminProperties.Role>",
+      "description": "List of Keycloak roles."
+    },
+    {
+      "name": "keycloak.admin.setup.groups",
+      "type": "java.util.List<com.example.mystarter.KeycloakAdminProperties.Group>",
+      "description": "List of Keycloak groups."
+    },
+    {
+      "name": "keycloak.admin.setup.users",
+      "type": "java.util.List<com.example.mystarter.KeycloakAdminProperties.User>",
+      "description": "List of default Keycloak users."
+    }
+  ]
+}

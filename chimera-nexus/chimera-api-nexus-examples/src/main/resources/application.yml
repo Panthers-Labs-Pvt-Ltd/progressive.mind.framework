@@ -1,0 +1,32 @@
+server:
+  port: 9001
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/chimera_db?currentSchema=test
+    username: postgres
+    password: admin123
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 10
+      connection-timeout: 5000
+
+  flyway:
+    enabled: false
+    schemas: test
+    cleanDisabled: true
+
+logging:
+  level:
+    org.springframework.boot.autoconfigure: DEBUG
+    org.springframework.boot.env: DEBUG
+    com.progressive.minds.chimera: DEBUG
+retry:
+  enabled: false
+
+keycloak:
+  setup:
+    enabled: 0
+    realm: chimera
+    client:
+      clientId: chimera_api_client2

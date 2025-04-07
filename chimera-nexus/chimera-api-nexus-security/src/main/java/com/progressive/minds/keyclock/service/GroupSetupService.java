@@ -3,6 +3,8 @@ package com.progressive.minds.keyclock.service;
 import com.progressive.minds.keyclock.config.KeycloakSetupProperties;
 import java.util.Collections;
 import java.util.List;
+
+import jakarta.ws.rs.NotFoundException;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.resource.GroupsResource;
 import org.keycloak.admin.client.resource.RealmResource;
@@ -19,7 +21,7 @@ public class GroupSetupService {
         this.keycloak = keycloak;
     }
 
-  public void createGroups(String realmName, List<KeycloakSetupProperties.Setup.Group> groups) {
+    public void createGroups(String realmName, List<KeycloakSetupProperties.Setup.Group> groups) {
         RealmResource realm = keycloak.realm(realmName);
         GroupsResource groupsResource = realm.groups();
 
@@ -30,14 +32,24 @@ public class GroupSetupService {
                 group.setName(groupConfig.getName());
                 groupsResource.add(group);
 
-                // Assign roles to group
                 GroupRepresentation createdGroup = groupsResource.groups().stream()
                         .filter(g -> g.getName().equals(groupConfig.getName()))
                         .findFirst().orElseThrow();
 
                 groupConfig.getRoles().forEach(roleName -> {
-                    RoleRepresentation role = realm.roles().get(roleName).toRepresentation();
-                    groupsResource.group(createdGroup.getId()).roles().realmLevel().add(Collections.singletonList(role));
+                    RoleRepresentation role;
+                    try {
+                        role = realm.roles().get(roleName).toRepresentation();
+                    } catch (NotFoundException e) {
+                        RoleRepresentation newRole = new RoleRepresentation();
+                        newRole.setName(roleName);
+                        realm.roles().create(newRole);
+                        role = realm.roles().get(roleName).toRepresentation();
+                    }
+                    groupsResource.group(createdGroup.getId())
+                            .roles()
+                            .realmLevel()
+                            .add(Collections.singletonList(role));
                 });
             }
         });

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.bind.ConstructorBinding;
 
 @Data
 @ConfigurationProperties(prefix = "keycloak")
@@ -20,6 +21,7 @@ public class KeycloakSetupProperties {
     private String username;
     private String password;
     private String realm = "master";
+    private String clientId = "admin-cli";
   }
 
   @Data
