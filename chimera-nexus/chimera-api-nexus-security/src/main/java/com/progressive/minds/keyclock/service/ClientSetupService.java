@@ -20,9 +20,7 @@ public class ClientSetupService {
         this.keycloak = keycloak;
     }
 
-  public void createClient(String realmName, KeycloakSetupProperties keycloakSetupProperties) {
-    KeycloakSetupProperties.Setup.Client clientConfig =
-        keycloakSetupProperties.getSetup().getClient();
+  public void createClient(String realmName, KeycloakSetupProperties.Setup.Client clientConfig) {
         RealmResource realm = keycloak.realm(realmName);
 
     try {
@@ -116,8 +114,9 @@ public class ClientSetupService {
       mapper.setProtocolMapper(mapperConfig.getProtocolMapper());
       mapper.setConfig(mapperConfig.getConfig());
 
-      mappersResource.createMapper(mapper);
-      log.info("Created protocol mapper: {}", mapper.getName());
+        try (Response response = mappersResource.createMapper(mapper)) {
+            log.info("createMapper response: {}", response.getStatus());
+        }
     } catch (ResteasyWebApplicationException e) {
       if (e.getResponse().getStatus() == Response.Status.CONFLICT.getStatusCode()) {
         log.warn("Protocol mapper {} already exists", mapperConfig.getName());

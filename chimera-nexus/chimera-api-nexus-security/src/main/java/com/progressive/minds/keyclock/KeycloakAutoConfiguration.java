@@ -1,33 +1,35 @@
 package com.progressive.minds.keyclock;
 
-import com.progressive.minds.keyclock.config.KeycloakAdminProperties;
 import com.progressive.minds.keyclock.config.KeycloakSetupProperties;
 import com.progressive.minds.keyclock.service.*;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.KeycloakBuilder;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
+import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 
 @AutoConfiguration
-@EnableConfigurationProperties({KeycloakAdminProperties.class, KeycloakSetupProperties.class})
+@EnableConfigurationProperties(KeycloakSetupProperties.class)
+@AutoConfigureAfter({KeycloakSetupProperties.class})
 public class KeycloakAutoConfiguration {
 
-    private final KeycloakAdminProperties properties;
+    private final KeycloakSetupProperties properties;
 
-    public KeycloakAutoConfiguration(KeycloakAdminProperties properties) {
+    public KeycloakAutoConfiguration(KeycloakSetupProperties properties) {
         this.properties = properties;
     }
 
     @Bean
-    public Keycloak keycloakAdmin(KeycloakAdminProperties properties) {
+    public Keycloak keycloakAdmin() {
+        KeycloakSetupProperties.Admin admin = properties.getAdmin();
         return KeycloakBuilder.builder()
-                .serverUrl(properties.getServerUrl())
-                .realm(properties.getRealm())
-                .clientId(properties.getClientId())
-                .username(properties.getUsername())
-                .password(properties.getPassword())
+                .serverUrl(admin.getServerUrl())
+                .realm(admin.getRealm())
+                .clientId(admin.getClientId())
+                .username(admin.getUsername())
+                .password(admin.getPassword())
                 .build();
     }
 
