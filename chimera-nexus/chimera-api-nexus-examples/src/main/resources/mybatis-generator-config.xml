@@ -20,13 +20,13 @@
 
         <!-- 3. Model/Client Generators -->
         <javaModelGenerator
-                targetPackage="com.progressive.minds.chimera.examples.model"
+                targetPackage="com.progressive.minds.chimera.examples.model.generated"
                 targetProject="src/main/java"/>
 
         <!-- 4. Mapper Generators -->
         <javaClientGenerator
                 type="ANNOTATEDMAPPER"
-                targetPackage="com.progressive.minds.chimera.examples.mapper"
+                targetPackage="com.progressive.minds.chimera.examples.mapper.generated"
                 targetProject="src/main/java"/>
 
         <!-- 5. Tables -->
@@ -35,6 +35,8 @@
         <table schema="test" tableName="customer" delimitIdentifiers="true"/>
 
         <table schema="test" tableName="contract_customer" delimitIdentifiers="true"/>
+
+        <table schema="test" tableName="DATA_PIPELINE" delimitIdentifiers="true"/>
 
     </context>
 </generatorConfiguration>
