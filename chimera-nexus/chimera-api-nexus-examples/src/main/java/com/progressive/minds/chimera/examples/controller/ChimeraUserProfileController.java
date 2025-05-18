@@ -1,6 +1,8 @@
 package com.progressive.minds.chimera.examples.controller;
 
-import com.progressive.minds.chimera.examples.model.UserProfile;
+
+import com.progressive.minds.chimera.examples.model.generated.DataPipeline;
+import com.progressive.minds.chimera.examples.model.generated.UserProfile;
 import com.progressive.minds.chimera.examples.services.ChimeraUserProfileService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +16,7 @@ public class ChimeraUserProfileController {
 
   @Autowired private ChimeraUserProfileService chimeraUserProfileService;
   
-  @PostMapping
+  @PostMapping("/profile")
   public ResponseEntity<String> createUserProfile(@RequestBody UserProfile userProfile) {
     chimeraUserProfileService.createUserProfile(userProfile);
     return new ResponseEntity<>("User Profile Created", HttpStatus.CREATED);
@@ -24,6 +26,18 @@ public class ChimeraUserProfileController {
   public ResponseEntity<List<UserProfile>> getUserProfile() {
     List<UserProfile> select = chimeraUserProfileService.getAllUserProfile();
     return new ResponseEntity<>(select, HttpStatus.OK);
+  }
+
+  @PostMapping("/pipeline")
+  public ResponseEntity<String> createDataPipeline(@RequestBody DataPipeline dataPipeline) {
+    chimeraUserProfileService.createDataPipeLine(dataPipeline);
+    return new ResponseEntity<>("Data pipeline Created", HttpStatus.CREATED);
+  }
+
+  @GetMapping("/pipelines")
+  public ResponseEntity<List<DataPipeline>> getDataPipelines() {
+    List<DataPipeline> pipelineList= chimeraUserProfileService.getAllDataPipeLines();
+    return new ResponseEntity<>(pipelineList, HttpStatus.OK);
   }
   
 }
