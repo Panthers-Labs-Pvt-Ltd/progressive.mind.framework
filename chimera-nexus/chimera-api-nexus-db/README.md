@@ -188,14 +188,46 @@ target/generated-sources/mybatis-generator/
     - Always commit changes before regeneration
     - Use diff tools to resolve conflicts in merged files
 
+Here's a cleaned-up and corrected version of the **"Common Errors"** section of your Markdown file. The rest of the content looks great as you mentioned.
+
+---
+
 ## Troubleshooting
 
 ### Common Errors
 
-| Error                             | Solution                               |
-|-----------------------------------|----------------------------------------|
-| `Cannot instantiate LombokPlugin` | Add the plugin dependency to `pom.xml` |
-| `Table not found`                 | Verify schema and table name case      |
+| Error                            | Solution                                                                                                                                               |
+|----------------------------------| ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `Cannot instantiate LombokPlugin` | Ensure the Lombok plugin dependency is added under the MyBatis plugin in `pom.xml`.                                                                    |
+| `Table not found`                | Verify that the table name and schema are correct. PostgreSQL is case-sensitive; use double quotes in XML if needed.                                   |
+|`Mapper/model class deleted`       | If a table entry is removed from `mybatis-generator-config.xml`, its corresponding generated classes (mapper/model) will be deleted upon regeneration. |
+
+### What happens if the table is not found?
+
+If the table specified in the generator config does not exist in the database:
+
+* **No files are generated** for that table.
+* **No errors are thrown** by default, but the generator logs a warning.
+* Ensure the table is created **before running** the code generation process.
+
+To make debugging easier, you can enable verbose logging.
+
+### Debugging
+
+Enable verbose mode in your plugin configuration:
+
+```xml
+<configuration>
+    <configurationFile>src/main/resources/mybatis-generator-config.xml</configurationFile>
+    <overwrite>true</overwrite>
+    <verbose>true</verbose> <!-- Add this line -->
+</configuration>
+```
+
+---
+
+Let me know if you’d like me to polish any other part of the file or help add more common error scenarios!
+
 
 ### Debugging
 

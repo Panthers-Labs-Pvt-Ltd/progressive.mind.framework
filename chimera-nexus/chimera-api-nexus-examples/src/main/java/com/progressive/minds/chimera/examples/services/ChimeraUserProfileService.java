@@ -2,13 +2,13 @@ package com.progressive.minds.chimera.examples.services;
 
 
 import com.progressive.minds.chimera.examples.mapper.CustomDataPipelineMapper;
-import com.progressive.minds.chimera.examples.mapper.generated.ContractCustomerMapper;
-import com.progressive.minds.chimera.examples.mapper.generated.CustomerMapper;
-import com.progressive.minds.chimera.examples.mapper.generated.DataPipelineMapper;
-import com.progressive.minds.chimera.examples.mapper.generated.UserProfileMapper;
+import com.progressive.minds.chimera.examples.mapper.CustomMetaDataPipelineMapper;
+import com.progressive.minds.chimera.examples.mapper.generated.*;
 import com.progressive.minds.chimera.examples.model.generated.ContractCustomer;
 import com.progressive.minds.chimera.examples.model.generated.DataPipeline;
+import com.progressive.minds.chimera.examples.model.generated.MetaDataPipeline;
 import com.progressive.minds.chimera.examples.model.generated.UserProfile;
+import org.mybatis.dynamic.sql.delete.DeleteDSLCompleter;
 import org.mybatis.dynamic.sql.select.SelectDSLCompleter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,6 +33,13 @@ public class ChimeraUserProfileService {
   @Autowired
   private CustomDataPipelineMapper customDataPipelineMapper;
 
+  @Autowired
+  MetaDataPipelineMapper metaDataPipelineMapper;
+
+  @Autowired
+  private CustomMetaDataPipelineMapper customMetaDataPipelineMapper;
+
+
   public void createUserProfile(UserProfile profile) {
     int insert = userProfileMapper.insert(profile);
   }
@@ -52,8 +59,25 @@ public class ChimeraUserProfileService {
     customDataPipelineMapper.customInsert(dataPipeline);
   }
 
+  @Transactional
+  public void createMetaDataPipeLine(MetaDataPipeline dataPipeline){
+    customMetaDataPipelineMapper.insert(dataPipeline);
+  }
+
   public List<DataPipeline> getAllDataPipeLines(){
     return dataPipelineMapper.select(SelectDSLCompleter.allRows());
+  }
+
+  public List<MetaDataPipeline> getAllMetaDataPipeLines(){
+    return metaDataPipelineMapper.select(SelectDSLCompleter.allRows());
+  }
+
+  public void deleteFromMetaDataPipeline(long id){
+     customMetaDataPipelineMapper.customDelete(id);
+  }
+
+  public void deleteFromDataPipelineMapper(long id){
+    customDataPipelineMapper.customDelete(id);
   }
 
 }

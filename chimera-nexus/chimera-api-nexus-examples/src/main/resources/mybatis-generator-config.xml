@@ -38,6 +38,8 @@
 
         <table schema="test" tableName="DATA_PIPELINE" delimitIdentifiers="true"/>
 
+        <table schema="test" tableName="META_DATA_PIPELINE" delimitIdentifiers="true"/>
+
     </context>
 </generatorConfiguration>
 
