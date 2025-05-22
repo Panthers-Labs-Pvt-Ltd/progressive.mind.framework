@@ -7,19 +7,19 @@ import org.mybatis.dynamic.sql.AliasableSqlTable;
 import org.mybatis.dynamic.sql.SqlColumn;
 
 public final class UserProfileDynamicSqlSupport {
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-21T21:04:10.0557447+05:30", comments="Source Table: test.USER_PROFILE")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-22T21:46:35.8297194+05:30", comments="Source Table: test.USER_PROFILE")
     public static final UserProfile userProfile = new UserProfile();
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-21T21:04:10.0572528+05:30", comments="Source field: test.USER_PROFILE.id")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-22T21:46:35.8297194+05:30", comments="Source field: test.USER_PROFILE.id")
     public static final SqlColumn<Long> id = userProfile.id;
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-21T21:04:10.0572528+05:30", comments="Source field: test.USER_PROFILE.name")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-22T21:46:35.8297194+05:30", comments="Source field: test.USER_PROFILE.name")
     public static final SqlColumn<String> name = userProfile.name;
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-21T21:04:10.0572528+05:30", comments="Source field: test.USER_PROFILE.created_at")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-22T21:46:35.8297194+05:30", comments="Source field: test.USER_PROFILE.created_at")
     public static final SqlColumn<Date> createdAt = userProfile.createdAt;
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-21T21:04:10.0567407+05:30", comments="Source Table: test.USER_PROFILE")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-22T21:46:35.8297194+05:30", comments="Source Table: test.USER_PROFILE")
     public static final class UserProfile extends AliasableSqlTable<UserProfile> {
         public final SqlColumn<Long> id = column("id", JDBCType.BIGINT);
 

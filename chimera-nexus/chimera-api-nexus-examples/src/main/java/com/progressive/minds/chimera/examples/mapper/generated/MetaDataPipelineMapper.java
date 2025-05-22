@@ -30,10 +30,10 @@ import org.mybatis.dynamic.sql.util.mybatis3.MyBatis3Utils;
 
 @Mapper
 public interface MetaDataPipelineMapper extends CommonCountMapper, CommonDeleteMapper, CommonInsertMapper<MetaDataPipeline>, CommonUpdateMapper {
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-21T21:04:10.0896688+05:30", comments="Source Table: test.META_DATA_PIPELINE")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-22T21:46:35.8478472+05:30", comments="Source Table: test.META_DATA_PIPELINE")
     BasicColumn[] selectList = BasicColumn.columnList(id, name, metaPipeline);
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-21T21:04:10.0885393+05:30", comments="Source Table: test.META_DATA_PIPELINE")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-22T21:46:35.8478472+05:30", comments="Source Table: test.META_DATA_PIPELINE")
     @SelectProvider(type=SqlProviderAdapter.class, method="select")
     @Results(id="MetaDataPipelineResult", value = {
         @Result(column="id", property="id", jdbcType=JdbcType.BIGINT),
@@ -42,22 +42,22 @@ public interface MetaDataPipelineMapper extends CommonCountMapper, CommonDeleteM
     })
     List<MetaDataPipeline> selectMany(SelectStatementProvider selectStatement);
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-21T21:04:10.0885393+05:30", comments="Source Table: test.META_DATA_PIPELINE")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-22T21:46:35.8478472+05:30", comments="Source Table: test.META_DATA_PIPELINE")
     @SelectProvider(type=SqlProviderAdapter.class, method="select")
     @ResultMap("MetaDataPipelineResult")
     Optional<MetaDataPipeline> selectOne(SelectStatementProvider selectStatement);
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-21T21:04:10.0885393+05:30", comments="Source Table: test.META_DATA_PIPELINE")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-22T21:46:35.8478472+05:30", comments="Source Table: test.META_DATA_PIPELINE")
     default long count(CountDSLCompleter completer) {
         return MyBatis3Utils.countFrom(this::count, metaDataPipeline, completer);
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-21T21:04:10.0885393+05:30", comments="Source Table: test.META_DATA_PIPELINE")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-22T21:46:35.8478472+05:30", comments="Source Table: test.META_DATA_PIPELINE")
     default int delete(DeleteDSLCompleter completer) {
         return MyBatis3Utils.deleteFrom(this::delete, metaDataPipeline, completer);
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-21T21:04:10.0885393+05:30", comments="Source Table: test.META_DATA_PIPELINE")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-22T21:46:35.8478472+05:30", comments="Source Table: test.META_DATA_PIPELINE")
     default int insert(MetaDataPipeline row) {
         return MyBatis3Utils.insert(this::insert, row, metaDataPipeline, c ->
             c.map(id).toProperty("id")
@@ -66,7 +66,7 @@ public interface MetaDataPipelineMapper extends CommonCountMapper, CommonDeleteM
         );
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-21T21:04:10.0885393+05:30", comments="Source Table: test.META_DATA_PIPELINE")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-22T21:46:35.8478472+05:30", comments="Source Table: test.META_DATA_PIPELINE")
     default int insertMultiple(Collection<MetaDataPipeline> records) {
         return MyBatis3Utils.insertMultiple(this::insertMultiple, records, metaDataPipeline, c ->
             c.map(id).toProperty("id")
@@ -75,7 +75,7 @@ public interface MetaDataPipelineMapper extends CommonCountMapper, CommonDeleteM
         );
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-21T21:04:10.0885393+05:30", comments="Source Table: test.META_DATA_PIPELINE")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-22T21:46:35.8478472+05:30", comments="Source Table: test.META_DATA_PIPELINE")
     default int insertSelective(MetaDataPipeline row) {
         return MyBatis3Utils.insert(this::insert, row, metaDataPipeline, c ->
             c.map(id).toPropertyWhenPresent("id", row::getId)
@@ -84,34 +84,34 @@ public interface MetaDataPipelineMapper extends CommonCountMapper, CommonDeleteM
         );
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-21T21:04:10.0896688+05:30", comments="Source Table: test.META_DATA_PIPELINE")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-22T21:46:35.8478472+05:30", comments="Source Table: test.META_DATA_PIPELINE")
     default Optional<MetaDataPipeline> selectOne(SelectDSLCompleter completer) {
         return MyBatis3Utils.selectOne(this::selectOne, selectList, metaDataPipeline, completer);
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-21T21:04:10.0896688+05:30", comments="Source Table: test.META_DATA_PIPELINE")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-22T21:46:35.8478472+05:30", comments="Source Table: test.META_DATA_PIPELINE")
     default List<MetaDataPipeline> select(SelectDSLCompleter completer) {
         return MyBatis3Utils.selectList(this::selectMany, selectList, metaDataPipeline, completer);
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-21T21:04:10.0896688+05:30", comments="Source Table: test.META_DATA_PIPELINE")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-22T21:46:35.8478472+05:30", comments="Source Table: test.META_DATA_PIPELINE")
     default List<MetaDataPipeline> selectDistinct(SelectDSLCompleter completer) {
         return MyBatis3Utils.selectDistinct(this::selectMany, selectList, metaDataPipeline, completer);
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-21T21:04:10.0896688+05:30", comments="Source Table: test.META_DATA_PIPELINE")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-22T21:46:35.8478472+05:30", comments="Source Table: test.META_DATA_PIPELINE")
     default int update(UpdateDSLCompleter completer) {
         return MyBatis3Utils.update(this::update, metaDataPipeline, completer);
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-21T21:04:10.0896688+05:30", comments="Source Table: test.META_DATA_PIPELINE")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-22T21:46:35.8488529+05:30", comments="Source Table: test.META_DATA_PIPELINE")
     static UpdateDSL<UpdateModel> updateAllColumns(MetaDataPipeline row, UpdateDSL<UpdateModel> dsl) {
         return dsl.set(id).equalTo(row::getId)
                 .set(name).equalTo(row::getName)
                 .set(metaPipeline).equalTo(row::getMetaPipeline);
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-21T21:04:10.0896688+05:30", comments="Source Table: test.META_DATA_PIPELINE")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-22T21:46:35.8488529+05:30", comments="Source Table: test.META_DATA_PIPELINE")
     static UpdateDSL<UpdateModel> updateSelectiveColumns(MetaDataPipeline row, UpdateDSL<UpdateModel> dsl) {
         return dsl.set(id).equalToWhenPresent(row::getId)
                 .set(name).equalToWhenPresent(row::getName)
