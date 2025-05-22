@@ -1,8 +1,8 @@
 package com.progressive.minds.chimera.examples.mapper;
 
-import com.progressive.minds.chimera.examples.mapper.generated.DataPipelineMapper;
 import com.progressive.minds.chimera.examples.mapper.generated.MetaDataPipelineDynamicSqlSupport;
-import com.progressive.minds.chimera.examples.model.generated.DataPipeline;
+import com.progressive.minds.chimera.examples.mapper.generated.MetaDataPipelineMapper;
+import com.progressive.minds.chimera.examples.model.generated.MetaDataPipeline;
 import org.apache.ibatis.executor.BatchResult;
 import org.mybatis.dynamic.sql.delete.render.DeleteStatementProvider;
 import org.mybatis.dynamic.sql.insert.render.GeneralInsertStatementProvider;
@@ -11,31 +11,33 @@ import org.mybatis.dynamic.sql.insert.render.InsertStatementProvider;
 import org.mybatis.dynamic.sql.insert.render.MultiRowInsertStatementProvider;
 import org.mybatis.dynamic.sql.select.render.SelectStatementProvider;
 import org.mybatis.dynamic.sql.update.render.UpdateStatementProvider;
-import org.mybatis.dynamic.sql.util.mybatis3.MyBatis3Utils;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Function;
 
-import static com.progressive.minds.chimera.examples.mapper.generated.DataPipelineDynamicSqlSupport.*;
-import static com.progressive.minds.chimera.examples.mapper.generated.DataPipelineDynamicSqlSupport.pipelineType;
 import static org.mybatis.dynamic.sql.SqlBuilder.isEqualTo;
 
-public class CustomDataPipelineMapper implements DataPipelineMapper {
+public class CustomMetaDataPipelineMapper implements MetaDataPipelineMapper {
 
-    private final DataPipelineMapper delegate;
+    private final MetaDataPipelineMapper delegate;
 
-    public CustomDataPipelineMapper(DataPipelineMapper delegate) {
+    public CustomMetaDataPipelineMapper(MetaDataPipelineMapper delegate) {
         this.delegate = delegate;
     }
 
+
+    public void customDelete(long dataId) {
+        delegate.delete(c ->
+                c.where(MetaDataPipelineDynamicSqlSupport.id, isEqualTo(dataId)));
+    }
+
     @Override
-    public List<DataPipeline> selectMany(SelectStatementProvider selectStatement) {
+    public List<MetaDataPipeline> selectMany(SelectStatementProvider selectStatement) {
         return delegate.selectMany(selectStatement);
     }
 
     @Override
-    public Optional<DataPipeline> selectOne(SelectStatementProvider selectStatement) {
+    public Optional<MetaDataPipeline> selectOne(SelectStatementProvider selectStatement) {
         return delegate.selectOne(selectStatement);
     }
 
@@ -50,49 +52,32 @@ public class CustomDataPipelineMapper implements DataPipelineMapper {
     }
 
     @Override
-    public int insert(InsertStatementProvider<DataPipeline> insertStatement) {
+    public int insert(InsertStatementProvider<MetaDataPipeline> insertStatement) {
         return delegate.insert(insertStatement);
     }
 
-    public int customInsert(DataPipeline row) {
-        return MyBatis3Utils.insert(
-                delegate::insert,
-                row,
-                dataPipeline,
-                c -> c.map(id).toProperty("id")
-                        .map(name).toProperty("name")
-                        .map(pipelineType).toProperty("pipelineType")
-        );
-    }
-
-
-    public int customDelete(long rowId) {
-        return delegate.delete(c ->
-                c.where(MetaDataPipelineDynamicSqlSupport.id, isEqualTo(rowId)));
-    }
-
     @Override
-    public int insertMultiple(MultiRowInsertStatementProvider<DataPipeline> insertStatement) {
-        return 0;
+    public int insertMultiple(MultiRowInsertStatementProvider<MetaDataPipeline> insertStatement) {
+        return delegate.insertMultiple(insertStatement);
     }
 
     @Override
     public List<BatchResult> flush() {
-        return List.of();
+        return delegate.flush();
     }
 
     @Override
     public int generalInsert(GeneralInsertStatementProvider insertStatement) {
-        return 0;
+        return delegate.generalInsert(insertStatement);
     }
 
     @Override
     public int insertSelect(InsertSelectStatementProvider insertSelectStatement) {
-        return 0;
+        return delegate.insertSelect(insertSelectStatement);
     }
 
     @Override
     public int update(UpdateStatementProvider updateStatement) {
-        return 0;
+        return delegate.update(updateStatement);
     }
 }

@@ -31,10 +31,10 @@ import org.mybatis.dynamic.sql.util.mybatis3.MyBatis3Utils;
 
 @Mapper
 public interface CustomerMapper extends CommonCountMapper, CommonDeleteMapper, CommonInsertMapper<Customer>, CommonUpdateMapper {
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-18T20:42:25.8565462+05:30", comments="Source Table: test.customer")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-21T21:04:10.0807564+05:30", comments="Source Table: test.customer")
     BasicColumn[] selectList = BasicColumn.columnList(id, name, email, createdAt);
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-18T20:42:25.8565462+05:30", comments="Source Table: test.customer")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-21T21:04:10.0792777+05:30", comments="Source Table: test.customer")
     @SelectProvider(type=SqlProviderAdapter.class, method="select")
     @Results(id="CustomerResult", value = {
         @Result(column="id", property="id", jdbcType=JdbcType.INTEGER, id=true),
@@ -44,29 +44,29 @@ public interface CustomerMapper extends CommonCountMapper, CommonDeleteMapper, C
     })
     List<Customer> selectMany(SelectStatementProvider selectStatement);
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-18T20:42:25.8565462+05:30", comments="Source Table: test.customer")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-21T21:04:10.0792777+05:30", comments="Source Table: test.customer")
     @SelectProvider(type=SqlProviderAdapter.class, method="select")
     @ResultMap("CustomerResult")
     Optional<Customer> selectOne(SelectStatementProvider selectStatement);
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-18T20:42:25.8565462+05:30", comments="Source Table: test.customer")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-21T21:04:10.0792777+05:30", comments="Source Table: test.customer")
     default long count(CountDSLCompleter completer) {
         return MyBatis3Utils.countFrom(this::count, customer, completer);
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-18T20:42:25.8565462+05:30", comments="Source Table: test.customer")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-21T21:04:10.0792777+05:30", comments="Source Table: test.customer")
     default int delete(DeleteDSLCompleter completer) {
         return MyBatis3Utils.deleteFrom(this::delete, customer, completer);
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-18T20:42:25.8565462+05:30", comments="Source Table: test.customer")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-21T21:04:10.0792777+05:30", comments="Source Table: test.customer")
     default int deleteByPrimaryKey(Integer id_) {
         return delete(c -> 
             c.where(id, isEqualTo(id_))
         );
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-18T20:42:25.8565462+05:30", comments="Source Table: test.customer")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-21T21:04:10.0792777+05:30", comments="Source Table: test.customer")
     default int insert(Customer row) {
         return MyBatis3Utils.insert(this::insert, row, customer, c ->
             c.map(id).toProperty("id")
@@ -76,7 +76,7 @@ public interface CustomerMapper extends CommonCountMapper, CommonDeleteMapper, C
         );
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-18T20:42:25.8565462+05:30", comments="Source Table: test.customer")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-21T21:04:10.0807564+05:30", comments="Source Table: test.customer")
     default int insertMultiple(Collection<Customer> records) {
         return MyBatis3Utils.insertMultiple(this::insertMultiple, records, customer, c ->
             c.map(id).toProperty("id")
@@ -86,7 +86,7 @@ public interface CustomerMapper extends CommonCountMapper, CommonDeleteMapper, C
         );
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-18T20:42:25.8565462+05:30", comments="Source Table: test.customer")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-21T21:04:10.0807564+05:30", comments="Source Table: test.customer")
     default int insertSelective(Customer row) {
         return MyBatis3Utils.insert(this::insert, row, customer, c ->
             c.map(id).toPropertyWhenPresent("id", row::getId)
@@ -96,34 +96,34 @@ public interface CustomerMapper extends CommonCountMapper, CommonDeleteMapper, C
         );
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-18T20:42:25.8565462+05:30", comments="Source Table: test.customer")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-21T21:04:10.0807564+05:30", comments="Source Table: test.customer")
     default Optional<Customer> selectOne(SelectDSLCompleter completer) {
         return MyBatis3Utils.selectOne(this::selectOne, selectList, customer, completer);
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-18T20:42:25.8565462+05:30", comments="Source Table: test.customer")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-21T21:04:10.0807564+05:30", comments="Source Table: test.customer")
     default List<Customer> select(SelectDSLCompleter completer) {
         return MyBatis3Utils.selectList(this::selectMany, selectList, customer, completer);
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-18T20:42:25.8565462+05:30", comments="Source Table: test.customer")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-21T21:04:10.0807564+05:30", comments="Source Table: test.customer")
     default List<Customer> selectDistinct(SelectDSLCompleter completer) {
         return MyBatis3Utils.selectDistinct(this::selectMany, selectList, customer, completer);
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-18T20:42:25.8565462+05:30", comments="Source Table: test.customer")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-21T21:04:10.0807564+05:30", comments="Source Table: test.customer")
     default Optional<Customer> selectByPrimaryKey(Integer id_) {
         return selectOne(c ->
             c.where(id, isEqualTo(id_))
         );
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-18T20:42:25.8565462+05:30", comments="Source Table: test.customer")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-21T21:04:10.0807564+05:30", comments="Source Table: test.customer")
     default int update(UpdateDSLCompleter completer) {
         return MyBatis3Utils.update(this::update, customer, completer);
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-18T20:42:25.8565462+05:30", comments="Source Table: test.customer")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-21T21:04:10.0807564+05:30", comments="Source Table: test.customer")
     static UpdateDSL<UpdateModel> updateAllColumns(Customer row, UpdateDSL<UpdateModel> dsl) {
         return dsl.set(id).equalTo(row::getId)
                 .set(name).equalTo(row::getName)
@@ -131,7 +131,7 @@ public interface CustomerMapper extends CommonCountMapper, CommonDeleteMapper, C
                 .set(createdAt).equalTo(row::getCreatedAt);
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-18T20:42:25.8565462+05:30", comments="Source Table: test.customer")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-21T21:04:10.0818145+05:30", comments="Source Table: test.customer")
     static UpdateDSL<UpdateModel> updateSelectiveColumns(Customer row, UpdateDSL<UpdateModel> dsl) {
         return dsl.set(id).equalToWhenPresent(row::getId)
                 .set(name).equalToWhenPresent(row::getName)
@@ -139,7 +139,7 @@ public interface CustomerMapper extends CommonCountMapper, CommonDeleteMapper, C
                 .set(createdAt).equalToWhenPresent(row::getCreatedAt);
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-18T20:42:25.8565462+05:30", comments="Source Table: test.customer")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-21T21:04:10.0818145+05:30", comments="Source Table: test.customer")
     default int updateByPrimaryKey(Customer row) {
         return update(c ->
             c.set(name).equalTo(row::getName)
@@ -149,7 +149,7 @@ public interface CustomerMapper extends CommonCountMapper, CommonDeleteMapper, C
         );
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-18T20:42:25.8565462+05:30", comments="Source Table: test.customer")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-21T21:04:10.0818145+05:30", comments="Source Table: test.customer")
     default int updateByPrimaryKeySelective(Customer row) {
         return update(c ->
             c.set(name).equalToWhenPresent(row::getName)
