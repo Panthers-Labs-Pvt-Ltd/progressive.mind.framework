@@ -16,6 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static org.mybatis.dynamic.sql.SqlBuilder.isEqualTo;
+
 @Service
 public class ChimeraUserProfileService {
 
@@ -38,6 +40,9 @@ public class ChimeraUserProfileService {
 
   @Autowired
   private CustomMetaDataPipelineMapper customMetaDataPipelineMapper;
+
+  @Autowired
+  private PipelineMapper pipelineMapper;
 
 
   public void createUserProfile(UserProfile profile) {
@@ -78,6 +83,11 @@ public class ChimeraUserProfileService {
 
   public void deleteFromDataPipelineMapper(long id){
     customDataPipelineMapper.customDelete(id);
+  }
+
+  public void deletePipeline(long id){
+    pipelineMapper.delete(c ->
+            c.where(MetaDataPipelineDynamicSqlSupport.id, isEqualTo(id)));
   }
 
 }

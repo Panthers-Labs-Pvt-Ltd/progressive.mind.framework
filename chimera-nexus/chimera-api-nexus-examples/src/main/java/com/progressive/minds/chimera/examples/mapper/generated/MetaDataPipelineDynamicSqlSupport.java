@@ -6,19 +6,19 @@ import org.mybatis.dynamic.sql.AliasableSqlTable;
 import org.mybatis.dynamic.sql.SqlColumn;
 
 public final class MetaDataPipelineDynamicSqlSupport {
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-21T21:04:10.0885393+05:30", comments="Source Table: test.META_DATA_PIPELINE")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-22T21:46:35.8478472+05:30", comments="Source Table: test.META_DATA_PIPELINE")
     public static final MetaDataPipeline metaDataPipeline = new MetaDataPipeline();
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-21T21:04:10.0885393+05:30", comments="Source field: test.META_DATA_PIPELINE.id")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-22T21:46:35.8478472+05:30", comments="Source field: test.META_DATA_PIPELINE.id")
     public static final SqlColumn<Long> id = metaDataPipeline.id;
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-21T21:04:10.0885393+05:30", comments="Source field: test.META_DATA_PIPELINE.name")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-22T21:46:35.8478472+05:30", comments="Source field: test.META_DATA_PIPELINE.name")
     public static final SqlColumn<String> name = metaDataPipeline.name;
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-21T21:04:10.0885393+05:30", comments="Source field: test.META_DATA_PIPELINE.meta_pipeline")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-22T21:46:35.8478472+05:30", comments="Source field: test.META_DATA_PIPELINE.meta_pipeline")
     public static final SqlColumn<String> metaPipeline = metaDataPipeline.metaPipeline;
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-21T21:04:10.0885393+05:30", comments="Source Table: test.META_DATA_PIPELINE")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-22T21:46:35.8478472+05:30", comments="Source Table: test.META_DATA_PIPELINE")
     public static final class MetaDataPipeline extends AliasableSqlTable<MetaDataPipeline> {
         public final SqlColumn<Long> id = column("id", JDBCType.BIGINT);
 

@@ -56,6 +56,12 @@ public ResponseEntity<String> deleteMetaPipeline(@PathVariable("id") Long id) {
     return new ResponseEntity<>("DELETE", HttpStatus.OK);
   }
 
+  @DeleteMapping("/ppe/delete/{id}")
+  public ResponseEntity<String> deletePipeline(@PathVariable("id") Long id) {
+    chimeraUserProfileService.deletePipeline(id);
+    return new ResponseEntity<>("DELETE", HttpStatus.OK);
+  }
+
   @GetMapping("/pipelines")
   public ResponseEntity<List<DataPipeline>> getDataPipelines() {
     List<DataPipeline> pipelineList= chimeraUserProfileService.getAllDataPipeLines();

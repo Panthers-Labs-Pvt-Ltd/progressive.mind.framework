@@ -6,19 +6,19 @@ import org.mybatis.dynamic.sql.AliasableSqlTable;
 import org.mybatis.dynamic.sql.SqlColumn;
 
 public final class DataPipelineDynamicSqlSupport {
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-21T21:04:10.0870186+05:30", comments="Source Table: test.DATA_PIPELINE")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-22T21:46:35.8458437+05:30", comments="Source Table: test.DATA_PIPELINE")
     public static final DataPipeline dataPipeline = new DataPipeline();
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-21T21:04:10.0870186+05:30", comments="Source field: test.DATA_PIPELINE.id")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-22T21:46:35.8458437+05:30", comments="Source field: test.DATA_PIPELINE.id")
     public static final SqlColumn<Long> id = dataPipeline.id;
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-21T21:04:10.0870186+05:30", comments="Source field: test.DATA_PIPELINE.name")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-22T21:46:35.8458437+05:30", comments="Source field: test.DATA_PIPELINE.name")
     public static final SqlColumn<String> name = dataPipeline.name;
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-21T21:04:10.0870186+05:30", comments="Source field: test.DATA_PIPELINE.pipeline_type")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-22T21:46:35.8458437+05:30", comments="Source field: test.DATA_PIPELINE.pipeline_type")
     public static final SqlColumn<String> pipelineType = dataPipeline.pipelineType;
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-21T21:04:10.0870186+05:30", comments="Source Table: test.DATA_PIPELINE")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2025-05-22T21:46:35.8458437+05:30", comments="Source Table: test.DATA_PIPELINE")
     public static final class DataPipeline extends AliasableSqlTable<DataPipeline> {
         public final SqlColumn<Long> id = column("id", JDBCType.BIGINT);
 
