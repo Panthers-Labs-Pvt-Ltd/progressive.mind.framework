@@ -49,7 +49,12 @@ jobs:
               echo 'ENTRYPOINT ["java", "-jar", "/app.jar"]' >> $module_dir/Dockerfile
             fi
 
-            cp "$jar" "$module_dir/$(basename $jar)"
+              dest_jar="$module_dir/$(basename $jar)"
+              if [ "$jar" != "$dest_jar" ]; then
+                cp "$jar" "$dest_jar"
+              else
+                echo "File $jar is already in the destination directory, skipping copy."
+              fi
             docker build -t $image_name $module_dir
             docker push $image_name
           done
