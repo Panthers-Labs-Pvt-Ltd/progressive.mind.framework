@@ -32,7 +32,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <version>${spring-boot.version}</version>
             </plugin>
-            <plugin>
+            <!--<plugin>
                 <groupId>org.flywaydb</groupId>
                 <artifactId>flyway-maven-plugin</artifactId>
                 <version>${flyway-maven-plugin-version}</version>
@@ -45,10 +45,10 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <url>jdbc:postgresql://127.0.0.1:5432/data_management</url>
+                    <url>jdbc:postgresql://localhost:5432/data_management</url>
                     <user>owner_data_management</user>
                     <password>owner_data_management</password>
-                    <!-- Update the URL to point to your actual database, this config is as per my DB -->
+                    &lt;!&ndash; Update the URL to point to your actual database, this config is as per my DB &ndash;&gt;
                     <defaultSchema>public</defaultSchema>
                     <schemas>
                         <schema>public</schema>
@@ -57,7 +57,7 @@
                         <location>filesystem:src/main/resources/migration</location>
                     </locations>
                 </configuration>
-            </plugin>
+            </plugin>-->
         </plugins>
     </build>
 

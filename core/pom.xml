@@ -18,7 +18,6 @@
         <module>dataSource</module>
         <module>api_service</module>
         <module>decision-engine</module>
-        <module>apacheComet</module>
         <module>api-cloud-config</module>
         <module>executionEngine</module>
         <module>analytics_engine</module>
