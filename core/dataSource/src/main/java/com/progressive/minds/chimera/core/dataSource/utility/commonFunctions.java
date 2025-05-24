@@ -770,6 +770,7 @@ public class commonFunctions {
         if (tableExists) {
             writer.json(outputPath);
         } else {
+            //TODO: Remove saveAsTable
             writer.format(format).saveAsTable(tableName);
         }
     }
