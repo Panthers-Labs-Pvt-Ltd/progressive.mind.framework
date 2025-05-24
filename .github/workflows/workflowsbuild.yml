@@ -38,9 +38,9 @@ jobs:
           # Find all .jar files excluding original ones
           for jar in $(find . -name "*.jar" -not -path "*/target/original-*.jar"); do
             module_dir=$(dirname "$jar")
-            module_name=$(basename $(dirname "$jar"))
+            module_name=$(basename "$module_dir")  # Fixed to get the correct module name
             
-            # Extract the version from the module's pom.xml (assumes the version tag is in the first <version> element)
+            # Extract the version from the module's pom.xml
             version=$(grep -oP '(?<=<version>)[^<]+' "$module_dir/pom.xml" | head -n 1)
             
             # Ensure module_name is lowercase and replace spaces with underscores
@@ -60,7 +60,7 @@ jobs:
               echo 'ENTRYPOINT ["java", "-jar", "/app.jar"]' >> $module_dir/Dockerfile
             fi
 
-            # Check if the file already exists in the destination, and only copy if it's not the same
+            # Ensure the JAR file is copied to the module directory (if not already)
             dest_jar="$module_dir/$(basename $jar)"
             if [ "$jar" != "$dest_jar" ]; then
               cp "$jar" "$dest_jar"
