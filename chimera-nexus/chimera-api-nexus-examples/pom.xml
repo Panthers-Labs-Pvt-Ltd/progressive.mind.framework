@@ -50,7 +50,7 @@
 
     <build>
         <plugins>
-            <plugin>
+           <!-- <plugin>
                 <groupId>org.mybatis.generator</groupId>
                 <artifactId>mybatis-generator-maven-plugin</artifactId>
                 <version>1.4.2</version>
@@ -66,21 +66,21 @@
                     <overwrite>true</overwrite>
                 </configuration>
                 <dependencies>
-                    <!-- Lombok Plugin for MyBatis Generator -->
+                    &lt;!&ndash; Lombok Plugin for MyBatis Generator &ndash;&gt;
                     <dependency>
                         <groupId>com.softwareloop</groupId>
                         <artifactId>mybatis-generator-lombok-plugin</artifactId>
                         <version>1.0</version>
                     </dependency>
 
-                    <!-- PostgresSQL Driver -->
+                    &lt;!&ndash; PostgresSQL Driver &ndash;&gt;
                     <dependency>
                         <groupId>org.postgresql</groupId>
                         <artifactId>postgresql</artifactId>
                         <version>42.7.4</version>
                     </dependency>
                 </dependencies>
-            </plugin>
+            </plugin>-->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
