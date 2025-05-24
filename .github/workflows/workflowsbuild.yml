@@ -23,6 +23,13 @@ jobs:
           distribution: temurin
           java-version: '17'
 
+      - name: Get Current Version
+        id: extract_version
+        run: |
+          version=$(grep -m 1 '<version>' pom.xml | sed -E 's/.*<version>(.+)<\/version>.*/\1/')
+          echo "Current Version: $version"
+          echo "version=${version,,}" >> "$GITHUB_OUTPUT"
+      
       - name: Build all modules with Maven
         run: mvn clean package -DskipTests
 
@@ -38,7 +45,9 @@ jobs:
           # Find all .jar files excluding original ones
           for jar in $(find . -name "*.jar" -not -path "*/target/original-*.jar"); do
             module_dir=$(dirname "$jar")
-            module_name=$(basename "$module_dir")  # Fixed to get the correct module name
+            module_dir="${module_dir%/target}"
+            #module_name=$(basename "$(dirname "$jar")")
+            module_name=$(basename "$module_dir")
             
             # Extract the version from the module's pom.xml
             version=$(grep -oP '(?<=<version>)[^<]+' "$module_dir/pom.xml" | head -n 1)
