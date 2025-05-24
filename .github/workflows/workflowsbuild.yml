@@ -38,7 +38,7 @@ jobs:
             # Use a Dockerfile in each module, or copy a template if not present
             if [ ! -f "$module_dir/Dockerfile" ]; then
               echo "No Dockerfile found in $module_dir, creating a simple Dockerfile"
-              cat > $module_dir/Dockerfile <<EOF
+              cat > $module_dir/Dockerfile <<"EOF"
               FROM eclipse-temurin:17-jre
               COPY $(basename $jar) /app.jar
               ENTRYPOINT ["java", "-jar", "/app.jar"]
