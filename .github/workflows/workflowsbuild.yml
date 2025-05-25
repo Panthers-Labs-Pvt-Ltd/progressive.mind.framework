@@ -82,13 +82,15 @@ jobs:
             else
               echo "File $jar is already in the destination directory, skipping copy."
             fi
-
-            # Build and push the Docker image
-           JAR_BASE=$(basename $jar)
-           if [ -f "$JAR_BASE" ]; then
-            docker build -t $image_name_lowercase $module_dir
-            docker push $image_name_lowercase
+            jar_basename=$(basename "$jar")
+            jar_path="$module_dir/$jar_basename"
+            
+            if [ -f "$jar_path" ]; then
+              echo "Found JAR: $jar_path. Building Docker image..."
+              docker build -t "$image_name_lowercase" "$module_dir"
+              docker push "$image_name_lowercase"
             else
-            echo "Jar File Not Found  $jar, Skipping Docker Build for $JAR_BASE"
-           fi
+              echo "JAR not found at $jar_path. Skipping Docker build."
+            fi
+          
           done
