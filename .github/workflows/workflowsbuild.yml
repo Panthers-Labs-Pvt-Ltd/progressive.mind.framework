@@ -84,11 +84,11 @@ jobs:
             fi
 
             # Build and push the Docker image
-           
-           if [ -f "$(basename $jar)" ]; then
+           JAR_BASE=$(basename $jar)
+           if [ -f "$JAR_BASE" ]; then
             docker build -t $image_name_lowercase $module_dir
             docker push $image_name_lowercase
             else
-            echo "Jar File Not Found  $jar", Skipping Docker Build for `$(basename $jar)`"
+            echo "Jar File Not Found  $jar", Skipping Docker Build for $JAR_BASE"
            fi
           done
