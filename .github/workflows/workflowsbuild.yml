@@ -53,14 +53,15 @@ jobs:
             version=$(grep -oP '(?<=<version>)[^<]+' "$module_dir/pom.xml" | head -n 1)
             
             # Ensure module_name is lowercase and replace spaces with underscores
-            formatted_module_name=$(echo "$module_name" | tr '[:space:]' '_')
+            formatted_module_name=$(echo "$module_name" | tr '[:space:]' '_'| sed 's/__/_/g')
             
             # Construct the image name with version and convert everything to lowercase
-            image_name="ghcr.io/${{ github.repository_owner }}/${formatted_module_name}_${version}:latest"
+            image_name="ghcr.io/${{ github.repository_owner }}/${formatted_module_name}:${version}"
             image_name_lowercase=$(echo "$image_name" | tr '[:upper:]' '[:lower:]')
 
             echo "Processing $jar in module $module_name, version $version"
 
+            if [ -f "$(basename $jar)" ]; then
             # Use a Dockerfile in each module, or copy a template if not present
             if [ ! -f "$module_dir/Dockerfile" ]; then
               echo "No Dockerfile found in $module_dir, creating a simple Dockerfile"
@@ -80,4 +81,5 @@ jobs:
             # Build and push the Docker image
             docker build -t $image_name_lowercase $module_dir
             docker push $image_name_lowercase
+            fi
           done
