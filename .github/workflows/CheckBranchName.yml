@@ -1,0 +1,19 @@
+name: Check Branch Name
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+
+jobs:
+  check_branch_name:  # 👈 This is the name that appears as a status check
+    name: Validate Branch Name   # 👈 This is the friendly name in GitHub UI
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check JIRA ticket in branch name
+        run: |
+          BRANCH_NAME="${{ github.head_ref }}"
+          echo "Branch name is $BRANCH_NAME"
+          if [[ ! "$BRANCH_NAME" =~ [A-Z]+-[0-9]+ ]]; then
+            echo "❌ Branch name must include a JIRA key like ABC-123"
+            exit 1
+          fi
