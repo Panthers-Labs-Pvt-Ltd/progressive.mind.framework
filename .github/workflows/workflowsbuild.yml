@@ -26,7 +26,13 @@ jobs:
       - name: Get Current Version
         id: extract_version
         run: |
-          version=$(grep -m 1 '<version>' pom.xml | sed -E 's/.*<version>(.+)<\/version>.*/\1/')
+          pom_version=$(grep -m 1 '<version>' pom.xml | sed -E 's/.*<version>(.+)<\/version>.*/\1/')
+          tag="${GITHUB_REF##refs/tags/}"
+          if [[ "$GITHUB_REF" == refs/tags/* ]]; then
+            version="$tag"
+          else
+            version="$pom_version"
+          fi
           echo "Current Version: $version"
           echo "version=${version,,}" >> "$GITHUB_OUTPUT"
       
@@ -61,7 +67,6 @@ jobs:
 
             echo "Processing $jar in module $module_name, version $version"
 
-            if [ -f "$jar" ]; then
             # Use a Dockerfile in each module, or copy a template if not present
             if [ ! -f "$module_dir/Dockerfile" ]; then
               echo "No Dockerfile found in $module_dir, creating a simple Dockerfile"
@@ -79,7 +84,11 @@ jobs:
             fi
 
             # Build and push the Docker image
+           
+           if [ -f "$(basename $jar)" ]; then
             docker build -t $image_name_lowercase $module_dir
             docker push $image_name_lowercase
-            fi
+            else
+            echo "Jar File Not Found  $jar", Skipping Docker Build for `$(basename $jar)`"
+           fi
           done
