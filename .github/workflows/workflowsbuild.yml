@@ -61,7 +61,7 @@ jobs:
 
             echo "Processing $jar in module $module_name, version $version"
 
-            if [ -f "$(basename $jar)" ]; then
+            if [ -f "$jar" ]; then
             # Use a Dockerfile in each module, or copy a template if not present
             if [ ! -f "$module_dir/Dockerfile" ]; then
               echo "No Dockerfile found in $module_dir, creating a simple Dockerfile"
