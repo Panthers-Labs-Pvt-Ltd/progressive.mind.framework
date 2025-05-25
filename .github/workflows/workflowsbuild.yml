@@ -89,6 +89,6 @@ jobs:
             docker build -t $image_name_lowercase $module_dir
             docker push $image_name_lowercase
             else
-            echo "Jar File Not Found  $jar", Skipping Docker Build for $JAR_BASE"
+            echo "Jar File Not Found  $jar, Skipping Docker Build for $JAR_BASE"
            fi
           done
