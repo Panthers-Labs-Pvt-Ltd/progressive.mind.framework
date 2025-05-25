@@ -53,7 +53,7 @@ jobs:
             version=$(grep -oP '(?<=<version>)[^<]+' "$module_dir/pom.xml" | head -n 1)
             
             # Ensure module_name is lowercase and replace spaces with underscores
-            formatted_module_name=$(echo "$module_name" | tr '[:space:]' '_'| sed 's/__/_/g')
+            formatted_module_name=$(echo "$module_name" | tr '[:space:]' '_'| sed 's/__/_/g'| sed 's/_$//')
             
             # Construct the image name with version and convert everything to lowercase
             image_name="ghcr.io/${{ github.repository_owner }}/${formatted_module_name}:${version}"
