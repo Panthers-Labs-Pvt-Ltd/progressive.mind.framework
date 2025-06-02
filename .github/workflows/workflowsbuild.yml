@@ -71,6 +71,7 @@ jobs:
       - name: Build and push Docker images for each JAR
         run: |
           # Find all .jar files excluding original ones
+          [ -d "jars-to-upload" ] && rm -rf "jars-to-upload"
           for jar in $(find . -name "*.jar" -not -path "*/target/original-*.jar"); do
             module_dir=$(dirname "$jar")
             module_dir="${module_dir%/target}"
