@@ -45,7 +45,23 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+     
+      - name: Collect Build Artifact
+        id: find_jars
+        run: |
+          VERSION="${{ steps.get_version.outputs.VERSION }}"
+          echo "Searching for JARs with version $VERSION"
+          mkdir -p jars-to-upload
+          find . \( -path "*/target/*.jar" -o -path "*/build/libs/*.jar" \) -name "*-${VERSION}.jar" -exec cp {} jars-to-upload/ \;
+          echo "FILES=$(ls jars-to-upload/*.jar | tr '\n' ' ')" >> $GITHUB_OUTPUT
 
+      - name: Upload Build Artifact to GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: jars-to-upload/*.jar
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
       - name: Build and push Docker images for each JAR
         run: |
           # Find all .jar files excluding original ones
