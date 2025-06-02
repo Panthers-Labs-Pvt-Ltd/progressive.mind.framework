@@ -58,14 +58,16 @@ jobs:
           done < <(find . -type f -name "*.jar" -not -path "*/target/original-*.jar")
           echo "FILES=$(ls jars-to-upload/*.jar | tr '\n' ' ')" >> $GITHUB_OUTPUT
 
-      - name: Upload Build Artifact to GitHub Release
-        uses: actions/upload-artifact@v4      
-        #uses: softprops/action-gh-release@v1
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v4
         with:
-          files: jars-to-upload/*.jar
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          
+          name: artifact
+          path: jars-to-upload/*.jar
+          if-no-files-found: warn
+          compression-level: 6
+          overwrite: true
+          include-hidden-files: false
+                
       - name: Build and push Docker images for each JAR
         run: |
           # Find all .jar files excluding original ones
