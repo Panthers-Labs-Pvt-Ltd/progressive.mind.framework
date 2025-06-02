@@ -49,10 +49,10 @@ jobs:
       - name: Collect Build Artifact
         id: find_jars
         run: |
-          VERSION="${{ steps.get_version.outputs.VERSION }}"
+          VERSION="${{ steps.extract_version.outputs.version }}"
           echo "Searching for JARs with version $VERSION"
           mkdir -p jars-to-upload
-          find . \( -path "*/target/*.jar" -o -path "*/build/libs/*.jar" \) -name "*-${VERSION}.jar" -exec cp {} jars-to-upload/ \;
+          find . \( -path "*/target/*.jar" -o -path "*/build/libs/*.jar" \) -name "*-${version}.jar" -exec cp {} jars-to-upload/ \;
           echo "FILES=$(ls jars-to-upload/*.jar | tr '\n' ' ')" >> $GITHUB_OUTPUT
 
       - name: Upload Build Artifact to GitHub Release
