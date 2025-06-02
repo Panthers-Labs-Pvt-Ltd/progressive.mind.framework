@@ -11,7 +11,7 @@ import org.apache.spark.sql.catalyst.plans.logical.Sort;
 import org.apache.spark.sql.catalyst.plans.logical.LogicalPlan;
 import org.apache.spark.sql.catalyst.expressions.Expression;
 import org.apache.spark.sql.execution.datasources.LogicalRelation;
-import com.progressive.minds.chimera.core.dataSource.sourceTypes.FileReader;
+import com.progressive.minds.chimera.core.data_source.sourceTypes.FileReader;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;

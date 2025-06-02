@@ -35,7 +35,7 @@
 
           <dependency>
             <groupId>com.progressive.minds.chimera</groupId>
-            <artifactId>core.dataSource</artifactId>
+            <artifactId>core.data_source</artifactId>
             <version>${chimera.project.version}</version>
         </dependency>
 
