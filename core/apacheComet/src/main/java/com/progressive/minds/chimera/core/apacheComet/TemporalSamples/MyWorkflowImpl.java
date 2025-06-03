@@ -3,7 +3,7 @@ package com.progressive.minds.chimera.core.apacheComet.TemporalSamples;
 
 
 
-import com.progressive.minds.chimera.core.dataSource.sourceTypes.FileReader;
+import com.progressive.minds.chimera.core.data_source.sourceTypes.FileReader;
 // import com.progressive.minds.chimera.core.temporal.example.workflows.MyWorkflow;
 import io.temporal.client.WorkflowClient;
 import io.temporal.client.WorkflowOptions;

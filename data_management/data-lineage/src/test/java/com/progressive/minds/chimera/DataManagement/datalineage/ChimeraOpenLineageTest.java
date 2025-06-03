@@ -1,6 +1,6 @@
 package com.progressive.minds.chimera.DataManagement.datalineage;
 
-import com.progressive.minds.chimera.core.dataSource.sourceTypes.FileReader;
+import com.progressive.minds.chimera.core.data_source.sourceTypes.FileReader;
 import org.apache.spark.sql.*;
 import org.apache.spark.sql.catalyst.plans.logical.LogicalPlan;
 import org.apache.spark.sql.types.*;
