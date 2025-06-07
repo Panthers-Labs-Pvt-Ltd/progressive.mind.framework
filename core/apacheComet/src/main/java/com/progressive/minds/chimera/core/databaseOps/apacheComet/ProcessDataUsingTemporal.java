@@ -1,6 +1,6 @@
 package com.progressive.minds.chimera.core.databaseOps.apacheComet;
 
-import com.progressive.minds.chimera.core.dataSource.sourceTypes.FileReader;
+import com.progressive.minds.chimera.core.data_source.sourceTypes.FileReader;
 import com.progressive.minds.chimera.core.temporal.activities.PipelineActivities;
 import com.progressive.minds.chimera.core.temporal.startWorkflow;
 import com.progressive.minds.chimera.core.temporal.workflows.ExtractWorkflow;

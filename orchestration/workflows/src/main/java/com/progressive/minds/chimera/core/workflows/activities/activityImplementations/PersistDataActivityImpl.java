@@ -1,6 +1,6 @@
 package com.progressive.minds.chimera.core.workflows.activities.activityImplementations;
 
-import com.progressive.minds.chimera.core.dataSource.formats.jdbc.jdbc;
+import com.progressive.minds.chimera.core.data_source.formats.jdbc.jdbc;
 import com.progressive.minds.chimera.core.workflows.activities.PersistDataActivity;
 import com.progressive.minds.chimera.core.api_service.dto.PersistMetadata;
 import com.progressive.minds.chimera.foundational.logging.ChimeraLogger;
