@@ -1,0 +1,35 @@
+server:
+  port: 9001
+
+spring:
+  application:
+    name: "DataHub API"
+  cloud:
+    config:
+      enabled: false
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres?currentSchema=test
+    username: postgres
+    password: admin123
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 10
+      connection-timeout: 5000
+  flyway:
+    enabled: false
+    schemas: test
+    cleanDisabled: true
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          client-id: chimera_api_client2
+          issuer-uri: "http://localhost:3000/realms/chimera"
+          jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/certs
+
+keycloak:
+  setup:
+    enabled: true
+    realm: chimera
+    client:
+      clientId: chimera_api_client2
