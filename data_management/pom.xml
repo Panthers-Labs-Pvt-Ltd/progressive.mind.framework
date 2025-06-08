@@ -21,6 +21,7 @@
         <module>data_observability</module>
         <module>deequ</module>
         <module>data_quality</module>
+        <module>datahub-api</module>
     </modules>
 
     <dependencies>
